@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Thread — The Whacky Rack</title>
+
+    <meta name="description" content="A single Yap thread — full discussion with nested replies.">
+
+    <style>
+        :root {
+            --bg: #f7f5ef;
+            --card: #ffffff;
+            --text: #202020;
+            --muted: #777;
+            --accent: #ff5a36;
+            --accent-dark: #e84625;
+            --border: #e8e4dc;
+            --pill: #fff0eb;
+            --shadow: 0 8px 25px rgba(0,0,0,.06);
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        /* ---------------- HEADER ---------------- */
+
+        header {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-inner {
+            max-width: 1250px;
+            margin: auto;
+            padding: 16px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .logo { font-size: 25px; font-weight: 900; letter-spacing: -1px; white-space: nowrap; }
+        .logo span { color: var(--accent); }
+
+        .header-right { display: flex; align-items: center; gap: 12px; }
+
+        .nav-link {
+            font-size: 13px;
+            font-weight: 700;
+            padding: 8px 14px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            background: #fff;
+            transition: .2s ease;
+            white-space: nowrap;
+        }
+        .nav-link:hover { border-color: #bbb; }
+
+        /* ---------------- BREADCRUMB ---------------- */
+
+        .breadcrumb {
+            max-width: 900px;
+            margin: auto;
+            padding: 22px 22px 0;
+            font-size: 13px;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .breadcrumb a { color: var(--accent-dark); font-weight: 700; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .breadcrumb .sep { opacity: .5; }
+
+        /* ---------------- YAP CARD (main) ---------------- */
+
+        .thread-wrap { max-width: 900px; margin: auto; padding: 18px 22px 70px; }
+
+        .yap-main-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 24px 26px;
+            box-shadow: var(--shadow);
+            margin-bottom: 22px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .yap-votes {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            min-width: 48px;
+            flex-shrink: 0;
+        }
+
+        .vote-btn {
+            width: 38px;
+            height: 38px;
+            border: 1px solid var(--border);
+            background: #fff;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            color: #999;
+            transition: .15s ease;
+            font-family: inherit;
+            padding: 0;
+        }
+        .vote-btn:hover:not(:disabled) { border-color: #bbb; color: #555; }
+        .vote-btn.up.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+        .vote-btn.down.active { background: #3b82f6; border-color: #3b82f6; color: #fff; }
+        .vote-btn:disabled { opacity: .55; cursor: not-allowed; }
+
+        .vote-count {
+            font-size: 15px;
+            font-weight: 900;
+            color: #444;
+            min-width: 26px;
+            text-align: center;
+        }
+        .vote-count.positive { color: var(--accent-dark); }
+        .vote-count.negative { color: #3b82f6; }
+
+        .yap-body-col { flex: 1; min-width: 0; }
+
+        .yap-title {
+            margin: 0 0 12px;
+            font-size: 24px;
+            font-weight: 950;
+            letter-spacing: -.5px;
+            line-height: 1.25;
+            word-wrap: break-word;
+        }
+
+        .yap-full-body {
+            font-size: 15px;
+            line-height: 1.75;
+            color: #333;
+            margin: 0 0 16px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .yap-product-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 14px 8px 8px;
+            background: #fafafa;
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            margin-bottom: 14px;
+            transition: .2s ease;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .yap-product-chip:hover { border-color: #bbb; }
+        .yap-product-chip img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #f1eee8;
+        }
+        .yap-product-chip .cat {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            color: var(--accent-dark);
+            font-weight: 800;
+        }
+        .yap-product-chip .name {
+            color: #333;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .yap-meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px 12px;
+            font-size: 12px;
+            color: var(--muted);
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+        }
+
+        .yap-author {
+            font-weight: 800;
+            color: var(--accent-dark);
+        }
+        .yap-author:hover { text-decoration: underline; }
+
+        .yap-dot { opacity: .5; }
+        .yap-edited { font-style: italic; }
+
+        .yap-actions {
+            margin-left: auto;
+            display: flex;
+            gap: 8px;
+        }
+
+        .yap-action-btn {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--muted);
+            background: transparent;
+            border: 1px solid var(--border);
+            padding: 6px 13px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: .15s ease;
+        }
+        .yap-action-btn:hover { border-color: #bbb; color: var(--text); }
+        .yap-action-btn.danger:hover { border-color: var(--accent); color: var(--accent-dark); }
+
+        /* Deleted yap banner */
+        .yap-deleted-banner {
+            background: #fafafa;
+            border: 1px dashed var(--border);
+            border-radius: 12px;
+            padding: 14px 18px;
+            color: var(--muted);
+            font-style: italic;
+            font-size: 14px;
+        }
+
+        /* ---------------- COMMENT SECTION HEADER ---------------- */
+
+        .comments-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin: 8px 0 18px;
+            flex-wrap: wrap;
+        }
+
+        .comments-header h2 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 900;
+            letter-spacing: -.3px;
+        }
+
+        .comments-sort {
+            display: flex;
+            gap: 6px;
+        }
+
+        .sort-mini {
+            border: 1px solid var(--border);
+            background: #fff;
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 800;
+            cursor: pointer;
+            font-family: inherit;
+            color: var(--muted);
+            transition: .15s ease;
+        }
+        .sort-mini:hover { border-color: #bbb; color: var(--text); }
+        .sort-mini.active { background: #222; color: #fff; border-color: #222; }
+
+        /* ---------------- TOP-LEVEL COMMENT FORM ---------------- */
+
+        .comment-form {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 16px 18px;
+            margin-bottom: 22px;
+            box-shadow: var(--shadow);
+        }
+
+        .comment-form.signed-out {
+            text-align: center;
+            color: var(--muted);
+            font-size: 13px;
+            padding: 22px 18px;
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            padding: 11px 13px;
+            font-family: inherit;
+            font-size: 14px;
+            background: #fafafa;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            outline: none;
+            resize: vertical;
+            min-height: 80px;
+            color: var(--text);
+            transition: .2s ease;
+        }
+        .comment-form textarea:focus { border-color: var(--accent); background: #fff; }
+
+        .comment-form-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .char-mini {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .btn-primary-sm {
+            padding: 9px 18px;
+            border-radius: 50px;
+            font-family: inherit;
+            font-weight: 800;
+            font-size: 12px;
+            background: var(--accent);
+            color: #fff;
+            border: 0;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+        .btn-primary-sm:hover:not(:disabled) { background: var(--accent-dark); }
+        .btn-primary-sm:disabled { opacity: .5; cursor: not-allowed; }
+
+        .signin-prompt {
+            color: var(--accent-dark);
+            font-weight: 800;
+        }
+        .signin-prompt:hover { text-decoration: underline; }
+
+        /* ---------------- COMMENT TREE ---------------- */
+
+        .comment-tree { display: flex; flex-direction: column; gap: 4px; }
+
+        .comment {
+            padding-left: 18px;
+            border-left: 2px solid var(--border);
+            margin-top: 14px;
+        }
+
+        .comment.level-0 { padding-left: 0; border-left: 0; margin-top: 18px; }
+        .comment.level-1 { border-left-color: #ffd8cc; }
+        .comment.level-2 { border-left-color: #ffc0ac; }
+        .comment.level-3 { border-left-color: #ffa88d; }
+        .comment.level-4 { border-left-color: #ff8f6e; }
+        .comment.level-5 { border-left-color: #ff7750; }
+        .comment.level-6 { border-left-color: var(--accent); }
+
+        .comment-inner {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding-top: 2px;
+        }
+
+        .comment-votes {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            min-width: 30px;
+            flex-shrink: 0;
+        }
+
+        .comment-votes .vote-btn {
+            width: 26px;
+            height: 26px;
+            font-size: 11px;
+            border-radius: 8px;
+        }
+
+        .comment-votes .vote-count {
+            font-size: 11px;
+            min-width: 22px;
+        }
+
+        .comment-body-col { flex: 1; min-width: 0; }
+
+        .comment-head {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 4px;
+        }
+
+        .comment-author {
+            font-weight: 800;
+            color: var(--accent-dark);
+            font-size: 13px;
+        }
+        .comment-author:hover { text-decoration: underline; }
+        .comment-author.deleted { color: var(--muted); font-weight: 700; font-style: italic; }
+        .comment-author.deleted:hover { text-decoration: none; }
+
+        .comment-edited { font-style: italic; }
+
+        .comment-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #333;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+        .comment-text.deleted {
+            color: #999;
+            font-style: italic;
+        }
+
+        .comment-foot {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 6px;
+            font-size: 11px;
+        }
+
+        .comment-foot-btn {
+            background: transparent;
+            border: 0;
+            color: var(--muted);
+            font-weight: 700;
+            font-family: inherit;
+            font-size: 11px;
+            cursor: pointer;
+            padding: 0;
+            transition: .15s ease;
+        }
+        .comment-foot-btn:hover { color: var(--accent-dark); text-decoration: underline; }
+        .comment-foot-btn.danger:hover { color: #c2410c; }
+
+        /* Reply form inside comment */
+        .reply-form {
+            display: none;
+            margin-top: 10px;
+        }
+        .reply-form.open { display: block; }
+        .reply-form textarea {
+            width: 100%;
+            padding: 9px 12px;
+            font-family: inherit;
+            font-size: 13px;
+            background: #fafafa;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            outline: none;
+            resize: vertical;
+            min-height: 60px;
+            transition: .2s ease;
+        }
+        .reply-form textarea:focus { border-color: var(--accent); background: #fff; }
+        .reply-form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .btn-ghost-sm {
+            padding: 7px 14px;
+            border-radius: 50px;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 12px;
+            background: transparent;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: .2s ease;
+        }
+        .btn-ghost-sm:hover { border-color: #bbb; color: var(--text); }
+
+        /* Continue thread link */
+        .continue-thread {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--accent-dark);
+            background: transparent;
+            border: 0;
+            cursor: pointer;
+            font-family: inherit;
+            padding: 0;
+            margin-top: 8px;
+            transition: .15s ease;
+        }
+        .continue-thread:hover { text-decoration: underline; }
+
+        .deeper-replies {
+            display: none;
+            margin-top: 4px;
+        }
+        .deeper-replies.open { display: block; }
+
+        /* ---------------- EMPTY / LOADING ---------------- */
+
+        .empty-comments {
+            text-align: center;
+            padding: 30px 20px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .error-card {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            padding: 18px 22px;
+            border-radius: 14px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .error-card a { color: #7f1d1d; font-weight: 800; text-decoration: underline; }
+
+        /* ---------------- EDIT YAP INLINE PANEL ---------------- */
+
+        .edit-panel {
+            display: none;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+        }
+        .edit-panel.open { display: block; }
+
+        .edit-panel label {
+            display: block;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            color: #555;
+            margin: 10px 0 4px;
+        }
+        .edit-panel input,
+        .edit-panel textarea {
+            width: 100%;
+            padding: 10px 12px;
+            font-family: inherit;
+            font-size: 14px;
+            background: #fafafa;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            outline: none;
+            color: var(--text);
+            transition: .2s ease;
+        }
+        .edit-panel input:focus,
+        .edit-panel textarea:focus { border-color: var(--accent); background: #fff; }
+        .edit-panel textarea { min-height: 100px; resize: vertical; line-height: 1.55; }
+        .edit-panel-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        /* ---------------- TOAST ---------------- */
+
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+        .toast {
+            padding: 12px 20px;
+            border-radius: 50px;
+            background: #222;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0,0,0,.25);
+            animation: toastIn .2s ease-out;
+        }
+        .toast.ok { background: #16a34a; }
+        .toast.err { background: #dc2626; }
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ---------------- FOOTER ---------------- */
+
+        footer { background: #222; color: #fff; padding: 40px 22px; text-align: center; margin-top: 40px; }
+        .footer-title { font-size: 22px; font-weight: 900; margin-bottom: 10px; }
+        .footer-title span { color: var(--accent); }
+        footer p { max-width: 650px; margin: auto; color: #bbb; font-size: 12px; line-height: 1.7; }
+        .footer-links {
+            margin-top: 22px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px 18px;
+            font-size: 12px;
+        }
+        .footer-links a { color: #bbb; font-weight: 700; transition: .2s ease; }
+        .footer-links a:hover { color: var(--accent); }
+        .footer-disclosure { margin-top: 18px; font-size: 11px; color: #888; }
+
+        /* ---------------- MOBILE ---------------- */
+
+        @media (max-width: 700px) {
+            .header-inner { padding: 13px 15px; flex-wrap: wrap; }
+            .logo { font-size: 21px; }
+            .nav-link { font-size: 11px; padding: 7px 11px; }
+
+            .breadcrumb { padding: 16px 15px 0; font-size: 12px; }
+            .thread-wrap { padding: 14px 15px 50px; }
+
+            .yap-main-card { padding: 18px 16px; gap: 12px; border-radius: 15px; }
+            .yap-title { font-size: 19px; }
+            .yap-full-body { font-size: 14px; }
+            .vote-btn { width: 32px; height: 32px; font-size: 13px; }
+            .vote-count { font-size: 13px; }
+
+            .comment { padding-left: 12px; }
+            .comment-inner { gap: 8px; }
+            .comment-votes .vote-btn { width: 24px; height: 24px; font-size: 10px; }
+            .comment-text { font-size: 13px; }
+
+            .comment-form { padding: 14px; border-radius: 14px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="header-inner">
+            <a href="index.html" class="logo">The <span>Whacky</span> Rack</a>
+            <div class="header-right">
+                <a href="index.html" class="nav-link">Shop</a>
+                <a href="world.html" class="nav-link">World</a>
+                <a href="history.html" class="nav-link">History</a>
+                <a href="about.html" class="nav-link">About</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="breadcrumb">
+        <a href="yap.html">← Back to the board</a>
+    </div>
+
+    <main class="thread-wrap" id="thread-root">
+        <div class="loading">Loading thread...</div>
+    </main>
+
+    <!-- TOAST -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-title">The <span>Whacky</span> Rack</div>
+        <p>
+            We collect weird, wonderful, funny and completely unnecessary products
+            from around the internet. Some links on this site are affiliate links,
+            which means we may earn a commission if you make a purchase through them,
+            at no additional cost to you.
+        </p>
+        <div class="footer-links">
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="cookies.html">Cookie Policy</a>
+            <a href="disclosure.html">Affiliate Disclosure</a>
+        </div>
+        <div class="footer-disclosure">
+            Products and availability may change depending on Amazon.com policies.
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth.js"></script>
+
+    <script>
+        (function () {
+            const sb = window.wr.sb;
+            const MAX_DEPTH = 6;
+
+            /* ---------------- State ---------------- */
+            let session = null;
+            let me = null;
+            let yapId = null;
+            let yap = null;
+            let comments = [];          // flat list
+            let commentTree = [];       // nested
+            let myYapVote = 0;
+            let myCommentVotes = {};    // { commentId: 1 | -1 }
+            let commentsSort = "new";
+            let editingYap = false;
+
+            const root = document.getElementById("thread-root");
+            const toastBox = document.getElementById("toast-container");
+
+            /* ---------------- Utils ---------------- */
+            function esc(s) {
+                return String(s ?? "").replace(/[&<>"']/g, c => ({
+                    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+                }[c]));
+            }
+
+            function timeAgo(iso) {
+                const d = new Date(iso);
+                const s = Math.floor((Date.now() - d.getTime()) / 1000);
+                if (s < 60)      return "just now";
+                if (s < 3600)    return Math.floor(s/60) + "m ago";
+                if (s < 86400)   return Math.floor(s/3600) + "h ago";
+                if (s < 604800)  return Math.floor(s/86400) + "d ago";
+                if (s < 2592000) return Math.floor(s/604800) + "w ago";
+                return d.toLocaleDateString();
+            }
+
+            function toast(msg, kind = "ok") {
+                const el = document.createElement("div");
+                el.className = "toast " + kind;
+                el.textContent = msg;
+                toastBox.appendChild(el);
+                setTimeout(() => el.remove(), 2800);
+            }
+
+            /* ---------------- Boot ---------------- */
+
+            async function boot() {
+                const params = new URLSearchParams(location.search);
+                yapId = params.get("id");
+                if (!yapId) {
+                    root.innerHTML = `<div class="error-card">No Yap specified. <a href="yap.html">Back to the board →</a></div>`;
+                    return;
+                }
+
+                const { data: { session: s } } = await sb.auth.getSession();
+                session = s;
+                if (session) {
+                    me = window.wr.getProfile();
+                    if (!me) {
+                        const { data } = await sb.from("profiles")
+                            .select("id, username")
+                            .eq("id", session.user.id)
+                            .maybeSingle();
+                        me = data;
+                    }
+                }
+
+                await loadYap();
+                await loadComments();
+                render();
+            }
+
+            async function loadYap() {
+                const { data, error } = await sb.from("yaps")
+                    .select(`
+                        id, product_id, title, body, upvotes, downvotes, net_votes,
+                        comment_count, is_deleted, edited_at, created_at,
+                        author:profiles!yaps_author_id_fkey(id, username),
+                        product:products!yaps_product_id_fkey(id, name, image, category)
+                    `)
+                    .eq("id", yapId)
+                    .maybeSingle();
+
+                if (error || !data) {
+                    root.innerHTML = `<div class="error-card">This Yap doesn't exist. <a href="yap.html">Back to the board →</a></div>`;
+                    return;
+                }
+                yap = data;
+
+                if (session) {
+                    const { data: v } = await sb.from("yap_votes")
+                        .select("vote")
+                        .eq("user_id", session.user.id)
+                        .eq("yap_id", yapId)
+                        .maybeSingle();
+                    myYapVote = v ? v.vote : 0;
+                }
+            }
+
+            async function loadComments() {
+                const { data, error } = await sb.from("yap_comments")
+                    .select(`
+                        id, yap_id, parent_id, depth, body, upvotes, downvotes, net_votes,
+                        is_deleted, edited_at, created_at,
+                        author:profiles!yap_comments_author_id_fkey(id, username)
+                    `)
+                    .eq("yap_id", yapId);
+
+                if (error) {
+                    console.error(error);
+                    comments = [];
+                    commentTree = [];
+                    return;
+                }
+                comments = data || [];
+
+                // Build tree
+                const byId = {};
+                comments.forEach(c => { byId[c.id] = { ...c, children: [] }; });
+                const roots = [];
+                comments.forEach(c => {
+                    const node = byId[c.id];
+                    if (c.parent_id && byId[c.parent_id]) {
+                        byId[c.parent_id].children.push(node);
+                    } else {
+                        roots.push(node);
+                    }
+                });
+
+                // Sort function
+                const cmp = (a, b) => {
+                    if (commentsSort === "top") {
+                        const an = a.net_votes ?? (a.upvotes - a.downvotes);
+                        const bn = b.net_votes ?? (b.upvotes - b.downvotes);
+                        if (an !== bn) return bn - an;
+                    }
+                    return new Date(a.created_at) - new Date(b.created_at);
+                };
+                const sortTree = (nodes) => {
+                    nodes.sort(cmp);
+                    nodes.forEach(n => sortTree(n.children));
+                };
+                sortTree(roots);
+
+                commentTree = roots;
+
+                // Fetch my comment votes
+                if (session && comments.length > 0) {
+                    const ids = comments.map(c => c.id);
+                    const { data: vRows } = await sb.from("yap_votes")
+                        .select("comment_id, vote")
+                        .eq("user_id", session.user.id)
+                        .in("comment_id", ids);
+                    myCommentVotes = {};
+                    (vRows || []).forEach(v => { myCommentVotes[v.comment_id] = v.vote; });
+                }
+            }
+
+            /* ---------------- Render ---------------- */
+
+            function render() {
+                if (!yap) return;
+                root.innerHTML = "";
+
+                root.appendChild(renderYapCard());
+                root.appendChild(renderCommentsHeader());
+                root.appendChild(renderTopCommentForm());
+
+                if (commentTree.length === 0) {
+                    const empty = document.createElement("div");
+                    empty.className = "empty-comments";
+                    empty.textContent = "No comments yet. Start the thread.";
+                    root.appendChild(empty);
+                } else {
+                    const tree = document.createElement("div");
+                    tree.className = "comment-tree";
+                    commentTree.forEach(node => tree.appendChild(renderComment(node)));
+                    root.appendChild(tree);
+                }
+            }
+
+            function renderYapCard() {
+                const card = document.createElement("article");
+                card.className = "yap-main-card";
+
+                if (yap.is_deleted) {
+                    const deleted = document.createElement("div");
+                    deleted.className = "yap-deleted-banner";
+                    deleted.textContent = "This Yap was deleted by its author. The thread below is still visible.";
+                    card.appendChild(deleted);
+                    return card;
+                }
+
+                const author = yap.author || {};
+                const product = yap.product || {};
+                const net = yap.net_votes ?? (yap.upvotes - yap.downvotes);
+                const netClass = net > 0 ? "positive" : net < 0 ? "negative" : "";
+                const isAuthor = me && author.id === me.id;
+
+                card.innerHTML = `
+                    <div class="yap-votes">
+                        <button class="vote-btn up${myYapVote === 1 ? " active" : ""}"
+                                data-action="vote-yap-up"
+                                aria-label="Upvote Yap">▲</button>
+                        <div class="vote-count ${netClass}">${net}</div>
+                        <button class="vote-btn down${myYapVote === -1 ? " active" : ""}"
+                                data-action="vote-yap-down"
+                                aria-label="Downvote Yap">▼</button>
+                    </div>
+
+                    <div class="yap-body-col">
+                        <h1 class="yap-title">${esc(yap.title)}</h1>
+                        ${product.id ? `
+                            <a class="yap-product-chip" href="yap.html?product=${esc(product.id)}">
+                                <img src="${esc(product.image || "")}" alt="">
+                                <span>
+                                    <span class="cat">${esc(product.category || "")}</span>
+                                    <span class="name">${esc(product.name || "")}</span>
+                                </span>
+                            </a>
+                        ` : ""}
+                        <div class="yap-full-body" id="yap-full-body">${esc(yap.body)}</div>
+
+                        <div class="edit-panel" id="edit-panel">
+                            <label for="edit-title">Title</label>
+                            <input id="edit-title" type="text" maxlength="120" value="${esc(yap.title)}">
+                            <label for="edit-body">Body</label>
+                            <textarea id="edit-body" maxlength="5000">${esc(yap.body)}</textarea>
+                            <div class="edit-panel-actions">
+                                <button class="btn-ghost-sm" data-action="cancel-edit-yap" type="button">Cancel</button>
+                                <button class="btn-primary-sm" data-action="save-edit-yap" type="button">Save changes</button>
+                            </div>
+                        </div>
+
+                        <div class="yap-meta">
+                            <a class="yap-author" href="profile.html?id=${esc(author.id)}">${esc(author.username || "unknown")}</a>
+                            <span class="yap-dot">·</span>
+                            <span>${esc(timeAgo(yap.created_at))}</span>
+                            ${yap.edited_at ? `<span class="yap-dot">·</span><span class="yap-edited">edited ${esc(timeAgo(yap.edited_at))}</span>` : ""}
+
+                            ${isAuthor ? `
+                                <div class="yap-actions">
+                                    <button class="yap-action-btn" data-action="start-edit-yap" type="button">Edit</button>
+                                    <button class="yap-action-btn danger" data-action="delete-yap" type="button">Delete</button>
+                                </div>
+                            ` : ""}
+                        </div>
+                    </div>
+                `;
+                return card;
+            }
+
+            function renderCommentsHeader() {
+                const wrap = document.createElement("div");
+                wrap.className = "comments-header";
+
+                const count = comments.length;
+                wrap.innerHTML = `
+                    <h2>${count} comment${count === 1 ? "" : "s"}</h2>
+                    <div class="comments-sort">
+                        <button class="sort-mini${commentsSort === "new" ? " active" : ""}"
+                                data-action="sort-new" type="button">✨ Newest</button>
+                        <button class="sort-mini${commentsSort === "top" ? " active" : ""}"
+                                data-action="sort-top" type="button">🔥 Top</button>
+                    </div>
+                `;
+                return wrap;
+            }
+
+            function renderTopCommentForm() {
+                const form = document.createElement("div");
+                form.className = "comment-form";
+
+                if (!session) {
+                    form.classList.add("signed-out");
+                    form.innerHTML = `
+                        <a class="signin-prompt" href="login.html">Sign in</a>
+                        to join the conversation.
+                    `;
+                    return form;
+                }
+
+                form.innerHTML = `
+                    <textarea id="top-comment-input" maxlength="2000" placeholder="Add a comment..."></textarea>
+                    <div class="comment-form-row">
+                        <span class="char-mini"><span id="top-comment-count">0</span> / 2000</span>
+                        <button class="btn-primary-sm" id="top-comment-submit" type="button" disabled>Post comment</button>
+                    </div>
+                `;
+                return form;
+            }
+
+            /* ---------------- Comment rendering ---------------- */
+
+            function renderComment(node, depth = 0) {
+                const el = document.createElement("div");
+                el.className = "comment level-" + Math.min(depth, MAX_DEPTH);
+                el.dataset.commentId = node.id;
+
+                const visibleDepth = Math.min(node.depth, MAX_DEPTH);
+                const hasReplies = node.children && node.children.length > 0;
+                const atCap = visibleDepth >= MAX_DEPTH;
+                const isAuthor = me && node.author && node.author.id === me.id;
+
+                const net = node.net_votes ?? (node.upvotes - node.downvotes);
+                const netClass = net > 0 ? "positive" : net < 0 ? "negative" : "";
+                const myVote = myCommentVotes[node.id] || 0;
+
+                const authorHtml = node.is_deleted
+                    ? `<span class="comment-author deleted">[deleted]</span>`
+                    : `<a class="comment-author" href="profile.html?id=${esc(node.author?.id || "")}">${esc(node.author?.username || "unknown")}</a>`;
+
+                const textHtml = node.is_deleted
+                    ? `<div class="comment-text deleted">[deleted]</div>`
+                    : `<div class="comment-text">${esc(node.body)}</div>`;
+
+                const canReply = !node.is_deleted && session && !atCap;
+
+                el.innerHTML = `
+                    <div class="comment-inner">
+                        <div class="comment-votes">
+                            <button class="vote-btn up${myVote === 1 ? " active" : ""}"
+                                    data-action="vote-cmt-up" data-comment-id="${esc(node.id)}"
+                                    aria-label="Upvote comment">▲</button>
+                            <div class="vote-count ${netClass}">${net}</div>
+                            <button class="vote-btn down${myVote === -1 ? " active" : ""}"
+                                    data-action="vote-cmt-down" data-comment-id="${esc(node.id)}"
+                                    aria-label="Downvote comment">▼</button>
+                        </div>
+                        <div class="comment-body-col">
+                            <div class="comment-head">
+                                ${authorHtml}
+                                <span>·</span>
+                                <span>${esc(timeAgo(node.created_at))}</span>
+                                ${node.edited_at ? `<span>·</span><span class="comment-edited">edited</span>` : ""}
+                            </div>
+                            ${textHtml}
+                            <div class="comment-foot">
+                                ${canReply ? `<button class="comment-foot-btn" data-action="reply-open" data-comment-id="${esc(node.id)}">Reply</button>` : ""}
+                                ${isAuthor && !node.is_deleted ? `
+                                    <button class="comment-foot-btn" data-action="edit-comment" data-comment-id="${esc(node.id)}">Edit</button>
+                                    <button class="comment-foot-btn danger" data-action="delete-comment" data-comment-id="${esc(node.id)}">Delete</button>
+                                ` : ""}
+                            </div>
+
+                            <div class="reply-form" id="reply-form-${esc(node.id)}">
+                                <textarea maxlength="2000" placeholder="Write a reply..."></textarea>
+                                <div class="reply-form-actions">
+                                    <button class="btn-ghost-sm" data-action="reply-cancel" data-comment-id="${esc(node.id)}" type="button">Cancel</button>
+                                    <button class="btn-primary-sm" data-action="reply-submit" data-comment-id="${esc(node.id)}" type="button" disabled>Reply</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // Children
+                if (hasReplies) {
+                    const childWrap = document.createElement("div");
+                    if (atCap) {
+                        // Visual cap: hide deeper replies behind a "continue thread →" toggle
+                        childWrap.className = "deeper-replies";
+                        childWrap.id = "deeper-" + node.id;
+                        node.children.forEach(child => childWrap.appendChild(renderComment(child, MAX_DEPTH)));
+
+                        const toggle = document.createElement("button");
+                        toggle.className = "continue-thread";
+                        toggle.type = "button";
+                        toggle.dataset.action = "toggle-deeper";
+                        toggle.dataset.target = "deeper-" + node.id;
+                        toggle.textContent = `Continue thread → (${node.children.length} ${node.children.length === 1 ? "reply" : "replies"})`;
+
+                        el.appendChild(toggle);
+                        el.appendChild(childWrap);
+                    } else {
+                        node.children.forEach(child => el.appendChild(renderComment(child, depth + 1)));
+                    }
+                }
+
+                return el;
+            }
+
+            /* ---------------- Click handling ---------------- */
+
+            document.addEventListener("click", async (e) => {
+                const btn = e.target.closest("[data-action]");
+                if (!btn) return;
+                const action = btn.dataset.action;
+
+                // Yap votes
+                if (action === "vote-yap-up")   { e.preventDefault(); await voteYap(1);  return; }
+                if (action === "vote-yap-down") { e.preventDefault(); await voteYap(-1); return; }
+
+                // Yap edit / delete
+                if (action === "start-edit-yap")  { e.preventDefault(); openEditPanel();  return; }
+                if (action === "cancel-edit-yap") { e.preventDefault(); closeEditPanel(); return; }
+                if (action === "save-edit-yap")   { e.preventDefault(); await saveEditYap(); return; }
+                if (action === "delete-yap")      { e.preventDefault(); await deleteYap(); return; }
+
+                // Sort
+                if (action === "sort-new") { commentsSort = "new"; await reloadComments(); return; }
+                if (action === "sort-top") { commentsSort = "top"; await reloadComments(); return; }
+
+                // Comment votes
+                if (action === "vote-cmt-up")   { e.preventDefault(); await voteComment(btn.dataset.commentId, 1);  return; }
+                if (action === "vote-cmt-down") { e.preventDefault(); await voteComment(btn.dataset.commentId, -1); return; }
+
+                // Reply open / cancel / submit
+                if (action === "reply-open")   { e.preventDefault(); openReplyForm(btn.dataset.commentId);   return; }
+                if (action === "reply-cancel") { e.preventDefault(); closeReplyForm(btn.dataset.commentId);  return; }
+                if (action === "reply-submit") { e.preventDefault(); await submitReply(btn.dataset.commentId); return; }
+
+                // Comment edit / delete
+                if (action === "edit-comment")   { e.preventDefault(); await editComment(btn.dataset.commentId);   return; }
+                if (action === "delete-comment") { e.preventDefault(); await deleteComment(btn.dataset.commentId); return; }
+
+                // Deeper replies toggle
+                if (action === "toggle-deeper") {
+                    e.preventDefault();
+                    const target = document.getElementById(btn.dataset.target);
+                    if (!target) return;
+                    const open = target.classList.toggle("open");
+                    btn.textContent = open
+                        ? "← Collapse thread"
+                        : `Continue thread → (${target.children.length} ${target.children.length === 1 ? "reply" : "replies"})`;
+                    return;
+                }
+            });
+
+            /* Top comment form: input + submit */
+            root.addEventListener("input", (e) => {
+                if (e.target.id === "top-comment-input") {
+                    const v = e.target.value.trim();
+                    document.getElementById("top-comment-count").textContent = String(e.target.value.length);
+                    document.getElementById("top-comment-submit").disabled = v.length === 0;
+                }
+                // Reply textareas
+                const replyForm = e.target.closest(".reply-form");
+                if (replyForm) {
+                    const commentId = replyForm.id.replace("reply-form-", "");
+                    const submit = replyForm.querySelector(`[data-action="reply-submit"][data-comment-id="${commentId}"]`);
+                    if (submit) submit.disabled = e.target.value.trim().length === 0;
+                }
+            });
+
+            root.addEventListener("click", async (e) => {
+                if (e.target.id === "top-comment-submit") {
+                    e.preventDefault();
+                    await submitTopComment();
+                }
+            });
+
+            /* ---------------- Actions ---------------- */
+
+            async function voteYap(direction) {
+                if (!session) {
+                    toast("Sign in to vote.", "err");
+                    return;
+                }
+                try {
+                    const { error } = await sb.rpc("vote_yap", {
+                        p_yap_id: yapId, p_vote: direction
+                    });
+                    if (error) throw error;
+
+                    const { data } = await sb.from("yaps")
+                        .select("upvotes, downvotes, net_votes")
+                        .eq("id", yapId).maybeSingle();
+                    if (data) {
+                        yap.upvotes = data.upvotes;
+                        yap.downvotes = data.downvotes;
+                        yap.net_votes = data.net_votes;
+                    }
+                    const { data: v } = await sb.from("yap_votes")
+                        .select("vote")
+                        .eq("user_id", session.user.id).eq("yap_id", yapId).maybeSingle();
+                    myYapVote = v ? v.vote : 0;
+                    render();
+                } catch (err) {
+                    console.error(err);
+                    toast(err.message || "Vote failed.", "err");
+                }
+            }
+
+            async function voteComment(commentId, direction) {
+                if (!session) {
+                    toast("Sign in to vote.", "err");
+                    return;
+                }
+                try {
+                    const { error } = await sb.rpc("vote_yap_comment", {
+                        p_comment_id: commentId, p_vote: direction
+                    });
+                    if (error) throw error;
+
+                    const { data } = await sb.from("yap_comments")
+                        .select("upvotes, downvotes, net_votes")
+                        .eq("id", commentId).maybeSingle();
+                    if (data) {
+                        const c = comments.find(x => x.id === commentId);
+                        if (c) {
+                            c.upvotes = data.upvotes;
+                            c.downvotes = data.downvotes;
+                            c.net_votes = data.net_votes;
+                        }
+                    }
+                    const { data: v } = await sb.from("yap_votes")
+                        .select("vote")
+                        .eq("user_id", session.user.id).eq("comment_id", commentId).maybeSingle();
+                    myCommentVotes[commentId] = v ? v.vote : 0;
+                    await reloadComments();
+                } catch (err) {
+                    console.error(err);
+                    toast(err.message || "Vote failed.", "err");
+                }
+            }
+
+            async function submitTopComment() {
+                const input = document.getElementById("top-comment-input");
+                if (!input) return;
+                const body = input.value.trim();
+                if (!body) return;
+                if (!session) { toast("Sign in to comment.", "err"); return; }
+
+                const btn = document.getElementById("top-comment-submit");
+                btn.disabled = true;
+                btn.textContent = "Posting…";
+
+                try {
+                    const { error } = await sb.rpc("create_yap_comment", {
+                        p_yap_id: yapId,
+                        p_parent_id: null,
+                        p_body: body
+                    });
+                    if (error) throw error;
+                    toast("Comment posted.", "ok");
+                    await reloadComments();
+                } catch (err) {
+                    console.error(err);
+                    toast(err.message || "Could not post comment.", "err");
+                    btn.disabled = false;
+                    btn.textContent = "Post comment";
+                }
+            }
+
+            function openReplyForm(commentId) {
+                const f = document.getElementById("reply-form-" + commentId);
+                if (f) {
+                    f.classList.add("open");
+                    f.querySelector("textarea").focus();
+                }
+            }
+
+            function closeReplyForm(commentId) {
+                const f = document.getElementById("reply-form-" + commentId);
+                if (f) {
+                    f.classList.remove("open");
+                    f.querySelector("textarea").value = "";
+                    const submit = f.querySelector(`[data-action="reply-submit"]`);
+                    if (submit) submit.disabled = true;
+                }
+            }
+
+            async function submitReply(commentId) {
+                const f = document.getElementById("reply-form-" + commentId);
+                if (!f) return;
+                const ta = f.querySelector("textarea");
+                const body = ta.value.trim();
+                if (!body) return;
+                if (!session) { toast("Sign in to reply.", "err"); return; }
+
+                const btn = f.querySelector(`[data-action="reply-submit"]`);
+                btn.disabled = true;
+                btn.textContent = "Replying…";
+
+                try {
+                    const { error } = await sb.rpc("create_yap_comment", {
+                        p_yap_id: yapId,
+                        p_parent_id: commentId,
+                        p_body: body
+                    });
+                    if (error) throw error;
+                    toast("Reply posted.", "ok");
+                    await reloadComments();
+                } catch (err) {
+                    console.error(err);
+                    toast(err.message || "Could not post reply.", "err");
+                    btn.disabled = false;
+                    btn.textContent = "Reply";
+                }
+            }
+
+            async function editComment(commentId) {
+                const c = comments.find(x => x.id === commentId);
+                if (!c) return;
+                const newBody = prompt("Edit your comment:", c.body);
+                if (newBody === null) return;
+                const trimmed = newBody.trim();
+                if (!trimmed || trimmed === c.body) return;
+
+                try {
+                    const { error } = await sb.rpc("update_yap_comment", {
+                        p_comment_id: commentId, p_body: trimmed
+                    });
+                    if (error) throw error;
+                    toast("Comment updated.", "ok");
+                    await reloadComments();
+                } catch (err) {
+                    console.error(err);
+                    toast(err.message || "Could not save.", "err");
+                }
+            }
+
+            async function deleteComment(commentId) {
+                if (!confirm("Delete this comment? If it has replies, it'll show as [deleted] instead.")) return;
+                try {
+                    const { data, error } = await sb.rpc("delete_yap_comment", { p_comment_id: commentId });
+                    if (error) throw error;
+                    toast((data?.mode === "soft") ? "Comment marked as deleted." : "Comment deleted.", "ok");
+                    await reloadComments();
+                } catch (err) {
+                    console.error(err);
+                    toast(err.message || "Could not delete.", "err");
+                }
+            }
+
+            /* ---------------- Yap edit / delete ---------------- */
+
+            function openEditPanel() {
+                document.getElementById("edit-panel").classList.add("open");
+                document.getElementById("yap-full-body").style.display = "none";
+            }
+            function closeEditPanel() {
+                document.getElementById("edit-panel").classList.remove("open");
+                document.getElementById("yap-full-body").style.display = "";
+            }
+
+            async function saveEditYap() {
+                const title = document.getElementById("edit-title").value.trim();
+                const body = document.getElementById("edit-body").value.trim();
+                if (title.length < 3) { toast("Title must be at least 3 characters.", "err"); return; }
+                if (!body) { toast("Body cannot be empty.", "err"); return; }
+
+                try {
+                    const { error } = await sb.rpc("update_yap", {
+                        p_yap_id: yapId, p_title: title, p_body: body
+                    });
+                    if (error) throw error;
+                    toast("Yap updated.", "ok");
+                    await loadYap();
+                    render();
+                } catch (err) {
+                    console.error(err);
+                    toast(err.message || "Could not save.", "err");
+                }
+            }
+
+            async function deleteYap() {
+                if (!confirm("Delete this Yap? If it has comments, it'll show as [deleted] instead.")) return;
+                try {
+                    const { data, error } = await sb.rpc("delete_yap", { p_yap_id: yapId });
+                    if (error) throw error;
+                    toast((data?.mode === "soft") ? "Yap marked as deleted." : "Yap deleted.", "ok");
+                    if (data?.mode === "hard") {
+                        setTimeout(() => { location.href = "yap.html"; }, 700);
+                    } else {
+                        await loadYap();
+                        render();
+                    }
+                } catch (err) {
+                    console.error(err);
+                    toast(err.message || "Could not delete.", "err");
+                }
+            }
+
+            /* ---------------- Helpers ---------------- */
+
+            async function reloadComments() {
+                await loadComments();
+                render();
+            }
+
+            boot();
+        })();
+    </script>
+
+</body>
+</html>

@@ -1,177 +1,373 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sign in — The Whacky Rack</title>
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
-<style>
-  :root {
-    --bg:#f7f5ef; --card:#fff; --text:#202020; --muted:#777;
-    --accent:#ff5a36; --accent-dark:#e84625;
-    --border:#e8e4dc; --shadow:0 8px 25px rgba(0,0,0,.06);
-  }
-  * { box-sizing:border-box; }
-  body { margin:0; font-family:Arial,Helvetica,sans-serif; background:var(--bg); color:var(--text); }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in — The Whacky Rack</title>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+    <style>
+        :root {
+            --bg: #f7f5ef;
+            --card: #fff;
+            --text: #202020;
+            --muted: #777;
+            --accent: #ff5a36;
+            --accent-dark: #e84625;
+            --border: #e8e4dc;
+            --shadow: 0 8px 25px rgba(0, 0, 0, .06);
+        }
 
-  header { background:#fff; border-bottom:1px solid var(--border); position:sticky; top:0; z-index:1000; }
-  .header-inner { max-width:1250px; margin:auto; padding:16px 22px; display:flex; align-items:center; justify-content:space-between; gap:20px; }
-  .logo { font-size:25px; font-weight:900; letter-spacing:-1px; color:inherit; text-decoration:none; white-space:nowrap; }
-  .logo span { color:var(--accent); }
-  .header-right { display:flex; align-items:center; gap:12px; }
-  .nav-link { font-size:13px; font-weight:700; padding:8px 14px; border-radius:50px; border:1px solid var(--border); background:#fff; color:inherit; text-decoration:none; transition:.2s ease; }
-  .nav-link:hover { border-color:#bbb; }
+        * {
+            box-sizing: border-box;
+        }
 
-  .wrap { max-width:480px; margin:auto; padding:60px 22px 80px; }
-  .card { background:var(--card); border:1px solid var(--border); border-radius:18px; padding:34px 32px; box-shadow:var(--shadow); }
-  .card h1 { margin:0 0 6px; font-size:30px; letter-spacing:-1px; font-weight:950; }
-  .card h1 span { color:var(--accent); }
-  .card .sub { margin:0 0 24px; color:var(--muted); font-size:14px; }
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
 
-  label { display:block; font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.4px; margin:16px 0 6px; color:#555; }
-  input[type=email], input[type=password] {
-    width:100%; padding:12px 14px; font-family:inherit; font-size:14px;
-    background:#fafafa; border:1px solid var(--border); border-radius:12px; outline:none; transition:.2s ease;
-  }
-  input:focus { border-color:var(--accent); background:#fff; }
+        header {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
 
-  .turnstile-wrap { margin:22px 0 10px; min-height:65px; }
+        .header-inner {
+            max-width: 1250px;
+            margin: auto;
+            padding: 16px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
 
-  .submit-btn {
-    width:100%; padding:15px 20px; background:var(--accent); color:#fff; border:0;
-    border-radius:50px; font-family:inherit; font-weight:900; font-size:14px; letter-spacing:.3px;
-    cursor:pointer; transition:.2s ease; margin-top:8px;
-  }
-  .submit-btn:hover:not(:disabled) { background:var(--accent-dark); }
-  .submit-btn:disabled { opacity:.6; cursor:not-allowed; }
+        .logo {
+            font-size: 25px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            color: inherit;
+            text-decoration: none;
+            white-space: nowrap;
+        }
 
-  .status { margin-top:16px; padding:12px 14px; border-radius:12px; font-size:13px; display:none; }
-  .status.show { display:block; }
-  .status.err { background:#fef2f2; color:#991b1b; border:1px solid #fecaca; }
+        .logo span {
+            color: var(--accent);
+        }
 
-  .alt { text-align:center; margin-top:22px; font-size:13px; color:#666; }
-  .alt a { color:var(--accent-dark); font-weight:800; text-decoration:none; }
-  .alt a:hover { text-decoration:underline; }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-  @media (max-width:600px) {
-    .card { padding:26px 20px; border-radius:15px; }
-    .card h1 { font-size:26px; }
-    .header-inner { padding:13px 15px; flex-wrap:wrap; }
-    .logo { font-size:21px; }
-    .nav-link { font-size:11px; padding:7px 11px; }
-  }
-</style>
+        .nav-link {
+            font-size: 13px;
+            font-weight: 700;
+            padding: 8px 14px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            background: #fff;
+            color: inherit;
+            text-decoration: none;
+            transition: .2s ease;
+        }
+
+        .nav-link:hover {
+            border-color: #bbb;
+        }
+
+        .wrap {
+            max-width: 480px;
+            margin: auto;
+            padding: 60px 22px 80px;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 34px 32px;
+            box-shadow: var(--shadow);
+        }
+
+        .card h1 {
+            margin: 0 0 6px;
+            font-size: 30px;
+            letter-spacing: -1px;
+            font-weight: 950;
+        }
+
+        .card h1 span {
+            color: var(--accent);
+        }
+
+        .card .sub {
+            margin: 0 0 24px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            margin: 16px 0 6px;
+            color: #555;
+        }
+
+        input[type=email],
+        input[type=password] {
+            width: 100%;
+            padding: 12px 14px;
+            font-family: inherit;
+            font-size: 14px;
+            background: #fafafa;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            outline: none;
+            transition: .2s ease;
+        }
+
+        input:focus {
+            border-color: var(--accent);
+            background: #fff;
+        }
+
+        .turnstile-wrap {
+            margin: 22px 0 10px;
+            min-height: 65px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px 20px;
+            background: var(--accent);
+            color: #fff;
+            border: 0;
+            border-radius: 50px;
+            font-family: inherit;
+            font-weight: 900;
+            font-size: 14px;
+            letter-spacing: .3px;
+            cursor: pointer;
+            transition: .2s ease;
+            margin-top: 8px;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            background: var(--accent-dark);
+        }
+
+        .submit-btn:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        .status {
+            margin-top: 16px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            display: none;
+        }
+
+        .status.show {
+            display: block;
+        }
+
+        .status.err {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .alt {
+            text-align: center;
+            margin-top: 22px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .alt a {
+            color: var(--accent-dark);
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .alt a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width:600px) {
+            .card {
+                padding: 26px 20px;
+                border-radius: 15px;
+            }
+
+            .card h1 {
+                font-size: 26px;
+            }
+
+            .header-inner {
+                padding: 13px 15px;
+                flex-wrap: wrap;
+            }
+
+            .logo {
+                font-size: 21px;
+            }
+
+            .nav-link {
+                font-size: 11px;
+                padding: 7px 11px;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<header>
-  <div class="header-inner">
-    <a href="index.html" class="logo">The <span>Whacky</span> Rack</a>
-    <div class="header-right">
-      <a href="index.html" class="nav-link">Shop</a>
-      <a href="world.html" class="nav-link">World</a>
-      <a href="history.html" class="nav-link">History</a>
-      <a href="about.html" class="nav-link">About</a>
-    </div>
-  </div>
-</header>
+    <header>
+        <div class="header-inner">
+            <a href="index.html" class="logo">The <span>Whacky</span> Rack</a>
+            <div class="header-right">
+                <a href="index.html" class="nav-link">Shop</a>
+                <a href="world.html" class="nav-link">World</a>
+                <a href="history.html" class="nav-link">History</a>
+                <a href="about.html" class="nav-link">About</a>
+            </div>
+        </div>
+    </header>
 
-<main class="wrap">
-  <div class="card">
-    <h1>Welcome <span>back</span></h1>
-    <p class="sub">Sign in to Yap, Tape, and check your profile.</p>
+    <main class="wrap">
+        <div class="card">
+            <h1>Welcome <span>back</span></h1>
+            <p class="sub">Sign in to Yap, Tape, and check your profile.</p>
 
-    <form id="login-form" novalidate>
-      <label for="email">Email</label>
-      <input id="email" type="email" autocomplete="email" required>
+            <form id="login-form" novalidate>
+                <label for="email">Email</label>
+                <input id="email" type="email" autocomplete="email" required>
 
-      <label for="password">Password</label>
-      <input id="password" type="password" autocomplete="current-password" required>
+                <label for="password">Password</label>
+                <input id="password" type="password" autocomplete="current-password" required>
 
-      <div class="turnstile-wrap">
-        <div id="turnstile-container"></div>
-      </div>
+                <div style="text-align: right; margin-top: 6px; margin-bottom: 12px;">
+                    <a href="reset-password-request.html" style="font-size: 12px; font-weight: 700; color: var(--accent-dark); text-decoration: none;">Forgot password?</a>
+                </div>
 
-      <button type="submit" class="submit-btn" id="submit-btn" disabled>Sign in</button>
-      <div class="status" id="status"></div>
-    </form>
+                <div class="turnstile-wrap">
+                    <div id="turnstile-container"></div>
+                </div>
 
-    <p class="alt">New here? <a href="signup.html">Join the cult</a></p>
-  </div>
-</main>
+                <button type="submit" class="submit-btn" id="submit-btn" disabled>Sign in</button>
+                <div class="status" id="status"></div>
+            </form>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="auth.js"></script>
-<script>
-(function () {
-  const sb = window.wr.sb;
-  const TURNSTILE_SITE_KEY = "0x4AAAAAAE-T6yl4RUNhYl0a";
+            <p class="alt">New here? <a href="signup.html">Join the cult</a></p>
+        </div>
+    </main>
 
-  const form = document.getElementById("login-form");
-  const emailEl = document.getElementById("email");
-  const pwEl = document.getElementById("password");
-  const submitBtn = document.getElementById("submit-btn");
-  const statusEl = document.getElementById("status");
-  const container = document.getElementById("turnstile-container");
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth.js"></script>
+    <script>
+        (function() {
+            const sb = window.wr.sb;
+            const TURNSTILE_SITE_KEY = "0x4AAAAAAE-T6yl4RUNhYl0a";
 
-  let captchaToken = null;
-  let widgetId = null;
+            const form = document.getElementById("login-form");
+            const emailEl = document.getElementById("email");
+            const pwEl = document.getElementById("password");
+            const submitBtn = document.getElementById("submit-btn");
+            const statusEl = document.getElementById("status");
+            const container = document.getElementById("turnstile-container");
 
-  function initTurnstile() {
-    if (typeof turnstile === "undefined") return setTimeout(initTurnstile, 200);
-    widgetId = turnstile.render(container, {
-      sitekey: TURNSTILE_SITE_KEY,
-      callback: (t) => { captchaToken = t; validate(); },
-      "expired-callback": () => { captchaToken = null; validate(); },
-      "error-callback": () => { captchaToken = null; validate(); }
-    });
-  }
-  initTurnstile();
+            let captchaToken = null;
+            let widgetId = null;
 
-  function validate() {
-    const emailOk = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(emailEl.value);
-    const pwOk = pwEl.value.length >= 1;
-    submitBtn.disabled = !(emailOk && pwOk && captchaToken);
-  }
-  [emailEl, pwEl].forEach(el => el.addEventListener("input", validate));
+            function initTurnstile() {
+                if (typeof turnstile === "undefined") return setTimeout(initTurnstile, 200);
+                widgetId = turnstile.render(container, {
+                    sitekey: TURNSTILE_SITE_KEY,
+                    callback: (t) => {
+                        captchaToken = t;
+                        validate();
+                    },
+                    "expired-callback": () => {
+                        captchaToken = null;
+                        validate();
+                    },
+                    "error-callback": () => {
+                        captchaToken = null;
+                        validate();
+                    }
+                });
+            }
+            initTurnstile();
 
-  function status(msg) {
-    statusEl.className = "status show err";
-    statusEl.textContent = msg;
-  }
+            function validate() {
+                const emailOk = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(emailEl.value);
+                const pwOk = pwEl.value.length >= 1;
+                submitBtn.disabled = !(emailOk && pwOk && captchaToken);
+            }
+            [emailEl, pwEl].forEach(el => el.addEventListener("input", validate));
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    if (!captchaToken) { status("Please complete the CAPTCHA."); return; }
+            function status(msg) {
+                statusEl.className = "status show err";
+                statusEl.textContent = msg;
+            }
 
-    submitBtn.disabled = true;
-    submitBtn.textContent = "Signing in…";
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                if (!captchaToken) {
+                    status("Please complete the CAPTCHA.");
+                    return;
+                }
 
-    const { error } = await sb.auth.signInWithPassword({
-      email: emailEl.value.trim(),
-      password: pwEl.value,
-      options: { captchaToken }
-    });
+                submitBtn.disabled = true;
+                submitBtn.textContent = "Signing in…";
 
-    if (error) {
-      status(error.message || "Sign-in failed.");
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Sign in";
-      if (typeof turnstile !== "undefined" && widgetId !== null) {
-        turnstile.reset(widgetId);
-        captchaToken = null;
-      }
-      return;
-    }
+                const {
+                    error
+                } = await sb.auth.signInWithPassword({
+                    email: emailEl.value.trim(),
+                    password: pwEl.value,
+                    options: {
+                        captchaToken
+                    }
+                });
 
-    window.location.href = "profile.html";
-  });
+                if (error) {
+                    status(error.message || "Sign-in failed.");
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Sign in";
+                    if (typeof turnstile !== "undefined" && widgetId !== null) {
+                        turnstile.reset(widgetId);
+                        captchaToken = null;
+                    }
+                    return;
+                }
 
-  // Already signed in? Skip.
-  sb.auth.getSession().then(({ data: { session } }) => {
-    if (session) window.location.href = "profile.html";
-  });
-})();
-</script>
+                window.location.href = "profile.html";
+            });
+
+            // Already signed in? Skip.
+            sb.auth.getSession().then(({
+                data: {
+                    session
+                }
+            }) => {
+                if (session) window.location.href = "profile.html";
+            });
+        })();
+    </script>
 </body>
+
 </html>

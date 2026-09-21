@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moderation — The Whacky Rack</title>
+<style>
+  :root {
+    --bg:#f7f5ef; --card:#fff; --text:#202020; --muted:#777;
+    --accent:#ff5a36; --accent-dark:#e84625;
+    --border:#e8e4dc; --pill:#fff0eb;
+    --shadow:0 8px 25px rgba(0,0,0,.06);
+    --green:#16a34a; --red:#dc2626;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial,Helvetica,sans-serif; background:var(--bg); color:var(--text); }
+  a { color:inherit; text-decoration:none; }
+
+  header { background:#fff; border-bottom:1px solid var(--border); position:sticky; top:0; z-index:1000; }
+  .header-inner { max-width:1250px; margin:auto; padding:16px 22px; display:flex; align-items:center; justify-content:space-between; gap:20px; }
+  .logo { font-size:25px; font-weight:900; letter-spacing:-1px; white-space:nowrap; }
+  .logo span { color:var(--accent); }
+  .header-right { display:flex; align-items:center; gap:12px; }
+  .nav-link { font-size:13px; font-weight:700; padding:8px 14px; border-radius:50px; border:1px solid var(--border); background:#fff; transition:.2s ease; white-space:nowrap; }
+  .nav-link:hover { border-color:#bbb; }
+  .nav-link.active { background:#222; color:#fff; border-color:#222; }
+
+  .wrap { max-width:1100px; margin:auto; padding:28px 22px 70px; }
+
+  .page-head { margin-bottom:22px; }
+  .page-head .kicker { font-size:11px; font-weight:800; letter-spacing:.6px; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+  .page-head h1 { margin:0 0 4px; font-size:32px; letter-spacing:-1px; font-weight:950; }
+  .page-head h1 span { color:var(--accent); }
+  .page-head p { margin:0; color:var(--muted); font-size:14px; }
+
+  .tabs { display:flex; gap:8px; margin-bottom:18px; }
+  .tab-btn {
+    border:1px solid var(--border); background:#fff; padding:11px 18px;
+    border-radius:50px; font-family:inherit; font-weight:800; font-size:13px;
+    cursor:pointer; color:var(--muted); transition:.2s ease;
+  }
+  .tab-btn:hover { border-color:#bbb; color:var(--text); }
+  .tab-btn.active { background:#222; color:#fff; border-color:#222; }
+  .tab-btn .count { display:inline-block; background:var(--pill); color:var(--accent-dark); padding:1px 8px; border-radius:20px; font-size:11px; font-weight:900; margin-left:6px; }
+  .tab-btn.active .count { background:rgba(255,255,255,.2); color:#fff; }
+
+  .card { background:var(--card); border:1px solid var(--border); border-radius:18px; box-shadow:var(--shadow); overflow:hidden; margin-bottom:16px; }
+
+  .rep-row { padding:18px 22px; border-bottom:1px solid var(--border); }
+  .rep-row:last-child { border-bottom:0; }
+  .rep-head { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:10px; }
+  .rep-type { font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:.5px; padding:4px 10px; border-radius:50px; background:#222; color:#fff; }
+  .rep-type.yap { background:#ff5a36; }
+  .rep-type.yap_comment { background:#ffa88d; }
+  .rep-type.tape { background:#7c3aed; }
+  .rep-type.tape_comment { background:#a78bfa; }
+  .rep-type.profile { background:#0284c7; }
+  .rep-time { font-size:11px; color:var(--muted); margin-left:auto; }
+  .rep-preview { font-size:13px; line-height:1.6; color:#333; background:#fafafa; border:1px solid var(--border); border-radius:10px; padding:10px 12px; margin-bottom:10px; white-space:pre-wrap; word-wrap:break-word; max-height:120px; overflow-y:auto; }
+  .rep-preview em { color:var(--muted); font-style:italic; }
+  .rep-meta { font-size:12px; color:var(--muted); line-height:1.6; margin-bottom:10px; }
+  .rep-meta strong { color:#555; font-weight:800; }
+  .rep-reason { font-size:13px; color:#333; line-height:1.55; padding:10px 12px; background:#fff5f0; border-left:3px solid var(--accent); border-radius:6px; margin-bottom:12px; }
+
+  .rep-actions { display:flex; gap:8px; flex-wrap:wrap; }
+  .rep-btn { border:1px solid var(--border); background:#fff; padding:8px 16px; border-radius:50px; font-family:inherit; font-weight:800; font-size:12px; cursor:pointer; color:#444; transition:.2s ease; }
+  .rep-btn:hover:not(:disabled) { border-color:#bbb; }
+  .rep-btn.resolve { background:var(--green); border-color:var(--green); color:#fff; }
+  .rep-btn.resolve:hover:not(:disabled) { background:#15803d; border-color:#15803d; }
+  .rep-btn.dismiss { background:#fff; }
+  .rep-btn.remove { background:var(--red); border-color:var(--red); color:#fff; }
+  .rep-btn.remove:hover:not(:disabled) { background:#b91c1c; border-color:#b91c1c; }
+  .rep-btn:disabled { opacity:.55; cursor:not-allowed; }
+
+  .empty { text-align:center; padding:60px 20px; color:var(--muted); font-size:14px; }
+  .empty .emoji { font-size:42px; margin-bottom:10px; }
+  .empty strong { color:var(--text); display:block; font-size:17px; margin-bottom:6px; }
+
+  .loading { text-align:center; padding:50px 20px; color:var(--muted); font-size:14px; }
+
+  .err-card { background:#fef2f2; border:1px solid #fecaca; color:#991b1b; padding:20px 24px; border-radius:16px; font-size:14px; line-height:1.7; }
+  .err-card h2 { margin:0 0 8px; font-size:20px; }
+  .err-card a { color:#7f1d1d; font-weight:800; text-decoration:underline; }
+
+  .log-row { display:grid; grid-template-columns: 140px 1fr 200px; gap:14px; padding:12px 20px; border-bottom:1px solid var(--border); align-items:center; font-size:12px; }
+  .log-row:last-child { border-bottom:0; }
+  .log-row .who { font-weight:800; color:var(--accent-dark); }
+  .log-row .what { color:#333; }
+  .log-row .when { color:var(--muted); text-align:right; }
+
+  @media (max-width:700px) {
+    .header-inner { padding:13px 15px; flex-wrap:wrap; }
+    .logo { font-size:21px; }
+    .nav-link { font-size:11px; padding:7px 11px; }
+    .wrap { padding:18px 15px 55px; }
+    .page-head h1 { font-size:24px; }
+    .rep-row { padding:14px 16px; }
+    .log-row { grid-template-columns:1fr; gap:4px; padding:12px 16px; }
+    .log-row .when { text-align:left; }
+  }
+
+  .toast-container { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); z-index:99999; display:flex; flex-direction:column; gap:8px; align-items:center; }
+  .toast { padding:12px 20px; border-radius:50px; background:#222; color:#fff; font-size:13px; font-weight:600; box-shadow:0 10px 30px rgba(0,0,0,.25); animation:toastIn .2s ease-out; }
+  .toast.ok { background:var(--green); }
+  .toast.err { background:var(--red); }
+  @keyframes toastIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">The <span>Whacky</span> Rack</a>
+    <div class="header-right">
+      <a href="index.html" class="nav-link">Shop</a>
+      <a href="yap.html" class="nav-link">Yap it!</a>
+      <a href="tape.html" class="nav-link">Tape it!</a>
+      <a href="admin.html" class="nav-link active">Admin</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="root">
+  <div class="loading">Checking access…</div>
+</main>
+
+<div class="toast-container" id="toast-container"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js"></script>
+<script>
+(function () {
+  const sb = window.wr.sb;
+  const root = document.getElementById("root");
+  const toastBox = document.getElementById("toast-container");
+
+  let me = null;
+  let tab = "reports";
+  let reports = [];
+  let logs = [];
+
+  function esc(s) {
+    return String(s ?? "").replace(/[&<>"']/g, c => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    }[c]));
+  }
+  function timeAgo(iso) {
+    const d = new Date(iso);
+    const s = Math.floor((Date.now() - d.getTime()) / 1000);
+    if (s < 60) return "just now";
+    if (s < 3600) return Math.floor(s/60) + "m ago";
+    if (s < 86400) return Math.floor(s/3600) + "h ago";
+    if (s < 604800) return Math.floor(s/86400) + "d ago";
+    return d.toLocaleDateString();
+  }
+  function toast(msg, kind = "ok") {
+    const el = document.createElement("div");
+    el.className = "toast " + kind;
+    el.textContent = msg;
+    toastBox.appendChild(el);
+    setTimeout(() => el.remove(), 2800);
+  }
+
+  function labelTarget(t) {
+    return ({ yap: "Yap", yap_comment: "Yap comment", tape: "Tape", tape_comment: "Tape comment", profile: "Profile" })[t] || t;
+  }
+
+  async function boot() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) {
+      root.innerHTML = `<div class="err-card"><h2>Sign in required</h2><p>You need to be signed in as an admin to access this page.</p><p><a href="login.html">Sign in →</a></p></div>`;
+      return;
+    }
+    const { data: profile } = await sb.from("profiles")
+      .select("id, username, is_admin")
+      .eq("id", session.user.id)
+      .maybeSingle();
+    me = profile;
+
+    if (!me || !me.is_admin) {
+      root.innerHTML = `<div class="err-card"><h2>Admins only</h2><p>This page is only for moderators. If you think you should have access, contact the site owner.</p><p><a href="index.html">← Back home</a></p></div>`;
+      return;
+    }
+
+    await loadReports();
+    render();
+  }
+
+  async function loadReports() {
+    const { data, error } = await sb.rpc("get_pending_reports");
+    if (error) {
+      console.error(error);
+      reports = [];
+      return;
+    }
+    reports = data || [];
+  }
+
+  async function loadLogs() {
+    const { data, error } = await sb.from("moderation_log")
+      .select(`
+        id, action, target_type, target_id, note, created_at,
+        moderator:profiles!moderation_log_moderator_id_fkey(username)
+      `)
+      .order("created_at", { ascending: false })
+      .limit(100);
+    if (error) { console.error(error); logs = []; return; }
+    logs = data || [];
+  }
+
+  function render() {
+    root.innerHTML = `
+      <div class="page-head">
+        <div class="kicker">Signed in as ${esc(me.username)}</div>
+        <h1>Moderation <span>panel</span></h1>
+        <p>Review reports and keep the Rack weird — but not mean.</p>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn ${tab === "reports" ? "active" : ""}" data-tab="reports">
+          🚩 Reports<span class="count">${reports.length}</span>
+        </button>
+        <button class="tab-btn ${tab === "log" ? "active" : ""}" data-tab="log">
+          📜 Moderation log
+        </button>
+      </div>
+
+      <div id="tab-content">
+        ${tab === "reports" ? renderReports() : renderLogs()}
+      </div>
+    `;
+  }
+
+  function renderReports() {
+    if (reports.length === 0) {
+      return `
+        <div class="card">
+          <div class="empty">
+            <div class="emoji">🍃</div>
+            <strong>No pending reports</strong>
+            All quiet on the Rack. Nice.
+          </div>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="card">
+        ${reports.map(r => `
+          <div class="rep-row">
+            <div class="rep-head">
+              <span class="rep-type ${esc(r.target_type)}">${esc(labelTarget(r.target_type))}</span>
+              <span class="rep-time">${esc(timeAgo(r.created_at))}</span>
+            </div>
+
+            <div class="rep-preview">
+              ${r.target_preview ? esc(r.target_preview) : "<em>(no preview available)</em>"}
+            </div>
+
+            <div class="rep-meta">
+              <strong>Reported by:</strong> ${esc(r.reporter_username || "unknown")}
+              &nbsp;·&nbsp;
+              <strong>Author:</strong> ${esc(r.target_author_username || "unknown")}
+            </div>
+
+            <div class="rep-reason">
+              <strong>Reason:</strong> ${esc(r.reason)}
+            </div>
+
+            <div class="rep-actions">
+              <button class="rep-btn dismiss" data-action="dismiss" data-report-id="${esc(r.report_id)}">Dismiss</button>
+              <button class="rep-btn resolve" data-action="resolve" data-report-id="${esc(r.report_id)}">Mark resolved</button>
+              <button class="rep-btn remove" data-action="remove" data-report-id="${esc(r.report_id)}" data-target-type="${esc(r.target_type)}" data-target-id="${esc(r.target_id)}">Remove content</button>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    `;
+  }
+
+  function renderLogs() {
+    if (logs.length === 0) {
+      return `
+        <div class="card">
+          <div class="empty">
+            <div class="emoji">📜</div>
+            <strong>No moderation actions yet</strong>
+            Once you resolve or dismiss reports, they'll appear here.
+          </div>
+        </div>
+      `;
+    }
+    return `
+      <div class="card">
+        ${logs.map(l => `
+          <div class="log-row">
+            <div class="who">${esc(l.moderator?.username || "unknown")}</div>
+            <div class="what">
+              <strong>${esc(l.action)}</strong>
+              ${l.target_type ? `on <em>${esc(labelTarget(l.target_type))}</em>` : ""}
+              ${l.note ? `— ${esc(l.note)}` : ""}
+            </div>
+            <div class="when">${esc(timeAgo(l.created_at))}</div>
+          </div>
+        `).join("")}
+      </div>
+    `;
+  }
+
+  document.addEventListener("click", async (e) => {
+    const tabBtn = e.target.closest(".tab-btn");
+    if (tabBtn) {
+      tab = tabBtn.dataset.tab;
+      if (tab === "log") await loadLogs();
+      render();
+      return;
+    }
+
+    const btn = e.target.closest("[data-action]");
+    if (!btn) return;
+    const action = btn.dataset.action;
+
+    if (action === "dismiss" || action === "resolve") {
+      const note = prompt(
+        action === "dismiss" ? "Optional note (leave blank to just dismiss):" : "Optional note:",
+        ""
+      );
+      if (note === null) return; // cancelled
+      btn.disabled = true;
+      try {
+        const { error } = await sb.rpc("resolve_report", {
+          p_report_id: btn.dataset.reportId,
+          p_action: action === "dismiss" ? "dismissed" : "resolved",
+          p_note: note || null
+        });
+        if (error) throw error;
+        toast(action === "dismiss" ? "Report dismissed." : "Report marked resolved.", "ok");
+        await loadReports();
+        render();
+      } catch (err) {
+        console.error(err);
+        toast(err.message || "Action failed.", "err");
+        btn.disabled = false;
+      }
+      return;
+    }
+
+    if (action === "remove") {
+      if (!confirm("Soft-delete this content? It will show as [deleted] to everyone.")) return;
+      btn.disabled = true;
+      try {
+        const { error: removeErr } = await sb.rpc("admin_remove_content", {
+          p_target_type: btn.dataset.targetType,
+          p_target_id: btn.dataset.targetId
+        });
+        if (removeErr) throw removeErr;
+
+        // Also mark the report resolved so it leaves the queue
+        const reportRow = reports.find(r => r.target_id === btn.dataset.targetId && r.target_type === btn.dataset.targetType);
+        if (reportRow) {
+          await sb.rpc("resolve_report", {
+            p_report_id: reportRow.report_id,
+            p_action: "resolved",
+            p_note: "Content removed by moderator."
+          });
+        }
+        toast("Content removed and report resolved.", "ok");
+        await loadReports();
+        render();
+      } catch (err) {
+        console.error(err);
+        toast(err.message || "Remove failed.", "err");
+        btn.disabled = false;
+      }
+      return;
+    }
+  });
+
+  boot();
+})();
+</script>
+</body>
+</html>

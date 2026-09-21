@@ -697,6 +697,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="auth.js"></script>
+    <script src="report.js"></script>
 
     <script>
         (function () {
@@ -928,11 +929,11 @@
                         <a class="tape-author-name" href="profile.html?id=${esc(author.id || "")}">${esc(author.username || "unknown")}</a>
                         <span class="tape-dot">·</span>
                         <span class="tape-time">${esc(timeAgo(tape.created_at))}</span>
-                        ${isAuthor ? `
+                                                ${isAuthor ? `
                             <div class="tape-actions">
                                 <button class="tape-action-btn danger" type="button" data-action="delete-tape">Delete</button>
                             </div>
-                        ` : ""}
+                        ` : (session ? `<div class="tape-actions">${window.report.link("tape", tape.id, tape.caption || "Tape")}</div>` : "")}
                     </div>
 
                     ${product.id ? `
@@ -1039,10 +1040,11 @@
                             ${textHtml}
                             <div class="comment-foot">
                                 ${canReply ? `<button class="comment-foot-btn" data-action="reply-open" data-comment-id="${esc(node.id)}">Reply</button>` : ""}
-                                ${isAuthor && !node.is_deleted ? `
+                                                               ${isAuthor && !node.is_deleted ? `
                                     <button class="comment-foot-btn" data-action="edit-comment" data-comment-id="${esc(node.id)}">Edit</button>
                                     <button class="comment-foot-btn danger" data-action="delete-comment" data-comment-id="${esc(node.id)}">Delete</button>
                                 ` : ""}
+                                ${session && !isAuthor && !node.is_deleted ? window.report.link("tape_comment", node.id, node.body) : ""}
                             </div>
 
                             <div class="reply-form" id="reply-form-${esc(node.id)}">

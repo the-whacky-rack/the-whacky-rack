@@ -1,266 +1,662 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Profile — The Whacky Rack</title>
-<style>
-  :root {
-    --bg:#f7f5ef; --card:#fff; --text:#202020; --muted:#777;
-    --accent:#ff5a36; --accent-dark:#e84625;
-    --border:#e8e4dc; --pill:#fff0eb;
-    --shadow:0 8px 25px rgba(0,0,0,.06);
-  }
-  * { box-sizing:border-box; }
-  body { margin:0; font-family:Arial,Helvetica,sans-serif; background:var(--bg); color:var(--text); }
-  a { color:inherit; text-decoration:none; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile — The Whacky Rack</title>
+    <style>
+        :root {
+            --bg: #f7f5ef;
+            --card: #fff;
+            --text: #202020;
+            --muted: #777;
+            --accent: #ff5a36;
+            --accent-dark: #e84625;
+            --border: #e8e4dc;
+            --pill: #fff0eb;
+            --shadow: 0 8px 25px rgba(0, 0, 0, .06);
+        }
 
-  header { background:#fff; border-bottom:1px solid var(--border); position:sticky; top:0; z-index:1000; }
-  .header-inner { max-width:1250px; margin:auto; padding:16px 22px; display:flex; align-items:center; justify-content:space-between; gap:20px; }
-  .logo { font-size:25px; font-weight:900; letter-spacing:-1px; white-space:nowrap; }
-  .logo span { color:var(--accent); }
-  .header-right { display:flex; align-items:center; gap:12px; }
-  .nav-link { font-size:13px; font-weight:700; padding:8px 14px; border-radius:50px; border:1px solid var(--border); background:#fff; transition:.2s ease; white-space:nowrap; }
-  .nav-link:hover { border-color:#bbb; }
+        * {
+            box-sizing: border-box;
+        }
 
-  .wrap { max-width:1100px; margin:auto; padding:36px 22px 80px; }
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
 
-  /* Hero */
-  .hero {
-    background:var(--card); border:1px solid var(--border); border-radius:18px;
-    padding:28px 30px; box-shadow:var(--shadow); margin-bottom:24px;
-    display:flex; gap:24px; align-items:center; flex-wrap:wrap;
-  }
-  .hero-avatar {
-    width:96px; height:96px; border-radius:50%;
-    background:var(--pill); border:2px solid var(--accent);
-    display:flex; align-items:center; justify-content:center;
-    font-size:48px; flex-shrink:0;
-  }
-  .hero-info { flex:1; min-width:220px; }
-  .hero-name { margin:0 0 6px; font-size:32px; letter-spacing:-1px; font-weight:950; display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
-  .rank-badge { font-size:12px; font-weight:900; background:#222; color:#fff; padding:4px 12px; border-radius:50px; letter-spacing:.3px; }
-  .hero-meta { color:var(--muted); font-size:13px; margin:0; line-height:1.7; }
-  .hero-meta strong { color:#444; }
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
 
-  /* Grid */
-  .grid { display:grid; grid-template-columns:1fr 1.7fr; gap:24px; }
-  @media (max-width:900px) { .grid { grid-template-columns:1fr; } }
+        header {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
 
-  .card { background:var(--card); border:1px solid var(--border); border-radius:18px; padding:22px 24px; box-shadow:var(--shadow); margin-bottom:20px; }
-  .card-title { margin:0 0 14px; font-size:14px; font-weight:900; text-transform:uppercase; letter-spacing:.5px; color:#555; display:flex; align-items:center; justify-content:space-between; gap:8px; }
-  .card-title .count { font-size:12px; font-weight:700; background:var(--pill); color:var(--accent-dark); padding:3px 10px; border-radius:50px; letter-spacing:0; text-transform:none; }
+        .header-inner {
+            max-width: 1250px;
+            margin: auto;
+            padding: 16px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
 
-  .bio-text { font-size:15px; line-height:1.7; color:#333; margin:0; }
+        .logo {
+            font-size: 25px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            white-space: nowrap;
+        }
 
-  .stat-row { display:flex; gap:10px; }
-  .stat-box { flex:1; background:#fafafa; border:1px solid var(--border); border-radius:12px; padding:12px; text-align:center; }
-  .stat-box .n { font-size:20px; font-weight:900; color:var(--text); }
-  .stat-box .l { font-size:11px; text-transform:uppercase; letter-spacing:.4px; color:var(--muted); margin-top:2px; }
+        .logo span {
+            color: var(--accent);
+        }
 
-  .btn {
-    display:inline-flex; align-items:center; justify-content:center; gap:6px;
-    padding:11px 20px; border-radius:50px; font-family:inherit; font-weight:800; font-size:13px;
-    border:1px solid transparent; cursor:pointer; transition:.2s ease; text-decoration:none;
-  }
-  .btn-primary { background:var(--accent); color:#fff; border-color:var(--accent); }
-  .btn-primary:hover { background:var(--accent-dark); border-color:var(--accent-dark); }
-  .btn-ghost { background:#fff; color:var(--text); border-color:var(--border); }
-  .btn-ghost:hover { border-color:#bbb; }
-  .btn-row { display:flex; gap:10px; flex-wrap:wrap; }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-  /* Visitors */
-  .visitor-row { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px dashed var(--border); font-size:13px; }
-  .visitor-row:last-child { border-bottom:0; }
-  .visitor-avatar { width:30px; height:30px; border-radius:50%; background:var(--pill); color:var(--accent-dark); display:flex; align-items:center; justify-content:center; font-weight:900; font-size:12px; flex-shrink:0; }
-  .visitor-name { font-weight:700; color:var(--text); }
-  .visitor-time { color:var(--muted); font-size:11px; margin-left:auto; white-space:nowrap; }
-  .empty { color:var(--muted); font-size:13px; font-style:italic; padding:8px 0; }
+        .nav-link {
+            font-size: 13px;
+            font-weight: 700;
+            padding: 8px 14px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            background: #fff;
+            transition: .2s ease;
+            white-space: nowrap;
+        }
 
-  /* Tape feed placeholder */
-  .placeholder {
-    background:#fff; border:1px dashed var(--border); border-radius:18px;
-    padding:34px 24px; text-align:center; color:var(--muted);
-  }
-  .placeholder .big { font-size:42px; margin-bottom:8px; }
-  .placeholder h3 { margin:0 0 8px; color:var(--text); font-size:18px; letter-spacing:-.3px; }
-  .placeholder p { margin:0; font-size:13px; line-height:1.6; }
+        .nav-link:hover {
+            border-color: #bbb;
+        }
 
-  .loading { text-align:center; padding:60px 20px; color:var(--muted); font-size:14px; }
-  .error-card { background:#fef2f2; border:1px solid #fecaca; color:#991b1b; padding:16px 20px; border-radius:14px; font-size:14px; }
+        .wrap {
+            max-width: 1100px;
+            margin: auto;
+            padding: 36px 22px 80px;
+        }
 
-  .status { margin-top:10px; font-size:12px; color:var(--muted); }
+        /* Hero */
+        .hero {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 28px 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
 
-  @media (max-width:700px) {
-    .header-inner { padding:13px 15px; flex-wrap:wrap; }
-    .logo { font-size:21px; }
-    .nav-link { font-size:11px; padding:7px 11px; }
-    .wrap { padding:20px 15px 60px; }
-    .hero { padding:22px; }
-    .hero-avatar { width:76px; height:76px; font-size:38px; }
-    .hero-name { font-size:24px; }
-    .card { padding:18px 20px; border-radius:15px; }
-  }
-</style>
+        .hero-avatar {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            background: var(--pill);
+            border: 2px solid var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            flex-shrink: 0;
+        }
+
+        .hero-info {
+            flex: 1;
+            min-width: 220px;
+        }
+
+        .hero-name {
+            margin: 0 0 6px;
+            font-size: 32px;
+            letter-spacing: -1px;
+            font-weight: 950;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .rank-badge {
+            font-size: 12px;
+            font-weight: 900;
+            background: #222;
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 50px;
+            letter-spacing: .3px;
+        }
+
+        .hero-meta {
+            color: var(--muted);
+            font-size: 13px;
+            margin: 0;
+            line-height: 1.7;
+        }
+
+        .hero-meta strong {
+            color: #444;
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1.7fr;
+            gap: 24px;
+        }
+
+        @media (max-width:900px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 22px 24px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            margin: 0 0 14px;
+            font-size: 14px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            color: #555;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .card-title .count {
+            font-size: 12px;
+            font-weight: 700;
+            background: var(--pill);
+            color: var(--accent-dark);
+            padding: 3px 10px;
+            border-radius: 50px;
+            letter-spacing: 0;
+            text-transform: none;
+        }
+
+        .bio-text {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #333;
+            margin: 0;
+        }
+
+        .stat-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .stat-box {
+            flex: 1;
+            background: #fafafa;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .stat-box .n {
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--text);
+        }
+
+        .stat-box .l {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        a.stat-box {
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        a.stat-box:hover {
+            border-color: var(--accent);
+            background: #fff;
+        }
+
+        a.stat-box:hover .n {
+            color: var(--accent-dark);
+        }
+
+        .follows-you-badge {
+            font-size: 10px;
+            font-weight: 800;
+            background: var(--pill);
+            color: var(--accent-dark);
+            padding: 3px 10px;
+            border-radius: 50px;
+            letter-spacing: .3px;
+            align-self: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 11px 20px;
+            border-radius: 50px;
+            font-family: inherit;
+            font-weight: 800;
+            font-size: 13px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: .2s ease;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-dark);
+            border-color: var(--accent-dark);
+        }
+
+        .btn-ghost {
+            background: #fff;
+            color: var(--text);
+            border-color: var(--border);
+        }
+
+        .btn-ghost:hover {
+            border-color: #bbb;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* Visitors */
+        .visitor-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px dashed var(--border);
+            font-size: 13px;
+        }
+
+        .visitor-row:last-child {
+            border-bottom: 0;
+        }
+
+        .visitor-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--pill);
+            color: var(--accent-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .visitor-name {
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .visitor-time {
+            color: var(--muted);
+            font-size: 11px;
+            margin-left: auto;
+            white-space: nowrap;
+        }
+
+        .empty {
+            color: var(--muted);
+            font-size: 13px;
+            font-style: italic;
+            padding: 8px 0;
+        }
+
+        /* Tape feed placeholder */
+        .placeholder {
+            background: #fff;
+            border: 1px dashed var(--border);
+            border-radius: 18px;
+            padding: 34px 24px;
+            text-align: center;
+            color: var(--muted);
+        }
+
+        .placeholder .big {
+            font-size: 42px;
+            margin-bottom: 8px;
+        }
+
+        .placeholder h3 {
+            margin: 0 0 8px;
+            color: var(--text);
+            font-size: 18px;
+            letter-spacing: -.3px;
+        }
+
+        .placeholder p {
+            margin: 0;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .error-card {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            padding: 16px 20px;
+            border-radius: 14px;
+            font-size: 14px;
+        }
+
+        .status {
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        @media (max-width:700px) {
+            .header-inner {
+                padding: 13px 15px;
+                flex-wrap: wrap;
+            }
+
+            .logo {
+                font-size: 21px;
+            }
+
+            .nav-link {
+                font-size: 11px;
+                padding: 7px 11px;
+            }
+
+            .wrap {
+                padding: 20px 15px 60px;
+            }
+
+            .hero {
+                padding: 22px;
+            }
+
+            .hero-avatar {
+                width: 76px;
+                height: 76px;
+                font-size: 38px;
+            }
+
+            .hero-name {
+                font-size: 24px;
+            }
+
+            .card {
+                padding: 18px 20px;
+                border-radius: 15px;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<header>
-  <div class="header-inner">
-    <a href="index.html" class="logo">The <span>Whacky</span> Rack</a>
-    <div class="header-right">
-      <a href="index.html" class="nav-link">Shop</a>
-      <a href="world.html" class="nav-link">World</a>
-      <a href="history.html" class="nav-link">History</a>
-      <a href="about.html" class="nav-link">About</a>
-    </div>
-  </div>
-</header>
+    <header>
+        <div class="header-inner">
+            <a href="index.html" class="logo">The <span>Whacky</span> Rack</a>
+            <div class="header-right">
+                <a href="index.html" class="nav-link">Shop</a>
+                <a href="world.html" class="nav-link">World</a>
+                <a href="history.html" class="nav-link">History</a>
+                <a href="about.html" class="nav-link">About</a>
+            </div>
+        </div>
+    </header>
 
-<main class="wrap" id="profile-root">
-  <div class="loading">Loading profile…</div>
-</main>
+    <main class="wrap" id="profile-root">
+        <div class="loading">Loading profile…</div>
+    </main>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="auth.js"></script>
-<script>
-(function () {
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth.js"></script>
+    <script>
+        (function() {
 
-  const sb = window.wr.sb;
-  const root = document.getElementById("profile-root");
+            const sb = window.wr.sb;
+            const root = document.getElementById("profile-root");
 
-  let session = null;
-  let viewer = null;
-  let profile = null;
-  let isOwnProfile = false;
+            let session = null;
+            let viewer = null;
+            let profile = null;
+            let isOwnProfile = false;
+            let profileFollowsMe = false;
 
-  /* ---------- Utilities ---------- */
-  function esc(s) {
-    return String(s ?? "").replace(/[&<>"']/g, c => ({
-      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-    }[c]));
-  }
-  function initials(name) {
-    const parts = String(name || "?").replace(/[^A-Za-z0-9]/g," ").trim().split(/\s+/);
-    return (parts[0]?.[0] || "?").toUpperCase();
-  }
-  function timeAgo(iso) {
-    const d = new Date(iso);
-    const s = Math.floor((Date.now() - d.getTime()) / 1000);
-    if (s < 60) return "just now";
-    if (s < 3600) return Math.floor(s/60) + "m ago";
-    if (s < 86400) return Math.floor(s/3600) + "h ago";
-    if (s < 604800) return Math.floor(s/86400) + "d ago";
-    return d.toLocaleDateString();
-  }
-  function countryFlag(name) {
-    const map = {
-      "india":"🇮🇳","united states":"🇺🇸","usa":"🇺🇸","united kingdom":"🇬🇧","uk":"🇬🇧",
-      "canada":"🇨🇦","australia":"🇦🇺","germany":"🇩🇪","france":"🇫🇷","japan":"🇯🇵",
-      "brazil":"🇧🇷","south africa":"🇿🇦","nigeria":"🇳🇬","mexico":"🇲🇽","spain":"🇪🇸",
-      "italy":"🇮🇹","netherlands":"🇳🇱","ireland":"🇮🇪","new zealand":"🇳🇿","singapore":"🇸🇬"
-    };
-    return map[String(name || "").toLowerCase()] || "🌍";
-  }
+            /* ---------- Utilities ---------- */
+            function esc(s) {
+                return String(s ?? "").replace(/[&<>"']/g, c => ({
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    '"': "&quot;",
+                    "'": "&#39;"
+                } [c]));
+            }
 
-  /* ---------- Data ---------- */
-  async function fetchMyProfile() {
-    if (!session) return null;
-    const { data } = await sb.from("profiles")
-      .select("id, username, rank, bio, country, gender, age, avatar_url, created_at")
-      .eq("id", session.user.id)
-      .maybeSingle();
-    return data || null;
-  }
+            function initials(name) {
+                const parts = String(name || "?").replace(/[^A-Za-z0-9]/g, " ").trim().split(/\s+/);
+                return (parts[0]?.[0] || "?").toUpperCase();
+            }
 
-  async function fetchProfileById(id) {
-    const { data, error } = await sb.from("profiles")
-      .select("id, username, rank, bio, country, gender, age, avatar_url, created_at")
-      .eq("id", id)
-      .maybeSingle();
-    if (error) throw error;
-    return data;
-  }
+            function timeAgo(iso) {
+                const d = new Date(iso);
+                const s = Math.floor((Date.now() - d.getTime()) / 1000);
+                if (s < 60) return "just now";
+                if (s < 3600) return Math.floor(s / 60) + "m ago";
+                if (s < 86400) return Math.floor(s / 3600) + "h ago";
+                if (s < 604800) return Math.floor(s / 86400) + "d ago";
+                return d.toLocaleDateString();
+            }
 
-  async function fetchFollowerCounts(profileId) {
-    const [{ count: followers }, { count: following }] = await Promise.all([
-      sb.from("follows").select("*", { count: "exact", head: true })
-        .eq("following_id", profileId),
-      sb.from("follows").select("*", { count: "exact", head: true })
-        .eq("follower_id", profileId)
-    ]);
-    return { followers: followers || 0, following: following || 0 };
-  }
+            function countryFlag(name) {
+                const map = {
+                    "india": "🇮🇳",
+                    "united states": "🇺🇸",
+                    "usa": "🇺🇸",
+                    "united kingdom": "🇬🇧",
+                    "uk": "🇬🇧",
+                    "canada": "🇨🇦",
+                    "australia": "🇦🇺",
+                    "germany": "🇩🇪",
+                    "france": "🇫🇷",
+                    "japan": "🇯🇵",
+                    "brazil": "🇧🇷",
+                    "south africa": "🇿🇦",
+                    "nigeria": "🇳🇬",
+                    "mexico": "🇲🇽",
+                    "spain": "🇪🇸",
+                    "italy": "🇮🇹",
+                    "netherlands": "🇳🇱",
+                    "ireland": "🇮🇪",
+                    "new zealand": "🇳🇿",
+                    "singapore": "🇸🇬"
+                };
+                return map[String(name || "").toLowerCase()] || "🌍";
+            }
 
-  async function amIFollowing(profileId) {
-    if (!session) return false;
-    const { data } = await sb.from("follows")
-      .select("follower_id")
-      .eq("follower_id", session.user.id)
-      .eq("following_id", profileId)
-      .maybeSingle();
-    return !!data;
-  }
+            /* ---------- Data ---------- */
+            async function fetchMyProfile() {
+                if (!session) return null;
+                const {
+                    data
+                } = await sb.from("profiles")
+                    .select("id, username, rank, bio, country, gender, age, avatar_url, created_at")
+                    .eq("id", session.user.id)
+                    .maybeSingle();
+                return data || null;
+            }
 
-  async function recordVisit(profileId) {
-    if (!session || profileId === session.user.id) return;
-    await sb.from("profile_visits").insert({
-      profile_id: profileId,
-      visitor_id: session.user.id
-    });
-  }
+            async function fetchProfileById(id) {
+                const {
+                    data,
+                    error
+                } = await sb.from("profiles")
+                    .select("id, username, rank, bio, country, gender, age, avatar_url, created_at")
+                    .eq("id", id)
+                    .maybeSingle();
+                if (error) throw error;
+                return data;
+            }
 
-  async function fetchRecentVisitors(profileId) {
-    const { data } = await sb.from("profile_visits")
-      .select("visitor_id, visited_at")
-      .eq("profile_id", profileId)
-      .order("visited_at", { ascending: false })
-      .limit(50);
-    if (!data || data.length === 0) return [];
+            async function fetchFollowerCounts(profileId) {
+                const [{
+                    count: followers
+                }, {
+                    count: following
+                }] = await Promise.all([
+                    sb.from("follows").select("*", {
+                        count: "exact",
+                        head: true
+                    })
+                    .eq("following_id", profileId),
+                    sb.from("follows").select("*", {
+                        count: "exact",
+                        head: true
+                    })
+                    .eq("follower_id", profileId)
+                ]);
+                return {
+                    followers: followers || 0,
+                    following: following || 0
+                };
+            }
 
-    const byVisitor = new Map();
-    for (const v of data) {
-      const cur = byVisitor.get(v.visitor_id);
-      if (!cur) {
-        byVisitor.set(v.visitor_id, { id: v.visitor_id, count: 1, last: v.visited_at });
-      } else {
-        cur.count += 1;
-        if (v.visited_at > cur.last) cur.last = v.visited_at;
-      }
-    }
-    const grouped = [...byVisitor.values()]
-      .sort((a,b) => (a.last < b.last ? 1 : -1));
+            async function amIFollowing(profileId) {
+                if (!session) return false;
+                const {
+                    data
+                } = await sb.from("follows")
+                    .select("follower_id")
+                    .eq("follower_id", session.user.id)
+                    .eq("following_id", profileId)
+                    .maybeSingle();
+                return !!data;
+            }
 
-    const ids = grouped.map(g => g.id);
-    const { data: users } = await sb.from("profiles")
-      .select("id, username, avatar_url")
-      .in("id", ids);
-    const userMap = new Map((users || []).map(u => [u.id, u]));
+            async function recordVisit(profileId) {
+                if (!session || profileId === session.user.id) return;
+                await sb.rpc("record_profile_visit", {
+                    p_profile_id: profileId
+                });
+            }
 
-    return grouped.map(g => ({
-      id: g.id,
-      username: userMap.get(g.id)?.username || "deleted",
-      count: g.count,
-      last: g.last
-    }));
-  }
+            async function fetchRecentVisitors(profileId) {
+                const {
+                    data
+                } = await sb.from("profile_visits")
+                    .select("visitor_id, visited_at")
+                    .eq("profile_id", profileId)
+                    .order("visited_at", {
+                        ascending: false
+                    })
+                    .limit(50);
+                if (!data || data.length === 0) return [];
 
-  /* ---------- Render ---------- */
-  function renderHero() {
-    const joined = new Date(profile.created_at).toLocaleDateString(undefined, {
-      year: "numeric", month: "short", day: "numeric"
-    });
-    const country = profile.country
-      ? `${countryFlag(profile.country)} ${esc(profile.country)}`
-      : "🌍 Somewhere weird";
+                const byVisitor = new Map();
+                for (const v of data) {
+                    const cur = byVisitor.get(v.visitor_id);
+                    if (!cur) {
+                        byVisitor.set(v.visitor_id, {
+                            id: v.visitor_id,
+                            count: 1,
+                            last: v.visited_at
+                        });
+                    } else {
+                        cur.count += 1;
+                        if (v.visited_at > cur.last) cur.last = v.visited_at;
+                    }
+                }
+                const grouped = [...byVisitor.values()]
+                    .sort((a, b) => (a.last < b.last ? 1 : -1));
 
-    return `
+                const ids = grouped.map(g => g.id);
+                const {
+                    data: users
+                } = await sb.from("profiles")
+                    .select("id, username, avatar_url")
+                    .in("id", ids);
+                const userMap = new Map((users || []).map(u => [u.id, u]));
+
+                return grouped.map(g => ({
+                    id: g.id,
+                    username: userMap.get(g.id)?.username || "deleted",
+                    count: g.count,
+                    last: g.last
+                }));
+            }
+
+            /* ---------- Render ---------- */
+            function renderHero() {
+                const joined = new Date(profile.created_at).toLocaleDateString(undefined, {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric"
+                });
+                const country = profile.country ?
+                    `${countryFlag(profile.country)} ${esc(profile.country)}` :
+                    "🌍 Somewhere weird";
+
+                return `
       <section class="hero">
         <div class="hero-avatar">${esc(profile.avatar_url || "🧙")}</div>
         <div class="hero-info">
-          <h1 class="hero-name">
+                    <h1 class="hero-name">
             ${esc(profile.username)}
             <span class="rank-badge">#${profile.rank}</span>
+            ${profileFollowsMe ? `<span class="follows-you-badge">Follows you</span>` : ""}
           </h1>
           <p class="hero-meta">
             ${country} · joined <strong>${joined}</strong>
@@ -268,33 +664,33 @@
         </div>
       </section>
     `;
-  }
+            }
 
-  function renderSidebar(visitors) {
-    const bio = profile.bio?.trim() || "This user hasn't written a bio yet.";
-    const meta = [];
-    if (profile.gender) meta.push(esc(profile.gender));
-    if (profile.age) meta.push(`${profile.age} y/o`);
-    if (profile.country) meta.push(esc(profile.country));
+            function renderSidebar(visitors) {
+                const bio = profile.bio?.trim() || "This user hasn't written a bio yet.";
+                const meta = [];
+                if (profile.gender) meta.push(esc(profile.gender));
+                if (profile.age) meta.push(`${profile.age} y/o`);
+                if (profile.country) meta.push(esc(profile.country));
 
-    return `
+                return `
       <div class="card">
         <h2 class="card-title">About</h2>
         <p class="bio-text">${esc(bio)}</p>
         ${meta.length ? `<p class="hero-meta" style="margin-top:10px;">${meta.join(" · ")}</p>` : ""}
       </div>
 
-      <div class="card">
+         <div class="card">
         <h2 class="card-title">Stats</h2>
         <div class="stat-row">
-          <div class="stat-box">
+          <a class="stat-box" href="followers.html?id=${esc(profile.id)}">
             <div class="n" id="followers-count">0</div>
             <div class="l">Followers</div>
-          </div>
-          <div class="stat-box">
+          </a>
+          <a class="stat-box" href="followers.html?id=${esc(profile.id)}&tab=following">
             <div class="n" id="following-count">0</div>
             <div class="l">Following</div>
-          </div>
+          </a>
         </div>
       </div>
 
@@ -319,12 +715,12 @@
         </div>
       ` : ""}
     `;
-  }
+            }
 
-  function renderMain(following) {
-    const canFollow = session && !isOwnProfile;
+            function renderMain(following) {
+                const canFollow = session && !isOwnProfile;
 
-    return `
+                return `
       <div class="card">
         <h2 class="card-title">Actions</h2>
         <div class="btn-row">
@@ -346,16 +742,16 @@
         <p>This is where ${esc(profile.username)}'s Tapes will appear. Phase 3 will fill this in.</p>
       </div>
     `;
-  }
+            }
 
-  async function renderAll() {
-    const [counts, following, visitors] = await Promise.all([
-      fetchFollowerCounts(profile.id),
-      amIFollowing(profile.id),
-      isOwnProfile ? fetchRecentVisitors(profile.id) : Promise.resolve([])
-    ]);
+            async function renderAll() {
+                const [counts, following, visitors] = await Promise.all([
+                    fetchFollowerCounts(profile.id),
+                    amIFollowing(profile.id),
+                    isOwnProfile ? fetchRecentVisitors(profile.id) : Promise.resolve([])
+                ]);
 
-    root.innerHTML = `
+                root.innerHTML = `
       ${renderHero()}
       <div class="grid">
         <div>${renderSidebar(visitors)}</div>
@@ -363,72 +759,80 @@
       </div>
     `;
 
-    document.getElementById("followers-count").textContent = counts.followers;
-    document.getElementById("following-count").textContent = counts.following;
+                document.getElementById("followers-count").textContent = counts.followers;
+                document.getElementById("following-count").textContent = counts.following;
 
-    const followBtn = document.getElementById("follow-btn");
-    if (followBtn) followBtn.addEventListener("click", handleFollowToggle);
+                const followBtn = document.getElementById("follow-btn");
+                if (followBtn) followBtn.addEventListener("click", handleFollowToggle);
 
-    const editBtn = document.getElementById("edit-profile-btn");
-    if (editBtn) editBtn.addEventListener("click", handleEditProfile);
-  }
+                const editBtn = document.getElementById("edit-profile-btn");
+                if (editBtn) editBtn.addEventListener("click", handleEditProfile);
+            }
 
-  /* ---------- Actions ---------- */
-  async function handleFollowToggle() {
-    const btn = document.getElementById("follow-btn");
-    const status = document.getElementById("follow-status");
-    if (!btn || !session || isOwnProfile) return;
+            /* ---------- Actions ---------- */
+            async function handleFollowToggle() {
+                const btn = document.getElementById("follow-btn");
+                const status = document.getElementById("follow-status");
+                if (!btn || !session || isOwnProfile) return;
 
-    const isFollowing = btn.dataset.following === "1";
-    btn.disabled = true;
-    status.textContent = "";
+                const isFollowing = btn.dataset.following === "1";
+                btn.disabled = true;
+                status.textContent = "";
 
-    try {
-      if (isFollowing) {
-        const { error } = await sb.from("follows").delete()
-          .eq("follower_id", session.user.id)
-          .eq("following_id", profile.id);
-        if (error) throw error;
-        btn.dataset.following = "0";
-        btn.textContent = "Follow";
-        btn.className = "btn btn-primary";
-      } else {
-        const { error } = await sb.from("follows").insert({
-          follower_id: session.user.id,
-          following_id: profile.id
-        });
-        if (error) throw error;
-        btn.dataset.following = "1";
-        btn.textContent = "Unfollow";
-        btn.className = "btn btn-ghost";
-      }
-      const counts = await fetchFollowerCounts(profile.id);
-      document.getElementById("followers-count").textContent = counts.followers;
-    } catch (e) {
-      console.error(e);
-      status.textContent = "Something went wrong. Try again.";
-    } finally {
-      btn.disabled = false;
-    }
-  }
+                try {
+                    if (isFollowing) {
+                        const {
+                            error
+                        } = await sb.from("follows").delete()
+                            .eq("follower_id", session.user.id)
+                            .eq("following_id", profile.id);
+                        if (error) throw error;
+                        btn.dataset.following = "0";
+                        btn.textContent = "Follow";
+                        btn.className = "btn btn-primary";
+                    } else {
+                        const {
+                            error
+                        } = await sb.from("follows").insert({
+                            follower_id: session.user.id,
+                            following_id: profile.id
+                        });
+                        if (error) throw error;
+                        btn.dataset.following = "1";
+                        btn.textContent = "Unfollow";
+                        btn.className = "btn btn-ghost";
+                    }
+                    const counts = await fetchFollowerCounts(profile.id);
+                    document.getElementById("followers-count").textContent = counts.followers;
+                } catch (e) {
+                    console.error(e);
+                    status.textContent = "Something went wrong. Try again.";
+                } finally {
+                    btn.disabled = false;
+                }
+            }
 
-  function handleEditProfile() {
-    alert("Profile editing comes in a later phase. For now this page shows your live data.");
-  }
+            function handleEditProfile() {
+                alert("Profile editing comes in a later phase. For now this page shows your live data.");
+            }
 
-  /* ---------- Bootstrap ---------- */
-  async function init() {
-    try {
-      const { data: { session: s } } = await sb.auth.getSession();
-      session = s;
-      viewer = await fetchMyProfile();
+            /* ---------- Bootstrap ---------- */
+            async function init() {
+                try {
+                    const {
+                        data: {
+                            session: s
+                        }
+                    } = await sb.auth.getSession();
+                    session = s;
+                    viewer = await fetchMyProfile();
 
-      const params = new URLSearchParams(location.search);
-      const idParam = params.get("id");
-      const targetId = idParam || (session?.user.id ?? null);
+                    const params = new URLSearchParams(location.search);
+                    const idParam = params.get("id");
+                    const targetId = idParam || (session?.user.id ?? null);
 
-      if (!targetId) {
-        root.innerHTML = `
+                    if (!targetId) {
+                        root.innerHTML = `
           <div class="placeholder">
             <div class="big">🔐</div>
             <h3>Sign in to see profiles</h3>
@@ -438,35 +842,45 @@
               <a class="btn btn-ghost" href="login.html" style="margin-left:8px;">Sign in</a>
             </div>
           </div>`;
-        return;
-      }
+                        return;
+                    }
 
-      profile = await fetchProfileById(targetId);
-      if (!profile) {
-        root.innerHTML = `<div class="error-card">This profile doesn't exist or has been deleted.</div>`;
-        return;
-      }
+                    profile = await fetchProfileById(targetId);
+                    if (!profile) {
+                        root.innerHTML = `<div class="error-card">This profile doesn't exist or has been deleted.</div>`;
+                        return;
+                    }
 
-      isOwnProfile = session && session.user.id === profile.id;
+                    isOwnProfile = session && session.user.id === profile.id;
 
-      if (session && !isOwnProfile) {
-        recordVisit(profile.id).catch(() => {});
-      }
+                    if (session && !isOwnProfile) {
+                        recordVisit(profile.id).catch(() => {});
+                        // Does this profile follow me?
+                        const {
+                            data: f
+                        } = await sb.from("follows")
+                            .select("follower_id")
+                            .eq("follower_id", profile.id)
+                            .eq("following_id", session.user.id)
+                            .maybeSingle();
+                        profileFollowsMe = !!f;
+                    }
 
-      await renderAll();
-    } catch (e) {
-      console.error(e);
-      root.innerHTML = `<div class="error-card">Couldn't load this profile. Please try again.</div>`;
-    }
-  }
+                    await renderAll();
+                } catch (e) {
+                    console.error(e);
+                    root.innerHTML = `<div class="error-card">Couldn't load this profile. Please try again.</div>`;
+                }
+            }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
-  } else {
-    init();
-  }
+            if (document.readyState === "loading") {
+                document.addEventListener("DOMContentLoaded", init);
+            } else {
+                init();
+            }
 
-})();
-</script>
+        })();
+    </script>
 </body>
+
 </html>

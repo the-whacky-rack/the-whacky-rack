@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Tape it! — The Whacky Rack</title>
+
+    <meta name="description" content="The Tape it! feed — what the Rack has been taping to their timelines.">
+
+    <style>
+        :root {
+            --bg: #f7f5ef;
+            --card: #ffffff;
+            --text: #202020;
+            --muted: #777;
+            --accent: #ff5a36;
+            --accent-dark: #e84625;
+            --border: #e8e4dc;
+            --pill: #fff0eb;
+            --shadow: 0 8px 25px rgba(0,0,0,.06);
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        /* ---------------- HEADER ---------------- */
+
+        header {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-inner {
+            max-width: 1250px;
+            margin: auto;
+            padding: 16px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .logo { font-size: 25px; font-weight: 900; letter-spacing: -1px; white-space: nowrap; }
+        .logo span { color: var(--accent); }
+
+        .header-right { display: flex; align-items: center; gap: 12px; }
+
+        .nav-link {
+            font-size: 13px;
+            font-weight: 700;
+            padding: 8px 14px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            background: #fff;
+            transition: .2s ease;
+            white-space: nowrap;
+        }
+        .nav-link:hover { border-color: #bbb; }
+        .nav-link.active { background: #222; color: #fff; border-color: #222; }
+
+        /* ---------------- HERO ---------------- */
+
+        .hero { max-width: 900px; margin: auto; padding: 55px 22px 25px; text-align: center; }
+
+        .hero-kicker {
+            display: inline-block;
+            padding: 7px 13px;
+            background: #222;
+            color: #fff;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: clamp(38px, 6vw, 66px);
+            line-height: 1;
+            letter-spacing: -3px;
+            font-weight: 950;
+        }
+        .hero h1 span { color: var(--accent); }
+
+        .hero-description {
+            max-width: 720px;
+            margin: 20px auto 0;
+            color: #555;
+            font-size: 16px;
+            line-height: 1.75;
+        }
+
+        /* ---------------- CONTROLS ---------------- */
+
+        .controls-wrapper { max-width: 720px; margin: 15px auto 25px; padding: 0 22px; }
+
+        .controls {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow);
+            justify-content: center;
+        }
+
+        .feed-tab {
+            border: 1px solid var(--border);
+            background: #fafafa;
+            padding: 9px 18px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: .2s ease;
+            color: #666;
+        }
+        .feed-tab:hover { border-color: #bbb; color: #202020; }
+        .feed-tab.active { background: #222; color: #fff; border-color: #222; }
+
+        /* ---------------- FEED ---------------- */
+
+        .feed-wrapper { max-width: 720px; margin: auto; padding: 0 22px 70px; }
+
+        .results-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            color: var(--muted);
+            font-size: 13px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .tape-list { display: flex; flex-direction: column; gap: 16px; }
+
+        .tape-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 18px 20px;
+            transition: box-shadow .18s ease;
+        }
+        .tape-card:hover { box-shadow: 0 12px 30px rgba(0,0,0,.06); }
+
+        /* Head */
+        .tape-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .tape-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: var(--pill);
+            color: var(--accent-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .tape-author-name {
+            font-weight: 800;
+            font-size: 13px;
+            color: var(--text);
+        }
+        .tape-author-name:hover { color: var(--accent-dark); }
+
+        .tape-dot { color: #ccc; }
+        .tape-time { font-size: 12px; color: var(--muted); }
+
+        .tape-actions {
+            margin-left: auto;
+            display: flex;
+            gap: 8px;
+        }
+
+        .tape-action-btn {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--muted);
+            background: transparent;
+            border: 1px solid var(--border);
+            padding: 5px 11px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: .15s ease;
+        }
+        .tape-action-btn:hover { border-color: #bbb; color: var(--text); }
+        .tape-action-btn.danger:hover { border-color: var(--accent); color: var(--accent-dark); }
+
+        /* Product block */
+        .tape-product {
+            display: flex;
+            gap: 14px;
+            padding: 12px;
+            background: #fafafa;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            margin-bottom: 12px;
+            transition: .15s ease;
+        }
+        .tape-product:hover { background: #f5f2ea; }
+
+        .tape-product img {
+            width: 92px;
+            height: 92px;
+            object-fit: cover;
+            border-radius: 10px;
+            background: #f1eee8;
+            flex-shrink: 0;
+        }
+
+        .tape-product-info {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .tape-product-cat {
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            color: var(--accent-dark);
+            margin-bottom: 4px;
+        }
+
+        .tape-product-name {
+            font-size: 15px;
+            font-weight: 800;
+            line-height: 1.3;
+            color: var(--text);
+            margin: 0;
+        }
+
+        /* Caption */
+        .tape-caption {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #333;
+            margin: 0 0 12px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        /* Reaction bar */
+        .tape-reactions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .reaction-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #fff;
+            border: 1px solid var(--border);
+            padding: 6px 12px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 14px;
+            transition: .15s ease;
+            color: #444;
+            line-height: 1;
+        }
+        .reaction-btn:hover { border-color: #bbb; background: #fafafa; }
+        .reaction-btn.active {
+            background: var(--pill);
+            border-color: var(--accent);
+            color: var(--accent-dark);
+        }
+        .reaction-btn .reaction-count {
+            font-size: 11px;
+            font-weight: 800;
+            color: #555;
+            min-width: 12px;
+            text-align: right;
+        }
+        .reaction-btn.active .reaction-count { color: var(--accent-dark); }
+        .reaction-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+        /* Foot */
+        .tape-foot {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 12px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .tape-comment-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 700;
+            color: var(--accent-dark);
+            padding: 6px 12px;
+            border-radius: 50px;
+            background: #fff;
+            border: 1px solid var(--border);
+            transition: .15s ease;
+        }
+        .tape-comment-link:hover { border-color: var(--accent); background: var(--pill); }
+
+        /* ---------------- EMPTY / LOADING ---------------- */
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--muted);
+            background: #fff;
+            border: 1px dashed var(--border);
+            border-radius: 18px;
+        }
+        .empty-state .emoji { font-size: 42px; margin-bottom: 10px; }
+        .empty-state h2 { margin: 0 0 8px; color: var(--text); font-size: 20px; }
+        .empty-state p { margin: 0 0 18px; font-size: 14px; line-height: 1.6; }
+        .empty-state a {
+            display: inline-block;
+            background: var(--accent);
+            color: #fff;
+            padding: 12px 22px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 13px;
+            transition: .2s ease;
+        }
+        .empty-state a:hover { background: var(--accent-dark); }
+
+        .loading {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        /* ---------------- TOAST ---------------- */
+
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+        .toast {
+            padding: 12px 20px;
+            border-radius: 50px;
+            background: #222;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0,0,0,.25);
+            animation: toastIn .2s ease-out;
+        }
+        .toast.ok { background: #16a34a; }
+        .toast.err { background: #dc2626; }
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ---------------- FOOTER ---------------- */
+
+        footer { background: #222; color: #fff; padding: 40px 22px; text-align: center; margin-top: 40px; }
+        .footer-title { font-size: 22px; font-weight: 900; margin-bottom: 10px; }
+        .footer-title span { color: var(--accent); }
+        footer p { max-width: 650px; margin: auto; color: #bbb; font-size: 12px; line-height: 1.7; }
+
+        .footer-links {
+            margin-top: 22px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px 18px;
+            font-size: 12px;
+        }
+        .footer-links a { color: #bbb; font-weight: 700; transition: .2s ease; }
+        .footer-links a:hover { color: var(--accent); }
+
+        .footer-disclosure { margin-top: 18px; font-size: 11px; color: #888; }
+
+        /* ---------------- MOBILE ---------------- */
+
+        @media (max-width: 700px) {
+            .header-inner { padding: 13px 15px; flex-wrap: wrap; }
+            .logo { font-size: 21px; }
+            .nav-link { font-size: 11px; padding: 7px 11px; }
+
+            .hero { padding: 40px 18px 20px; }
+            .hero h1 { font-size: 44px; letter-spacing: -2px; }
+            .hero-description { font-size: 14px; line-height: 1.65; }
+
+            .controls-wrapper { padding: 0 15px; }
+            .feed-tab { padding: 8px 14px; font-size: 12px; }
+
+            .feed-wrapper { padding: 0 15px 55px; }
+            .tape-card { padding: 15px; border-radius: 15px; }
+            .tape-product { padding: 10px; gap: 10px; }
+            .tape-product img { width: 72px; height: 72px; }
+            .tape-product-name { font-size: 14px; }
+            .tape-caption { font-size: 13px; }
+
+            .reaction-btn { padding: 5px 10px; font-size: 13px; gap: 5px; }
+            .reaction-btn .reaction-count { font-size: 10px; }
+        }
+
+        @media (max-width: 380px) {
+            .hero h1 { font-size: 38px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="header-inner">
+            <a href="index.html" class="logo">The <span>Whacky</span> Rack</a>
+            <div class="header-right">
+                <a href="index.html" class="nav-link">Shop</a>
+                <a href="world.html" class="nav-link">World</a>
+                <a href="history.html" class="nav-link">History</a>
+                <a href="about.html" class="nav-link">About</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-kicker">Tape it!</div>
+        <h1>What the Rack is <span>taping</span></h1>
+        <p class="hero-description">
+            Tapings from the Rack. React with one of six emojis, jump into the thread,
+            and see what everyone's been taping to their timelines.
+        </p>
+    </section>
+
+    <!-- CONTROLS -->
+    <div class="controls-wrapper">
+        <div class="controls">
+            <button class="feed-tab active" data-tab="following">👥 Following</button>
+            <button class="feed-tab" data-tab="everyone">🌍 Everyone</button>
+        </div>
+    </div>
+
+    <!-- FEED -->
+    <main class="feed-wrapper">
+        <div class="results-info">
+            <span id="result-count">Loading...</span>
+            <span>One Tape at a time. 📼</span>
+        </div>
+
+        <div id="tape-list" class="tape-list">
+            <div class="loading">Loading Tapes...</div>
+        </div>
+
+        <div id="empty-state" class="empty-state" hidden>
+            <div class="emoji">📼</div>
+            <h2 id="empty-title">Nothing taped here yet.</h2>
+            <p id="empty-sub">Head to the Shop, find something weird, and hit Tape it!.</p>
+            <a href="index.html">Go to the Shop</a>
+        </div>
+    </main>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <footer>
+        <div class="footer-title">The <span>Whacky</span> Rack</div>
+        <p>
+            We collect weird, wonderful, funny and completely unnecessary products
+            from around the internet. Some links on this site are affiliate links,
+            which means we may earn a commission if you make a purchase through them,
+            at no additional cost to you.
+        </p>
+        <div class="footer-links">
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="cookies.html">Cookie Policy</a>
+            <a href="disclosure.html">Affiliate Disclosure</a>
+        </div>
+        <div class="footer-disclosure">
+            Products and availability may change depending on Amazon.com policies.
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth.js"></script>
+
+    <script>
+        (function () {
+            const sb = window.wr.sb;
+            const REACTIONS = ["👍","👎","🤣","🤬","🎉","💝"];
+            const PAGE_SIZE = 25;
+
+            let session = null;
+            let me = null;
+            let tab = "following";
+            let tapes = [];
+            let myReactions = {};   // { tapeId: emoji }
+
+            const els = {
+                tapeList:    document.getElementById("tape-list"),
+                resultCount: document.getElementById("result-count"),
+                emptyState:  document.getElementById("empty-state"),
+                emptyTitle:  document.getElementById("empty-title"),
+                emptySub:    document.getElementById("empty-sub"),
+                tabs:        document.querySelectorAll(".feed-tab"),
+                toastBox:    document.getElementById("toast-container")
+            };
+
+            /* ---------------- Utils ---------------- */
+            function esc(s) {
+                return String(s ?? "").replace(/[&<>"']/g, c => ({
+                    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+                }[c]));
+            }
+
+            function initials(name) {
+                const p = String(name || "?").replace(/[^A-Za-z0-9]/g, " ").trim().split(/\s+/);
+                return (p[0]?.[0] || "?").toUpperCase();
+            }
+
+            function timeAgo(iso) {
+                const d = new Date(iso);
+                const s = Math.floor((Date.now() - d.getTime()) / 1000);
+                if (s < 60)      return "just now";
+                if (s < 3600)    return Math.floor(s/60) + "m ago";
+                if (s < 86400)   return Math.floor(s/3600) + "h ago";
+                if (s < 604800)  return Math.floor(s/86400) + "d ago";
+                if (s < 2592000) return Math.floor(s/604800) + "w ago";
+                return d.toLocaleDateString();
+            }
+
+            function toast(msg, kind = "ok") {
+                const el = document.createElement("div");
+                el.className = "toast " + kind;
+                el.textContent = msg;
+                els.toastBox.appendChild(el);
+                setTimeout(() => el.remove(), 2800);
+            }
+
+            /* ---------------- Data ---------------- */
+
+            async function loadSession() {
+                const { data: { session: s } } = await sb.auth.getSession();
+                session = s;
+                if (session) {
+                    me = window.wr.getProfile();
+                    if (!me) {
+                        const { data } = await sb.from("profiles")
+                            .select("id, username")
+                            .eq("id", session.user.id)
+                            .maybeSingle();
+                        me = data;
+                    }
+                }
+            }
+
+            async function loadFollowingIds() {
+                if (!session) return [];
+                const { data, error } = await sb.from("follows")
+                    .select("following_id")
+                    .eq("follower_id", session.user.id);
+                if (error) { console.error(error); return []; }
+                return (data || []).map(r => r.following_id);
+            }
+
+            async function loadTapes() {
+                els.tapeList.innerHTML = `<div class="loading">Loading Tapes...</div>`;
+                els.emptyState.hidden = true;
+
+                let query = sb.from("tapes")
+                    .select(`
+                        id, user_id, product_id, caption, reaction_count, comment_count,
+                        created_at,
+                        author:profiles!tapes_user_id_fkey(id, username),
+                        product:products!tapes_product_id_fkey(id, name, image, category, link)
+                    `)
+                    .eq("is_deleted", false)
+                    .order("created_at", { ascending: false })
+                    .limit(PAGE_SIZE);
+
+                if (tab === "following") {
+                    if (!session) {
+                        // Not signed in — show empty state with sign-in prompt
+                        tapes = [];
+                        render();
+                        return;
+                    }
+                    const ids = await loadFollowingIds();
+                    const feedIds = [session.user.id, ...ids];
+                    query = query.in("user_id", feedIds);
+                }
+
+                const { data, error } = await query;
+                if (error) {
+                    console.error(error);
+                    els.tapeList.innerHTML = `<div class="loading">Couldn't load Tapes. Try again.</div>`;
+                    return;
+                }
+                tapes = data || [];
+
+                // Load my reactions on these tapes
+                if (session && tapes.length > 0) {
+                    const ids = tapes.map(t => t.id);
+                    const { data: rRows } = await sb.from("tape_reactions")
+                        .select("tape_id, reaction")
+                        .eq("user_id", session.user.id)
+                        .in("tape_id", ids);
+                    myReactions = {};
+                    (rRows || []).forEach(r => { myReactions[r.tape_id] = r.reaction; });
+                }
+
+                // Load per-reaction breakdown for each tape
+                if (tapes.length > 0) {
+                    const ids = tapes.map(t => t.id);
+                    const { data: allReactions } = await sb.from("tape_reactions")
+                        .select("tape_id, reaction")
+                        .in("tape_id", ids);
+                    const breakdown = {};
+                    (allReactions || []).forEach(r => {
+                        if (!breakdown[r.tape_id]) breakdown[r.tape_id] = {};
+                        breakdown[r.tape_id][r.reaction] = (breakdown[r.tape_id][r.reaction] || 0) + 1;
+                    });
+                    tapes.forEach(t => { t._breakdown = breakdown[t.id] || {}; });
+                }
+
+                render();
+            }
+
+            /* ---------------- Render ---------------- */
+
+            function render() {
+                if (tapes.length === 0) {
+                    els.tapeList.innerHTML = "";
+                    els.emptyState.hidden = false;
+                    if (tab === "following") {
+                        if (!session) {
+                            els.emptyTitle.textContent = "Sign in to see your feed";
+                            els.emptySub.innerHTML = `Your Following feed shows Tapes from you and the people you follow. <a href="login.html">Sign in</a> or tap the <strong>Everyone</strong> tab.`;
+                        } else {
+                            els.emptyTitle.textContent = "Nothing taped here yet";
+                            els.emptySub.innerHTML = `You're not following anyone yet, or no one has taped anything. Head to the Shop to Tape it! or check the <strong>Everyone</strong> tab.`;
+                        }
+                    } else {
+                        els.emptyTitle.textContent = "Nobody has taped anything yet";
+                        els.emptySub.textContent = "Be the first. Head to the Shop and hit Tape it! on something weird.";
+                    }
+                    els.resultCount.textContent = "0 Tapes";
+                    return;
+                }
+                els.emptyState.hidden = true;
+
+                const frag = document.createDocumentFragment();
+                tapes.forEach(t => frag.appendChild(createTapeCard(t)));
+                els.tapeList.innerHTML = "";
+                els.tapeList.appendChild(frag);
+
+                els.resultCount.textContent =
+                    `${tapes.length} Tape${tapes.length === 1 ? "" : "s"}`;
+            }
+
+            function createTapeCard(t) {
+                const card = document.createElement("article");
+                card.className = "tape-card";
+                card.dataset.tapeId = t.id;
+
+                const author = t.author || {};
+                const product = t.product || {};
+                const breakdown = t._breakdown || {};
+                const myReaction = myReactions[t.id] || null;
+                const isAuthor = me && t.user_id === me.id;
+
+                const reactionsHtml = REACTIONS.map(emoji => {
+                    const count = breakdown[emoji] || 0;
+                    const active = myReaction === emoji;
+                    return `
+                        <button class="reaction-btn${active ? " active" : ""}"
+                                type="button"
+                                data-action="react"
+                                data-tape-id="${esc(t.id)}"
+                                data-reaction="${emoji}"
+                                aria-label="React ${emoji}">
+                            <span>${emoji}</span>
+                            <span class="reaction-count">${count || 0}</span>
+                        </button>
+                    `;
+                }).join("");
+
+                card.innerHTML = `
+                    <div class="tape-head">
+                        <a class="tape-avatar" href="profile.html?id=${esc(author.id || "")}" aria-hidden="true">${esc(initials(author.username))}</a>
+                        <a class="tape-author-name" href="profile.html?id=${esc(author.id || "")}">${esc(author.username || "unknown")}</a>
+                        <span class="tape-dot">·</span>
+                        <span class="tape-time">${esc(timeAgo(t.created_at))}</span>
+                        ${isAuthor ? `
+                            <div class="tape-actions">
+                                <button class="tape-action-btn danger" type="button" data-action="delete-tape" data-tape-id="${esc(t.id)}">Delete</button>
+                            </div>
+                        ` : ""}
+                    </div>
+
+                    ${product.id ? `
+                        <a class="tape-product" href="${esc(product.link || "#")}" target="_blank" rel="nofollow sponsored noopener">
+                            <img src="${esc(product.image || "")}" alt="${esc(product.name || "")}" loading="lazy" decoding="async">
+                            <div class="tape-product-info">
+                                <div class="tape-product-cat">${esc(product.category || "")}</div>
+                                <h3 class="tape-product-name">${esc(product.name || "")}</h3>
+                            </div>
+                        </a>
+                    ` : ""}
+
+                    ${t.caption ? `<p class="tape-caption">${esc(t.caption)}</p>` : ""}
+
+                    <div class="tape-reactions">
+                        ${reactionsHtml}
+                    </div>
+
+                    <div class="tape-foot">
+                        <a class="tape-comment-link" href="tape-thread.html?id=${esc(t.id)}">
+                            💬 ${t.comment_count} comment${t.comment_count === 1 ? "" : "s"}
+                        </a>
+                    </div>
+                `;
+
+                return card;
+            }
+
+            /* ---------------- Actions ---------------- */
+
+            async function handleReact(tapeId, reaction) {
+                if (!session) {
+                    toast("Sign in to react.", "err");
+                    setTimeout(() => { window.location.href = "login.html"; }, 900);
+                    return;
+                }
+
+                // Disable reaction buttons on this card while in flight
+                const card = els.tapeList.querySelector(`[data-tape-id="${tapeId}"]`);
+                if (!card) return;
+                card.querySelectorAll(".reaction-btn").forEach(b => b.disabled = true);
+
+                try {
+                    const { error } = await sb.rpc("react_tape", {
+                        p_tape_id: tapeId,
+                        p_reaction: reaction
+                    });
+                    if (error) throw error;
+
+                    // Reload just this tape's reaction data
+                    const { data: tData } = await sb.from("tapes")
+                        .select("reaction_count")
+                        .eq("id", tapeId).maybeSingle();
+
+                    const { data: rRows } = await sb.from("tape_reactions")
+                        .select("reaction")
+                        .eq("tape_id", tapeId);
+
+                    const breakdown = {};
+                    (rRows || []).forEach(r => {
+                        breakdown[r.reaction] = (breakdown[r.reaction] || 0) + 1;
+                    });
+
+                    const mine = (rRows || []).find(r => r.user_id === session.user.id);
+                    // The above won't work since we filtered by tape_id only; refetch properly:
+                    const { data: myRow } = await sb.from("tape_reactions")
+                        .select("reaction")
+                        .eq("tape_id", tapeId)
+                        .eq("user_id", session.user.id)
+                        .maybeSingle();
+                    myReactions[tapeId] = myRow ? myRow.reaction : null;
+
+                    // Update local state
+                    const t = tapes.find(x => x.id === tapeId);
+                    if (t) {
+                        t.reaction_count = tData ? tData.reaction_count : (t.reaction_count || 0);
+                        t._breakdown = breakdown;
+                    }
+
+                    render();
+                } catch (err) {
+                    console.error(err);
+                    toast(err.message || "Reaction failed.", "err");
+                    card.querySelectorAll(".reaction-btn").forEach(b => b.disabled = false);
+                }
+            }
+
+            async function handleDelete(tapeId) {
+                if (!confirm("Delete this Tape? If it has comments, it'll show as [deleted] instead.")) return;
+                try {
+                    const { data, error } = await sb.rpc("delete_tape", { p_tape_id: tapeId });
+                    if (error) throw error;
+                    toast((data?.mode === "soft") ? "Tape marked as deleted." : "Tape deleted.", "ok");
+                    await loadTapes();
+                } catch (err) {
+                    console.error(err);
+                    toast(err.message || "Delete failed.", "err");
+                }
+            }
+
+            /* ---------------- Events ---------------- */
+
+            els.tabs.forEach(t => {
+                t.addEventListener("click", () => {
+                    const next = t.dataset.tab;
+                    if (next === tab) return;
+                    tab = next;
+                    els.tabs.forEach(x => x.classList.toggle("active", x === t));
+                    loadTapes();
+                });
+            });
+
+            document.addEventListener("click", (e) => {
+                const btn = e.target.closest("[data-action]");
+                if (!btn) return;
+                const action = btn.dataset.action;
+                if (action === "react") {
+                    e.preventDefault();
+                    handleReact(btn.dataset.tapeId, btn.dataset.reaction);
+                } else if (action === "delete-tape") {
+                    e.preventDefault();
+                    handleDelete(btn.dataset.tapeId);
+                }
+            });
+
+            /* ---------------- Boot ---------------- */
+
+            async function boot() {
+                await loadSession();
+                // Default tab based on session
+                if (!session) {
+                    tab = "everyone";
+                    els.tabs.forEach(x => x.classList.toggle("active", x.dataset.tab === "everyone"));
+                }
+                await loadTapes();
+            }
+
+            boot();
+
+        })();
+    </script>
+
+</body>
+</html>

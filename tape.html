@@ -524,6 +524,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="auth.js"></script>
+    <script src="report.js"></script>
 
     <script>
         (function () {
@@ -732,11 +733,11 @@
                         <a class="tape-author-name" href="profile.html?id=${esc(author.id || "")}">${esc(author.username || "unknown")}</a>
                         <span class="tape-dot">·</span>
                         <span class="tape-time">${esc(timeAgo(t.created_at))}</span>
-                        ${isAuthor ? `
+                                                ${isAuthor ? `
                             <div class="tape-actions">
                                 <button class="tape-action-btn danger" type="button" data-action="delete-tape" data-tape-id="${esc(t.id)}">Delete</button>
                             </div>
-                        ` : ""}
+                        ` : (session ? `<div class="tape-actions">${window.report.link("tape", t.id, t.caption || "Tape")}</div>` : "")}
                     </div>
 
                     ${product.id ? `

@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Cookie Policy — The Whacky Rack</title>
+
+    <meta name="description" content="Cookie Policy for The Whacky Rack — which cookies we use, which we don't, and how to control them.">
+
+    <style>
+        :root {
+            --bg: #f7f5ef;
+            --card: #ffffff;
+            --text: #202020;
+            --muted: #777;
+            --accent: #ff5a36;
+            --accent-dark: #e84625;
+            --border: #e8e4dc;
+            --pill: #fff0eb;
+            --shadow: 0 8px 25px rgba(0, 0, 0, .06);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* ---------------- HEADER ---------------- */
+
+        header {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-inner {
+            max-width: 1250px;
+            margin: auto;
+            padding: 16px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            white-space: nowrap;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-link {
+            font-size: 13px;
+            font-weight: 700;
+            padding: 8px 14px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            background: #fff;
+            transition: .2s ease;
+            white-space: nowrap;
+        }
+
+        .nav-link:hover {
+            border-color: #bbb;
+        }
+
+        .nav-link.active {
+            background: #222;
+            color: #fff;
+            border-color: #222;
+        }
+
+        .affiliate-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 10px;
+            border-radius: 50px;
+            background: var(--pill);
+            color: var(--accent-dark);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .3px;
+            white-space: nowrap;
+        }
+
+        /* ---------------- HERO ---------------- */
+
+        .hero {
+            max-width: 900px;
+            margin: auto;
+            padding: 65px 22px 25px;
+            text-align: center;
+        }
+
+        .hero-kicker {
+            display: inline-block;
+            padding: 7px 13px;
+            background: #222;
+            color: #fff;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: clamp(38px, 6vw, 62px);
+            line-height: 1;
+            letter-spacing: -3px;
+            font-weight: 950;
+        }
+
+        .hero h1 span {
+            color: var(--accent);
+        }
+
+        .hero-description {
+            max-width: 700px;
+            margin: 22px auto 0;
+            color: #555;
+            font-size: 16px;
+            line-height: 1.75;
+        }
+
+        .hero-description strong {
+            color: #222;
+        }
+
+        .updated-pill {
+            display: inline-block;
+            margin-top: 22px;
+            padding: 6px 12px;
+            border-radius: 50px;
+            background: #fff;
+            border: 1px solid var(--border);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--muted);
+            letter-spacing: .3px;
+        }
+
+        /* ---------------- CONTENT ---------------- */
+
+        .content-wrapper {
+            max-width: 900px;
+            margin: auto;
+            padding: 10px 22px 70px;
+        }
+
+        .notice-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--accent);
+            border-radius: 14px;
+            padding: 22px 24px;
+            margin: 30px 0 40px;
+            box-shadow: var(--shadow);
+        }
+
+        .notice-card h2 {
+            margin: 0 0 10px;
+            font-size: 17px;
+            letter-spacing: -.3px;
+        }
+
+        .notice-card p {
+            margin: 0;
+            color: #444;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .content-section {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 30px 34px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .content-section h2 {
+            margin: 0 0 14px;
+            font-size: 22px;
+            letter-spacing: -.5px;
+            line-height: 1.25;
+        }
+
+        .content-section h2 .num {
+            display: inline-block;
+            min-width: 28px;
+            height: 28px;
+            line-height: 28px;
+            text-align: center;
+            background: var(--pill);
+            color: var(--accent-dark);
+            border-radius: 50%;
+            font-size: 13px;
+            font-weight: 900;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        .content-section h3 {
+            margin: 22px 0 8px;
+            font-size: 15px;
+            letter-spacing: -.2px;
+        }
+
+        .content-section p {
+            margin: 0 0 14px;
+            color: #444;
+            font-size: 15px;
+            line-height: 1.75;
+        }
+
+        .content-section p:last-child {
+            margin-bottom: 0;
+        }
+
+        .content-section ul,
+        .content-section ol {
+            margin: 6px 0 16px;
+            padding-left: 22px;
+            color: #444;
+            font-size: 15px;
+            line-height: 1.75;
+        }
+
+        .content-section li {
+            margin-bottom: 6px;
+        }
+
+        .content-section strong {
+            color: #222;
+        }
+
+        .content-section a.inline-link {
+            color: var(--accent-dark);
+            font-weight: 700;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        .content-section a.inline-link:hover {
+            color: #000;
+        }
+
+        .content-section code {
+            background: #f1eee8;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #7a2b12;
+        }
+
+        .callout {
+            background: var(--pill);
+            border-radius: 12px;
+            padding: 16px 18px;
+            font-size: 14px;
+            color: #7a2b12;
+            line-height: 1.7;
+            margin: 18px 0;
+            border-left: 4px solid var(--accent);
+        }
+
+        .callout strong {
+            color: #5a1e0c;
+        }
+
+        /* ---------------- TABLE (cookie policy only) ---------------- */
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 20px;
+            font-size: 14px;
+        }
+
+        .data-table th,
+        .data-table td {
+            text-align: left;
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+            line-height: 1.55;
+        }
+
+        .data-table th {
+            background: #fafafa;
+            font-weight: 800;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            color: #555;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: 0;
+        }
+
+        /* ---------------- CONTACT CARD ---------------- */
+
+        .contact-card {
+            background: #222;
+            color: #fff;
+            border-radius: 18px;
+            padding: 34px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .contact-card h2 {
+            margin: 0 0 10px;
+            font-size: 22px;
+            letter-spacing: -.5px;
+        }
+
+        .contact-card p {
+            color: #bbb;
+            font-size: 14px;
+            line-height: 1.7;
+            margin: 0 auto 18px;
+            max-width: 520px;
+        }
+
+        .contact-card a.email {
+            display: inline-block;
+            background: var(--accent);
+            color: #fff;
+            padding: 12px 22px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 800;
+            transition: .2s ease;
+        }
+
+        .contact-card a.email:hover {
+            background: var(--accent-dark);
+        }
+
+        /* ---------------- FOOTER ---------------- */
+
+        footer {
+            background: #222;
+            color: #fff;
+            padding: 40px 22px;
+            text-align: center;
+        }
+
+        .footer-title {
+            font-size: 22px;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+
+        .footer-title span {
+            color: var(--accent);
+        }
+
+        footer p {
+            max-width: 650px;
+            margin: auto;
+            color: #bbb;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .footer-links {
+            margin-top: 22px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px 18px;
+            font-size: 12px;
+        }
+
+        .footer-links a {
+            color: #bbb;
+            font-weight: 700;
+            transition: .2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .footer-disclosure {
+            margin-top: 18px;
+            font-size: 11px;
+            color: #888;
+        }
+
+        /* ---------------- MOBILE ---------------- */
+
+        @media (max-width: 700px) {
+
+            .header-inner {
+                padding: 13px 15px;
+                flex-wrap: wrap;
+            }
+
+            .logo {
+                font-size: 21px;
+            }
+
+            .nav-link {
+                font-size: 11px;
+                padding: 7px 11px;
+            }
+
+            .affiliate-pill {
+                font-size: 9px;
+                padding: 5px 8px;
+            }
+
+            .hero {
+                padding: 45px 18px 20px;
+            }
+
+            .hero h1 {
+                font-size: 40px;
+                letter-spacing: -2px;
+            }
+
+            .hero-description {
+                font-size: 14px;
+                line-height: 1.65;
+            }
+
+            .content-wrapper {
+                padding: 5px 15px 55px;
+            }
+
+            .content-section {
+                padding: 22px 20px;
+                border-radius: 15px;
+            }
+
+            .content-section h2 {
+                font-size: 18px;
+            }
+
+            .content-section h2 .num {
+                min-width: 24px;
+                height: 24px;
+                line-height: 24px;
+                font-size: 11px;
+                margin-right: 8px;
+            }
+
+            .content-section p,
+            .content-section ul,
+            .content-section ol {
+                font-size: 14px;
+            }
+
+            .notice-card {
+                padding: 18px 20px;
+            }
+
+            .contact-card {
+                padding: 26px 20px;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 10px 8px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .hero h1 {
+                font-size: 34px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="header-inner">
+            <a href="index.html" class="logo">The <span>Whacky</span> Rack</a>
+            <div class="header-right">
+                <a href="index.html" class="nav-link">Shop</a>
+                <a href="world.html" class="nav-link">World</a>
+                <a href="history.html" class="nav-link">History</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-kicker">The smallest possible footprint</div>
+        <h1>Cookie <span>Policy</span></h1>
+        <p class="hero-description">
+            We keep cookies to an absolute minimum. There are no advertising trackers,
+            no analytics scripts, and no profiling. We set no first-party cookies.
+            The only cookies on this site come from Amazon when you click an affiliate
+            link, and from a social platform if you use the share button.
+        </p>
+        <span class="updated-pill">Last updated: 2026</span>
+    </section>
+
+    <main class="content-wrapper">
+
+        <div class="notice-card">
+            <h2>Plain-English summary</h2>
+            <p>
+                The Whacky Rack itself sets <strong>no cookies</strong>. We do use your
+                browser's <strong>localStorage</strong> to remember which products you've
+                liked — this is not a cookie and is never sent to our servers automatically.
+                When you click an Amazon affiliate link, Amazon sets its own tracking cookie
+                so it can credit a purchase to us. If you use a share button, the platform
+                you choose may set its own cookies. You can clear cookies and localStorage
+                at any time through your browser settings — the site will still work fine.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2><span class="num">1</span>What are cookies?</h2>
+            <p>
+                Cookies are small text files that a website stores on your device. They
+                are widely used to make websites work, remember your preferences, and
+                track how visitors use a site.
+            </p>
+            <p>
+                Related technologies include <strong>local storage</strong>,
+                <strong>session storage</strong>, and <strong>pixels</strong> (also called
+                web beacons). This policy covers all of them collectively as "cookies"
+                for simplicity, though they are technically distinct and are treated
+                separately below where it matters.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2><span class="num">2</span>Cookies we set ourselves</h2>
+            <div class="callout">
+                <strong>No cookies.</strong> The Whacky Rack does not set any first-party
+                cookies, does not install analytics or advertising scripts, and does not
+                run any form of cross-site tracking.
+            </div>
+            <p>
+                We do use your browser's <strong>localStorage</strong> for one
+                user-facing purpose: remembering which products you've liked, and
+                assigning your browser an anonymous identifier so that like counts
+                can be tallied. Unlike cookies, localStorage data is never sent to
+                any server automatically, and it is not used for tracking, advertising,
+                or profiling.
+            </p>
+            <p>
+                There is no cookie consent banner because there is nothing for us to ask
+                consent for on our own behalf. If we ever add analytics or a newsletter,
+                we will update this page and add a consent mechanism where required.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2><span class="num">3</span>Third-party cookies</h2>
+            <p>
+                Third-party cookies may be set on this site in two situations: when you
+                click an Amazon affiliate link, and when you use the share button to
+                share a product on a social platform.
+            </p>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Provider</th>
+                        <th>When it's set</th>
+                        <th>Purpose</th>
+                        <th>Typical duration</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Amazon</strong></td>
+                        <td>When you click an Amazon affiliate link</td>
+                        <td>Tracks the referral so Amazon can attribute a qualifying purchase to The Whacky Rack</td>
+                        <td>Up to 24 hours for most products; up to 90 days if you add an item to your cart</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Social platforms</strong><br>(Twitter/X, Facebook, Pinterest, Reddit, WhatsApp)</td>
+                        <td>Only if you click the share button and land on that platform</td>
+                        <td>Those platforms may set their own cookies to track the shared link, your session, and their ad networks</td>
+                        <td>Governed by each platform's own cookie policy</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                Amazon's use of these cookies is governed by the
+                <a class="inline-link" href="https://www.amazon.com/gp/help/customer/display.html?nodeId=GX7NJQ4ZB8MHFRNJ" target="_blank" rel="noopener noreferrer">Amazon Privacy Notice</a>
+                and the
+                <a class="inline-link" href="https://www.amazon.com/gp/help/customer/display.html?nodeId=468496" target="_blank" rel="noopener noreferrer">Amazon Conditions of Use</a>.
+                For the social platforms, please refer to the cookie and privacy
+                policies of the specific platform you choose to use.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2><span class="num">4</span>Services that do <em>not</em> set cookies</h2>
+            <p>
+                For clarity, the following services and technologies are used by the
+                site but do not place cookies on your device:
+            </p>
+            <ul>
+                <li><strong>Supabase</strong> — used to fetch product and story data, and to store like counts. Since we do not use Supabase authentication, no session cookies are created.</li>
+                <li><strong>localStorage (our like feature)</strong> — we use your browser's localStorage to remember which products you've liked and to assign you an anonymous identifier. This is not a cookie, is not sent to any server automatically, and can be cleared at any time through your browser's site data settings.</li>
+                <li><strong>ImgBB and other image hosts</strong> — serve product images. No cookies are set for anonymous image requests.</li>
+                <li><strong>Our fonts and stylesheets</strong> — served from the same domain as the site.</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2><span class="num">5</span>How to control cookies and localStorage</h2>
+            <p>
+                You have full control over cookies and localStorage through your browser
+                settings. Common options include:
+            </p>
+            <ul>
+                <li>Blocking all third-party cookies.</li>
+                <li>Blocking cookies from specific sites.</li>
+                <li>Deleting existing cookies and clearing localStorage.</li>
+                <li>Browsing in private or incognito mode, which discards both when you close the window.</li>
+            </ul>
+            <p>Here's how to manage cookies in the most common browsers:</p>
+            <ul>
+                <li><a class="inline-link" href="https://support.google.com/chrome/answer/95647" target="_blank" rel="noopener noreferrer">Google Chrome</a></li>
+                <li><a class="inline-link" href="https://support.mozilla.org/en-US/kb/enhanced-tracking-protection-firefox-desktop" target="_blank" rel="noopener noreferrer">Mozilla Firefox</a></li>
+                <li><a class="inline-link" href="https://support.apple.com/guide/safari/manage-cookies-sfri11471/mac" target="_blank" rel="noopener noreferrer">Safari</a></li>
+                <li><a class="inline-link" href="https://support.microsoft.com/en-us/microsoft-edge/delete-cookies-in-microsoft-edge-63947406-40ac-c3b8-57b9-2a946a29ae09" target="_blank" rel="noopener noreferrer">Microsoft Edge</a></li>
+            </ul>
+            <p>
+                Clearing your browser's site data or localStorage will remove the
+                anonymous identifier we use and the record of products you've liked
+                on this device. Your likes will reset to zero the next time you visit.
+            </p>
+            <p>
+                Blocking cookies will not break this site. It may, however, prevent Amazon
+                from attributing a purchase to us if you later buy something — which
+                simply means we don't earn a commission. It does not affect the price you
+                pay.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2><span class="num">6</span>Do Not Track signals</h2>
+            <p>
+                Some browsers send a "Do Not Track" (DNT) signal. Because we do not track
+                users ourselves and do not run analytics, there is nothing for us to
+                disable in response. Amazon's and the social platforms' handling of DNT
+                signals is governed by their own policies.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2><span class="num">7</span>Changes to this policy</h2>
+            <p>
+                We may update this Cookie Policy if we add new features or services that
+                use cookies. When that happens, we will update the "Last updated" date and
+                — where required by law — ask for your consent before setting any new
+                non-essential cookies.
+            </p>
+        </div>
+
+        <div class="contact-card">
+            <h2>Cookie questions?</h2>
+            <p>
+                If anything here is unclear, or if you'd like more detail about a
+                specific cookie, we're happy to help.
+            </p>
+            <a class="email" href="mailto:the.whacky.rack@limbomail.com">the.whacky.rack@limbomail.com</a>
+        </div>
+
+    </main>
+
+    <footer>
+        <div class="footer-title">The <span>Whacky</span> Rack</div>
+        <p>
+            We collect weird, wonderful, funny and completely unnecessary products
+            from around the internet. Some links on this site are affiliate links,
+            which means we may earn a commission if you make a purchase through them,
+            at no additional cost to you.
+        </p>
+        <div class="footer-links">
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="cookies.html">Cookie Policy</a>
+            <a href="disclosure.html">Affiliate Disclosure</a>
+        </div>
+        <div class="footer-disclosure">
+            Products and availability may change depending on Amazon.com policies.
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth.js"></script>
+</body>
+
+</html>

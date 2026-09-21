@@ -1,0 +1,1884 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>The Whacky Rack</title>
+
+    <meta name="description" content="The Whacky Rack — bizarre, funny, wonderfully unnecessary products you'll definitely want.">
+
+    <style>
+        :root {
+            --bg: #f7f5ef;
+            --card: #ffffff;
+            --text: #202020;
+            --muted: #777;
+            --accent: #ff5a36;
+            --accent-dark: #e84625;
+            --border: #e8e4dc;
+            --pill: #fff0eb;
+            --shadow: 0 8px 25px rgba(0, 0, 0, .06);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* ---------------- HEADER ---------------- */
+
+        header {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-inner {
+            max-width: 1250px;
+            margin: auto;
+            padding: 16px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            white-space: nowrap;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-link {
+            font-size: 13px;
+            font-weight: 700;
+            padding: 8px 14px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            background: #fff;
+            transition: .2s ease;
+            white-space: nowrap;
+        }
+
+        .nav-link:hover {
+            border-color: #bbb;
+        }
+
+        .nav-link.active {
+            background: #222;
+            color: #fff;
+            border-color: #222;
+        }
+
+        .affiliate-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 10px;
+            border-radius: 50px;
+            background: var(--pill);
+            color: var(--accent-dark);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .3px;
+            white-space: nowrap;
+        }
+
+        /* ---------------- HERO ---------------- */
+
+        .hero {
+            max-width: 1050px;
+            margin: auto;
+            padding: 65px 22px 35px;
+            text-align: center;
+        }
+
+        .hero-kicker {
+            display: inline-block;
+            padding: 7px 13px;
+            background: #222;
+            color: #fff;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: clamp(42px, 7vw, 78px);
+            line-height: .95;
+            letter-spacing: -4px;
+            font-weight: 950;
+        }
+
+        .hero h1 span {
+            color: var(--accent);
+        }
+
+        .hero-description {
+            max-width: 850px;
+            margin: 25px auto 0;
+            color: #555;
+            font-size: 17px;
+            line-height: 1.75;
+        }
+
+        .hero-description strong {
+            color: #222;
+        }
+
+        /* ---------------- CONTROLS ---------------- */
+
+        .controls-wrapper {
+            max-width: 1250px;
+            margin: 10px auto 35px;
+            padding: 0 22px;
+        }
+
+        .controls {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 15px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            box-shadow: var(--shadow);
+        }
+
+        .search-box {
+            flex: 1;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            height: 46px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0 15px;
+            font-size: 14px;
+            outline: none;
+            background: #fafafa;
+        }
+
+        .search-box input:focus {
+            border-color: var(--accent);
+            background: #fff;
+        }
+
+        select {
+            height: 46px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0 13px;
+            font-size: 14px;
+            background: #fafafa;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .category-bar {
+            max-width: 1250px;
+            margin: 0 auto 30px;
+            padding: 0 22px;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .category-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-btn {
+            border: 1px solid var(--border);
+            background: #fff;
+            padding: 9px 15px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 700;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .category-btn:hover {
+            border-color: #bbb;
+        }
+
+        .category-btn.active {
+            background: #222;
+            color: #fff;
+            border-color: #222;
+        }
+
+        /* ---------------- PRODUCT AREA ---------------- */
+
+        .products-wrapper {
+            max-width: 1250px;
+            margin: auto;
+            padding: 0 22px 70px;
+        }
+
+        .results-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            color: var(--muted);
+            font-size: 13px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .results-info-left {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .affiliate-inline {
+            font-family: "Helvetica Neue", "Segoe UI", -apple-system, BlinkMacSystemFont, "Roboto", Arial, sans-serif;
+            font-weight: 300;
+            font-size: 11px;
+            color: var(--muted);
+            background: transparent;
+            letter-spacing: .2px;
+            line-height: 1.4;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        /* ---------------- PRODUCT CARD ---------------- */
+
+        .product-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, .09);
+        }
+
+        .product-image-wrap {
+            aspect-ratio: 1 / 1;
+            background: #f1eee8;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform .35s ease;
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.04);
+        }
+
+        .product-category {
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            background: rgba(255, 255, 255, .94);
+            padding: 6px 9px;
+            border-radius: 50px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+
+        .product-content {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .product-name {
+            font-size: 16px;
+            line-height: 1.35;
+            font-weight: 800;
+            margin: 0 0 16px;
+            min-height: 44px;
+        }
+
+        .product-button {
+            margin-top: auto;
+            width: 100%;
+            display: block;
+            text-align: center;
+            background: var(--accent);
+            color: #fff;
+            padding: 12px 15px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 800;
+            transition: .2s ease;
+        }
+
+        .product-button:hover {
+            background: var(--accent-dark);
+        }
+
+        /* ---------------- PRODUCT ACTIONS (LIKE + SHARE) ---------------- */
+
+        .product-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            border: 1px solid var(--border);
+            background: #fff;
+            color: #444;
+            padding: 7px 11px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: .2s ease;
+            line-height: 1;
+        }
+
+        .action-btn:hover {
+            border-color: #bbb;
+            background: #fafafa;
+        }
+
+        .action-icon {
+            font-size: 13px;
+            line-height: 1;
+        }
+
+        .like-btn.liked {
+            background: var(--pill);
+            border-color: var(--accent);
+            color: var(--accent-dark);
+        }
+
+        .share-wrap {
+            margin-left: auto;
+        }
+
+        /* ---------------- SHARE MODAL ---------------- */
+
+        .share-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .5);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .share-modal.open {
+            display: flex;
+        }
+
+        .share-modal-inner {
+            background: #fff;
+            border-radius: 20px;
+            padding: 26px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .25);
+            position: relative;
+            animation: modalIn .18s ease-out;
+        }
+
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px) scale(.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .share-modal-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            border: 0;
+            background: #f1eee8;
+            border-radius: 50%;
+            font-size: 20px;
+            line-height: 1;
+            cursor: pointer;
+            color: #555;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: inherit;
+            transition: .2s ease;
+        }
+
+        .share-modal-close:hover {
+            background: #e8e4dc;
+            color: #222;
+        }
+
+        .share-modal-title {
+            margin: 0 0 6px;
+            font-size: 18px;
+            font-weight: 900;
+            letter-spacing: -.3px;
+        }
+
+        .share-modal-product {
+            margin: 0 0 20px;
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .share-modal-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .share-option {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #333;
+            cursor: pointer;
+            transition: .2s ease;
+            background: #fff;
+            font-family: inherit;
+            text-align: left;
+            width: 100%;
+        }
+
+        .share-option:hover {
+            border-color: #bbb;
+            background: #fafafa;
+        }
+
+        .share-option.copied {
+            border-color: var(--accent);
+            background: var(--pill);
+            color: var(--accent-dark);
+        }
+
+        .share-option-icon {
+            font-size: 16px;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .share-option-label {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* ---------------- COMPANION CHARACTER ---------------- */
+
+        .companion {
+            position: fixed;
+            z-index: 900;
+            pointer-events: none;
+            display: none;
+            will-change: transform, opacity;
+        }
+
+        .companion.active {
+            display: block;
+        }
+
+        /* --- Right-to-left mode --- */
+
+        .companion.direction-right_to_left {
+            top: 65px;
+            left: 100%;
+            animation: companion-slide 35s linear forwards;
+        }
+
+        .companion.direction-right_to_left img {
+            display: block;
+            width: 100px;
+            height: auto;
+        }
+
+        @keyframes companion-slide {
+            from {
+                transform: translateX(0);
+            }
+
+            to {
+                transform: translateX(calc(-100vw - 200px));
+            }
+        }
+
+        /* --- Center-appear mode --- */
+
+        .companion.direction-center_appear {
+            top: 65px;
+            left: 50%;
+            transform: translate(-50%, 0);
+            opacity: 0;
+            transition: opacity .6s ease;
+        }
+
+        .companion.direction-center_appear.active {
+            opacity: 1;
+        }
+
+        .companion.direction-center_appear.hiding {
+            opacity: 0;
+        }
+
+        .companion.direction-center_appear img {
+            display: block;
+            width: 100px;
+            height: auto;
+        }
+
+        /* Speech bubble (below the character) */
+
+        .companion-bubble {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(8px);
+            background: #fff;
+            color: #222;
+            padding: 8px 13px;
+            border-radius: 14px;
+            font-size: 12px;
+            font-weight: 400;
+            white-space: nowrap;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, .12);
+            border: 1px solid #222;
+            opacity: 0;
+            transition: opacity .35s ease;
+            pointer-events: none;
+            letter-spacing: -.1px;
+        }
+
+        .companion-bubble::after {
+            content: "";
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 7px solid transparent;
+            border-bottom-color: #222;
+            margin-bottom: -1px;
+        }
+
+        .companion-bubble::before {
+            content: "";
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-bottom-color: #fff;
+            margin-bottom: -2px;
+            z-index: 1;
+        }
+
+        .companion-bubble.show {
+            opacity: 1;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .companion {
+                display: none !important;
+            }
+        }
+
+        /* ---------------- LOAD MORE ---------------- */
+
+        .load-more-wrap {
+            text-align: center;
+            padding-top: 35px;
+        }
+
+        .load-more {
+            border: 0;
+            background: #222;
+            color: #fff;
+            border-radius: 50px;
+            padding: 13px 25px;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .load-more:hover {
+            background: #000;
+        }
+
+        .load-more.hidden {
+            display: none;
+        }
+
+        /* ---------------- EMPTY STATE ---------------- */
+
+        .empty-state {
+            text-align: center;
+            padding: 70px 20px;
+            display: none;
+        }
+
+        .empty-state .emoji {
+            font-size: 45px;
+            margin-bottom: 12px;
+        }
+
+        .empty-state h2 {
+            margin: 0 0 8px;
+        }
+
+        .empty-state p {
+            color: var(--muted);
+            margin: 0;
+        }
+
+        /* ---------------- FOOTER ---------------- */
+
+        footer {
+            background: #222;
+            color: #fff;
+            padding: 40px 22px;
+            text-align: center;
+        }
+
+        .footer-title {
+            font-size: 22px;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+
+        .footer-title span {
+            color: var(--accent);
+        }
+
+        footer p {
+            max-width: 650px;
+            margin: auto;
+            color: #bbb;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .footer-links {
+            margin-top: 22px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px 18px;
+            font-size: 12px;
+        }
+
+        .footer-links a {
+            color: #bbb;
+            font-weight: 700;
+            transition: .2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .footer-disclosure {
+            margin-top: 18px;
+            font-size: 11px;
+            color: #888;
+        }
+
+        /* ---------------- TABLET ---------------- */
+
+        @media (max-width: 1000px) {
+            .product-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        /* ---------------- MOBILE ---------------- */
+
+        @media (max-width: 700px) {
+
+            .header-inner {
+                padding: 13px 15px;
+                flex-wrap: wrap;
+            }
+
+            .logo {
+                font-size: 21px;
+            }
+
+            .nav-link {
+                font-size: 11px;
+                padding: 7px 11px;
+            }
+
+            .hero {
+                padding: 45px 18px 28px;
+            }
+
+            .hero h1 {
+                font-size: 50px;
+                letter-spacing: -2.5px;
+            }
+
+            .hero-description {
+                font-size: 15px;
+                line-height: 1.65;
+            }
+
+            .controls-wrapper {
+                padding: 0 15px;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+                border-radius: 15px;
+            }
+
+            .category-bar {
+                padding: 0 15px;
+                margin-bottom: 25px;
+            }
+
+            .products-wrapper {
+                padding: 0 15px 55px;
+            }
+
+            .results-info {
+                font-size: 11px;
+            }
+
+            .affiliate-inline {
+                font-size: 10px;
+            }
+
+            .product-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 12px;
+            }
+
+            .product-content {
+                padding: 12px;
+            }
+
+            .product-name {
+                font-size: 14px;
+                min-height: 38px;
+                margin-bottom: 12px;
+            }
+
+            .product-button {
+                padding: 10px 8px;
+                font-size: 11px;
+            }
+
+            .product-category {
+                font-size: 8px;
+                padding: 5px 7px;
+            }
+
+            .product-actions {
+                gap: 6px;
+                margin-top: 10px;
+                padding-top: 10px;
+            }
+
+            .action-btn {
+                padding: 6px 9px;
+                font-size: 11px;
+                gap: 4px;
+            }
+
+            .action-icon {
+                font-size: 12px;
+            }
+
+            .share-modal-inner {
+                padding: 22px 20px;
+                max-width: 360px;
+            }
+
+            .share-modal-options {
+                gap: 8px;
+            }
+
+            .share-option {
+                padding: 10px 11px;
+                font-size: 12px;
+                gap: 7px;
+            }
+
+            .share-option-icon {
+                font-size: 14px;
+            }
+
+            .companion.direction-right_to_left {
+                top: 120px;
+            }
+
+            .companion.direction-right_to_left img {
+                width: 70px;
+            }
+
+            .companion.direction-center_appear {
+                top: 120px;
+            }
+
+            .companion.direction-center_appear img {
+                width: 70px;
+            }
+
+            .companion-bubble {
+                font-size: 10px;
+                padding: 6px 10px;
+                border-radius: 12px;
+            }
+
+            .companion-bubble::after {
+                border-width: 6px;
+            }
+
+            .companion-bubble::before {
+                border-width: 5px;
+            }
+        }
+
+        @media (max-width: 380px) {
+
+            .product-grid {
+                gap: 9px;
+            }
+
+            .hero h1 {
+                font-size: 43px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+
+    <header>
+        <div class="header-inner">
+
+            <a href="index.html" class="logo">
+                The <span>Whacky</span> Rack
+            </a>
+
+            <div class="header-right">
+                <a href="index.html" class="nav-link active">Shop</a>
+                <a href="world.html" class="nav-link">World</a>
+                <a href="history.html" class="nav-link">History</a>
+                <a href="about.html" class="nav-link">About</a>
+            </div>
+
+        </div>
+    </header>
+
+
+    <!-- ================= SEARCH / SORT ================= -->
+
+    <div class="controls-wrapper">
+
+        <div class="controls">
+
+            <div class="search-box">
+                <input type="search" id="searchInput" placeholder="Search the rack..." aria-label="Search products">
+            </div>
+
+            <select id="sortSelect" aria-label="Sort products">
+                <option value="default">Sort: Featured</option>
+                <option value="popular">Most liked</option>
+                <option value="az">Name: A–Z</option>
+                <option value="za">Name: Z–A</option>
+                <option value="category">Category</option>
+            </select>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= CATEGORY FILTER ================= -->
+
+    <div class="category-bar" id="categoryBar">
+        <!-- Categories generated automatically -->
+    </div>
+
+
+    <!-- ================= PRODUCTS ================= -->
+
+    <main class="products-wrapper">
+
+        <div class="results-info">
+
+            <span class="results-info-left">
+                <span id="resultCount">Loading...</span>
+                <span class="affiliate-inline">[🛒 Affiliate Disclosure: This page contains affiliate links.]</span>
+            </span>
+
+            <span>More weirdness coming soon 🤪</span>
+
+        </div>
+
+        <div class="product-grid" id="productGrid">
+            <!-- Products generated by JavaScript -->
+        </div>
+
+        <div class="empty-state" id="emptyState">
+            <div class="emoji">🤔</div>
+            <h2>Nothing wacky found.</h2>
+            <p>Try another search or category.</p>
+        </div>
+
+        <div class="load-more-wrap">
+            <button class="load-more" id="loadMore">
+                Load More Weirdness
+            </button>
+        </div>
+
+    </main>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        <div class="footer-title">
+            The <span>Whacky</span> Rack
+        </div>
+
+        <p>
+            We collect weird, wonderful, funny and completely unnecessary products
+            from around the internet. Some links on this site are affiliate links,
+            which means we may earn a commission if you make a purchase through them,
+            at no additional cost to you.
+        </p>
+
+        <div class="footer-links">
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="cookies.html">Cookie Policy</a>
+            <a href="disclosure.html">Affiliate Disclosure</a>
+        </div>
+
+        <div class="footer-disclosure">
+            Products and availability may change depending on Amazon.com policies.<br>
+            GIF Animations by Google via Iconscout.
+        </div>
+
+    </footer>
+
+
+    <!-- ================= SHARE MODAL ================= -->
+
+    <div class="share-modal" id="shareModal" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="share-modal-inner">
+            <button class="share-modal-close" type="button" id="shareModalClose" aria-label="Close">×</button>
+            <h3 class="share-modal-title">Share this find</h3>
+            <p class="share-modal-product" id="shareProductName"></p>
+            <div class="share-modal-options" id="shareOptions"></div>
+        </div>
+    </div>
+
+
+    <!-- ================= COMPANION CHARACTER ================= -->
+
+    <div class="companion" id="companion" aria-hidden="true"></div>
+
+
+    <!-- ================= SUPABASE CLIENT ================= -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js"></script>
+    <script>
+        /* ==========================================================
+   SUPABASE CONFIGURATION
+   ========================================================== */
+        const TABLE_NAME = "products";
+        const LIKES_TABLE = "product_likes";
+        const CHARACTERS_TABLE = "whacky_characters";
+
+        const supabaseClient = window.wr.sb;
+
+
+        /* ==========================================================
+           STATE
+           ========================================================== */
+
+        let products = [];
+        let likeCounts = {};
+        let userLikes = new Set();
+
+        const ITEMS_PER_LOAD = 8;
+
+        let currentCategory = "All";
+        let currentSearch = "";
+        let currentSort = "default";
+        let visibleCount = ITEMS_PER_LOAD;
+
+        const CLIENT_ID_KEY = "whackyrack_client_id";
+        const USER_LIKES_KEY = "whackyrack_user_likes";
+
+
+        /* ==========================================================
+           ELEMENTS
+           ========================================================== */
+
+        const productGrid = document.getElementById("productGrid");
+        const categoryBar = document.getElementById("categoryBar");
+        const searchInput = document.getElementById("searchInput");
+        const sortSelect = document.getElementById("sortSelect");
+        const loadMoreButton = document.getElementById("loadMore");
+        const resultCount = document.getElementById("resultCount");
+        const emptyState = document.getElementById("emptyState");
+
+        const shareModal = document.getElementById("shareModal");
+        const shareModalClose = document.getElementById("shareModalClose");
+        const shareProductName = document.getElementById("shareProductName");
+        const shareOptions = document.getElementById("shareOptions");
+
+
+        /* ==========================================================
+           UTILITY: Fisher-Yates shuffle (in place)
+           ========================================================== */
+
+        function shuffleArray(arr) {
+
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+
+            return arr;
+        }
+
+
+        /* ==========================================================
+           CLIENT ID + USER LIKES (localStorage)
+           ========================================================== */
+
+        function getClientId() {
+            let id = localStorage.getItem(CLIENT_ID_KEY);
+            if (!id) {
+                id = (window.crypto && crypto.randomUUID) ?
+                    crypto.randomUUID() :
+                    "client-" + Date.now() + "-" + Math.random().toString(36).slice(2);
+                localStorage.setItem(CLIENT_ID_KEY, id);
+            }
+            return id;
+        }
+
+        function loadUserLikes() {
+            try {
+                const raw = localStorage.getItem(USER_LIKES_KEY);
+                const arr = raw ? JSON.parse(raw) : [];
+                userLikes = new Set(arr.map(String));
+            } catch (e) {
+                userLikes = new Set();
+            }
+        }
+
+        function saveUserLikes() {
+            localStorage.setItem(USER_LIKES_KEY, JSON.stringify([...userLikes]));
+        }
+
+
+        /* ==========================================================
+           LOAD PRODUCTS + LIKES FROM SUPABASE
+           ========================================================== */
+
+        async function loadProductsFromSupabase() {
+
+            resultCount.textContent = "Loading...";
+            emptyState.style.display = "none";
+
+            const {
+                data,
+                error
+            } = await supabaseClient
+                .from(TABLE_NAME)
+                .select("*");
+
+            if (error) {
+
+                console.error("Supabase error:", error);
+
+                resultCount.textContent = "Failed to load products.";
+                emptyState.style.display = "block";
+                emptyState.querySelector("h2").textContent = "Could not load products.";
+                emptyState.querySelector("p").textContent = "Please check your Supabase configuration.";
+
+                return;
+            }
+
+            products = data || [];
+
+            /* Randomize order for the default "Featured" view.
+               Each page load produces a new shuffle, so different
+               visitors (and repeat visits) see a different mix. */
+
+            shuffleArray(products);
+
+            const {
+                data: likesData,
+                error: likesError
+            } = await supabaseClient
+                .from(LIKES_TABLE)
+                .select("product_id");
+
+            if (likesError) {
+                console.error("Likes error:", likesError);
+            } else {
+                likeCounts = {};
+                (likesData || []).forEach(row => {
+                    const key = row.product_id;
+                    likeCounts[key] = (likeCounts[key] || 0) + 1;
+                });
+            }
+
+            createCategories();
+            renderProducts();
+        }
+
+
+        /* ==========================================================
+           CATEGORY FILTERS
+           ========================================================== */
+
+        function createCategories() {
+
+            const categories = [
+                "All",
+                ...new Set(products.map(product => product.category))
+            ];
+
+            categoryBar.innerHTML = "";
+
+            categories.forEach(category => {
+
+                const button = document.createElement("button");
+
+                button.className = "category-btn";
+
+                if (category === currentCategory) {
+                    button.classList.add("active");
+                }
+
+                button.textContent = category;
+
+                button.addEventListener("click", () => {
+
+                    currentCategory = category;
+                    visibleCount = ITEMS_PER_LOAD;
+
+                    createCategories();
+                    renderProducts();
+
+                });
+
+                categoryBar.appendChild(button);
+
+            });
+        }
+
+
+        /* ==========================================================
+           FILTER + SORT
+           ========================================================== */
+
+        function getFilteredProducts() {
+
+            let filtered = products.filter(product => {
+
+                const matchesCategory =
+                    currentCategory === "All" ||
+                    product.category === currentCategory;
+
+                const searchText =
+                    `${product.name} ${product.category}`.toLowerCase();
+
+                const matchesSearch =
+                    searchText.includes(currentSearch.toLowerCase());
+
+                return matchesCategory && matchesSearch;
+
+            });
+
+
+            if (currentSort === "az") {
+
+                filtered.sort((a, b) => a.name.localeCompare(b.name));
+
+            } else if (currentSort === "za") {
+
+                filtered.sort((a, b) => b.name.localeCompare(a.name));
+
+            } else if (currentSort === "category") {
+
+                filtered.sort((a, b) => a.category.localeCompare(b.category));
+
+            } else if (currentSort === "popular") {
+
+                filtered.sort((a, b) => {
+                    const ca = likeCounts[a.id] || 0;
+                    const cb = likeCounts[b.id] || 0;
+                    return cb - ca;
+                });
+
+            }
+
+            /* "default" falls through with no sort — the array is
+               already shuffled, so it stays in random order. */
+
+            return filtered;
+        }
+
+
+        /* ==========================================================
+           PRODUCT CARD
+           ========================================================== */
+
+        function createProductCard(product) {
+
+            const card = document.createElement("article");
+
+            card.className = "product-card";
+
+            const isLiked = userLikes.has(String(product.id));
+            const count = likeCounts[product.id] || 0;
+            const heartIcon = isLiked ? "❤️" : "🤍";
+
+            card.innerHTML = `
+
+        <a
+            href="${product.link}"
+            target="_blank"
+            rel="nofollow sponsored noopener"
+            aria-label="View ${escapeHTML(product.name)}"
+        >
+
+            <div class="product-image-wrap">
+
+                <img
+                    class="product-image"
+                    src="${product.image}"
+                    alt="${escapeHTML(product.name)}"
+                    loading="lazy"
+                    decoding="async"
+                >
+
+                <span class="product-category">
+                    ${escapeHTML(product.category)}
+                </span>
+
+            </div>
+
+        </a>
+
+        <div class="product-content">
+
+            <h2 class="product-name">
+                ${escapeHTML(product.name)}
+            </h2>
+
+            <a
+                class="product-button"
+                href="${product.link}"
+                target="_blank"
+                rel="nofollow sponsored noopener"
+            >
+                Check It Out →
+            </a>
+
+            <div class="product-actions">
+
+                <button
+                    class="action-btn like-btn${isLiked ? " liked" : ""}"
+                    type="button"
+                    aria-label="Like this product"
+                >
+                    <span class="action-icon">${heartIcon}</span>
+                    <span class="like-count">${count}</span>
+                </button>
+
+                <div class="share-wrap">
+                    <button
+                        class="action-btn share-btn"
+                        type="button"
+                        aria-label="Share this product"
+                    >
+                        <span class="action-icon">↗</span>
+                        <span>Share</span>
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+    `;
+
+            const likeBtn = card.querySelector(".like-btn");
+            likeBtn.addEventListener("click", () => handleLike(product, likeBtn));
+
+            const shareBtn = card.querySelector(".share-btn");
+            shareBtn.addEventListener("click", () => openShareModal(product));
+
+            return card;
+        }
+
+
+        /* ==========================================================
+           LIKE HANDLER
+           ========================================================== */
+
+        async function handleLike(product, btn) {
+
+            const productIdStr = String(product.id);
+            const isLiked = userLikes.has(productIdStr);
+
+            const iconEl = btn.querySelector(".action-icon");
+            const countEl = btn.querySelector(".like-count");
+            const currentCount = parseInt(countEl.textContent, 10) || 0;
+
+            if (isLiked) {
+
+                /* -------- UNLIKE -------- */
+
+                userLikes.delete(productIdStr);
+                saveUserLikes();
+                btn.classList.remove("liked");
+                iconEl.textContent = "🤍";
+                countEl.textContent = Math.max(0, currentCount - 1);
+                likeCounts[product.id] = Math.max(0, currentCount - 1);
+
+                const {
+                    error
+                } = await supabaseClient
+                    .from(LIKES_TABLE)
+                    .delete()
+                    .eq("product_id", product.id)
+                    .eq("client_id", getClientId());
+
+                if (error) {
+
+                    userLikes.add(productIdStr);
+                    saveUserLikes();
+                    btn.classList.add("liked");
+                    iconEl.textContent = "❤️";
+                    countEl.textContent = currentCount;
+                    likeCounts[product.id] = currentCount;
+                    console.error("Unlike failed:", error);
+                }
+
+            } else {
+
+                /* -------- LIKE -------- */
+
+                userLikes.add(productIdStr);
+                saveUserLikes();
+                btn.classList.add("liked");
+                iconEl.textContent = "❤️";
+                countEl.textContent = currentCount + 1;
+                likeCounts[product.id] = currentCount + 1;
+
+                const {
+                    error
+                } = await supabaseClient
+                    .from(LIKES_TABLE)
+                    .insert({
+                        product_id: product.id,
+                        client_id: getClientId()
+                    });
+
+                if (error && error.code !== "23505") {
+
+                    userLikes.delete(productIdStr);
+                    saveUserLikes();
+                    btn.classList.remove("liked");
+                    iconEl.textContent = "🤍";
+                    countEl.textContent = currentCount;
+                    likeCounts[product.id] = currentCount;
+                    console.error("Like failed:", error);
+                }
+            }
+        }
+
+
+        /* ==========================================================
+           SHARE MODAL
+           ========================================================== */
+
+        function openShareModal(product) {
+
+            shareProductName.textContent = product.name;
+
+            const url = product.link;
+            const text = `Check out "${product.name}" on The Whacky Rack 🛒`;
+            const image = product.image || "";
+
+            shareOptions.innerHTML = "";
+
+            const platforms = [
+
+                {
+                    key: "twitter",
+                    label: "Twitter / X",
+                    icon: "𝕏",
+                    href: `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`
+                },
+
+                {
+                    key: "facebook",
+                    label: "Facebook",
+                    icon: "f",
+                    href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`
+                },
+
+                {
+                    key: "pinterest",
+                    label: "Pinterest",
+                    icon: "P",
+                    href: `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(url)}&media=${encodeURIComponent(image)}&description=${encodeURIComponent(text)}`
+                },
+
+                {
+                    key: "reddit",
+                    label: "Reddit",
+                    icon: "👽",
+                    href: `https://www.reddit.com/submit?url=${encodeURIComponent(url)}&title=${encodeURIComponent(text)}`
+                },
+
+                {
+                    key: "whatsapp",
+                    label: "WhatsApp",
+                    icon: "💬",
+                    href: `https://wa.me/?text=${encodeURIComponent(text + " " + url)}`
+                },
+
+                {
+                    key: "copy",
+                    label: "Copy link",
+                    icon: "🔗",
+                    href: null
+                }
+
+            ];
+
+            platforms.forEach(platform => {
+
+                const el = document.createElement(platform.href ? "a" : "button");
+
+                el.className = "share-option";
+
+                if (platform.href) {
+                    el.href = platform.href;
+                    el.target = "_blank";
+                    el.rel = "noopener noreferrer";
+                } else {
+                    el.type = "button";
+                }
+
+                el.innerHTML = `
+            <span class="share-option-icon">${platform.icon}</span>
+            <span class="share-option-label">${platform.label}</span>
+        `;
+
+                if (platform.key === "copy") {
+
+                    el.addEventListener("click", async () => {
+
+                        const labelEl = el.querySelector(".share-option-label");
+                        const iconEl = el.querySelector(".share-option-icon");
+
+                        let copied = false;
+
+                        try {
+                            await navigator.clipboard.writeText(url);
+                            copied = true;
+                        } catch (err) {
+
+                            const ta = document.createElement("textarea");
+
+                            ta.value = url;
+                            ta.setAttribute("readonly", "");
+                            ta.style.position = "absolute";
+                            ta.style.left = "-9999px";
+
+                            document.body.appendChild(ta);
+                            ta.select();
+
+                            try {
+                                copied = document.execCommand("copy");
+                            } catch (e) {
+                                copied = false;
+                            }
+
+                            document.body.removeChild(ta);
+                        }
+
+                        if (copied) {
+                            el.classList.add("copied");
+                            labelEl.textContent = "Copied!";
+                            iconEl.textContent = "✓";
+                            setTimeout(() => {
+                                el.classList.remove("copied");
+                                labelEl.textContent = "Copy link";
+                                iconEl.textContent = "🔗";
+                            }, 1800);
+                        } else {
+                            labelEl.textContent = "Copy failed";
+                            setTimeout(() => {
+                                labelEl.textContent = "Copy link";
+                            }, 1800);
+                        }
+
+                    });
+
+                } else {
+
+                    el.addEventListener("click", () => {
+                        setTimeout(closeShareModal, 150);
+                    });
+
+                }
+
+                shareOptions.appendChild(el);
+
+            });
+
+            shareModal.classList.add("open");
+            shareModal.setAttribute("aria-hidden", "false");
+        }
+
+
+        function closeShareModal() {
+            shareModal.classList.remove("open");
+            shareModal.setAttribute("aria-hidden", "true");
+        }
+
+
+        shareModalClose.addEventListener("click", closeShareModal);
+
+        shareModal.addEventListener("click", (e) => {
+            if (e.target === shareModal) closeShareModal();
+        });
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && shareModal.classList.contains("open")) {
+                closeShareModal();
+            }
+        });
+
+
+        /* ==========================================================
+           COMPANION CHARACTERS (random, from Supabase)
+           ========================================================== */
+
+        async function initCompanion() {
+
+            /* Respect reduced-motion preferences */
+
+            if (window.matchMedia &&
+                window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+                return;
+            }
+
+            const {
+                data,
+                error
+            } = await supabaseClient
+                .from(CHARACTERS_TABLE)
+                .select("*")
+                .eq("active", true);
+
+            if (error) {
+                console.error("Companion fetch error:", error);
+                return;
+            }
+
+            if (!data || data.length === 0) {
+                return;
+            }
+
+            /* Pick a random character */
+
+            const character = data[Math.floor(Math.random() * data.length)];
+
+            /* Fire after 20 seconds on the page */
+
+            setTimeout(() => playCompanion(character), 20000);
+
+        }
+
+
+        function playCompanion(character) {
+
+            const container = document.getElementById("companion");
+
+            if (!container) return;
+
+            /* Build the character + bubble */
+
+            container.innerHTML = `
+                <div class="companion-bubble" id="companionBubble">
+                    ${escapeHTML(character.dialog)}
+                </div>
+                <img
+                    src="${escapeHTML(character.gif_url)}"
+                    alt="${escapeHTML(character.name)}"
+                >
+            `;
+
+            /* Apply direction class + activate in one mutation */
+
+            const direction = character.direction === "center_appear" ?
+                "center_appear" :
+                "right_to_left";
+
+            container.className =
+                `companion direction-${direction} active`;
+
+            const bubble = document.getElementById("companionBubble");
+
+            if (!bubble) return;
+
+            /* -------- Right-to-left: hop across the header -------- */
+
+            if (direction === "right_to_left") {
+
+                /* Bubble appears 5s in, hides 10s later */
+
+                setTimeout(() => {
+
+                    bubble.classList.add("show");
+
+                    setTimeout(() => {
+                        bubble.classList.remove("show");
+                    }, 10000);
+
+                }, 5000);
+
+            }
+
+            /* -------- Center-appear: pop in, then vanish -------- */
+            else {
+
+                setTimeout(() => bubble.classList.add("show"), 300);
+
+                /* Whole thing fades out after 8s, then cleans up */
+
+                setTimeout(() => {
+
+                    container.classList.add("hiding");
+
+                    setTimeout(() => {
+                        container.classList.remove("active", "hiding");
+                        container.className = "companion";
+                        container.innerHTML = "";
+                    }, 700);
+
+                }, 8000);
+
+            }
+
+        }
+
+
+        /* ==========================================================
+           RENDER PRODUCTS
+           ========================================================== */
+
+        function renderProducts() {
+
+            const filtered = getFilteredProducts();
+
+            productGrid.innerHTML = "";
+
+            const productsToShow = filtered.slice(0, visibleCount);
+
+            productsToShow.forEach(product => {
+                productGrid.appendChild(createProductCard(product));
+            });
+
+
+            if (filtered.length === 0) {
+
+                resultCount.textContent = "0 products";
+                emptyState.style.display = "block";
+
+            } else {
+
+                resultCount.textContent =
+                    `${filtered.length} ${filtered.length === 1 ? "product" : "products"}`;
+
+                emptyState.style.display = "none";
+
+            }
+
+
+            if (visibleCount >= filtered.length) {
+                loadMoreButton.classList.add("hidden");
+            } else {
+                loadMoreButton.classList.remove("hidden");
+            }
+
+        }
+
+
+        /* ==========================================================
+           SEARCH
+           ========================================================== */
+
+        searchInput.addEventListener("input", function() {
+
+            currentSearch = this.value.trim();
+            visibleCount = ITEMS_PER_LOAD;
+
+            renderProducts();
+
+        });
+
+
+        /* ==========================================================
+           SORT
+           ========================================================== */
+
+        sortSelect.addEventListener("change", function() {
+
+            currentSort = this.value;
+            visibleCount = ITEMS_PER_LOAD;
+
+            /* Every time the user selects "Featured" again,
+               reshuffle so they get a fresh mix instead of the
+               previous random order. */
+
+            if (currentSort === "default") {
+                shuffleArray(products);
+            }
+
+            renderProducts();
+
+        });
+
+
+        /* ==========================================================
+           LOAD MORE
+           ========================================================== */
+
+        loadMoreButton.addEventListener("click", function() {
+
+            visibleCount += ITEMS_PER_LOAD;
+
+            renderProducts();
+
+        });
+
+
+        /* ==========================================================
+           BASIC HTML ESCAPING
+           ========================================================== */
+
+        function escapeHTML(value) {
+
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+
+        }
+
+
+        /* ==========================================================
+           INITIALIZE
+           ========================================================== */
+
+        loadUserLikes();
+        loadProductsFromSupabase();
+        initCompanion();
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>About Us — The Whacky Rack</title>
+
+    <meta name="description" content="About The Whacky Rack — a cult for people who love weird things, run by three friends who've never met and one mystery partner.">
+
+    <style>
+        :root {
+            --bg: #f7f5ef;
+            --card: #ffffff;
+            --text: #202020;
+            --muted: #777;
+            --accent: #ff5a36;
+            --accent-dark: #e84625;
+            --border: #e8e4dc;
+            --pill: #fff0eb;
+            --shadow: 0 8px 25px rgba(0, 0, 0, .06);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* ---------------- HEADER ---------------- */
+
+        header {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-inner {
+            max-width: 1250px;
+            margin: auto;
+            padding: 16px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            white-space: nowrap;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-link {
+            font-size: 13px;
+            font-weight: 700;
+            padding: 8px 14px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            background: #fff;
+            transition: .2s ease;
+            white-space: nowrap;
+        }
+
+        .nav-link:hover {
+            border-color: #bbb;
+        }
+
+        .nav-link.active {
+            background: #222;
+            color: #fff;
+            border-color: #222;
+        }
+
+        /* ---------------- HERO ---------------- */
+
+        .hero {
+            max-width: 900px;
+            margin: auto;
+            padding: 65px 22px 25px;
+            text-align: center;
+        }
+
+        .hero-kicker {
+            display: inline-block;
+            padding: 7px 13px;
+            background: #222;
+            color: #fff;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: clamp(38px, 6vw, 62px);
+            line-height: 1;
+            letter-spacing: -3px;
+            font-weight: 950;
+        }
+
+        .hero h1 span {
+            color: var(--accent);
+        }
+
+        .hero-description {
+            max-width: 700px;
+            margin: 22px auto 0;
+            color: #555;
+            font-size: 16px;
+            line-height: 1.75;
+        }
+
+        .hero-description strong {
+            color: #222;
+        }
+
+        /* ---------------- CONTENT ---------------- */
+
+        .content-wrapper {
+            max-width: 900px;
+            margin: auto;
+            padding: 10px 22px 70px;
+        }
+
+        .notice-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--accent);
+            border-radius: 14px;
+            padding: 22px 24px;
+            margin: 30px 0 40px;
+            box-shadow: var(--shadow);
+        }
+
+        .notice-card h2 {
+            margin: 0 0 10px;
+            font-size: 17px;
+            letter-spacing: -.3px;
+        }
+
+        .notice-card p {
+            margin: 0;
+            color: #444;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .content-section {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 30px 34px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .content-section h2 {
+            margin: 0 0 14px;
+            font-size: 22px;
+            letter-spacing: -.5px;
+            line-height: 1.25;
+        }
+
+        .content-section h2 .num {
+            display: inline-block;
+            min-width: 28px;
+            height: 28px;
+            line-height: 28px;
+            text-align: center;
+            background: var(--pill);
+            color: var(--accent-dark);
+            border-radius: 50%;
+            font-size: 13px;
+            font-weight: 900;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        .content-section h3 {
+            margin: 22px 0 8px;
+            font-size: 15px;
+            letter-spacing: -.2px;
+        }
+
+        .content-section p {
+            margin: 0 0 14px;
+            color: #444;
+            font-size: 15px;
+            line-height: 1.75;
+        }
+
+        .content-section p:last-child {
+            margin-bottom: 0;
+        }
+
+        .content-section ul,
+        .content-section ol {
+            margin: 6px 0 16px;
+            padding-left: 22px;
+            color: #444;
+            font-size: 15px;
+            line-height: 1.75;
+        }
+
+        .content-section li {
+            margin-bottom: 6px;
+        }
+
+        .content-section strong {
+            color: #222;
+        }
+
+        .content-section em {
+            color: #555;
+        }
+
+        .callout {
+            background: var(--pill);
+            border-radius: 12px;
+            padding: 16px 18px;
+            font-size: 14px;
+            color: #7a2b12;
+            line-height: 1.7;
+            margin: 18px 0;
+            border-left: 4px solid var(--accent);
+        }
+
+        .callout strong {
+            color: #5a1e0c;
+        }
+
+        /* ---------------- FOUNDER CARDS ---------------- */
+
+        .founders-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .founder-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .founder-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, .09);
+        }
+
+        .founder-card.mystery {
+            background: #fafafa;
+            border-style: dashed;
+        }
+
+        .founder-emoji {
+            font-size: 42px;
+            line-height: 1;
+            margin-bottom: 14px;
+        }
+
+        .founder-name {
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: -.5px;
+            margin: 0 0 6px;
+        }
+
+        .founder-title {
+            display: inline-block;
+            background: var(--pill);
+            color: var(--accent-dark);
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            margin-bottom: 16px;
+            align-self: flex-start;
+        }
+
+        .founder-quote {
+            font-style: italic;
+            color: #444;
+            font-size: 14px;
+            line-height: 1.7;
+            margin: 0 0 14px;
+            padding-left: 14px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .founder-quote .attribution {
+            display: block;
+            font-style: normal;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--muted);
+            margin-top: 6px;
+            letter-spacing: .3px;
+        }
+
+        .founder-role {
+            color: #555;
+            font-size: 13px;
+            line-height: 1.6;
+            margin: 0 0 12px;
+        }
+
+        .founder-filed {
+            margin-top: auto;
+            padding-top: 12px;
+            border-top: 1px dashed var(--border);
+            font-size: 11px;
+            color: var(--muted);
+            letter-spacing: .3px;
+        }
+
+        .founder-filed strong {
+            color: #555;
+            font-weight: 700;
+        }
+
+        /* ---------------- CONTACT CARD ---------------- */
+
+        .contact-card {
+            background: #222;
+            color: #fff;
+            border-radius: 18px;
+            padding: 34px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .contact-card h2 {
+            margin: 0 0 10px;
+            font-size: 22px;
+            letter-spacing: -.5px;
+        }
+
+        .contact-card p {
+            color: #bbb;
+            font-size: 14px;
+            line-height: 1.7;
+            margin: 0 auto 18px;
+            max-width: 520px;
+        }
+
+        .contact-card a.email {
+            display: inline-block;
+            background: var(--accent);
+            color: #fff;
+            padding: 12px 22px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 800;
+            transition: .2s ease;
+        }
+
+        .contact-card a.email:hover {
+            background: var(--accent-dark);
+        }
+
+        /* ---------------- FOOTER ---------------- */
+
+        footer {
+            background: #222;
+            color: #fff;
+            padding: 40px 22px;
+            text-align: center;
+        }
+
+        .footer-title {
+            font-size: 22px;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+
+        .footer-title span {
+            color: var(--accent);
+        }
+
+        footer p {
+            max-width: 650px;
+            margin: auto;
+            color: #bbb;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .footer-links {
+            margin-top: 22px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px 18px;
+            font-size: 12px;
+        }
+
+        .footer-links a {
+            color: #bbb;
+            font-weight: 700;
+            transition: .2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .footer-disclosure {
+            margin-top: 18px;
+            font-size: 11px;
+            color: #888;
+        }
+
+        /* ---------------- MOBILE ---------------- */
+
+        @media (max-width: 700px) {
+
+            .header-inner {
+                padding: 13px 15px;
+                flex-wrap: wrap;
+            }
+
+            .logo {
+                font-size: 21px;
+            }
+
+            .nav-link {
+                font-size: 11px;
+                padding: 7px 11px;
+            }
+
+            .hero {
+                padding: 45px 18px 20px;
+            }
+
+            .hero h1 {
+                font-size: 40px;
+                letter-spacing: -2px;
+            }
+
+            .hero-description {
+                font-size: 14px;
+                line-height: 1.65;
+            }
+
+            .content-wrapper {
+                padding: 5px 15px 55px;
+            }
+
+            .content-section {
+                padding: 22px 20px;
+                border-radius: 15px;
+            }
+
+            .content-section h2 {
+                font-size: 18px;
+            }
+
+            .content-section h2 .num {
+                min-width: 24px;
+                height: 24px;
+                line-height: 24px;
+                font-size: 11px;
+                margin-right: 8px;
+            }
+
+            .content-section p,
+            .content-section ul,
+            .content-section ol {
+                font-size: 14px;
+            }
+
+            .notice-card {
+                padding: 18px 20px;
+            }
+
+            .contact-card {
+                padding: 26px 20px;
+            }
+
+            .founders-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+
+            .founder-card {
+                padding: 20px;
+                border-radius: 15px;
+            }
+
+            .founder-emoji {
+                font-size: 36px;
+                margin-bottom: 12px;
+            }
+
+            .founder-name {
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .hero h1 {
+                font-size: 34px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+
+    <header>
+        <div class="header-inner">
+
+            <a href="index.html" class="logo">
+                The <span>Whacky</span> Rack
+            </a>
+
+            <div class="header-right">
+                <a href="index.html" class="nav-link">Shop</a>
+                <a href="world.html" class="nav-link">World</a>
+                <a href="history.html" class="nav-link">History</a>
+                <a href="about.html" class="nav-link active">About</a>
+            </div>
+
+        </div>
+    </header>
+
+
+    <!-- ================= HERO ================= -->
+
+    <section class="hero">
+        <div class="hero-kicker">A cult, but the fun kind</div>
+        <h1>About <span>Us</span></h1>
+        <p class="hero-description">
+            We started as a group chat. We became a cult. We're now a website.
+            Nobody is more surprised about this than us.
+        </p>
+    </section>
+
+
+    <!-- ================= CONTENT ================= -->
+
+    <main class="content-wrapper">
+
+        <div class="notice-card">
+            <h2>The short version</h2>
+            <p>
+                The Whacky Rack is run by four co-owners. Three of them call themselves
+                <strong>The Three Musketeers</strong> and have been best friends since 2018,
+                despite never having met in person. The fourth, <strong>D'Artagnan</strong>,
+                is a sleeping partner whose actual role remains a mystery even to us.
+            </p>
+        </div>
+
+
+        <!-- How it started -->
+        <div class="content-section">
+            <h2><span class="num">1</span>How it started</h2>
+            <p>
+                We started as a cult. Not the kind with robes and a compound — though
+                we're open to it if the Wi-Fi's good — but the kind that gathers at 2 AM
+                to send each other links to inflatable dinosaur costumes and say
+                "look at this" with no further context.
+            </p>
+            <p>
+                The idea was simple: collect the weirdest things the internet has to
+                offer, put them in one place, and let people scroll through them the way
+                our ancestors scrolled through cave walls looking for meaning. Same
+                energy. Better lighting.
+            </p>
+            <p>
+                We had no business plan. We had no budget. We had one group chat, three
+                people who'd never met in person, and an unreasonable number of opinions
+                about whether a hot dog toaster was "peak innovation" or "a war crime."
+            </p>
+            <p>
+                Reader, we built the site.
+            </p>
+        </div>
+
+
+        <!-- The cult -->
+        <div class="content-section">
+            <h2><span class="num">2</span>The cult</h2>
+            <p>
+                We are, technically, a cult. Not a scary one. A cult the way a book club
+                is a cult, if the book club spent its evenings ranking novelty socks and
+                arguing about whether a raccoon-shaped nightlight counts as "essential
+                home décor."
+            </p>
+
+            <div class="callout">
+                <strong>Anyone can join.</strong> Anyone can browse. Anyone can forward a
+                link to a friend with the caption "you need this" and then pretend it
+                wasn't them.
+            </div>
+
+            <p>
+                But if you're going to call yourself a <em>member</em> — a real member —
+                we have three rules:
+            </p>
+
+            <ol>
+                <li>You must have, at some point, laughed alone at a product description.</li>
+                <li>You must have sent someone a link to a screaming goat at an inappropriate hour.</li>
+                <li>You must accept, deep in your bones, that you do not <em>need</em> any of this. You will want all of it.</li>
+            </ol>
+
+            <p>
+                If that's you, welcome home. If that's not you yet, give it a week.
+            </p>
+        </div>
+
+
+        <!-- The Three Musketeers -->
+        <div class="content-section">
+            <h2><span class="num">3</span>The Three Musketeers (and one mystery)</h2>
+            <p>
+                The Whacky Rack is run by four co-owners. Three of them call themselves
+                <strong>The Three Musketeers</strong>, because none of them thought of a
+                better name in time and now it's load-bearing.
+            </p>
+            <p>
+                They are <strong>Aramis</strong>, <strong>Athos</strong>, and
+                <strong>Porthos</strong> — friends since 2018, inseparable ever since, and
+                yet none of them have ever met in person. Not once. Not even for a coffee.
+                It turns out you don't need to be in the same country to build a deep,
+                unshakeable friendship based entirely on sending each other increasingly
+                weird Amazon listings.
+            </p>
+            <p>
+                Then there's <strong>D'Artagnan</strong>.
+            </p>
+            <p>
+                We don't know much about D'Artagnan. We know he exists. We know he's a
+                sleeping partner. We know that if you ask three people at The Whacky Rack
+                what D'Artagnan does, you get three different answers, none of which are
+                correct.
+            </p>
+            <p>
+                That's the whole bio. We're as confused as you are.
+            </p>
+        </div>
+
+
+        <!-- Founder cards -->
+        <div class="content-section">
+            <h2><span class="num">4</span>Meet the crew</h2>
+            <p>
+                Four founders. Two halves of a description each. Zero in-person meetings.
+                Here's what we know.
+            </p>
+
+            <div class="founders-grid">
+
+                <div class="founder-card">
+                    <div class="founder-emoji">🔬</div>
+                    <h3 class="founder-name">Aramis</h3>
+                    <span class="founder-title">The Scientist</span>
+                    <p class="founder-quote">
+                        "Our Scientist. The only guy I know who looks at a menu and
+                        accidentally calculates the thermodynamic efficiency of the kitchen."
+                        <span class="attribution">— Porthos</span>
+                    </p>
+                    <p class="founder-role">
+                        The one who conceptualised the whole thing. Systems thinker,
+                        sends technical observations at 3 AM, has strong opinions about
+                        fonts, would explain entropy at a birthday party if you let him.
+                    </p>
+                    <div class="founder-filed">
+                        <strong>Filed under:</strong> Would survive the apocalypse using spreadsheets
+                    </div>
+                </div>
+
+                <div class="founder-card">
+                    <div class="founder-emoji">🏍️</div>
+                    <h3 class="founder-name">Athos</h3>
+                    <span class="founder-title">The Apocalypse</span>
+                    <p class="founder-quote">
+                        "Bro looks like he's ready for the apocalypse and surviving the
+                        nuclear winter, but only if it involves a highway chase and a
+                        leather vest."
+                        <span class="attribution">— Porthos</span>
+                    </p>
+                    <p class="founder-role">
+                        Aesthetic department. Resident chaos agent. Would walk out of a
+                        burning building looking better than when he walked in. Probably
+                        owns more than one leather jacket. We've never asked.
+                    </p>
+                    <div class="founder-filed">
+                        <strong>Filed under:</strong> Would survive the end of the world, would complain about the parking
+                    </div>
+                </div>
+
+                <div class="founder-card">
+                    <div class="founder-emoji">⚔️</div>
+                    <h3 class="founder-name">Porthos</h3>
+                    <span class="founder-title">Warrior Princess of Wzkaban</span>
+                    <p class="founder-quote">
+                        "The favorite musketeer of the other two, the warrior princess of
+                        Wzkaban. Mysterious yet funny, she and her fur babies are always
+                        up for an action!"
+                        <span class="attribution">— Aramis</span>
+                    </p>
+                    <p class="founder-role">
+                        The favorite (this is per Aramis, so take it with a grain of salt).
+                        Handles the fur babies, the chaos, and the important things. If
+                        you've ever wondered who actually runs this site — it's her.
+                    </p>
+                    <div class="founder-filed">
+                        <strong>Filed under:</strong> The only one who knows what's going on
+                    </div>
+                </div>
+
+                <div class="founder-card mystery">
+                    <div class="founder-emoji">🕵️</div>
+                    <h3 class="founder-name">D'Artagnan</h3>
+                    <span class="founder-title">The Sleeping Partner</span>
+                    <p class="founder-quote">
+                        "Who?"
+                        <span class="attribution">— Everyone</span>
+                    </p>
+                    <p class="founder-role">
+                        Sleeping partner. Present in spirit. Possibly a myth. Possibly a
+                        cat. Possibly three cats in a trench coat. Rumours are unconfirmed
+                        and, frankly, we've stopped investigating.
+                    </p>
+                    <div class="founder-filed">
+                        <strong>Filed under:</strong> Legacy mystery, will be explained in season 2
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- What we actually do -->
+        <div class="content-section">
+            <h2><span class="num">5</span>What we actually do</h2>
+            <p>
+                Three things, loosely:
+            </p>
+            <ul>
+                <li><strong>Find weird products</strong> — the kind you don't need but immediately want, from inflatable hot dog costumes to novelty candles.</li>
+                <li><strong>Collect world oddities</strong> — real festivals, strange laws, and traditions from every corner of the globe that nobody can quite explain.</li>
+                <li><strong>Dig up weird history</strong> — true stories from the past that sound completely invented but aren't.</li>
+            </ul>
+            <p>
+                We're not a shop. We're not a media company. We're three friends and one
+                mystery partner who decided to build something for people who also think
+                "who even thought of this?" is the highest form of compliment.
+            </p>
+        </div>
+
+
+        <!-- Contact -->
+        <div class="contact-card">
+            <h2>Come in. Sit down. Scroll.</h2>
+            <p>
+                You don't need any of this. You never did. But here you are, and we're
+                glad. If you've found something truly weird and want to share it, we'd
+                love to see it.
+            </p>
+            <a class="email" href="mailto:the.whacky.rack@limbomail.com">the.whacky.rack@limbomail.com</a>
+        </div>
+
+    </main>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        <div class="footer-title">
+            The <span>Whacky</span> Rack
+        </div>
+
+        <p>
+            We collect weird, wonderful, funny and completely unnecessary products
+            from around the internet. Some links on this site are affiliate links,
+            which means we may earn a commission if you make a purchase through them,
+            at no additional cost to you.
+        </p>
+
+        <div class="footer-links">
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="cookies.html">Cookie Policy</a>
+            <a href="disclosure.html">Affiliate Disclosure</a>
+        </div>
+
+        <div class="footer-disclosure">
+            Products and availability may change depending on Amazon.com policies.
+        </div>
+
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth.js"></script>
+</body>
+
+</html>

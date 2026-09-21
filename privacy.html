@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Privacy Policy — The Whacky Rack</title>
+
+    <meta name="description" content="Privacy Policy for The Whacky Rack — what data we collect, what we don't, and how we handle your information.">
+
+    <style>
+        :root {
+            --bg: #f7f5ef;
+            --card: #ffffff;
+            --text: #202020;
+            --muted: #777;
+            --accent: #ff5a36;
+            --accent-dark: #e84625;
+            --border: #e8e4dc;
+            --pill: #fff0eb;
+            --shadow: 0 8px 25px rgba(0, 0, 0, .06);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* ---------------- HEADER ---------------- */
+
+        header {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-inner {
+            max-width: 1250px;
+            margin: auto;
+            padding: 16px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            white-space: nowrap;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-link {
+            font-size: 13px;
+            font-weight: 700;
+            padding: 8px 14px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            background: #fff;
+            transition: .2s ease;
+            white-space: nowrap;
+        }
+
+        .nav-link:hover {
+            border-color: #bbb;
+        }
+
+        .nav-link.active {
+            background: #222;
+            color: #fff;
+            border-color: #222;
+        }
+
+        .affiliate-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 10px;
+            border-radius: 50px;
+            background: var(--pill);
+            color: var(--accent-dark);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .3px;
+            white-space: nowrap;
+        }
+
+        /* ---------------- HERO ---------------- */
+
+        .hero {
+            max-width: 900px;
+            margin: auto;
+            padding: 65px 22px 25px;
+            text-align: center;
+        }
+
+        .hero-kicker {
+            display: inline-block;
+            padding: 7px 13px;
+            background: #222;
+            color: #fff;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: clamp(38px, 6vw, 62px);
+            line-height: 1;
+            letter-spacing: -3px;
+            font-weight: 950;
+        }
+
+        .hero h1 span {
+            color: var(--accent);
+        }
+
+        .hero-description {
+            max-width: 700px;
+            margin: 22px auto 0;
+            color: #555;
+            font-size: 16px;
+            line-height: 1.75;
+        }
+
+        .hero-description strong {
+            color: #222;
+        }
+
+        .updated-pill {
+            display: inline-block;
+            margin-top: 22px;
+            padding: 6px 12px;
+            border-radius: 50px;
+            background: #fff;
+            border: 1px solid var(--border);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--muted);
+            letter-spacing: .3px;
+        }
+
+        /* ---------------- CONTENT ---------------- */
+
+        .content-wrapper {
+            max-width: 900px;
+            margin: auto;
+            padding: 10px 22px 70px;
+        }
+
+        .notice-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--accent);
+            border-radius: 14px;
+            padding: 22px 24px;
+            margin: 30px 0 40px;
+            box-shadow: var(--shadow);
+        }
+
+        .notice-card h2 {
+            margin: 0 0 10px;
+            font-size: 17px;
+            letter-spacing: -.3px;
+        }
+
+        .notice-card p {
+            margin: 0;
+            color: #444;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .content-section {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 30px 34px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .content-section h2 {
+            margin: 0 0 14px;
+            font-size: 22px;
+            letter-spacing: -.5px;
+            line-height: 1.25;
+        }
+
+        .content-section h2 .num {
+            display: inline-block;
+            min-width: 28px;
+            height: 28px;
+            line-height: 28px;
+            text-align: center;
+            background: var(--pill);
+            color: var(--accent-dark);
+            border-radius: 50%;
+            font-size: 13px;
+            font-weight: 900;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        .content-section h3 {
+            margin: 22px 0 8px;
+            font-size: 15px;
+            letter-spacing: -.2px;
+        }
+
+        .content-section p {
+            margin: 0 0 14px;
+            color: #444;
+            font-size: 15px;
+            line-height: 1.75;
+        }
+
+        .content-section p:last-child {
+            margin-bottom: 0;
+        }
+
+        .content-section ul,
+        .content-section ol {
+            margin: 6px 0 16px;
+            padding-left: 22px;
+            color: #444;
+            font-size: 15px;
+            line-height: 1.75;
+        }
+
+        .content-section li {
+            margin-bottom: 6px;
+        }
+
+        .content-section strong {
+            color: #222;
+        }
+
+        .content-section a.inline-link {
+            color: var(--accent-dark);
+            font-weight: 700;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        .content-section a.inline-link:hover {
+            color: #000;
+        }
+
+        .content-section code {
+            background: #f1eee8;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #7a2b12;
+        }
+
+        .callout {
+            background: var(--pill);
+            border-radius: 12px;
+            padding: 16px 18px;
+            font-size: 14px;
+            color: #7a2b12;
+            line-height: 1.7;
+            margin: 18px 0;
+            border-left: 4px solid var(--accent);
+        }
+
+        .callout strong {
+            color: #5a1e0c;
+        }
+
+        /* ---------------- CONTACT CARD ---------------- */
+
+        .contact-card {
+            background: #222;
+            color: #fff;
+            border-radius: 18px;
+            padding: 34px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .contact-card h2 {
+            margin: 0 0 10px;
+            font-size: 22px;
+            letter-spacing: -.5px;
+        }
+
+        .contact-card p {
+            color: #bbb;
+            font-size: 14px;
+            line-height: 1.7;
+            margin: 0 auto 18px;
+            max-width: 520px;
+        }
+
+        .contact-card a.email {
+            display: inline-block;
+            background: var(--accent);
+            color: #fff;
+            padding: 12px 22px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 800;
+            transition: .2s ease;
+        }
+
+        .contact-card a.email:hover {
+            background: var(--accent-dark);
+        }
+
+        /* ---------------- FOOTER ---------------- */
+
+        footer {
+            background: #222;
+            color: #fff;
+            padding: 40px 22px;
+            text-align: center;
+        }
+
+        .footer-title {
+            font-size: 22px;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+
+        .footer-title span {
+            color: var(--accent);
+        }
+
+        footer p {
+            max-width: 650px;
+            margin: auto;
+            color: #bbb;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .footer-links {
+            margin-top: 22px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px 18px;
+            font-size: 12px;
+        }
+
+        .footer-links a {
+            color: #bbb;
+            font-weight: 700;
+            transition: .2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .footer-disclosure {
+            margin-top: 18px;
+            font-size: 11px;
+            color: #888;
+        }
+
+        /* ---------------- MOBILE ---------------- */
+
+        @media (max-width: 700px) {
+
+            .header-inner {
+                padding: 13px 15px;
+                flex-wrap: wrap;
+            }
+
+            .logo {
+                font-size: 21px;
+            }
+
+            .nav-link {
+                font-size: 11px;
+                padding: 7px 11px;
+            }
+
+            .affiliate-pill {
+                font-size: 9px;
+                padding: 5px 8px;
+            }
+
+            .hero {
+                padding: 45px 18px 20px;
+            }
+
+            .hero h1 {
+                font-size: 40px;
+                letter-spacing: -2px;
+            }
+
+            .hero-description {
+                font-size: 14px;
+                line-height: 1.65;
+            }
+
+            .content-wrapper {
+                padding: 5px 15px 55px;
+            }
+
+            .content-section {
+                padding: 22px 20px;
+                border-radius: 15px;
+            }
+
+            .content-section h2 {
+                font-size: 18px;
+            }
+
+            .content-section h2 .num {
+                min-width: 24px;
+                height: 24px;
+                line-height: 24px;
+                font-size: 11px;
+                margin-right: 8px;
+            }
+
+            .content-section p,
+            .content-section ul,
+            .content-section ol {
+                font-size: 14px;
+            }
+
+            .notice-card {
+                padding: 18px 20px;
+            }
+
+            .contact-card {
+                padding: 26px 20px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .hero h1 {
+                font-size: 34px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="header-inner">
+            <a href="index.html" class="logo">The <span>Whacky</span> Rack</a>
+            <div class="header-right">
+                <a href="index.html" class="nav-link">Shop</a>
+                <a href="world.html" class="nav-link">World</a>
+                <a href="history.html" class="nav-link">History</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-kicker">Your data, plainly explained</div>
+        <h1>Privacy <span>Policy</span></h1>
+        <p class="hero-description">
+            This policy explains what information The Whacky Rack collects, how we use it,
+            and the choices you have. The short version: <strong>we collect as little as
+                possible</strong>, we don't sell your data, and we don't ask you to create an account.
+        </p>
+        <span class="updated-pill">Last updated: 2026</span>
+    </section>
+
+    <main class="content-wrapper">
+
+        <div class="notice-card">
+            <h2>Plain-English summary</h2>
+            <p>
+                The Whacky Rack does not have user accounts, logins, comment sections, or a
+                newsletter. We don't collect names, emails, or payment details. If you use
+                the like button, we store an anonymous identifier and your likes in your
+                browser's localStorage and in our database — no personal information is
+                involved. The only third parties that may set cookies on your device are
+                Amazon (when you click an affiliate link) and a social platform (when you
+                click a share button). That's it.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2><span class="num">1</span>Who we are</h2>
+            <p>
+                The Whacky Rack ("we", "us", "our") is an independently operated editorial
+                website that publishes curated product recommendations and factual
+                stories from around the world. We are the <strong>data controller</strong>
+                for any personal information collected through this site.
+            </p>
+            <p>
+                For questions about this policy or your data, contact us at
+                <a class="inline-link" href="mailto:the.whacky.rack@limbomail.com">the.whacky.rack@limbomail.com</a>.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2><span class="num">2</span>Information we collect</h2>
+
+            <h3>Information you give us</h3>
+            <p>
+                We only receive personal information if you voluntarily send it to us —
+                typically by emailing our contact address. In that case we receive your
+                email address and whatever you choose to include in your message. We use
+                it solely to reply to you.
+            </p>
+
+            <h3>Information collected automatically</h3>
+            <p>
+                Like virtually all websites, our hosting provider records basic technical
+                information when you visit — IP address, browser type, referring page,
+                pages viewed, and timestamps. This is standard server-log data used for
+                security, debugging, and understanding aggregate traffic patterns. It is
+                not linked to any identifiable individual by us.
+            </p>
+
+            <h3>Information stored when you like a product</h3>
+            <p>
+                When you use the like button on a product, two pieces of information are
+                stored in your browser's <strong>localStorage</strong>:
+            </p>
+            <ul>
+                <li>A randomly generated identifier (a UUID) that has no connection to your name, email, or any other personal information.</li>
+                <li>A list of the product IDs you have liked, so the heart icon stays filled when you return to the site.</li>
+            </ul>
+            <p>
+                When you like a product, we also send that random identifier and the
+                product ID to our database (hosted on Supabase) so that the like can be
+                counted and displayed. <strong>No personal information is transmitted</strong>
+                — only the anonymous identifier and the product ID.
+            </p>
+
+            <h3>Information we do <em>not</em> collect</h3>
+            <ul>
+                <li>We do not require or offer account registration.</li>
+                <li>We do not collect names, phone numbers, or postal addresses.</li>
+                <li>We do not collect payment information — we don't sell anything directly.</li>
+                <li>We do not operate a newsletter or mailing list at this time.</li>
+                <li>We do not use fingerprinting, session recording, or cross-site tracking scripts.</li>
+                <li>We do not collect your identity through the like feature — the identifier we use is random and cannot be traced back to you.</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2><span class="num">3</span>How we use information</h2>
+            <p>The limited information we receive is used only to:</p>
+            <ul>
+                <li>Respond to messages you send us.</li>
+                <li>Keep the website secure and functioning (server logs).</li>
+                <li>Understand aggregate, anonymised traffic patterns.</li>
+                <li>Display like counts on product cards.</li>
+                <li>Comply with legal obligations if required.</li>
+            </ul>
+            <p>
+                <strong>We do not sell, rent, or trade your personal information to anyone.</strong>
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2><span class="num">4</span>Third parties who may receive data</h2>
+
+            <h3>Amazon (affiliate links)</h3>
+            <p>
+                When you click an Amazon affiliate link on this site, Amazon.com, Inc. may
+                set cookies on your device and collect information about your visit in
+                order to attribute a qualifying purchase to our account. This is governed
+                by Amazon's own privacy notice:
+                <a class="inline-link" href="https://www.amazon.com/gp/help/customer/display.html?nodeId=GX7NJQ4ZB8MHFRNJ" target="_blank" rel="noopener noreferrer">Amazon Privacy Notice</a>.
+            </p>
+
+            <h3>Supabase (content delivery and likes)</h3>
+            <p>
+                Our product and story data is hosted on Supabase. When your browser loads
+                content from Supabase, Supabase may log the request as part of normal
+                infrastructure operation. When you like a product, the anonymous
+                identifier described in section 2 and the product ID are stored in a
+                Supabase-hosted database. We do not use Supabase authentication, so no
+                session or account cookies are set on your device by our use of it.
+            </p>
+
+            <h3>Social sharing platforms</h3>
+            <p>
+                When you use the share button on a product, your browser opens a page on
+                the platform you choose — Twitter/X, Facebook, Pinterest, Reddit, or
+                WhatsApp. Those platforms may set their own cookies and collect
+                information about your visit under their own privacy and cookie policies.
+                We do not receive any personal information from those platforms, and we do
+                not know which products you share or with whom.
+            </p>
+
+            <h3>Image hosts</h3>
+            <p>
+                Product images are served from third-party image hosting services
+                (such as ImgBB). Those providers may log the request when your browser
+                loads an image.
+            </p>
+
+            <h3>Hosting provider</h3>
+            <p>
+                Our website is hosted on a third-party platform that keeps standard
+                access logs for security and operational purposes.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2><span class="num">5</span>Legal bases for processing (GDPR / UK GDPR)</h2>
+            <p>
+                If you are located in the European Economic Area, the United Kingdom, or
+                Switzerland, we rely on the following legal bases:
+            </p>
+            <ul>
+                <li><strong>Legitimate interests</strong> — for server logs, security, and preventing abuse.</li>
+                <li><strong>Consent</strong> — where required, for any non-essential cookies set by third parties.</li>
+                <li><strong>Contract</strong> — where you have contacted us and we need to respond.</li>
+                <li><strong>Legal obligation</strong> — where we are required to retain or disclose information by law.</li>
+            </ul>
+            <p>
+                Because the like feature stores only an anonymous identifier and a list
+                of product IDs, and does not track you across other sites, we treat it as
+                a functional, user-initiated feature rather than tracking.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2><span class="num">6</span>Your rights</h2>
+            <p>
+                Depending on where you live, you may have some or all of the following
+                rights regarding your personal data:
+            </p>
+            <ul>
+                <li><strong>Access</strong> — request a copy of the data we hold about you.</li>
+                <li><strong>Correction</strong> — ask us to fix inaccurate data.</li>
+                <li><strong>Deletion</strong> — ask us to delete your data ("right to be forgotten").</li>
+                <li><strong>Restriction</strong> — ask us to limit how we use your data.</li>
+                <li><strong>Portability</strong> — receive your data in a portable format.</li>
+                <li><strong>Objection</strong> — object to processing based on legitimate interests.</li>
+                <li><strong>Withdraw consent</strong> — where processing is based on consent, withdraw it at any time.</li>
+                <li><strong>Lodge a complaint</strong> — with your local data protection authority.</li>
+            </ul>
+            <p>
+                To exercise any of these rights, email
+                <a class="inline-link" href="mailto:the.whacky.rack@limbomail.com">the.whacky.rack@limbomail.com</a>.
+                We will respond within the timeframe required by applicable law
+                (typically 30 days).
+            </p>
+            <p>
+                Because the like identifier is stored only in your browser and is not
+                linked to your identity, you can remove it at any time by clearing your
+                browser's local storage or site data for this site. This will also clear
+                any likes you have registered on this device.
+            </p>
+
+            <h3>California residents (CCPA / CPRA)</h3>
+            <p>
+                If you are a California resident, you have the right to know what personal
+                information we collect, to request its deletion, to opt out of the "sale"
+                or "sharing" of personal information (we do neither), and to not be
+                discriminated against for exercising your rights.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2><span class="num">7</span>Children's privacy</h2>
+            <p>
+                The Whacky Rack is not directed at children under the age of 13, and we do
+                not knowingly collect personal information from children. If you believe
+                a child has provided us with personal information, please contact us and
+                we will delete it promptly.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2><span class="num">8</span>International data transfers</h2>
+            <p>
+                Our service providers (hosting, Supabase, Amazon, image hosts, and any
+                social platform you choose to share to) may store or process data in
+                countries outside your own, including the United States. Where required,
+                these providers rely on approved transfer mechanisms such as Standard
+                Contractual Clauses.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2><span class="num">9</span>Data retention</h2>
+            <p>
+                We retain email correspondence only as long as needed to resolve the
+                matter at hand, after which it is deleted. Server logs are retained by
+                our hosting provider according to their standard retention schedule.
+                Like records in our database are retained indefinitely so that like
+                counts remain accurate over time; the identifier associated with a like
+                is anonymous and cannot be linked to an individual.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2><span class="num">10</span>Security</h2>
+            <p>
+                We take reasonable technical and organisational measures to protect any
+                information we handle. However, no method of transmission over the
+                internet or electronic storage is 100% secure, and we cannot guarantee
+                absolute security.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2><span class="num">11</span>External links</h2>
+            <p>
+                Our site contains links to external websites, including Amazon, reference
+                sources for our editorial content, and the social platforms you may share
+                to. We are not responsible for the privacy practices of those sites. We
+                encourage you to review their privacy policies before providing any
+                personal information.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2><span class="num">12</span>Changes to this policy</h2>
+            <p>
+                We may update this Privacy Policy from time to time. When we do, we will
+                update the "Last updated" date at the top of this page. Continued use of
+                the site after changes constitutes acceptance of the updated policy.
+            </p>
+        </div>
+
+        <div class="contact-card">
+            <h2>Privacy questions?</h2>
+            <p>
+                If you have any questions about this policy or how we handle your data,
+                we're happy to help.
+            </p>
+            <a class="email" href="mailto:the.whacky.rack@limbomail.com">the.whacky.rack@limbomail.com</a>
+        </div>
+
+    </main>
+
+    <footer>
+        <div class="footer-title">The <span>Whacky</span> Rack</div>
+        <p>
+            We collect weird, wonderful, funny and completely unnecessary products
+            from around the internet. Some links on this site are affiliate links,
+            which means we may earn a commission if you make a purchase through them,
+            at no additional cost to you.
+        </p>
+        <div class="footer-links">
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="cookies.html">Cookie Policy</a>
+            <a href="disclosure.html">Affiliate Disclosure</a>
+        </div>
+        <div class="footer-disclosure">
+            Products and availability may change depending on Amazon.com policies.
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth.js"></script>
+</body>
+
+</html>

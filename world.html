@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>The Whacky World — Strange Stories From Every Corner of the Globe</title>
+
+    <meta name="description" content="The Whacky World — bizarre festivals, strange traditions, weird laws, and wonderfully odd stories from countries around the world.">
+
+    <style>
+        :root {
+            --bg: #f7f5ef;
+            --card: #ffffff;
+            --text: #202020;
+            --muted: #777;
+            --accent: #ff5a36;
+            --accent-dark: #e84625;
+            --border: #e8e4dc;
+            --pill: #fff0eb;
+            --shadow: 0 8px 25px rgba(0, 0, 0, .06);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* ---------------- HEADER ---------------- */
+
+        header {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-inner {
+            max-width: 1250px;
+            margin: auto;
+            padding: 16px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            white-space: nowrap;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-link {
+            font-size: 13px;
+            font-weight: 700;
+            padding: 8px 14px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            background: #fff;
+            transition: .2s ease;
+            white-space: nowrap;
+        }
+
+        .nav-link:hover {
+            border-color: #bbb;
+        }
+
+        .nav-link.active {
+            background: #222;
+            color: #fff;
+            border-color: #222;
+        }
+
+        .affiliate-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 10px;
+            border-radius: 50px;
+            background: var(--pill);
+            color: var(--accent-dark);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .3px;
+            white-space: nowrap;
+        }
+
+        /* ---------------- HERO ---------------- */
+
+        .hero {
+            max-width: 1050px;
+            margin: auto;
+            padding: 65px 22px 35px;
+            text-align: center;
+        }
+
+        .hero-kicker {
+            display: inline-block;
+            padding: 7px 13px;
+            background: #222;
+            color: #fff;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: clamp(42px, 7vw, 78px);
+            line-height: .95;
+            letter-spacing: -4px;
+            font-weight: 950;
+        }
+
+        .hero h1 span {
+            color: var(--accent);
+        }
+
+        .hero-description {
+            max-width: 850px;
+            margin: 25px auto 0;
+            color: #555;
+            font-size: 17px;
+            line-height: 1.75;
+        }
+
+        .hero-description strong {
+            color: #222;
+        }
+
+        /* ---------------- CONTROLS ---------------- */
+
+        .controls-wrapper {
+            max-width: 1250px;
+            margin: 10px auto 25px;
+            padding: 0 22px;
+        }
+
+        .controls {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 15px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            box-shadow: var(--shadow);
+        }
+
+        .search-box {
+            flex: 1;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            height: 46px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0 15px;
+            font-size: 14px;
+            outline: none;
+            background: #fafafa;
+        }
+
+        .search-box input:focus {
+            border-color: var(--accent);
+            background: #fff;
+        }
+
+        select {
+            height: 46px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0 13px;
+            font-size: 14px;
+            background: #fafafa;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .category-bar {
+            max-width: 1250px;
+            margin: 0 auto 30px;
+            padding: 0 22px;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .category-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-btn {
+            border: 1px solid var(--border);
+            background: #fff;
+            padding: 9px 15px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 700;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .category-btn:hover {
+            border-color: #bbb;
+        }
+
+        .category-btn.active {
+            background: #222;
+            color: #fff;
+            border-color: #222;
+        }
+
+        /* ---------------- STORY AREA ---------------- */
+
+        .stories-wrapper {
+            max-width: 1250px;
+            margin: auto;
+            padding: 0 22px 70px;
+        }
+
+        .results-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            color: var(--muted);
+            font-size: 13px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .results-info-left {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .affiliate-inline {
+            font-family: "Helvetica Neue", "Segoe UI", -apple-system, BlinkMacSystemFont, "Roboto", Arial, sans-serif;
+            font-weight: 300;
+            font-size: 11px;
+            color: var(--muted);
+            background: transparent;
+            letter-spacing: .2px;
+            line-height: 1.4;
+        }
+
+        .story-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        /* ---------------- STORY CARD ---------------- */
+
+        .story-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .story-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, .09);
+        }
+
+        .story-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+
+        .story-flag {
+            font-size: 26px;
+            line-height: 1;
+        }
+
+        .story-country {
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            color: #555;
+        }
+
+        .story-tag {
+            margin-left: auto;
+            background: var(--pill);
+            color: var(--accent-dark);
+            padding: 5px 10px;
+            border-radius: 50px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            white-space: nowrap;
+        }
+
+        .story-title {
+            font-size: 19px;
+            line-height: 1.3;
+            font-weight: 900;
+            margin: 0 0 12px;
+            letter-spacing: -.3px;
+        }
+
+        .story-summary {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 0 0 16px;
+        }
+
+        .story-details {
+            display: none;
+            color: #444;
+            font-size: 14px;
+            line-height: 1.7;
+            margin: 0 0 16px;
+            padding-top: 16px;
+            border-top: 1px dashed var(--border);
+        }
+
+        .story-card.expanded .story-details {
+            display: block;
+        }
+
+        .story-actions {
+            margin-top: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding-top: 4px;
+        }
+
+        .story-toggle {
+            border: 0;
+            background: transparent;
+            color: var(--accent-dark);
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            padding: 0;
+            font-family: inherit;
+        }
+
+        .story-toggle:hover {
+            text-decoration: underline;
+        }
+
+        .story-source {
+            font-size: 11px;
+            color: var(--muted);
+            font-weight: 700;
+        }
+
+        .story-source:hover {
+            color: var(--accent-dark);
+        }
+
+        /* ---------------- LOAD MORE ---------------- */
+
+        .load-more-wrap {
+            text-align: center;
+            padding-top: 35px;
+        }
+
+        .load-more {
+            border: 0;
+            background: #222;
+            color: #fff;
+            border-radius: 50px;
+            padding: 13px 25px;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .load-more:hover {
+            background: #000;
+        }
+
+        .load-more.hidden {
+            display: none;
+        }
+
+        /* ---------------- EMPTY / LOADING ---------------- */
+
+        .empty-state {
+            text-align: center;
+            padding: 70px 20px;
+            display: none;
+        }
+
+        .empty-state .emoji {
+            font-size: 45px;
+            margin-bottom: 12px;
+        }
+
+        .empty-state h2 {
+            margin: 0 0 8px;
+        }
+
+        .empty-state p {
+            color: var(--muted);
+            margin: 0;
+        }
+
+        /* ---------------- FOOTER ---------------- */
+
+        footer {
+            background: #222;
+            color: #fff;
+            padding: 40px 22px;
+            text-align: center;
+        }
+
+        .footer-title {
+            font-size: 22px;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+
+        .footer-title span {
+            color: var(--accent);
+        }
+
+        footer p {
+            max-width: 650px;
+            margin: auto;
+            color: #bbb;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .footer-links {
+            margin-top: 22px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px 18px;
+            font-size: 12px;
+        }
+
+        .footer-links a {
+            color: #bbb;
+            font-weight: 700;
+            transition: .2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .footer-disclosure {
+            margin-top: 18px;
+            font-size: 11px;
+            color: #888;
+        }
+
+        /* ---------------- TABLET ---------------- */
+
+        @media (max-width: 1000px) {
+            .story-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        /* ---------------- MOBILE ---------------- */
+
+        @media (max-width: 700px) {
+
+            .header-inner {
+                padding: 13px 15px;
+                flex-wrap: wrap;
+            }
+
+            .logo {
+                font-size: 21px;
+            }
+
+            .nav-link {
+                font-size: 11px;
+                padding: 7px 11px;
+            }
+
+            .hero {
+                padding: 45px 18px 28px;
+            }
+
+            .hero h1 {
+                font-size: 50px;
+                letter-spacing: -2.5px;
+            }
+
+            .hero-description {
+                font-size: 15px;
+                line-height: 1.65;
+            }
+
+            .controls-wrapper {
+                padding: 0 15px;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+                border-radius: 15px;
+            }
+
+            .category-bar {
+                padding: 0 15px;
+                margin-bottom: 25px;
+            }
+
+            .stories-wrapper {
+                padding: 0 15px 55px;
+            }
+
+            .results-info {
+                font-size: 11px;
+            }
+
+            .affiliate-inline {
+                font-size: 10px;
+            }
+
+            .story-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+
+            .story-card {
+                padding: 18px;
+                border-radius: 15px;
+            }
+
+            .story-title {
+                font-size: 17px;
+            }
+
+            .story-summary,
+            .story-details {
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .hero h1 {
+                font-size: 43px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+
+    <header>
+        <div class="header-inner">
+
+            <a href="index.html" class="logo">
+                The <span>Whacky</span> Rack
+            </a>
+
+            <div class="header-right">
+                <a href="index.html" class="nav-link">Shop</a>
+                <a href="world.html" class="nav-link active">World</a>
+                <a href="history.html" class="nav-link">History</a>
+                <a href="about.html" class="nav-link">About</a>
+            </div>
+
+        </div>
+    </header>
+
+
+    <!-- ================= CONTROLS ================= -->
+
+    <div class="controls-wrapper">
+
+        <div class="controls">
+
+            <div class="search-box">
+                <input type="search" id="searchInput" placeholder="Search countries, stories, traditions..." aria-label="Search stories">
+            </div>
+
+            <select id="regionSelect" aria-label="Filter by region">
+                <option value="All">All Regions</option>
+            </select>
+
+            <select id="sortSelect" aria-label="Sort stories">
+                <option value="default">Sort: Featured</option>
+                <option value="az">Title: A–Z</option>
+                <option value="za">Title: Z–A</option>
+                <option value="country">Country</option>
+                <option value="region">Region</option>
+            </select>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= CATEGORY FILTER ================= -->
+
+    <div class="category-bar" id="categoryBar">
+        <!-- Categories generated automatically -->
+    </div>
+
+
+    <!-- ================= STORIES ================= -->
+
+    <main class="stories-wrapper">
+
+        <div class="results-info">
+
+            <span class="results-info-left">
+                <span id="resultCount">Loading...</span>
+                <span class="affiliate-inline">[🛒 Affiliate Disclosure: This page may contain affiliate links.]</span>
+            </span>
+
+            <span>New oddities added regularly 🌍</span>
+
+        </div>
+
+        <div class="story-grid" id="storyGrid">
+            <!-- Stories generated by JavaScript -->
+        </div>
+
+        <div class="empty-state" id="emptyState">
+            <div class="emoji">🧭</div>
+            <h2>No stories found here.</h2>
+            <p>Try another region, category, or search term.</p>
+        </div>
+
+        <div class="load-more-wrap">
+            <button class="load-more" id="loadMore">
+                Load More Stories
+            </button>
+        </div>
+
+    </main>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        <div class="footer-title">
+            The <span>Whacky</span> Rack
+        </div>
+
+        <p>
+            The Whacky World is an editorial collection of real, verifiable oddities
+            from around the globe. Sources are linked on every entry. Some links
+            elsewhere on this site are affiliate links, which means we may earn a
+            commission if you make a purchase through them, at no additional cost to you.
+        </p>
+
+        <div class="footer-links">
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="cookies.html">Cookie Policy</a>
+            <a href="disclosure.html">Affiliate Disclosure</a>
+        </div>
+
+        <div class="footer-disclosure">
+            Products and availability may change depending on Amazon.com policies.
+        </div>
+
+    </footer>
+
+
+    <!-- ================= SUPABASE CLIENT ================= -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth.js"></script>
+    <script>
+        /* ==========================================================
+   SUPABASE CONFIGURATION
+   ========================================================== */
+
+        const TABLE_NAME = "whacky_world";
+
+        const supabaseClient = window.wr.sb;
+
+
+        /* ==========================================================
+           STATE
+           ========================================================== */
+
+        let stories = [];
+
+        const ITEMS_PER_LOAD = 9;
+
+        let currentCategory = "All";
+        let currentRegion = "All";
+        let currentSearch = "";
+        let currentSort = "default";
+        let visibleCount = ITEMS_PER_LOAD;
+
+
+        /* ==========================================================
+           ELEMENTS
+           ========================================================== */
+
+        const storyGrid = document.getElementById("storyGrid");
+        const categoryBar = document.getElementById("categoryBar");
+        const searchInput = document.getElementById("searchInput");
+        const regionSelect = document.getElementById("regionSelect");
+        const sortSelect = document.getElementById("sortSelect");
+        const loadMoreButton = document.getElementById("loadMore");
+        const resultCount = document.getElementById("resultCount");
+        const emptyState = document.getElementById("emptyState");
+
+
+        /* ==========================================================
+           LOAD STORIES FROM SUPABASE
+           ========================================================== */
+
+        async function loadStoriesFromSupabase() {
+
+            resultCount.textContent = "Loading...";
+            emptyState.style.display = "none";
+
+            const {
+                data,
+                error
+            } = await supabaseClient
+                .from(TABLE_NAME)
+                .select("*");
+
+            if (error) {
+
+                console.error("Supabase error:", error);
+
+                resultCount.textContent = "Failed to load stories.";
+                emptyState.style.display = "block";
+                emptyState.querySelector("h2").textContent = "Could not load stories.";
+                emptyState.querySelector("p").textContent = "Please check your Supabase configuration.";
+
+                return;
+            }
+
+            stories = data || [];
+
+            createCategories();
+            createRegionOptions();
+            renderStories();
+        }
+
+
+        /* ==========================================================
+           CATEGORY FILTER PILLS
+           ========================================================== */
+
+        function createCategories() {
+
+            const categories = [
+                "All",
+                ...new Set(stories.map(story => story.category))
+            ].sort((a, b) => {
+                if (a === "All") return -1;
+                if (b === "All") return 1;
+                return a.localeCompare(b);
+            });
+
+            categoryBar.innerHTML = "";
+
+            categories.forEach(category => {
+
+                const button = document.createElement("button");
+
+                button.className = "category-btn";
+
+                if (category === currentCategory) {
+                    button.classList.add("active");
+                }
+
+                button.textContent = category;
+
+                button.addEventListener("click", () => {
+
+                    currentCategory = category;
+                    visibleCount = ITEMS_PER_LOAD;
+
+                    createCategories();
+                    renderStories();
+
+                });
+
+                categoryBar.appendChild(button);
+
+            });
+        }
+
+
+        /* ==========================================================
+           REGION DROPDOWN
+           ========================================================== */
+
+        function createRegionOptions() {
+
+            const regions = [
+                ...new Set(stories.map(story => story.region))
+            ].sort();
+
+            regionSelect.innerHTML = `<option value="All">All Regions</option>`;
+
+            regions.forEach(region => {
+
+                const option = document.createElement("option");
+
+                option.value = region;
+                option.textContent = region;
+
+                if (region === currentRegion) {
+                    option.selected = true;
+                }
+
+                regionSelect.appendChild(option);
+
+            });
+        }
+
+
+        /* ==========================================================
+           FILTER + SORT
+           ========================================================== */
+
+        function getFilteredStories() {
+
+            let filtered = stories.filter(story => {
+
+                const matchesCategory =
+                    currentCategory === "All" ||
+                    story.category === currentCategory;
+
+                const matchesRegion =
+                    currentRegion === "All" ||
+                    story.region === currentRegion;
+
+                const searchText =
+                    `${story.title} ${story.country} ${story.region} ${story.category} ${story.summary}`.toLowerCase();
+
+                const matchesSearch =
+                    searchText.includes(currentSearch.toLowerCase());
+
+                return matchesCategory && matchesRegion && matchesSearch;
+
+            });
+
+
+            /* Sorting */
+
+            if (currentSort === "az") {
+
+                filtered.sort((a, b) => a.title.localeCompare(b.title));
+
+            } else if (currentSort === "za") {
+
+                filtered.sort((a, b) => b.title.localeCompare(a.title));
+
+            } else if (currentSort === "country") {
+
+                filtered.sort((a, b) =>
+                    a.country.localeCompare(b.country) ||
+                    a.title.localeCompare(b.title)
+                );
+
+            } else if (currentSort === "region") {
+
+                filtered.sort((a, b) =>
+                    a.region.localeCompare(b.region) ||
+                    a.country.localeCompare(b.country)
+                );
+
+            }
+
+            return filtered;
+        }
+
+
+        /* ==========================================================
+           STORY CARD
+           ========================================================== */
+
+        function createStoryCard(story) {
+
+            const card = document.createElement("article");
+
+            card.className = "story-card";
+            card.id = escapeHTML(story.id);
+
+            card.innerHTML = `
+
+        <div class="story-meta">
+
+            <span class="story-flag" aria-hidden="true">
+                ${escapeHTML(story.emoji || "🌍")}
+            </span>
+
+            <span class="story-country">
+                ${escapeHTML(story.country)}
+            </span>
+
+            <span class="story-tag">
+                ${escapeHTML(story.category)}
+            </span>
+
+        </div>
+
+        <h2 class="story-title">
+            ${escapeHTML(story.title)}
+        </h2>
+
+        <p class="story-summary">
+            ${escapeHTML(story.summary)}
+        </p>
+
+        <div class="story-details">
+            ${escapeHTML(story.details)}
+        </div>
+
+        <div class="story-actions">
+
+            <button class="story-toggle" type="button">
+                Read the full story →
+            </button>
+
+            ${story.source
+                ? `<a class="story-source"
+                      href="${escapeHTML(story.source)}"
+                      target="_blank"
+                      rel="noopener noreferrer">
+                      Source ↗
+                   </a>`
+                : ""}
+
+        </div>
+    `;
+
+            const toggle = card.querySelector(".story-toggle");
+
+            toggle.addEventListener("click", () => {
+
+                const expanded = card.classList.toggle("expanded");
+
+                toggle.textContent = expanded ?
+                    "Show less ←" :
+                    "Read the full story →";
+
+            });
+
+            return card;
+        }
+
+
+        /* ==========================================================
+           RENDER STORIES
+           ========================================================== */
+
+        function renderStories() {
+
+            const filtered = getFilteredStories();
+
+            storyGrid.innerHTML = "";
+
+            const storiesToShow = filtered.slice(0, visibleCount);
+
+            storiesToShow.forEach(story => {
+                storyGrid.appendChild(createStoryCard(story));
+            });
+
+
+            /* Result count */
+
+            if (filtered.length === 0) {
+
+                resultCount.textContent = "0 stories";
+
+                emptyState.style.display = "block";
+
+            } else {
+
+                resultCount.textContent =
+                    `${filtered.length} ${filtered.length === 1 ? "story" : "stories"}`;
+
+                emptyState.style.display = "none";
+
+            }
+
+
+            /* Load more button */
+
+            if (visibleCount >= filtered.length) {
+                loadMoreButton.classList.add("hidden");
+            } else {
+                loadMoreButton.classList.remove("hidden");
+            }
+
+        }
+
+
+        /* ==========================================================
+           SEARCH
+           ========================================================== */
+
+        searchInput.addEventListener("input", function() {
+
+            currentSearch = this.value.trim();
+            visibleCount = ITEMS_PER_LOAD;
+
+            renderStories();
+
+        });
+
+
+        /* ==========================================================
+           REGION FILTER
+           ========================================================== */
+
+        regionSelect.addEventListener("change", function() {
+
+            currentRegion = this.value;
+            visibleCount = ITEMS_PER_LOAD;
+
+            renderStories();
+
+        });
+
+
+        /* ==========================================================
+           SORT
+           ========================================================== */
+
+        sortSelect.addEventListener("change", function() {
+
+            currentSort = this.value;
+            visibleCount = ITEMS_PER_LOAD;
+
+            renderStories();
+
+        });
+
+
+        /* ==========================================================
+           LOAD MORE
+           ========================================================== */
+
+        loadMoreButton.addEventListener("click", function() {
+
+            visibleCount += ITEMS_PER_LOAD;
+
+            renderStories();
+
+        });
+
+
+        /* ==========================================================
+           BASIC HTML ESCAPING
+           ========================================================== */
+
+        function escapeHTML(value) {
+
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+
+        }
+
+
+        /* ==========================================================
+           INITIALIZE
+           ========================================================== */
+
+        loadStoriesFromSupabase();
+    </script>
+
+</body>
+
+</html>

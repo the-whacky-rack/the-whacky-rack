@@ -414,6 +414,17 @@
             color: var(--accent-dark);
         }
 
+        .yap-btn {
+            color: var(--accent-dark);
+            border-color: var(--pill);
+            background: #fff;
+        }
+
+        .yap-btn:hover {
+            background: var(--pill);
+            border-color: var(--accent);
+        }
+
         .share-wrap {
             margin-left: auto;
         }
@@ -1069,7 +1080,7 @@
     <!-- ================= SUPABASE CLIENT ================= -->
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="auth.js"></script>
+    <script src="auth.js"></script>
     <script>
         /* ==========================================================
    SUPABASE CONFIGURATION
@@ -1370,18 +1381,27 @@
                 Check It Out →
             </a>
 
-            <div class="product-actions">
+                      <div class="product-actions">
 
-                <button
-                    class="action-btn like-btn${isLiked ? " liked" : ""}"
-                    type="button"
-                    aria-label="Like this product"
-                >
-                    <span class="action-icon">${heartIcon}</span>
-                    <span class="like-count">${count}</span>
-                </button>
+            <button
+              class="action-btn like-btn${isLiked ? " liked" : ""}"
+              type="button"
+              aria-label="Like this product"
+            >
+              <span class="action-icon">${heartIcon}</span>
+              <span class="like-count">${count}</span>
+            </button>
 
-                <div class="share-wrap">
+            <a
+              class="action-btn yap-btn"
+              href="yap.html?product=${product.id}"
+              aria-label="Yap about this product"
+            >
+              <span class="action-icon">💬</span>
+              <span>Yap it!</span>
+            </a>
+
+            <div class="share-wrap">
                     <button
                         class="action-btn share-btn"
                         type="button"

@@ -19,11 +19,16 @@
             --accent-dark: #e84625;
             --border: #e8e4dc;
             --pill: #fff0eb;
-            --shadow: 0 8px 25px rgba(0,0,0,.06);
+            --shadow: 0 8px 25px rgba(0, 0, 0, .06);
         }
 
-        * { box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
 
         body {
             margin: 0;
@@ -32,7 +37,10 @@
             color: var(--text);
         }
 
-        a { color: inherit; text-decoration: none; }
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
 
         /* ---------------- HEADER ---------------- */
 
@@ -54,10 +62,22 @@
             gap: 20px;
         }
 
-        .logo { font-size: 25px; font-weight: 900; letter-spacing: -1px; white-space: nowrap; }
-        .logo span { color: var(--accent); }
+        .logo {
+            font-size: 25px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            white-space: nowrap;
+        }
 
-        .header-right { display: flex; align-items: center; gap: 12px; }
+        .logo span {
+            color: var(--accent);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
         .nav-link {
             font-size: 13px;
@@ -69,7 +89,10 @@
             transition: .2s ease;
             white-space: nowrap;
         }
-        .nav-link:hover { border-color: #bbb; }
+
+        .nav-link:hover {
+            border-color: #bbb;
+        }
 
         /* ---------------- BREADCRUMB ---------------- */
 
@@ -85,13 +108,26 @@
             flex-wrap: wrap;
         }
 
-        .breadcrumb a { color: var(--accent-dark); font-weight: 700; }
-        .breadcrumb a:hover { text-decoration: underline; }
-        .breadcrumb .sep { opacity: .5; }
+        .breadcrumb a {
+            color: var(--accent-dark);
+            font-weight: 700;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb .sep {
+            opacity: .5;
+        }
 
         /* ---------------- YAP CARD (main) ---------------- */
 
-        .thread-wrap { max-width: 900px; margin: auto; padding: 18px 22px 70px; }
+        .thread-wrap {
+            max-width: 900px;
+            margin: auto;
+            padding: 18px 22px 70px;
+        }
 
         .yap-main-card {
             background: var(--card);
@@ -129,10 +165,28 @@
             font-family: inherit;
             padding: 0;
         }
-        .vote-btn:hover:not(:disabled) { border-color: #bbb; color: #555; }
-        .vote-btn.up.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-        .vote-btn.down.active { background: #3b82f6; border-color: #3b82f6; color: #fff; }
-        .vote-btn:disabled { opacity: .55; cursor: not-allowed; }
+
+        .vote-btn:hover:not(:disabled) {
+            border-color: #bbb;
+            color: #555;
+        }
+
+        .vote-btn.up.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+
+        .vote-btn.down.active {
+            background: #3b82f6;
+            border-color: #3b82f6;
+            color: #fff;
+        }
+
+        .vote-btn:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+        }
 
         .vote-count {
             font-size: 15px;
@@ -141,10 +195,19 @@
             min-width: 26px;
             text-align: center;
         }
-        .vote-count.positive { color: var(--accent-dark); }
-        .vote-count.negative { color: #3b82f6; }
 
-        .yap-body-col { flex: 1; min-width: 0; }
+        .vote-count.positive {
+            color: var(--accent-dark);
+        }
+
+        .vote-count.negative {
+            color: #3b82f6;
+        }
+
+        .yap-body-col {
+            flex: 1;
+            min-width: 0;
+        }
 
         .yap-title {
             margin: 0 0 12px;
@@ -177,7 +240,11 @@
             font-size: 12px;
             font-weight: 700;
         }
-        .yap-product-chip:hover { border-color: #bbb; }
+
+        .yap-product-chip:hover {
+            border-color: #bbb;
+        }
+
         .yap-product-chip img {
             width: 32px;
             height: 32px;
@@ -185,6 +252,7 @@
             object-fit: cover;
             background: #f1eee8;
         }
+
         .yap-product-chip .cat {
             font-size: 10px;
             text-transform: uppercase;
@@ -192,6 +260,7 @@
             color: var(--accent-dark);
             font-weight: 800;
         }
+
         .yap-product-chip .name {
             color: #333;
             font-size: 12px;
@@ -213,10 +282,18 @@
             font-weight: 800;
             color: var(--accent-dark);
         }
-        .yap-author:hover { text-decoration: underline; }
 
-        .yap-dot { opacity: .5; }
-        .yap-edited { font-style: italic; }
+        .yap-author:hover {
+            text-decoration: underline;
+        }
+
+        .yap-dot {
+            opacity: .5;
+        }
+
+        .yap-edited {
+            font-style: italic;
+        }
 
         .yap-actions {
             margin-left: auto;
@@ -236,8 +313,16 @@
             font-family: inherit;
             transition: .15s ease;
         }
-        .yap-action-btn:hover { border-color: #bbb; color: var(--text); }
-        .yap-action-btn.danger:hover { border-color: var(--accent); color: var(--accent-dark); }
+
+        .yap-action-btn:hover {
+            border-color: #bbb;
+            color: var(--text);
+        }
+
+        .yap-action-btn.danger:hover {
+            border-color: var(--accent);
+            color: var(--accent-dark);
+        }
 
         /* Deleted yap banner */
         .yap-deleted-banner {
@@ -285,8 +370,17 @@
             color: var(--muted);
             transition: .15s ease;
         }
-        .sort-mini:hover { border-color: #bbb; color: var(--text); }
-        .sort-mini.active { background: #222; color: #fff; border-color: #222; }
+
+        .sort-mini:hover {
+            border-color: #bbb;
+            color: var(--text);
+        }
+
+        .sort-mini.active {
+            background: #222;
+            color: #fff;
+            border-color: #222;
+        }
 
         /* ---------------- TOP-LEVEL COMMENT FORM ---------------- */
 
@@ -320,7 +414,11 @@
             color: var(--text);
             transition: .2s ease;
         }
-        .comment-form textarea:focus { border-color: var(--accent); background: #fff; }
+
+        .comment-form textarea:focus {
+            border-color: var(--accent);
+            background: #fff;
+        }
 
         .comment-form-row {
             display: flex;
@@ -347,18 +445,32 @@
             cursor: pointer;
             transition: .2s ease;
         }
-        .btn-primary-sm:hover:not(:disabled) { background: var(--accent-dark); }
-        .btn-primary-sm:disabled { opacity: .5; cursor: not-allowed; }
+
+        .btn-primary-sm:hover:not(:disabled) {
+            background: var(--accent-dark);
+        }
+
+        .btn-primary-sm:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
 
         .signin-prompt {
             color: var(--accent-dark);
             font-weight: 800;
         }
-        .signin-prompt:hover { text-decoration: underline; }
+
+        .signin-prompt:hover {
+            text-decoration: underline;
+        }
 
         /* ---------------- COMMENT TREE ---------------- */
 
-        .comment-tree { display: flex; flex-direction: column; gap: 4px; }
+        .comment-tree {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
 
         .comment {
             padding-left: 18px;
@@ -366,13 +478,35 @@
             margin-top: 14px;
         }
 
-        .comment.level-0 { padding-left: 0; border-left: 0; margin-top: 18px; }
-        .comment.level-1 { border-left-color: #ffd8cc; }
-        .comment.level-2 { border-left-color: #ffc0ac; }
-        .comment.level-3 { border-left-color: #ffa88d; }
-        .comment.level-4 { border-left-color: #ff8f6e; }
-        .comment.level-5 { border-left-color: #ff7750; }
-        .comment.level-6 { border-left-color: var(--accent); }
+        .comment.level-0 {
+            padding-left: 0;
+            border-left: 0;
+            margin-top: 18px;
+        }
+
+        .comment.level-1 {
+            border-left-color: #ffd8cc;
+        }
+
+        .comment.level-2 {
+            border-left-color: #ffc0ac;
+        }
+
+        .comment.level-3 {
+            border-left-color: #ffa88d;
+        }
+
+        .comment.level-4 {
+            border-left-color: #ff8f6e;
+        }
+
+        .comment.level-5 {
+            border-left-color: #ff7750;
+        }
+
+        .comment.level-6 {
+            border-left-color: var(--accent);
+        }
 
         .comment-inner {
             display: flex;
@@ -402,7 +536,10 @@
             min-width: 22px;
         }
 
-        .comment-body-col { flex: 1; min-width: 0; }
+        .comment-body-col {
+            flex: 1;
+            min-width: 0;
+        }
 
         .comment-head {
             display: flex;
@@ -419,11 +556,24 @@
             color: var(--accent-dark);
             font-size: 13px;
         }
-        .comment-author:hover { text-decoration: underline; }
-        .comment-author.deleted { color: var(--muted); font-weight: 700; font-style: italic; }
-        .comment-author.deleted:hover { text-decoration: none; }
 
-        .comment-edited { font-style: italic; }
+        .comment-author:hover {
+            text-decoration: underline;
+        }
+
+        .comment-author.deleted {
+            color: var(--muted);
+            font-weight: 700;
+            font-style: italic;
+        }
+
+        .comment-author.deleted:hover {
+            text-decoration: none;
+        }
+
+        .comment-edited {
+            font-style: italic;
+        }
 
         .comment-text {
             font-size: 14px;
@@ -432,6 +582,7 @@
             word-wrap: break-word;
             white-space: pre-wrap;
         }
+
         .comment-text.deleted {
             color: #999;
             font-style: italic;
@@ -456,15 +607,26 @@
             padding: 0;
             transition: .15s ease;
         }
-        .comment-foot-btn:hover { color: var(--accent-dark); text-decoration: underline; }
-        .comment-foot-btn.danger:hover { color: #c2410c; }
+
+        .comment-foot-btn:hover {
+            color: var(--accent-dark);
+            text-decoration: underline;
+        }
+
+        .comment-foot-btn.danger:hover {
+            color: #c2410c;
+        }
 
         /* Reply form inside comment */
         .reply-form {
             display: none;
             margin-top: 10px;
         }
-        .reply-form.open { display: block; }
+
+        .reply-form.open {
+            display: block;
+        }
+
         .reply-form textarea {
             width: 100%;
             padding: 9px 12px;
@@ -478,13 +640,19 @@
             min-height: 60px;
             transition: .2s ease;
         }
-        .reply-form textarea:focus { border-color: var(--accent); background: #fff; }
+
+        .reply-form textarea:focus {
+            border-color: var(--accent);
+            background: #fff;
+        }
+
         .reply-form-actions {
             display: flex;
             justify-content: flex-end;
             gap: 8px;
             margin-top: 8px;
         }
+
         .btn-ghost-sm {
             padding: 7px 14px;
             border-radius: 50px;
@@ -497,7 +665,11 @@
             cursor: pointer;
             transition: .2s ease;
         }
-        .btn-ghost-sm:hover { border-color: #bbb; color: var(--text); }
+
+        .btn-ghost-sm:hover {
+            border-color: #bbb;
+            color: var(--text);
+        }
 
         /* Continue thread link */
         .continue-thread {
@@ -515,13 +687,19 @@
             margin-top: 8px;
             transition: .15s ease;
         }
-        .continue-thread:hover { text-decoration: underline; }
+
+        .continue-thread:hover {
+            text-decoration: underline;
+        }
 
         .deeper-replies {
             display: none;
             margin-top: 4px;
         }
-        .deeper-replies.open { display: block; }
+
+        .deeper-replies.open {
+            display: block;
+        }
 
         /* ---------------- EMPTY / LOADING ---------------- */
 
@@ -548,7 +726,12 @@
             font-size: 14px;
             line-height: 1.6;
         }
-        .error-card a { color: #7f1d1d; font-weight: 800; text-decoration: underline; }
+
+        .error-card a {
+            color: #7f1d1d;
+            font-weight: 800;
+            text-decoration: underline;
+        }
 
         /* ---------------- EDIT YAP INLINE PANEL ---------------- */
 
@@ -558,7 +741,10 @@
             padding-top: 14px;
             border-top: 1px solid var(--border);
         }
-        .edit-panel.open { display: block; }
+
+        .edit-panel.open {
+            display: block;
+        }
 
         .edit-panel label {
             display: block;
@@ -569,6 +755,7 @@
             color: #555;
             margin: 10px 0 4px;
         }
+
         .edit-panel input,
         .edit-panel textarea {
             width: 100%;
@@ -582,9 +769,19 @@
             color: var(--text);
             transition: .2s ease;
         }
+
         .edit-panel input:focus,
-        .edit-panel textarea:focus { border-color: var(--accent); background: #fff; }
-        .edit-panel textarea { min-height: 100px; resize: vertical; line-height: 1.55; }
+        .edit-panel textarea:focus {
+            border-color: var(--accent);
+            background: #fff;
+        }
+
+        .edit-panel textarea {
+            min-height: 100px;
+            resize: vertical;
+            line-height: 1.55;
+        }
+
         .edit-panel-actions {
             display: flex;
             justify-content: flex-end;
@@ -605,6 +802,7 @@
             gap: 8px;
             align-items: center;
         }
+
         .toast {
             padding: 12px 20px;
             border-radius: 50px;
@@ -612,22 +810,58 @@
             color: #fff;
             font-size: 13px;
             font-weight: 600;
-            box-shadow: 0 10px 30px rgba(0,0,0,.25);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
             animation: toastIn .2s ease-out;
         }
-        .toast.ok { background: #16a34a; }
-        .toast.err { background: #dc2626; }
+
+        .toast.ok {
+            background: #16a34a;
+        }
+
+        .toast.err {
+            background: #dc2626;
+        }
+
         @keyframes toastIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* ---------------- FOOTER ---------------- */
 
-        footer { background: #222; color: #fff; padding: 40px 22px; text-align: center; margin-top: 40px; }
-        .footer-title { font-size: 22px; font-weight: 900; margin-bottom: 10px; }
-        .footer-title span { color: var(--accent); }
-        footer p { max-width: 650px; margin: auto; color: #bbb; font-size: 12px; line-height: 1.7; }
+        footer {
+            background: #222;
+            color: #fff;
+            padding: 40px 22px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .footer-title {
+            font-size: 22px;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+
+        .footer-title span {
+            color: var(--accent);
+        }
+
+        footer p {
+            max-width: 650px;
+            margin: auto;
+            color: #bbb;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
         .footer-links {
             margin-top: 22px;
             display: flex;
@@ -636,32 +870,95 @@
             gap: 8px 18px;
             font-size: 12px;
         }
-        .footer-links a { color: #bbb; font-weight: 700; transition: .2s ease; }
-        .footer-links a:hover { color: var(--accent); }
-        .footer-disclosure { margin-top: 18px; font-size: 11px; color: #888; }
+
+        .footer-links a {
+            color: #bbb;
+            font-weight: 700;
+            transition: .2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .footer-disclosure {
+            margin-top: 18px;
+            font-size: 11px;
+            color: #888;
+        }
 
         /* ---------------- MOBILE ---------------- */
 
         @media (max-width: 700px) {
-            .header-inner { padding: 13px 15px; flex-wrap: wrap; }
-            .logo { font-size: 21px; }
-            .nav-link { font-size: 11px; padding: 7px 11px; }
+            .header-inner {
+                padding: 13px 15px;
+                flex-wrap: wrap;
+            }
 
-            .breadcrumb { padding: 16px 15px 0; font-size: 12px; }
-            .thread-wrap { padding: 14px 15px 50px; }
+            .logo {
+                font-size: 21px;
+            }
 
-            .yap-main-card { padding: 18px 16px; gap: 12px; border-radius: 15px; }
-            .yap-title { font-size: 19px; }
-            .yap-full-body { font-size: 14px; }
-            .vote-btn { width: 32px; height: 32px; font-size: 13px; }
-            .vote-count { font-size: 13px; }
+            .nav-link {
+                font-size: 11px;
+                padding: 7px 11px;
+            }
 
-            .comment { padding-left: 12px; }
-            .comment-inner { gap: 8px; }
-            .comment-votes .vote-btn { width: 24px; height: 24px; font-size: 10px; }
-            .comment-text { font-size: 13px; }
+            .breadcrumb {
+                padding: 16px 15px 0;
+                font-size: 12px;
+            }
 
-            .comment-form { padding: 14px; border-radius: 14px; }
+            .thread-wrap {
+                padding: 14px 15px 50px;
+            }
+
+            .yap-main-card {
+                padding: 18px 16px;
+                gap: 12px;
+                border-radius: 15px;
+            }
+
+            .yap-title {
+                font-size: 19px;
+            }
+
+            .yap-full-body {
+                font-size: 14px;
+            }
+
+            .vote-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 13px;
+            }
+
+            .vote-count {
+                font-size: 13px;
+            }
+
+            .comment {
+                padding-left: 12px;
+            }
+
+            .comment-inner {
+                gap: 8px;
+            }
+
+            .comment-votes .vote-btn {
+                width: 24px;
+                height: 24px;
+                font-size: 10px;
+            }
+
+            .comment-text {
+                font-size: 13px;
+            }
+
+            .comment-form {
+                padding: 14px;
+                border-radius: 14px;
+            }
         }
     </style>
 </head>
@@ -713,9 +1010,10 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="auth.js"></script>
+    <script src="report.js"></script>
 
     <script>
-        (function () {
+        (function() {
             const sb = window.wr.sb;
             const MAX_DEPTH = 6;
 
@@ -724,10 +1022,10 @@
             let me = null;
             let yapId = null;
             let yap = null;
-            let comments = [];          // flat list
-            let commentTree = [];       // nested
+            let comments = []; // flat list
+            let commentTree = []; // nested
             let myYapVote = 0;
-            let myCommentVotes = {};    // { commentId: 1 | -1 }
+            let myCommentVotes = {}; // { commentId: 1 | -1 }
             let commentsSort = "new";
             let editingYap = false;
 
@@ -737,18 +1035,22 @@
             /* ---------------- Utils ---------------- */
             function esc(s) {
                 return String(s ?? "").replace(/[&<>"']/g, c => ({
-                    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-                }[c]));
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    '"': "&quot;",
+                    "'": "&#39;"
+                } [c]));
             }
 
             function timeAgo(iso) {
                 const d = new Date(iso);
                 const s = Math.floor((Date.now() - d.getTime()) / 1000);
-                if (s < 60)      return "just now";
-                if (s < 3600)    return Math.floor(s/60) + "m ago";
-                if (s < 86400)   return Math.floor(s/3600) + "h ago";
-                if (s < 604800)  return Math.floor(s/86400) + "d ago";
-                if (s < 2592000) return Math.floor(s/604800) + "w ago";
+                if (s < 60) return "just now";
+                if (s < 3600) return Math.floor(s / 60) + "m ago";
+                if (s < 86400) return Math.floor(s / 3600) + "h ago";
+                if (s < 604800) return Math.floor(s / 86400) + "d ago";
+                if (s < 2592000) return Math.floor(s / 604800) + "w ago";
                 return d.toLocaleDateString();
             }
 
@@ -770,12 +1072,18 @@
                     return;
                 }
 
-                const { data: { session: s } } = await sb.auth.getSession();
+                const {
+                    data: {
+                        session: s
+                    }
+                } = await sb.auth.getSession();
                 session = s;
                 if (session) {
                     me = window.wr.getProfile();
                     if (!me) {
-                        const { data } = await sb.from("profiles")
+                        const {
+                            data
+                        } = await sb.from("profiles")
                             .select("id, username")
                             .eq("id", session.user.id)
                             .maybeSingle();
@@ -789,7 +1097,10 @@
             }
 
             async function loadYap() {
-                const { data, error } = await sb.from("yaps")
+                const {
+                    data,
+                    error
+                } = await sb.from("yaps")
                     .select(`
                         id, product_id, title, body, upvotes, downvotes, net_votes,
                         comment_count, is_deleted, edited_at, created_at,
@@ -806,7 +1117,9 @@
                 yap = data;
 
                 if (session) {
-                    const { data: v } = await sb.from("yap_votes")
+                    const {
+                        data: v
+                    } = await sb.from("yap_votes")
                         .select("vote")
                         .eq("user_id", session.user.id)
                         .eq("yap_id", yapId)
@@ -816,7 +1129,10 @@
             }
 
             async function loadComments() {
-                const { data, error } = await sb.from("yap_comments")
+                const {
+                    data,
+                    error
+                } = await sb.from("yap_comments")
                     .select(`
                         id, yap_id, parent_id, depth, body, upvotes, downvotes, net_votes,
                         is_deleted, edited_at, created_at,
@@ -834,7 +1150,12 @@
 
                 // Build tree
                 const byId = {};
-                comments.forEach(c => { byId[c.id] = { ...c, children: [] }; });
+                comments.forEach(c => {
+                    byId[c.id] = {
+                        ...c,
+                        children: []
+                    };
+                });
                 const roots = [];
                 comments.forEach(c => {
                     const node = byId[c.id];
@@ -865,12 +1186,16 @@
                 // Fetch my comment votes
                 if (session && comments.length > 0) {
                     const ids = comments.map(c => c.id);
-                    const { data: vRows } = await sb.from("yap_votes")
+                    const {
+                        data: vRows
+                    } = await sb.from("yap_votes")
                         .select("comment_id, vote")
                         .eq("user_id", session.user.id)
                         .in("comment_id", ids);
                     myCommentVotes = {};
-                    (vRows || []).forEach(v => { myCommentVotes[v.comment_id] = v.vote; });
+                    (vRows || []).forEach(v => {
+                        myCommentVotes[v.comment_id] = v.vote;
+                    });
                 }
             }
 
@@ -956,12 +1281,12 @@
                             <span>${esc(timeAgo(yap.created_at))}</span>
                             ${yap.edited_at ? `<span class="yap-dot">·</span><span class="yap-edited">edited ${esc(timeAgo(yap.edited_at))}</span>` : ""}
 
-                            ${isAuthor ? `
+                                                       ${isAuthor ? `
                                 <div class="yap-actions">
                                     <button class="yap-action-btn" data-action="start-edit-yap" type="button">Edit</button>
                                     <button class="yap-action-btn danger" data-action="delete-yap" type="button">Delete</button>
                                 </div>
-                            ` : ""}
+                            ` : (session ? `<div class="yap-actions">${window.report.link("yap", yap.id, yap.title)}</div>` : "")}
                         </div>
                     </div>
                 `;
@@ -1024,13 +1349,13 @@
                 const netClass = net > 0 ? "positive" : net < 0 ? "negative" : "";
                 const myVote = myCommentVotes[node.id] || 0;
 
-                const authorHtml = node.is_deleted
-                    ? `<span class="comment-author deleted">[deleted]</span>`
-                    : `<a class="comment-author" href="profile.html?id=${esc(node.author?.id || "")}">${esc(node.author?.username || "unknown")}</a>`;
+                const authorHtml = node.is_deleted ?
+                    `<span class="comment-author deleted">[deleted]</span>` :
+                    `<a class="comment-author" href="profile.html?id=${esc(node.author?.id || "")}">${esc(node.author?.username || "unknown")}</a>`;
 
-                const textHtml = node.is_deleted
-                    ? `<div class="comment-text deleted">[deleted]</div>`
-                    : `<div class="comment-text">${esc(node.body)}</div>`;
+                const textHtml = node.is_deleted ?
+                    `<div class="comment-text deleted">[deleted]</div>` :
+                    `<div class="comment-text">${esc(node.body)}</div>`;
 
                 const canReply = !node.is_deleted && session && !atCap;
 
@@ -1055,10 +1380,11 @@
                             ${textHtml}
                             <div class="comment-foot">
                                 ${canReply ? `<button class="comment-foot-btn" data-action="reply-open" data-comment-id="${esc(node.id)}">Reply</button>` : ""}
-                                ${isAuthor && !node.is_deleted ? `
+                                                               ${isAuthor && !node.is_deleted ? `
                                     <button class="comment-foot-btn" data-action="edit-comment" data-comment-id="${esc(node.id)}">Edit</button>
                                     <button class="comment-foot-btn danger" data-action="delete-comment" data-comment-id="${esc(node.id)}">Delete</button>
                                 ` : ""}
+                                ${session && !isAuthor && !node.is_deleted ? window.report.link("yap_comment", node.id, node.body) : ""}
                             </div>
 
                             <div class="reply-form" id="reply-form-${esc(node.id)}">
@@ -1106,31 +1432,91 @@
                 const action = btn.dataset.action;
 
                 // Yap votes
-                if (action === "vote-yap-up")   { e.preventDefault(); await voteYap(1);  return; }
-                if (action === "vote-yap-down") { e.preventDefault(); await voteYap(-1); return; }
+                if (action === "vote-yap-up") {
+                    e.preventDefault();
+                    await voteYap(1);
+                    return;
+                }
+                if (action === "vote-yap-down") {
+                    e.preventDefault();
+                    await voteYap(-1);
+                    return;
+                }
 
                 // Yap edit / delete
-                if (action === "start-edit-yap")  { e.preventDefault(); openEditPanel();  return; }
-                if (action === "cancel-edit-yap") { e.preventDefault(); closeEditPanel(); return; }
-                if (action === "save-edit-yap")   { e.preventDefault(); await saveEditYap(); return; }
-                if (action === "delete-yap")      { e.preventDefault(); await deleteYap(); return; }
+                if (action === "start-edit-yap") {
+                    e.preventDefault();
+                    openEditPanel();
+                    return;
+                }
+                if (action === "cancel-edit-yap") {
+                    e.preventDefault();
+                    closeEditPanel();
+                    return;
+                }
+                if (action === "save-edit-yap") {
+                    e.preventDefault();
+                    await saveEditYap();
+                    return;
+                }
+                if (action === "delete-yap") {
+                    e.preventDefault();
+                    await deleteYap();
+                    return;
+                }
 
                 // Sort
-                if (action === "sort-new") { commentsSort = "new"; await reloadComments(); return; }
-                if (action === "sort-top") { commentsSort = "top"; await reloadComments(); return; }
+                if (action === "sort-new") {
+                    commentsSort = "new";
+                    await reloadComments();
+                    return;
+                }
+                if (action === "sort-top") {
+                    commentsSort = "top";
+                    await reloadComments();
+                    return;
+                }
 
                 // Comment votes
-                if (action === "vote-cmt-up")   { e.preventDefault(); await voteComment(btn.dataset.commentId, 1);  return; }
-                if (action === "vote-cmt-down") { e.preventDefault(); await voteComment(btn.dataset.commentId, -1); return; }
+                if (action === "vote-cmt-up") {
+                    e.preventDefault();
+                    await voteComment(btn.dataset.commentId, 1);
+                    return;
+                }
+                if (action === "vote-cmt-down") {
+                    e.preventDefault();
+                    await voteComment(btn.dataset.commentId, -1);
+                    return;
+                }
 
                 // Reply open / cancel / submit
-                if (action === "reply-open")   { e.preventDefault(); openReplyForm(btn.dataset.commentId);   return; }
-                if (action === "reply-cancel") { e.preventDefault(); closeReplyForm(btn.dataset.commentId);  return; }
-                if (action === "reply-submit") { e.preventDefault(); await submitReply(btn.dataset.commentId); return; }
+                if (action === "reply-open") {
+                    e.preventDefault();
+                    openReplyForm(btn.dataset.commentId);
+                    return;
+                }
+                if (action === "reply-cancel") {
+                    e.preventDefault();
+                    closeReplyForm(btn.dataset.commentId);
+                    return;
+                }
+                if (action === "reply-submit") {
+                    e.preventDefault();
+                    await submitReply(btn.dataset.commentId);
+                    return;
+                }
 
                 // Comment edit / delete
-                if (action === "edit-comment")   { e.preventDefault(); await editComment(btn.dataset.commentId);   return; }
-                if (action === "delete-comment") { e.preventDefault(); await deleteComment(btn.dataset.commentId); return; }
+                if (action === "edit-comment") {
+                    e.preventDefault();
+                    await editComment(btn.dataset.commentId);
+                    return;
+                }
+                if (action === "delete-comment") {
+                    e.preventDefault();
+                    await deleteComment(btn.dataset.commentId);
+                    return;
+                }
 
                 // Deeper replies toggle
                 if (action === "toggle-deeper") {
@@ -1138,9 +1524,9 @@
                     const target = document.getElementById(btn.dataset.target);
                     if (!target) return;
                     const open = target.classList.toggle("open");
-                    btn.textContent = open
-                        ? "← Collapse thread"
-                        : `Continue thread → (${target.children.length} ${target.children.length === 1 ? "reply" : "replies"})`;
+                    btn.textContent = open ?
+                        "← Collapse thread" :
+                        `Continue thread → (${target.children.length} ${target.children.length === 1 ? "reply" : "replies"})`;
                     return;
                 }
             });
@@ -1176,12 +1562,17 @@
                     return;
                 }
                 try {
-                    const { error } = await sb.rpc("vote_yap", {
-                        p_yap_id: yapId, p_vote: direction
+                    const {
+                        error
+                    } = await sb.rpc("vote_yap", {
+                        p_yap_id: yapId,
+                        p_vote: direction
                     });
                     if (error) throw error;
 
-                    const { data } = await sb.from("yaps")
+                    const {
+                        data
+                    } = await sb.from("yaps")
                         .select("upvotes, downvotes, net_votes")
                         .eq("id", yapId).maybeSingle();
                     if (data) {
@@ -1189,7 +1580,9 @@
                         yap.downvotes = data.downvotes;
                         yap.net_votes = data.net_votes;
                     }
-                    const { data: v } = await sb.from("yap_votes")
+                    const {
+                        data: v
+                    } = await sb.from("yap_votes")
                         .select("vote")
                         .eq("user_id", session.user.id).eq("yap_id", yapId).maybeSingle();
                     myYapVote = v ? v.vote : 0;
@@ -1206,12 +1599,17 @@
                     return;
                 }
                 try {
-                    const { error } = await sb.rpc("vote_yap_comment", {
-                        p_comment_id: commentId, p_vote: direction
+                    const {
+                        error
+                    } = await sb.rpc("vote_yap_comment", {
+                        p_comment_id: commentId,
+                        p_vote: direction
                     });
                     if (error) throw error;
 
-                    const { data } = await sb.from("yap_comments")
+                    const {
+                        data
+                    } = await sb.from("yap_comments")
                         .select("upvotes, downvotes, net_votes")
                         .eq("id", commentId).maybeSingle();
                     if (data) {
@@ -1222,7 +1620,9 @@
                             c.net_votes = data.net_votes;
                         }
                     }
-                    const { data: v } = await sb.from("yap_votes")
+                    const {
+                        data: v
+                    } = await sb.from("yap_votes")
                         .select("vote")
                         .eq("user_id", session.user.id).eq("comment_id", commentId).maybeSingle();
                     myCommentVotes[commentId] = v ? v.vote : 0;
@@ -1238,14 +1638,19 @@
                 if (!input) return;
                 const body = input.value.trim();
                 if (!body) return;
-                if (!session) { toast("Sign in to comment.", "err"); return; }
+                if (!session) {
+                    toast("Sign in to comment.", "err");
+                    return;
+                }
 
                 const btn = document.getElementById("top-comment-submit");
                 btn.disabled = true;
                 btn.textContent = "Posting…";
 
                 try {
-                    const { error } = await sb.rpc("create_yap_comment", {
+                    const {
+                        error
+                    } = await sb.rpc("create_yap_comment", {
                         p_yap_id: yapId,
                         p_parent_id: null,
                         p_body: body
@@ -1285,14 +1690,19 @@
                 const ta = f.querySelector("textarea");
                 const body = ta.value.trim();
                 if (!body) return;
-                if (!session) { toast("Sign in to reply.", "err"); return; }
+                if (!session) {
+                    toast("Sign in to reply.", "err");
+                    return;
+                }
 
                 const btn = f.querySelector(`[data-action="reply-submit"]`);
                 btn.disabled = true;
                 btn.textContent = "Replying…";
 
                 try {
-                    const { error } = await sb.rpc("create_yap_comment", {
+                    const {
+                        error
+                    } = await sb.rpc("create_yap_comment", {
                         p_yap_id: yapId,
                         p_parent_id: commentId,
                         p_body: body
@@ -1317,8 +1727,11 @@
                 if (!trimmed || trimmed === c.body) return;
 
                 try {
-                    const { error } = await sb.rpc("update_yap_comment", {
-                        p_comment_id: commentId, p_body: trimmed
+                    const {
+                        error
+                    } = await sb.rpc("update_yap_comment", {
+                        p_comment_id: commentId,
+                        p_body: trimmed
                     });
                     if (error) throw error;
                     toast("Comment updated.", "ok");
@@ -1332,7 +1745,12 @@
             async function deleteComment(commentId) {
                 if (!confirm("Delete this comment? If it has replies, it'll show as [deleted] instead.")) return;
                 try {
-                    const { data, error } = await sb.rpc("delete_yap_comment", { p_comment_id: commentId });
+                    const {
+                        data,
+                        error
+                    } = await sb.rpc("delete_yap_comment", {
+                        p_comment_id: commentId
+                    });
                     if (error) throw error;
                     toast((data?.mode === "soft") ? "Comment marked as deleted." : "Comment deleted.", "ok");
                     await reloadComments();
@@ -1348,6 +1766,7 @@
                 document.getElementById("edit-panel").classList.add("open");
                 document.getElementById("yap-full-body").style.display = "none";
             }
+
             function closeEditPanel() {
                 document.getElementById("edit-panel").classList.remove("open");
                 document.getElementById("yap-full-body").style.display = "";
@@ -1356,12 +1775,22 @@
             async function saveEditYap() {
                 const title = document.getElementById("edit-title").value.trim();
                 const body = document.getElementById("edit-body").value.trim();
-                if (title.length < 3) { toast("Title must be at least 3 characters.", "err"); return; }
-                if (!body) { toast("Body cannot be empty.", "err"); return; }
+                if (title.length < 3) {
+                    toast("Title must be at least 3 characters.", "err");
+                    return;
+                }
+                if (!body) {
+                    toast("Body cannot be empty.", "err");
+                    return;
+                }
 
                 try {
-                    const { error } = await sb.rpc("update_yap", {
-                        p_yap_id: yapId, p_title: title, p_body: body
+                    const {
+                        error
+                    } = await sb.rpc("update_yap", {
+                        p_yap_id: yapId,
+                        p_title: title,
+                        p_body: body
                     });
                     if (error) throw error;
                     toast("Yap updated.", "ok");
@@ -1376,11 +1805,18 @@
             async function deleteYap() {
                 if (!confirm("Delete this Yap? If it has comments, it'll show as [deleted] instead.")) return;
                 try {
-                    const { data, error } = await sb.rpc("delete_yap", { p_yap_id: yapId });
+                    const {
+                        data,
+                        error
+                    } = await sb.rpc("delete_yap", {
+                        p_yap_id: yapId
+                    });
                     if (error) throw error;
                     toast((data?.mode === "soft") ? "Yap marked as deleted." : "Yap deleted.", "ok");
                     if (data?.mode === "hard") {
-                        setTimeout(() => { location.href = "yap.html"; }, 700);
+                        setTimeout(() => {
+                            location.href = "yap.html";
+                        }, 700);
                     } else {
                         await loadYap();
                         render();
@@ -1403,4 +1839,5 @@
     </script>
 
 </body>
+
 </html>

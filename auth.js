@@ -67,26 +67,8 @@
     const area = getArea();
     if (!area) return;
 
-    if (session && profile) {
-      area.innerHTML = `
-        <a class="wr-auth-user" href="profile.html" title="Your profile">
-          ${esc(profile.username)}
-        </a>
-        <button class="wr-auth-logout" type="button" id="wr-logout-btn">Logout</button>
-      `;
-      const btn = document.getElementById("wr-logout-btn");
-      if (btn) btn.addEventListener("click", async () => {
-        await sb.auth.signOut();
-        window.location.reload();
-      });
-    } else if (session) {
-      area.innerHTML = `<span class="wr-auth-user">…</span>`;
-    } else {
-      area.innerHTML = `
-        <a class="wr-auth-signin wr-auth-cta" href="login.html">Sign in</a>
-        <a class="wr-auth-join wr-auth-cta" href="signup.html">Join</a>
-      `;
-    }
+    Object.keys(localStorage).filter(k => k.includes("supabase")).forEach(k => localStorage.removeItem(k));
+location.reload();
   }
 
   /* ---------- Profile lookup ---------- */

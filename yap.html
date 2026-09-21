@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Yap it! — The Whacky Rack</title>
+
+    <meta name="description" content="The Yap it! board — threaded discussions about every weird product on The Whacky Rack.">
+
+    <style>
+        :root {
+            --bg: #f7f5ef;
+            --card: #ffffff;
+            --text: #202020;
+            --muted: #777;
+            --accent: #ff5a36;
+            --accent-dark: #e84625;
+            --border: #e8e4dc;
+            --pill: #fff0eb;
+            --shadow: 0 8px 25px rgba(0,0,0,.06);
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        /* ---------------- HEADER ---------------- */
+
+        header {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-inner {
+            max-width: 1250px;
+            margin: auto;
+            padding: 16px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .logo { font-size: 25px; font-weight: 900; letter-spacing: -1px; white-space: nowrap; }
+        .logo span { color: var(--accent); }
+
+        .header-right { display: flex; align-items: center; gap: 12px; }
+
+        .nav-link {
+            font-size: 13px;
+            font-weight: 700;
+            padding: 8px 14px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            background: #fff;
+            transition: .2s ease;
+            white-space: nowrap;
+        }
+        .nav-link:hover { border-color: #bbb; }
+        .nav-link.active { background: #222; color: #fff; border-color: #222; }
+
+        /* ---------------- HERO ---------------- */
+
+        .hero { max-width: 1050px; margin: auto; padding: 55px 22px 25px; text-align: center; }
+
+        .hero-kicker {
+            display: inline-block;
+            padding: 7px 13px;
+            background: #222;
+            color: #fff;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: clamp(38px, 6vw, 66px);
+            line-height: 1;
+            letter-spacing: -3px;
+            font-weight: 950;
+        }
+
+        .hero h1 span { color: var(--accent); }
+
+        .hero-description {
+            max-width: 720px;
+            margin: 20px auto 0;
+            color: #555;
+            font-size: 16px;
+            line-height: 1.75;
+        }
+
+        /* ---------------- CONTROLS ---------------- */
+
+        .controls-wrapper { max-width: 1050px; margin: 15px auto 25px; padding: 0 22px; }
+
+        .controls {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: var(--shadow);
+            flex-wrap: wrap;
+        }
+
+        .sort-tabs { display: flex; gap: 6px; }
+
+        .sort-tab {
+            border: 1px solid var(--border);
+            background: #fafafa;
+            padding: 9px 16px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: .2s ease;
+            color: #666;
+        }
+        .sort-tab:hover { border-color: #bbb; color: #202020; }
+        .sort-tab.active { background: #222; color: #fff; border-color: #222; }
+
+        .controls-right { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+
+        .new-yap-btn {
+            background: var(--accent);
+            color: #fff;
+            border: 1px solid var(--accent);
+            padding: 10px 18px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            font-family: inherit;
+            transition: .2s ease;
+            white-space: nowrap;
+        }
+        .new-yap-btn:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
+
+        /* ---------------- PRODUCT BANNER ---------------- */
+
+        .product-banner {
+            max-width: 1050px;
+            margin: 0 auto 22px;
+            padding: 16px 20px;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--accent);
+            border-radius: 14px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .product-banner-img {
+            width: 62px;
+            height: 62px;
+            object-fit: cover;
+            border-radius: 10px;
+            background: #f1eee8;
+            flex-shrink: 0;
+        }
+
+        .product-banner-info { flex: 1; min-width: 200px; }
+
+        .product-banner-cat {
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            color: var(--accent-dark);
+            margin-bottom: 4px;
+        }
+
+        .product-banner-name { font-size: 15px; font-weight: 800; line-height: 1.3; }
+
+        .product-banner-clear {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            padding: 8px 14px;
+            border-radius: 50px;
+            white-space: nowrap;
+            transition: .2s ease;
+        }
+        .product-banner-clear:hover { border-color: #bbb; color: var(--text); }
+
+        /* ---------------- YAP LIST ---------------- */
+
+        .yaps-wrapper { max-width: 1050px; margin: auto; padding: 0 22px 70px; }
+
+        .results-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            color: var(--muted);
+            font-size: 13px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .yaps-list { display: flex; flex-direction: column; gap: 14px; }
+
+        .yap-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px 22px;
+            display: flex;
+            gap: 16px;
+            transition: transform .15s ease, box-shadow .15s ease;
+        }
+
+        .yap-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(0,0,0,.07);
+        }
+
+        /* Vote column */
+        .yap-votes {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            min-width: 42px;
+        }
+
+        .vote-btn {
+            width: 34px;
+            height: 34px;
+            border: 1px solid var(--border);
+            background: #fff;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #999;
+            transition: .15s ease;
+            font-family: inherit;
+            padding: 0;
+        }
+        .vote-btn:hover:not(:disabled) { border-color: #bbb; color: #555; }
+        .vote-btn.up.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+        .vote-btn.down.active { background: #3b82f6; border-color: #3b82f6; color: #fff; }
+        .vote-btn:disabled { opacity: .55; cursor: not-allowed; }
+
+        .vote-count {
+            font-size: 14px;
+            font-weight: 900;
+            color: #444;
+            padding: 2px 0;
+            min-width: 26px;
+            text-align: center;
+        }
+        .vote-count.positive { color: var(--accent-dark); }
+        .vote-count.negative { color: #3b82f6; }
+
+        /* Main content column */
+        .yap-main { flex: 1; min-width: 0; }
+
+        .yap-title {
+            margin: 0 0 6px;
+            font-size: 18px;
+            font-weight: 900;
+            letter-spacing: -.3px;
+            line-height: 1.3;
+        }
+
+        .yap-body {
+            color: #444;
+            font-size: 14px;
+            line-height: 1.65;
+            margin: 0 0 12px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            word-wrap: break-word;
+        }
+        .yap-body.deleted { color: #999; font-style: italic; }
+
+        .yap-meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px 12px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .yap-author {
+            font-weight: 800;
+            color: var(--accent-dark);
+        }
+        .yap-author:hover { text-decoration: underline; }
+
+        .yap-dot { opacity: .5; }
+
+        .yap-product-link {
+            font-size: 11px;
+            font-weight: 700;
+            color: #555;
+            background: #fafafa;
+            border: 1px solid var(--border);
+            padding: 3px 10px;
+            border-radius: 50px;
+            transition: .2s ease;
+        }
+        .yap-product-link:hover { border-color: #bbb; }
+
+        .yap-edited {
+            font-size: 11px;
+            color: var(--muted);
+            font-style: italic;
+        }
+
+        .yap-footer {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .open-thread {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--accent-dark);
+        }
+        .open-thread:hover { text-decoration: underline; }
+
+        .yap-comment-count {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--muted);
+            background: #fafafa;
+            padding: 5px 12px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+        }
+
+        /* Author actions */
+        .yap-actions {
+            display: flex;
+            gap: 6px;
+            margin-left: auto;
+        }
+
+        .yap-action-btn {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--muted);
+            background: transparent;
+            border: 1px solid var(--border);
+            padding: 5px 11px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: .15s ease;
+        }
+        .yap-action-btn:hover { border-color: #bbb; color: var(--text); }
+        .yap-action-btn.danger:hover { border-color: var(--accent); color: var(--accent-dark); }
+
+        /* ---------------- EMPTY STATE ---------------- */
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--muted);
+            background: #fff;
+            border: 1px dashed var(--border);
+            border-radius: 18px;
+        }
+        .empty-state .emoji { font-size: 42px; margin-bottom: 10px; }
+        .empty-state h2 { margin: 0 0 8px; color: var(--text); font-size: 20px; }
+        .empty-state p { margin: 0 0 18px; font-size: 14px; }
+
+        .empty-cta {
+            display: inline-block;
+            background: var(--accent);
+            color: #fff;
+            padding: 12px 22px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 13px;
+            cursor: pointer;
+            border: 0;
+            font-family: inherit;
+            transition: .2s ease;
+        }
+        .empty-cta:hover { background: var(--accent-dark); }
+
+        /* ---------------- LOADING ---------------- */
+
+        .loading {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        /* ---------------- FOOTER ---------------- */
+
+        footer { background: #222; color: #fff; padding: 40px 22px; text-align: center; }
+        .footer-title { font-size: 22px; font-weight: 900; margin-bottom: 10px; }
+        .footer-title span { color: var(--accent); }
+        footer p { max-width: 650px; margin: auto; color: #bbb; font-size: 12px; line-height: 1.7; }
+
+        .footer-links {
+            margin-top: 22px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px 18px;
+            font-size: 12px;
+        }
+        .footer-links a { color: #bbb; font-weight: 700; transition: .2s ease; }
+        .footer-links a:hover { color: var(--accent); }
+
+        .footer-disclosure { margin-top: 18px; font-size: 11px; color: #888; }
+
+        /* ---------------- MODAL ---------------- */
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.5);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal.open { display: flex; }
+
+        .modal-inner {
+            background: #fff;
+            border-radius: 20px;
+            padding: 28px;
+            max-width: 560px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,.25);
+            position: relative;
+            animation: modalIn .18s ease-out;
+        }
+
+        @keyframes modalIn {
+            from { opacity: 0; transform: translateY(10px) scale(.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 34px;
+            height: 34px;
+            border: 0;
+            background: #f1eee8;
+            border-radius: 50%;
+            font-size: 20px;
+            line-height: 1;
+            cursor: pointer;
+            color: #555;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: inherit;
+            transition: .2s ease;
+        }
+        .modal-close:hover { background: #e8e4dc; color: #222; }
+
+        .modal h3 {
+            margin: 0 0 4px;
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: -.3px;
+        }
+        .modal .modal-sub {
+            margin: 0 0 20px;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .modal label {
+            display: block;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            color: #555;
+            margin: 16px 0 6px;
+        }
+
+        .modal input,
+        .modal select,
+        .modal textarea {
+            width: 100%;
+            padding: 11px 13px;
+            font-family: inherit;
+            font-size: 14px;
+            background: #fafafa;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            outline: none;
+            transition: .2s ease;
+            color: var(--text);
+        }
+
+        .modal input:focus,
+        .modal select:focus,
+        .modal textarea:focus { border-color: var(--accent); background: #fff; }
+
+        .modal textarea { resize: vertical; min-height: 110px; line-height: 1.55; }
+
+        .modal .char-count {
+            font-size: 11px;
+            color: var(--muted);
+            text-align: right;
+            margin-top: 4px;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 22px;
+        }
+
+        .btn {
+            padding: 12px 22px;
+            border-radius: 50px;
+            font-family: inherit;
+            font-weight: 800;
+            font-size: 13px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: .2s ease;
+        }
+
+        .btn-ghost { background: #fff; color: #444; border-color: var(--border); }
+        .btn-ghost:hover { border-color: #bbb; }
+
+        .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+        .btn-primary:hover:not(:disabled) { background: var(--accent-dark); border-color: var(--accent-dark); }
+        .btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+
+        .modal .status {
+            margin-top: 14px;
+            padding: 11px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            display: none;
+        }
+        .modal .status.show { display: block; }
+        .modal .status.err { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+
+        .modal .product-preview {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: #fafafa;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-top: 6px;
+        }
+        .modal .product-preview img {
+            width: 48px;
+            height: 48px;
+            object-fit: cover;
+            border-radius: 8px;
+            background: #f1eee8;
+        }
+        .modal .product-preview .pp-cat {
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--accent-dark);
+            letter-spacing: .4px;
+        }
+        .modal .product-preview .pp-name {
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-top: 2px;
+        }
+
+        /* ---------------- TOAST ---------------- */
+
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .toast {
+            padding: 12px 20px;
+            border-radius: 50px;
+            background: #222;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0,0,0,.25);
+            animation: toastIn .2s ease-out;
+        }
+
+        .toast.ok { background: #16a34a; }
+        .toast.err { background: #dc2626; }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ---------------- MOBILE ---------------- */
+
+        @media (max-width: 700px) {
+            .header-inner { padding: 13px 15px; flex-wrap: wrap; }
+            .logo { font-size: 21px; }
+            .nav-link { font-size: 11px; padding: 7px 11px; }
+
+            .hero { padding: 40px 18px 20px; }
+            .hero h1 { font-size: 44px; letter-spacing: -2px; }
+            .hero-description { font-size: 14px; line-height: 1.65; }
+
+            .controls-wrapper { padding: 0 15px; }
+            .controls { padding: 10px 12px; border-radius: 15px; }
+            .sort-tab { padding: 8px 13px; font-size: 12px; }
+            .new-yap-btn { padding: 9px 14px; font-size: 12px; }
+
+            .product-banner { margin: 0 15px 18px; padding: 13px 15px; gap: 12px; }
+            .product-banner-img { width: 48px; height: 48px; }
+
+            .yaps-wrapper { padding: 0 15px 55px; }
+            .yap-card { padding: 15px 15px; gap: 10px; border-radius: 14px; }
+            .yap-title { font-size: 16px; }
+            .yap-body { font-size: 13px; }
+            .vote-btn { width: 30px; height: 30px; font-size: 13px; }
+            .vote-count { font-size: 13px; }
+
+            .modal-inner { padding: 22px 20px; border-radius: 16px; }
+            .modal h3 { font-size: 19px; }
+        }
+
+        @media (max-width: 380px) {
+            .hero h1 { font-size: 38px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="header-inner">
+            <a href="index.html" class="logo">The <span>Whacky</span> Rack</a>
+            <div class="header-right">
+                <a href="index.html" class="nav-link">Shop</a>
+                <a href="world.html" class="nav-link">World</a>
+                <a href="history.html" class="nav-link">History</a>
+                <a href="about.html" class="nav-link">About</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-kicker">Yap it! Board</div>
+        <h1>What did you <span>actually</span> think?</h1>
+        <p class="hero-description">
+            Honest takes on every weird product in the Rack. First Yap starts a thread.
+            Upvote the ones that matter, downvote the noise, and reply up to six levels deep.
+        </p>
+    </section>
+
+    <!-- CONTROLS -->
+    <div class="controls-wrapper">
+        <div class="controls">
+            <div class="sort-tabs">
+                <button class="sort-tab active" data-sort="top">🔥 Top</button>
+                <button class="sort-tab" data-sort="new">✨ New</button>
+            </div>
+            <div class="controls-right">
+                <button class="new-yap-btn" id="new-yap-btn">+ Start a Yap</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRODUCT BANNER (populated by JS when filtered) -->
+    <div id="product-banner" class="product-banner" hidden></div>
+
+    <!-- YAP LIST -->
+    <main class="yaps-wrapper">
+        <div class="results-info">
+            <span id="result-count">Loading...</span>
+            <span>Be nice. Be weird. Be real. 💬</span>
+        </div>
+
+        <div id="yaps-list" class="yaps-list">
+            <div class="loading">Loading Yaps...</div>
+        </div>
+
+        <div id="empty-state" class="empty-state" hidden>
+            <div class="emoji">🦆</div>
+            <h2>No Yaps here yet.</h2>
+            <p>Start the first thread. Be the legend.</p>
+            <button class="empty-cta" id="empty-start-btn">+ Start a Yap</button>
+        </div>
+    </main>
+
+    <!-- NEW YAP MODAL -->
+    <div class="modal" id="new-yap-modal" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="modal-inner">
+            <button class="modal-close" id="modal-close" type="button" aria-label="Close">×</button>
+            <h3>Start a Yap</h3>
+            <p class="modal-sub">Tell the Rack what you actually think.</p>
+
+            <label for="modal-product">Product</label>
+            <select id="modal-product"></select>
+            <div id="modal-product-preview"></div>
+
+            <label for="modal-title">Title</label>
+            <input id="modal-title" type="text" maxlength="120" placeholder="Sum it up in a few words">
+
+            <label for="modal-body">Body</label>
+            <textarea id="modal-body" maxlength="5000" placeholder="What's your take?"></textarea>
+            <div class="char-count"><span id="body-count">0</span> / 5000</div>
+
+            <div class="status" id="modal-status"></div>
+
+            <div class="modal-actions">
+                <button class="btn btn-ghost" id="modal-cancel" type="button">Cancel</button>
+                <button class="btn btn-primary" id="modal-submit" type="button" disabled>Post Yap</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-title">The <span>Whacky</span> Rack</div>
+        <p>
+            We collect weird, wonderful, funny and completely unnecessary products
+            from around the internet. Some links on this site are affiliate links,
+            which means we may earn a commission if you make a purchase through them,
+            at no additional cost to you.
+        </p>
+        <div class="footer-links">
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="cookies.html">Cookie Policy</a>
+            <a href="disclosure.html">Affiliate Disclosure</a>
+        </div>
+        <div class="footer-disclosure">
+            Products and availability may change depending on Amazon.com policies.
+        </div>
+    </footer>
+
+    <!-- SUPABASE + AUTH -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth.js"></script>
+
+    <script>
+        (function () {
+            const sb = window.wr.sb;
+
+            /* ---------------- State ---------------- */
+            const PAGE_SIZE = 20;
+
+            let session = null;
+            let me = null;
+            let yaps = [];
+            let myVotes = {};       // { yapId: 1 | -1 }
+            let currentSort = "top";
+            let filterProductId = null;
+            let filterProduct = null;
+            let offset = 0;
+            let hasMore = true;
+            let productsCache = null; // lazily populated
+
+            /* ---------------- Elements ---------------- */
+            const els = {
+                yapsList:      document.getElementById("yaps-list"),
+                resultCount:   document.getElementById("result-count"),
+                emptyState:    document.getElementById("empty-state"),
+                productBanner: document.getElementById("product-banner"),
+                newYapBtn:     document.getElementById("new-yap-btn"),
+                emptyStartBtn: document.getElementById("empty-start-btn"),
+                sortTabs:      document.querySelectorAll(".sort-tab"),
+                modal:         document.getElementById("new-yap-modal"),
+                modalClose:    document.getElementById("modal-close"),
+                modalCancel:   document.getElementById("modal-cancel"),
+                modalProduct:  document.getElementById("modal-product"),
+                modalPreview:  document.getElementById("modal-product-preview"),
+                modalTitle:    document.getElementById("modal-title"),
+                modalBody:     document.getElementById("modal-body"),
+                modalSubmit:   document.getElementById("modal-submit"),
+                modalStatus:   document.getElementById("modal-status"),
+                bodyCount:     document.getElementById("body-count"),
+                toastBox:      document.getElementById("toast-container")
+            };
+
+            /* ---------------- Utils ---------------- */
+            function esc(s) {
+                return String(s ?? "").replace(/[&<>"']/g, c => ({
+                    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+                }[c]));
+            }
+
+            function timeAgo(iso) {
+                const d = new Date(iso);
+                const s = Math.floor((Date.now() - d.getTime()) / 1000);
+                if (s < 60)     return "just now";
+                if (s < 3600)   return Math.floor(s/60) + "m ago";
+                if (s < 86400)  return Math.floor(s/3600) + "h ago";
+                if (s < 604800) return Math.floor(s/86400) + "d ago";
+                if (s < 2592000) return Math.floor(s/604800) + "w ago";
+                return d.toLocaleDateString();
+            }
+
+            function toast(msg, kind = "ok") {
+                const el = document.createElement("div");
+                el.className = "toast " + kind;
+                el.textContent = msg;
+                els.toastBox.appendChild(el);
+                setTimeout(() => el.remove(), 2800);
+            }
+
+            /* ---------------- Data loading ---------------- */
+
+            async function loadSession() {
+                const { data: { session: s } } = await sb.auth.getSession();
+                session = s;
+                if (session) {
+                    me = window.wr.getProfile() || null;
+                    if (!me) {
+                        const { data } = await sb.from("profiles")
+                            .select("id, username")
+                            .eq("id", session.user.id)
+                            .maybeSingle();
+                        me = data;
+                    }
+                }
+            }
+
+            async function loadProductFilter() {
+                const params = new URLSearchParams(location.search);
+                const pid = params.get("product");
+                if (!pid) return;
+                filterProductId = parseInt(pid, 10);
+                if (Number.isNaN(filterProductId)) { filterProductId = null; return; }
+
+                const { data } = await sb.from("products")
+                    .select("id, name, image, category, link")
+                    .eq("id", filterProductId)
+                    .maybeSingle();
+                filterProduct = data || null;
+            }
+
+            function renderProductBanner() {
+                if (!filterProduct) {
+                    els.productBanner.hidden = true;
+                    return;
+                }
+                els.productBanner.hidden = false;
+                els.productBanner.innerHTML = `
+                    <img class="product-banner-img" src="${esc(filterProduct.image)}" alt="${esc(filterProduct.name)}">
+                    <div class="product-banner-info">
+                        <div class="product-banner-cat">${esc(filterProduct.category)}</div>
+                        <div class="product-banner-name">${esc(filterProduct.name)}</div>
+                    </div>
+                    <a class="product-banner-clear" href="yap.html">× Show all Yaps</a>
+                `;
+            }
+
+            async function loadYaps(reset = true) {
+                if (reset) {
+                    offset = 0;
+                    yaps = [];
+                    hasMore = true;
+                    els.yapsList.innerHTML = `<div class="loading">Loading Yaps...</div>`;
+                    els.emptyState.hidden = true;
+                }
+
+                let query = sb.from("yaps")
+                    .select(`
+                        id, product_id, title, body, upvotes, downvotes, net_votes,
+                        comment_count, is_deleted, edited_at, created_at,
+                        author:profiles!yaps_author_id_fkey(id, username, avatar_url),
+                        product:products!yaps_product_id_fkey(id, name, image, category)
+                    `)
+                    .eq("is_deleted", false);
+
+                if (filterProductId) {
+                    query = query.eq("product_id", filterProductId);
+                }
+
+                if (currentSort === "top") {
+                    query = query.order("net_votes", { ascending: false });
+                } else {
+                    query = query.order("created_at", { ascending: false });
+                }
+                // Secondary sort for stable ordering
+                query = query.order("created_at", { ascending: false });
+
+                query = query.range(offset, offset + PAGE_SIZE - 1);
+
+                const { data, error } = await query;
+                if (error) {
+                    console.error(error);
+                    els.yapsList.innerHTML = `<div class="loading">Couldn't load Yaps. Try again.</div>`;
+                    return;
+                }
+
+                const rows = data || [];
+                if (reset) yaps = rows;
+                else yaps = yaps.concat(rows);
+
+                offset += rows.length;
+                hasMore = rows.length === PAGE_SIZE;
+
+                // Fetch my votes for these yaps
+                if (session && yaps.length > 0) {
+                    const ids = yaps.map(y => y.id);
+                    const { data: voteRows } = await sb.from("yap_votes")
+                        .select("yap_id, vote")
+                        .eq("user_id", session.user.id)
+                        .in("yap_id", ids);
+                    myVotes = {};
+                    (voteRows || []).forEach(v => { myVotes[v.yap_id] = v.vote; });
+                }
+
+                render();
+            }
+
+            /* ---------------- Render ---------------- */
+
+            function render() {
+                if (yaps.length === 0) {
+                    els.yapsList.innerHTML = "";
+                    els.emptyState.hidden = false;
+                    els.resultCount.textContent = "0 Yaps";
+                    return;
+                }
+                els.emptyState.hidden = true;
+
+                const frag = document.createDocumentFragment();
+                yaps.forEach(y => frag.appendChild(createYapCard(y)));
+                els.yapsList.innerHTML = "";
+                els.yapsList.appendChild(frag);
+
+                els.resultCount.textContent =
+                    `${yaps.length} Yap${yaps.length === 1 ? "" : "s"}`;
+            }
+
+            function createYapCard(y) {
+                const card = document.createElement("article");
+                card.className = "yap-card";
+                card.dataset.yapId = y.id;
+
+                const author = y.author || {};
+                const product = y.product || {};
+                const myVote = myVotes[y.id] || 0;
+                const net = y.net_votes ?? (y.upvotes - y.downvotes);
+                const netClass = net > 0 ? "positive" : net < 0 ? "negative" : "";
+
+                const isAuthor = me && author.id === me.id;
+
+                // Truncate body preview
+                let bodyPreview = y.body || "";
+                if (bodyPreview.length > 260) bodyPreview = bodyPreview.slice(0, 260) + "…";
+
+                card.innerHTML = `
+                    <div class="yap-votes">
+                        <button class="vote-btn up${myVote === 1 ? " active" : ""}"
+                                data-action="vote-up" data-yap-id="${esc(y.id)}"
+                                aria-label="Upvote">▲</button>
+                        <div class="vote-count ${netClass}">${net}</div>
+                        <button class="vote-btn down${myVote === -1 ? " active" : ""}"
+                                data-action="vote-down" data-yap-id="${esc(y.id)}"
+                                aria-label="Downvote">▼</button>
+                    </div>
+
+                    <div class="yap-main">
+                        <h2 class="yap-title">${esc(y.title)}</h2>
+                        <p class="yap-body">${esc(bodyPreview)}</p>
+
+                        <div class="yap-meta">
+                            <a class="yap-author" href="profile.html?id=${esc(author.id)}">${esc(author.username || "unknown")}</a>
+                            <span class="yap-dot">·</span>
+                            <span>${esc(timeAgo(y.created_at))}</span>
+                            ${y.edited_at ? `<span class="yap-dot">·</span><span class="yap-edited">edited</span>` : ""}
+                            ${product.id && !filterProductId ? `
+                                <a class="yap-product-link" href="yap.html?product=${esc(product.id)}">
+                                    💬 ${esc(product.name)}
+                                </a>
+                            ` : ""}
+                        </div>
+
+                        <div class="yap-footer">
+                            <span class="yap-comment-count">
+                                💬 ${y.comment_count} comment${y.comment_count === 1 ? "" : "s"}
+                            </span>
+
+                            <div class="yap-actions">
+                                ${isAuthor ? `
+                                    <button class="yap-action-btn" data-action="edit" data-yap-id="${esc(y.id)}">Edit</button>
+                                    <button class="yap-action-btn danger" data-action="delete" data-yap-id="${esc(y.id)}">Delete</button>
+                                ` : ""}
+                                <a class="yap-action-btn" href="yap-thread.html?id=${esc(y.id)}">Open thread →</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                return card;
+            }
+
+            /* ---------------- Vote handling ---------------- */
+
+            async function handleVote(yapId, direction) {
+                if (!session) {
+                    toast("Sign in to vote.", "err");
+                    return;
+                }
+
+                const card = els.yapsList.querySelector(`[data-yap-id="${yapId}"]`);
+                if (!card) return;
+                card.querySelectorAll(".vote-btn").forEach(b => b.disabled = true);
+
+                try {
+                    const { error } = await sb.rpc("vote_yap", {
+                        p_yap_id: yapId,
+                        p_vote: direction
+                    });
+                    if (error) throw error;
+
+                    // Refetch just this row to get correct counters
+                    const { data } = await sb.from("yaps")
+                        .select("id, upvotes, downvotes, net_votes")
+                        .eq("id", yapId)
+                        .maybeSingle();
+
+                    // Refetch my vote on this row
+                    const { data: voteRow } = await sb.from("yap_votes")
+                        .select("vote")
+                        .eq("user_id", session.user.id)
+                        .eq("yap_id", yapId)
+                        .maybeSingle();
+
+                    if (data) {
+                        const y = yaps.find(x => x.id === yapId);
+                        if (y) {
+                            y.upvotes = data.upvotes;
+                            y.downvotes = data.downvotes;
+                            y.net_votes = data.net_votes;
+                        }
+                        myVotes[yapId] = voteRow ? voteRow.vote : 0;
+                    }
+
+                    render();
+                } catch (e) {
+                    console.error(e);
+                    toast(e.message || "Vote failed.", "err");
+                    card.querySelectorAll(".vote-btn").forEach(b => b.disabled = false);
+                }
+            }
+
+            /* ---------------- Click handling ---------------- */
+
+            document.addEventListener("click", (e) => {
+                const btn = e.target.closest("[data-action]");
+                if (!btn) return;
+                const action = btn.dataset.action;
+                const yapId = btn.dataset.yapId;
+
+                if (action === "vote-up")   { e.preventDefault(); handleVote(yapId, 1);  }
+                if (action === "vote-down") { e.preventDefault(); handleVote(yapId, -1); }
+                if (action === "edit")      { e.preventDefault(); openEditModal(yapId); }
+                if (action === "delete")    { e.preventDefault(); handleDelete(yapId); }
+            });
+
+            async function handleDelete(yapId) {
+                if (!confirm("Delete this Yap? If it has comments, it'll show as [deleted] instead.")) return;
+                try {
+                    const { data, error } = await sb.rpc("delete_yap", { p_yap_id: yapId });
+                    if (error) throw error;
+                    const mode = data?.mode || "hard";
+                    toast(mode === "soft" ? "Yap marked as deleted." : "Yap deleted.", "ok");
+                    await loadYaps(true);
+                } catch (err) {
+                    console.error(err);
+                    toast(err.message || "Delete failed.", "err");
+                }
+            }
+
+            /* ---------------- Sort tabs ---------------- */
+
+            els.sortTabs.forEach(tab => {
+                tab.addEventListener("click", () => {
+                    const s = tab.dataset.sort;
+                    if (s === currentSort) return;
+                    currentSort = s;
+                    els.sortTabs.forEach(t => t.classList.toggle("active", t === tab));
+                    loadYaps(true);
+                });
+            });
+
+            /* ---------------- New Yap modal ---------------- */
+
+            async function loadProductsForModal() {
+                if (productsCache) return productsCache;
+                const { data, error } = await sb.from("products")
+                    .select("id, name, image, category")
+                    .order("name");
+                if (error) { console.error(error); return []; }
+                productsCache = data || [];
+                return productsCache;
+            }
+
+            function renderProductPreview(productId) {
+                const p = (productsCache || []).find(x => x.id === productId);
+                if (!p) {
+                    els.modalPreview.innerHTML = "";
+                    return;
+                }
+                els.modalPreview.innerHTML = `
+                    <div class="product-preview">
+                        <img src="${esc(p.image)}" alt="${esc(p.name)}">
+                        <div>
+                            <div class="pp-cat">${esc(p.category)}</div>
+                            <div class="pp-name">${esc(p.name)}</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            async function openNewModal() {
+                if (!session) {
+                    toast("Sign in to post a Yap.", "err");
+                    setTimeout(() => { window.location.href = "login.html"; }, 900);
+                    return;
+                }
+
+                els.modalProduct.innerHTML = `<option value="">Loading products…</option>`;
+                els.modalProduct.disabled = true;
+                els.modalSubmit.disabled = true;
+                els.modalStatus.className = "status";
+                els.modalTitle.value = "";
+                els.modalBody.value = "";
+                els.bodyCount.textContent = "0";
+
+                els.modal.classList.add("open");
+                els.modal.setAttribute("aria-hidden", "false");
+
+                const products = await loadProductsForModal();
+
+                if (filterProductId) {
+                    // Locked to current product
+                    els.modalProduct.innerHTML = `<option value="${filterProductId}" selected>${esc(filterProduct?.name || "Product #" + filterProductId)}</option>`;
+                    els.modalProduct.disabled = true;
+                } else {
+                    els.modalProduct.disabled = false;
+                    els.modalProduct.innerHTML = `<option value="">— Choose a product —</option>` +
+                        products.map(p =>
+                            `<option value="${p.id}">${esc(p.name)} — ${esc(p.category)}</option>`
+                        ).join("");
+                }
+
+                renderProductPreview(filterProductId);
+                validateModal();
+            }
+
+            function closeModal() {
+                els.modal.classList.remove("open");
+                els.modal.setAttribute("aria-hidden", "true");
+            }
+
+            function validateModal() {
+                const pid = parseInt(els.modalProduct.value || "0", 10);
+                const title = els.modalTitle.value.trim();
+                const body = els.modalBody.value.trim();
+                const ok = pid > 0 && title.length >= 3 && body.length >= 1;
+                els.modalSubmit.disabled = !ok;
+            }
+
+            async function submitNewYap() {
+                const pid = parseInt(els.modalProduct.value || "0", 10);
+                const title = els.modalTitle.value.trim();
+                const body = els.modalBody.value.trim();
+
+                if (!pid || title.length < 3 || !body) return;
+
+                els.modalSubmit.disabled = true;
+                els.modalSubmit.textContent = "Posting…";
+                els.modalStatus.className = "status";
+
+                try {
+                    const { data, error } = await sb.rpc("create_yap", {
+                        p_product_id: pid,
+                        p_title: title,
+                        p_body: body
+                    });
+                    if (error) throw error;
+
+                    toast("Yap posted!", "ok");
+                    closeModal();
+                    // Redirect to thread view
+                    setTimeout(() => {
+                        window.location.href = `yap-thread.html?id=${data}`;
+                    }, 500);
+                } catch (err) {
+                    console.error(err);
+                    els.modalStatus.className = "status show err";
+                    els.modalStatus.textContent = err.message || "Could not post Yap.";
+                    els.modalSubmit.disabled = false;
+                    els.modalSubmit.textContent = "Post Yap";
+                }
+            }
+
+            /* ---------------- Edit modal (reuses the same modal shell) ---------------- */
+
+            async function openEditModal(yapId) {
+                const y = yaps.find(x => x.id === yapId);
+                if (!y) return;
+
+                // Reuse the new modal in "edit" mode
+                els.modalProduct.innerHTML = `<option value="${y.product_id}" selected>${esc(y.product?.name || "Product #" + y.product_id)}</option>`;
+                els.modalProduct.disabled = true;
+                els.modalTitle.value = y.title;
+                els.modalBody.value = y.body;
+                els.bodyCount.textContent = String(y.body.length);
+                els.modal.querySelector("h3").textContent = "Edit Yap";
+                els.modalSub.parentElement && (els.modalSub.parentElement.textContent = "");
+                els.modalSubmit.textContent = "Save changes";
+                els.modalSubmit.disabled = false;
+                els.modalStatus.className = "status";
+                renderProductPreview(y.product_id);
+
+                els.modal.classList.add("open");
+                els.modal.setAttribute("aria-hidden", "false");
+
+                els.modalSubmit.onclick = async () => {
+                    const title = els.modalTitle.value.trim();
+                    const body = els.modalBody.value.trim();
+                    if (title.length < 3 || !body) return;
+                    els.modalSubmit.disabled = true;
+                    els.modalSubmit.textContent = "Saving…";
+                    try {
+                        const { error } = await sb.rpc("update_yap", {
+                            p_yap_id: yapId,
+                            p_title: title,
+                            p_body: body
+                        });
+                        if (error) throw error;
+                        toast("Yap updated.", "ok");
+                        closeModal();
+                        loadYaps(true);
+                    } catch (err) {
+                        console.error(err);
+                        els.modalStatus.className = "status show err";
+                        els.modalStatus.textContent = err.message || "Could not save.";
+                        els.modalSubmit.disabled = false;
+                        els.modalSubmit.textContent = "Save changes";
+                    }
+                };
+            }
+
+            /* ---------------- Modal wiring ---------------- */
+
+            els.newYapBtn.addEventListener("click", openNewModal);
+            els.emptyStartBtn.addEventListener("click", openNewModal);
+            els.modalClose.addEventListener("click", closeModal);
+            els.modalCancel.addEventListener("click", closeModal);
+            els.modal.addEventListener("click", (e) => {
+                if (e.target === els.modal) closeModal();
+            });
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "Escape" && els.modal.classList.contains("open")) closeModal();
+            });
+
+            els.modalProduct.addEventListener("change", () => {
+                const pid = parseInt(els.modalProduct.value || "0", 10);
+                renderProductPreview(pid);
+                validateModal();
+            });
+            els.modalTitle.addEventListener("input", validateModal);
+            els.modalBody.addEventListener("input", () => {
+                els.bodyCount.textContent = String(els.modalBody.value.length);
+                validateModal();
+            });
+
+            // Reset the submit handler to the default new-Yap flow
+            // (openEditModal overrides this — closing resets it)
+            els.modalClose.addEventListener("click", () => {
+                els.modal.querySelector("h3").textContent = "Start a Yap";
+                els.modalSubmit.textContent = "Post Yap";
+                els.modalSubmit.onclick = null; // fall back to addEventListener handler below
+            });
+            els.modalCancel.addEventListener("click", () => {
+                els.modal.querySelector("h3").textContent = "Start a Yap";
+                els.modalSubmit.textContent = "Post Yap";
+                els.modalSubmit.onclick = null;
+            });
+
+            els.modalSubmit.addEventListener("click", (e) => {
+                // If an inline onclick was set (edit mode), let it run
+                if (els.modalSubmit.onclick) return;
+                submitNewYap();
+            });
+
+            /* ---------------- Boot ---------------- */
+
+            async function boot() {
+                await loadSession();
+                await loadProductFilter();
+                renderProductBanner();
+                await loadYaps(true);
+            }
+
+            boot();
+
+        })();
+    </script>
+
+</body>
+</html>

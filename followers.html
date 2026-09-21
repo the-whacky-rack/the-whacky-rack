@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Followers — The Whacky Rack</title>
+
+    <style>
+        :root {
+            --bg: #f7f5ef;
+            --card: #ffffff;
+            --text: #202020;
+            --muted: #777;
+            --accent: #ff5a36;
+            --accent-dark: #e84625;
+            --border: #e8e4dc;
+            --pill: #fff0eb;
+            --shadow: 0 8px 25px rgba(0,0,0,.06);
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        header {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-inner {
+            max-width: 1250px;
+            margin: auto;
+            padding: 16px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .logo { font-size: 25px; font-weight: 900; letter-spacing: -1px; white-space: nowrap; }
+        .logo span { color: var(--accent); }
+
+        .header-right { display: flex; align-items: center; gap: 12px; }
+
+        .nav-link {
+            font-size: 13px;
+            font-weight: 700;
+            padding: 8px 14px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            background: #fff;
+            transition: .2s ease;
+            white-space: nowrap;
+        }
+        .nav-link:hover { border-color: #bbb; }
+
+        /* ---------------- BREADCRUMB ---------------- */
+
+        .breadcrumb {
+            max-width: 720px;
+            margin: auto;
+            padding: 22px 22px 0;
+            font-size: 13px;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .breadcrumb a { color: var(--accent-dark); font-weight: 700; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        /* ---------------- MAIN ---------------- */
+
+        .page-wrap { max-width: 720px; margin: auto; padding: 18px 22px 70px; }
+
+        .page-header {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 22px 24px;
+            box-shadow: var(--shadow);
+            margin-bottom: 18px;
+        }
+
+        .page-header .who {
+            font-size: 12px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .page-header h1 {
+            margin: 0 0 4px;
+            font-size: 26px;
+            letter-spacing: -.5px;
+            font-weight: 950;
+        }
+        .page-header h1 span { color: var(--accent); }
+
+        .page-header .sub {
+            margin: 0;
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        /* ---------------- TABS ---------------- */
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            border: 1px solid var(--border);
+            background: #fff;
+            padding: 12px;
+            border-radius: 14px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            color: var(--muted);
+            transition: .2s ease;
+        }
+        .tab-btn:hover { border-color: #bbb; color: var(--text); }
+        .tab-btn.active { background: #222; color: #fff; border-color: #222; }
+        .tab-btn .tab-count {
+            display: inline-block;
+            background: var(--pill);
+            color: var(--accent-dark);
+            padding: 1px 8px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 900;
+            margin-left: 6px;
+        }
+        .tab-btn.active .tab-count {
+            background: rgba(255,255,255,.2);
+            color: #fff;
+        }
+
+        /* ---------------- LIST ---------------- */
+
+        .list-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .user-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border);
+            transition: background .15s ease;
+        }
+        .user-row:last-child { border-bottom: 0; }
+        .user-row:hover { background: #fafafa; }
+
+        .user-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--pill);
+            color: var(--accent-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 17px;
+            flex-shrink: 0;
+            text-decoration: none;
+            transition: .15s ease;
+        }
+        .user-avatar:hover { background: #ffe2d8; }
+
+        .user-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .user-name-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 2px;
+        }
+
+        .user-name {
+            font-weight: 800;
+            font-size: 15px;
+            color: var(--text);
+        }
+        .user-name:hover { color: var(--accent-dark); }
+
+        .rank-chip {
+            font-size: 10px;
+            font-weight: 900;
+            background: #222;
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 50px;
+            letter-spacing: .3px;
+        }
+
+        .follows-you-badge {
+            font-size: 10px;
+            font-weight: 800;
+            background: var(--pill);
+            color: var(--accent-dark);
+            padding: 2px 8px;
+            border-radius: 50px;
+            letter-spacing: .3px;
+        }
+
+        .user-meta {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.4;
+        }
+
+        .user-action {
+            flex-shrink: 0;
+        }
+
+        .action-follow,
+        .action-unfollow,
+        .action-you {
+            font-size: 12px;
+            font-weight: 800;
+            padding: 8px 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: inherit;
+            border: 1px solid transparent;
+            transition: .15s ease;
+        }
+
+        .action-follow {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+        .action-follow:hover:not(:disabled) { background: var(--accent-dark); border-color: var(--accent-dark); }
+
+        .action-unfollow {
+            background: #fff;
+            color: #444;
+            border-color: var(--border);
+        }
+        .action-unfollow:hover:not(:disabled) { border-color: var(--accent); color: var(--accent-dark); }
+
+        .action-you {
+            background: #f1eee8;
+            color: var(--muted);
+            cursor: default;
+            border-color: #f1eee8;
+        }
+
+        .action-follow:disabled,
+        .action-unfollow:disabled { opacity: .55; cursor: not-allowed; }
+
+        /* ---------------- EMPTY / LOADING ---------------- */
+
+        .empty {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+        .empty .emoji { font-size: 40px; margin-bottom: 8px; }
+        .empty strong { color: var(--text); display: block; font-size: 16px; margin-bottom: 6px; }
+
+        .loading {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .error-card {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            padding: 18px 22px;
+            border-radius: 14px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .error-card a { color: #7f1d1d; font-weight: 800; text-decoration: underline; }
+
+        /* ---------------- TOAST ---------------- */
+
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+        .toast {
+            padding: 12px 20px;
+            border-radius: 50px;
+            background: #222;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0,0,0,.25);
+            animation: toastIn .2s ease-out;
+        }
+        .toast.ok { background: #16a34a; }
+        .toast.err { background: #dc2626; }
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ---------------- FOOTER ---------------- */
+
+        footer { background: #222; color: #fff; padding: 40px 22px; text-align: center; margin-top: 40px; }
+        .footer-title { font-size: 22px; font-weight: 900; margin-bottom: 10px; }
+        .footer-title span { color: var(--accent); }
+        footer p { max-width: 650px; margin: auto; color: #bbb; font-size: 12px; line-height: 1.7; }
+        .footer-links {
+            margin-top: 22px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px 18px;
+            font-size: 12px;
+        }
+        .footer-links a { color: #bbb; font-weight: 700; transition: .2s ease; }
+        .footer-links a:hover { color: var(--accent); }
+        .footer-disclosure { margin-top: 18px; font-size: 11px; color: #888; }
+
+        /* ---------------- MOBILE ---------------- */
+
+        @media (max-width: 700px) {
+            .header-inner { padding: 13px 15px; flex-wrap: wrap; }
+            .logo { font-size: 21px; }
+            .nav-link { font-size: 11px; padding: 7px 11px; }
+
+            .breadcrumb { padding: 16px 15px 0; font-size: 12px; }
+            .page-wrap { padding: 14px 15px 50px; }
+
+            .page-header { padding: 18px 18px; border-radius: 15px; }
+            .page-header h1 { font-size: 22px; }
+
+            .user-row { padding: 12px 14px; gap: 10px; }
+            .user-avatar { width: 40px; height: 40px; font-size: 15px; }
+            .user-name { font-size: 14px; }
+            .action-follow, .action-unfollow, .action-you {
+                font-size: 11px; padding: 6px 13px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="header-inner">
+            <a href="index.html" class="logo">The <span>Whacky</span> Rack</a>
+            <div class="header-right">
+                <a href="index.html" class="nav-link">Shop</a>
+                <a href="world.html" class="nav-link">World</a>
+                <a href="history.html" class="nav-link">History</a>
+                <a href="about.html" class="nav-link">About</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="breadcrumb" id="breadcrumb">
+        <a href="profile.html">← Profile</a>
+    </div>
+
+    <main class="page-wrap" id="root">
+        <div class="loading">Loading…</div>
+    </main>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <footer>
+        <div class="footer-title">The <span>Whacky</span> Rack</div>
+        <p>
+            We collect weird, wonderful, funny and completely unnecessary products
+            from around the internet. Some links on this site are affiliate links,
+            which means we may earn a commission if you make a purchase through them,
+            at no additional cost to you.
+        </p>
+        <div class="footer-links">
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="cookies.html">Cookie Policy</a>
+            <a href="disclosure.html">Affiliate Disclosure</a>
+        </div>
+        <div class="footer-disclosure">
+            Products and availability may change depending on Amazon.com policies.
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth.js"></script>
+
+    <script>
+        (function () {
+            const sb = window.wr.sb;
+
+            /* ---------------- State ---------------- */
+            let session = null;
+            let me = null;
+            let targetId = null;       // profile whose followers we're viewing
+            let targetProfile = null;
+            let tab = "followers";
+            let rows = [];
+            let followerCount = 0;
+            let followingCount = 0;
+
+            const root = document.getElementById("root");
+            const toastBox = document.getElementById("toast-container");
+            const breadcrumb = document.getElementById("breadcrumb");
+
+            /* ---------------- Utils ---------------- */
+            function esc(s) {
+                return String(s ?? "").replace(/[&<>"']/g, c => ({
+                    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+                }[c]));
+            }
+
+            function initials(name) {
+                const p = String(name || "?").replace(/[^A-Za-z0-9]/g, " ").trim().split(/\s+/);
+                return (p[0]?.[0] || "?").toUpperCase();
+            }
+
+            function toast(msg, kind = "ok") {
+                const el = document.createElement("div");
+                el.className = "toast " + kind;
+                el.textContent = msg;
+                toastBox.appendChild(el);
+                setTimeout(() => el.remove(), 2800);
+            }
+
+            /* ---------------- Boot ---------------- */
+
+            async function boot() {
+                const { data: { session: s } } = await sb.auth.getSession();
+                session = s;
+
+                if (session) {
+                    me = window.wr.getProfile();
+                    if (!me) {
+                        const { data } = await sb.from("profiles")
+                            .select("id, username, rank, avatar_url")
+                            .eq("id", session.user.id)
+                            .maybeSingle();
+                        me = data;
+                    }
+                }
+
+                const params = new URLSearchParams(location.search);
+                targetId = params.get("id") || session?.user.id || null;
+                tab = (params.get("tab") === "following") ? "following" : "followers";
+
+                if (!targetId) {
+                    root.innerHTML = `<div class="error-card">Not signed in and no profile specified. <a href="login.html">Sign in →</a></div>`;
+                    return;
+                }
+
+                const { data: prof, error } = await sb.from("profiles")
+                    .select("id, username, rank, avatar_url, country")
+                    .eq("id", targetId)
+                    .maybeSingle();
+
+                if (error || !prof) {
+                    root.innerHTML = `<div class="error-card">Profile not found. <a href="index.html">Home →</a></div>`;
+                    return;
+                }
+                targetProfile = prof;
+
+                breadcrumb.innerHTML = targetId === (session?.user.id)
+                    ? `<a href="profile.html">← Your profile</a>`
+                    : `<a href="profile.html?id=${esc(targetId)}">← ${esc(prof.username)}</a>`;
+
+                await loadCounts();
+                await loadList();
+                render();
+            }
+
+            async function loadCounts() {
+                const [a, b] = await Promise.all([
+                    sb.from("follows").select("*", { count: "exact", head: true }).eq("following_id", targetId),
+                    sb.from("follows").select("*", { count: "exact", head: true }).eq("follower_id", targetId)
+                ]);
+                followerCount = a.count || 0;
+                followingCount = b.count || 0;
+            }
+
+            async function loadList() {
+                let edgeData;
+                if (tab === "followers") {
+                    const { data } = await sb.from("follows")
+                        .select("follower_id, created_at")
+                        .eq("following_id", targetId)
+                        .order("created_at", { ascending: false });
+                    edgeData = (data || []).map(r => ({ user_id: r.follower_id, since: r.created_at }));
+                } else {
+                    const { data } = await sb.from("follows")
+                        .select("following_id, created_at")
+                        .eq("follower_id", targetId)
+                        .order("created_at", { ascending: false });
+                    edgeData = (data || []).map(r => ({ user_id: r.following_id, since: r.created_at }));
+                }
+
+                if (edgeData.length === 0) { rows = []; return; }
+
+                const ids = edgeData.map(e => e.user_id);
+
+                // Fetch profiles for these ids
+                const { data: profs } = await sb.from("profiles")
+                    .select("id, username, rank, avatar_url, country, deleted_at")
+                    .in("id", ids);
+                const byId = {};
+                (profs || []).forEach(p => { byId[p.id] = p; });
+
+                // Who follows the target (for "Follows you" badges on the Followers tab)
+                const { data: tFollowers } = await sb.from("follows")
+                    .select("follower_id")
+                    .eq("following_id", targetId);
+                const targetFollowerSet = new Set((tFollowers || []).map(r => r.follower_id));
+
+                // Whom the viewer follows (to decide Follow vs Unfollow buttons)
+                let viewerFollowingSet = new Set();
+                if (session) {
+                    const { data: vf } = await sb.from("follows")
+                        .select("following_id")
+                        .eq("follower_id", session.user.id);
+                    viewerFollowingSet = new Set((vf || []).map(r => r.following_id));
+                }
+
+                rows = edgeData.map(e => {
+                    const p = byId[e.user_id] || {};
+                    return {
+                        id: e.user_id,
+                        username: p.username || "deleted",
+                        rank: p.rank,
+                        avatar_url: p.avatar_url,
+                        country: p.country,
+                        isDeleted: !!p.deleted_at,
+                        since: e.since,
+                        followsYou: targetFollowerSet.has(e.user_id),
+                        youFollow: viewerFollowingSet.has(e.user_id),
+                        isMe: session && e.user_id === session.user.id
+                    };
+                });
+            }
+
+            /* ---------------- Render ---------------- */
+
+            function render() {
+                const isOwn = session && targetId === session.user.id;
+                const title = isOwn ? "Your network" : `${esc(targetProfile.username)}'s network`;
+
+                root.innerHTML = `
+                    <section class="page-header">
+                        <div class="who">${isOwn ? "You" : esc(targetProfile.username)}</div>
+                        <h1>${isOwn ? "Your <span>network</span>" : `People around <span>${esc(targetProfile.username)}</span>`}</h1>
+                        <p class="sub">Followers and Following — click a name to visit their profile.</p>
+                    </section>
+
+                    <div class="tabs">
+                        <button class="tab-btn ${tab === "followers" ? "active" : ""}" data-tab="followers">
+                            Followers<span class="tab-count">${followerCount}</span>
+                        </button>
+                        <button class="tab-btn ${tab === "following" ? "active" : ""}" data-tab="following">
+                            Following<span class="tab-count">${followingCount}</span>
+                        </button>
+                    </div>
+
+                    <div class="list-card" id="list-card"></div>
+                `;
+
+                renderList();
+            }
+
+            function renderList() {
+                const card = document.getElementById("list-card");
+                if (!card) return;
+
+                if (rows.length === 0) {
+                    card.innerHTML = `
+                        <div class="empty">
+                            <div class="emoji">👥</div>
+                            <strong>Nothing here yet</strong>
+                            ${tab === "followers"
+                                ? "No one has followed this profile yet."
+                                : "This profile isn't following anyone yet."}
+                        </div>
+                    `;
+                    return;
+                }
+
+                card.innerHTML = rows.map(row => {
+                    let actionHtml = "";
+                    if (row.isMe) {
+                        actionHtml = `<span class="action-you">You</span>`;
+                    } else if (!session) {
+                        actionHtml = `<a class="action-follow" href="login.html">Follow</a>`;
+                    } else if (row.youFollow) {
+                        actionHtml = `<button class="action-unfollow" type="button" data-action="unfollow" data-user-id="${esc(row.id)}">Unfollow</button>`;
+                    } else {
+                        actionHtml = `<button class="action-follow" type="button" data-action="follow" data-user-id="${esc(row.id)}">Follow</button>`;
+                    }
+
+                    const meta = [];
+                    if (row.rank) meta.push(`#${row.rank}`);
+                    if (row.country) meta.push(esc(row.country));
+                    const metaStr = meta.join(" · ");
+
+                    return `
+                        <div class="user-row">
+                            <a class="user-avatar" href="profile.html?id=${esc(row.id)}" aria-hidden="true">${esc(initials(row.username))}</a>
+                            <div class="user-info">
+                                <div class="user-name-row">
+                                    <a class="user-name" href="profile.html?id=${esc(row.id)}">${esc(row.username)}</a>
+                                    ${row.rank ? `<span class="rank-chip">#${row.rank}</span>` : ""}
+                                    ${row.followsYou && !row.isMe ? `<span class="follows-you-badge">Follows you</span>` : ""}
+                                </div>
+                                ${metaStr ? `<div class="user-meta">${metaStr}</div>` : ""}
+                            </div>
+                            <div class="user-action">${actionHtml}</div>
+                        </div>
+                    `;
+                }).join("");
+            }
+
+            /* ---------------- Click handling ---------------- */
+
+            document.addEventListener("click", async (e) => {
+                const tabBtn = e.target.closest(".tab-btn");
+                if (tabBtn) {
+                    tab = tabBtn.dataset.tab;
+                    await loadList();
+                    render();
+                    // Update URL
+                    const params = new URLSearchParams(location.search);
+                    params.set("tab", tab);
+                    history.replaceState({}, "", "?" + params.toString());
+                    return;
+                }
+
+                const actionBtn = e.target.closest("[data-action]");
+                if (!actionBtn) return;
+                const action = actionBtn.dataset.action;
+                const userId = actionBtn.dataset.userId;
+
+                if (action === "follow") {
+                    actionBtn.disabled = true;
+                    try {
+                        const { error } = await sb.from("follows").insert({
+                            follower_id: session.user.id,
+                            following_id: userId
+                        });
+                        if (error && error.code !== "23505") throw error;
+                        toast("Following.", "ok");
+                        await loadCounts();
+                        await loadList();
+                        render();
+                    } catch (err) {
+                        console.error(err);
+                        toast(err.message || "Follow failed.", "err");
+                        actionBtn.disabled = false;
+                    }
+                    return;
+                }
+
+                if (action === "unfollow") {
+                    if (!confirm("Unfollow this user?")) return;
+                    actionBtn.disabled = true;
+                    try {
+                        const { error } = await sb.from("follows").delete()
+                            .eq("follower_id", session.user.id)
+                            .eq("following_id", userId);
+                        if (error) throw error;
+                        toast("Unfollowed.", "ok");
+                        await loadCounts();
+                        await loadList();
+                        render();
+                    } catch (err) {
+                        console.error(err);
+                        toast(err.message || "Unfollow failed.", "err");
+                        actionBtn.disabled = false;
+                    }
+                    return;
+                }
+            });
+
+            boot();
+        })();
+    </script>
+
+</body>
+</html>

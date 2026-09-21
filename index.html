@@ -425,6 +425,238 @@
             border-color: var(--accent);
         }
 
+        .tape-btn {
+            color: #5a1e0c;
+            border-color: var(--pill);
+            background: #fff;
+        }
+
+        .tape-btn:hover {
+            background: var(--pill);
+            border-color: var(--accent);
+        }
+
+        /* Tape modal */
+        .tape-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .5);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .tape-modal.open {
+            display: flex;
+        }
+
+        .tape-modal-inner {
+            background: #fff;
+            border-radius: 20px;
+            padding: 26px;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .25);
+            position: relative;
+            animation: modalIn .18s ease-out;
+        }
+
+        .tape-modal-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            border: 0;
+            background: #f1eee8;
+            border-radius: 50%;
+            font-size: 20px;
+            line-height: 1;
+            cursor: pointer;
+            color: #555;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: inherit;
+        }
+
+        .tape-modal-close:hover {
+            background: #e8e4dc;
+            color: #222;
+        }
+
+        .tape-modal h3 {
+            margin: 0 0 4px;
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: -.3px;
+        }
+
+        .tape-modal .tape-modal-sub {
+            margin: 0 0 18px;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .tape-modal-preview {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: #fafafa;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 14px;
+        }
+
+        .tape-modal-preview img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 10px;
+            background: #f1eee8;
+        }
+
+        .tape-modal-preview .pcat {
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--accent-dark);
+            letter-spacing: .4px;
+        }
+
+        .tape-modal-preview .pname {
+            font-size: 14px;
+            font-weight: 800;
+            line-height: 1.3;
+            margin-top: 2px;
+        }
+
+        .tape-modal label {
+            display: block;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            color: #555;
+            margin: 12px 0 6px;
+        }
+
+        .tape-modal label .optional {
+            color: #aaa;
+            font-weight: 600;
+            text-transform: none;
+            letter-spacing: 0;
+            font-size: 11px;
+        }
+
+        .tape-modal textarea {
+            width: 100%;
+            padding: 11px 13px;
+            font-family: inherit;
+            font-size: 14px;
+            background: #fafafa;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            outline: none;
+            resize: vertical;
+            min-height: 80px;
+            color: var(--text);
+        }
+
+        .tape-modal textarea:focus {
+            border-color: var(--accent);
+            background: #fff;
+        }
+
+        .tape-char {
+            font-size: 11px;
+            color: var(--muted);
+            text-align: right;
+            margin-top: 4px;
+        }
+
+        .tape-modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .tape-btn-ghost {
+            padding: 11px 20px;
+            border-radius: 50px;
+            font-family: inherit;
+            font-weight: 800;
+            font-size: 13px;
+            background: #fff;
+            color: #444;
+            border: 1px solid var(--border);
+            cursor: pointer;
+        }
+
+        .tape-btn-ghost:hover {
+            border-color: #bbb;
+        }
+
+        .tape-btn-primary {
+            padding: 11px 20px;
+            border-radius: 50px;
+            font-family: inherit;
+            font-weight: 800;
+            font-size: 13px;
+            background: var(--accent);
+            color: #fff;
+            border: 0;
+            cursor: pointer;
+        }
+
+        .tape-btn-primary:hover:not(:disabled) {
+            background: var(--accent-dark);
+        }
+
+        .tape-btn-primary:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        .tape-modal .tape-status {
+            margin-top: 12px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            display: none;
+        }
+
+        .tape-modal .tape-status.show {
+            display: block;
+        }
+
+        .tape-modal .tape-status.err {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .tape-modal .tape-status.ok {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        @media (max-width: 700px) {
+            .tape-modal-inner {
+                padding: 22px 20px;
+                border-radius: 16px;
+            }
+
+            .tape-modal h3 {
+                font-size: 18px;
+            }
+        }
+
         .share-wrap {
             margin-left: auto;
         }
@@ -1071,6 +1303,28 @@
         </div>
     </div>
 
+    <!-- ================= TAPE IT! MODAL ================= -->
+
+    <div class="tape-modal" id="tapeModal" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="tape-modal-inner">
+            <button class="tape-modal-close" type="button" id="tapeModalClose" aria-label="Close">×</button>
+            <h3>Tape it!</h3>
+            <p class="tape-modal-sub">Post this to your timeline. Add a caption if you want.</p>
+
+            <div class="tape-modal-preview" id="tapeModalPreview"></div>
+
+            <label for="tapeCaption">Caption <span class="optional">(optional · 280 chars)</span></label>
+            <textarea id="tapeCaption" maxlength="280" placeholder="Why this one? Or just post it blank."></textarea>
+            <div class="tape-char"><span id="tapeCharCount">0</span> / 280</div>
+
+            <div class="tape-status" id="tapeStatus"></div>
+
+            <div class="tape-modal-actions">
+                <button class="tape-btn-ghost" id="tapeModalCancel" type="button">Cancel</button>
+                <button class="tape-btn-primary" id="tapeModalSubmit" type="button">Tape it!</button>
+            </div>
+        </div>
+    </div>
 
     <!-- ================= COMPANION CHARACTER ================= -->
 
@@ -1392,7 +1646,7 @@
               <span class="like-count">${count}</span>
             </button>
 
-            <a
+                        <a
               class="action-btn yap-btn"
               href="yap.html?product=${product.id}"
               aria-label="Yap about this product"
@@ -1400,6 +1654,19 @@
               <span class="action-icon">💬</span>
               <span>Yap it!</span>
             </a>
+
+            <button
+              class="action-btn tape-btn"
+              type="button"
+              data-product-id="${product.id}"
+              data-product-name="${escapeHTML(product.name)}"
+              data-product-image="${product.image}"
+              data-product-category="${escapeHTML(product.category)}"
+              aria-label="Tape this product"
+            >
+              <span class="action-icon">📼</span>
+              <span>Tape it!</span>
+            </button>
 
             <div class="share-wrap">
                     <button
@@ -1898,7 +2165,117 @@
         loadProductsFromSupabase();
         initCompanion();
     </script>
+    <script>
+    (function () {
+        function ready() {
+            if (!window.wr || !window.wr.sb) return setTimeout(ready, 50);
+            const sb = window.wr.sb;
 
+            const modal        = document.getElementById("tapeModal");
+            const modalClose   = document.getElementById("tapeModalClose");
+            const modalCancel  = document.getElementById("tapeModalCancel");
+            const modalSubmit  = document.getElementById("tapeModalSubmit");
+            const preview      = document.getElementById("tapeModalPreview");
+            const caption      = document.getElementById("tapeCaption");
+            const charCount    = document.getElementById("tapeCharCount");
+            const statusEl     = document.getElementById("tapeStatus");
+
+            let currentProduct = null;
+
+            function esc(s) {
+                return String(s ?? "").replace(/[&<>"']/g, c => ({
+                    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+                }[c]));
+            }
+
+            function openModal(product) {
+                currentProduct = product;
+                preview.innerHTML = `
+                    <img src="${esc(product.image)}" alt="">
+                    <div>
+                        <div class="pcat">${esc(product.category)}</div>
+                        <div class="pname">${esc(product.name)}</div>
+                    </div>
+                `;
+                caption.value = "";
+                charCount.textContent = "0";
+                statusEl.className = "tape-status";
+                statusEl.textContent = "";
+                modalSubmit.disabled = false;
+                modalSubmit.textContent = "Tape it!";
+                modal.classList.add("open");
+                modal.setAttribute("aria-hidden", "false");
+                setTimeout(() => caption.focus(), 100);
+            }
+
+            function closeModal() {
+                modal.classList.remove("open");
+                modal.setAttribute("aria-hidden", "true");
+                currentProduct = null;
+            }
+
+            caption.addEventListener("input", () => {
+                charCount.textContent = String(caption.value.length);
+            });
+            modalClose.addEventListener("click", closeModal);
+            modalCancel.addEventListener("click", closeModal);
+            modal.addEventListener("click", (e) => {
+                if (e.target === modal) closeModal();
+            });
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "Escape" && modal.classList.contains("open")) closeModal();
+            });
+
+            document.addEventListener("click", async (e) => {
+                const btn = e.target.closest(".tape-btn");
+                if (!btn) return;
+                e.preventDefault();
+
+                const { data: { session } } = await sb.auth.getSession();
+                if (!session) {
+                    window.location.href = "login.html";
+                    return;
+                }
+                openModal({
+                    id: parseInt(btn.dataset.productId, 10),
+                    name: btn.dataset.productName,
+                    image: btn.dataset.productImage,
+                    category: btn.dataset.productCategory
+                });
+            });
+
+            modalSubmit.addEventListener("click", async () => {
+                if (!currentProduct) return;
+                modalSubmit.disabled = true;
+                modalSubmit.textContent = "Taping…";
+                statusEl.className = "tape-status";
+
+                try {
+                    const cap = caption.value.trim();
+                    const { error } = await sb.rpc("create_tape", {
+                        p_product_id: currentProduct.id,
+                        p_caption: cap || null
+                    });
+                    if (error) throw error;
+
+                    statusEl.className = "tape-status show ok";
+                    statusEl.textContent = "Taped! Redirecting…";
+
+                    setTimeout(() => {
+                        window.location.href = "tape.html";
+                    }, 500);
+                } catch (err) {
+                    console.error(err);
+                    statusEl.className = "tape-status show err";
+                    statusEl.textContent = err.message || "Could not Tape it.";
+                    modalSubmit.disabled = false;
+                    modalSubmit.textContent = "Tape it!";
+                }
+            });
+        }
+        ready();
+    })();
+    </script>
 </body>
 
 </html>

@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /settings.html
+Disallow: /login.html
+Disallow: /signup.html
+Disallow: /reset-password.html
+Disallow: /reset-password-request.html
+Disallow: /profile.html
+Disallow: /followers.html
+Disallow: /yap-thread.html
+Disallow: /tape-thread.html
+
+Sitemap: https://the-whacky-rack.github.io/the-whacky-rack/sitemap.xml

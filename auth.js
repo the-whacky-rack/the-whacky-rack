@@ -28,6 +28,14 @@
       color: #777; padding: 7px 12px; border-radius: 50px;
       cursor: pointer; font-family: inherit; transition: .2s ease;
     }
+        .wr-auth-settings {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 34px; height: 34px; border-radius: 50%;
+      background: #fff; border: 1px solid #e8e4dc;
+      font-size: 15px; text-decoration: none;
+      transition: .2s ease;
+    }
+    .wr-auth-settings:hover { border-color: #bbb; background: #fafafa; }
     .wr-auth-logout:hover { border-color: #bbb; color: #202020; }
     .wr-auth-cta {
       font-size: 13px; font-weight: 700;
@@ -67,11 +75,12 @@
     const area = getArea();
     if (!area) return;
 
-    if (session && profile) {
+        if (session && profile) {
       area.innerHTML = `
         <a class="wr-auth-user" href="profile.html" title="Your profile">
           ${esc(profile.username)}
         </a>
+        <a class="wr-auth-settings" href="settings.html" title="Settings">⚙️</a>
         <button class="wr-auth-logout" type="button" id="wr-logout-btn">Logout</button>
       `;
       const btn = document.getElementById("wr-logout-btn");

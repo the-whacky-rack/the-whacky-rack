@@ -67,8 +67,26 @@
     const area = getArea();
     if (!area) return;
 
-    Object.keys(localStorage).filter(k => k.includes("supabase")).forEach(k => localStorage.removeItem(k));
-location.reload();
+    if (session && profile) {
+      area.innerHTML = `
+        <a class="wr-auth-user" href="profile.html" title="Your profile">
+          ${esc(profile.username)}
+        </a>
+        <button class="wr-auth-logout" type="button" id="wr-logout-btn">Logout</button>
+      `;
+      const btn = document.getElementById("wr-logout-btn");
+      if (btn) btn.addEventListener("click", async () => {
+        await sb.auth.signOut();
+        window.location.reload();
+      });
+    } else {
+      // No session, OR session without a matching profile row
+      // (e.g. profile was deleted). Show Sign in / Join either way.
+      area.innerHTML = `
+        <a class="wr-auth-signin wr-auth-cta" href="login.html">Sign in</a>
+        <a class="wr-auth-join wr-auth-cta" href="signup.html">Join</a>
+      `;
+    }
   }
 
   /* ---------- Profile lookup ---------- */

@@ -476,6 +476,7 @@
             let profile = null;
             let isOwnProfile = false;
             let profileFollowsMe = false;
+              let savedCount = 0;
 
             /* ---------- Utilities ---------- */
             function esc(s) {
@@ -696,6 +697,15 @@
         </div>
       </div>
 
+           ${isOwnProfile ? `
+        <div class="card">
+          <h2 class="card-title">Bookmarks</h2>
+          <a class="btn btn-ghost" href="bookmarks.html" style="width:100%; justify-content:center; text-decoration:none;">
+            🔖 Saved Yaps (${savedCount})
+          </a>
+        </div>
+      ` : ""}
+
       ${isOwnProfile ? `
         <div class="card">
           <h2 class="card-title">
@@ -854,22 +864,27 @@
                         return;
                     }
 
-                    isOwnProfile = session && session.user.id === profile.id;
+                         isOwnProfile = session && session.user.id === profile.id;
 
-                    if (session && !isOwnProfile) {
-                        recordVisit(profile.id).catch(() => {});
-                        // Does this profile follow me?
-                        const {
-                            data: f
-                        } = await sb.from("follows")
-                            .select("follower_id")
-                            .eq("follower_id", profile.id)
-                            .eq("following_id", session.user.id)
-                            .maybeSingle();
-                        profileFollowsMe = !!f;
-                    }
+      if (session && !isOwnProfile) {
+        recordVisit(profile.id).catch(() => {});
+        // Does this profile follow me?
+        const { data: f } = await sb.from("follows")
+          .select("follower_id")
+          .eq("follower_id", profile.id)
+          .eq("following_id", session.user.id)
+          .maybeSingle();
+        profileFollowsMe = !!f;
+      }
 
-                    await renderAll();
+      if (isOwnProfile) {
+        const { count } = await sb.from("yap_bookmarks")
+          .select("*", { count: "exact", head: true })
+          .eq("user_id", profile.id);
+        savedCount = count || 0;
+      }
+
+      await renderAll();
                 } catch (e) {
                     console.error(e);
                     root.innerHTML = `<div class="error-card">Couldn't load this profile. Please try again.</div>`;

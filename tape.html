@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Tape it! — The Whacky Rack</title>
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <meta name="description" content="The Tape it! feed — what the Rack has been taping to their timelines.">
 
     <style>
@@ -19,11 +19,16 @@
             --accent-dark: #e84625;
             --border: #e8e4dc;
             --pill: #fff0eb;
-            --shadow: 0 8px 25px rgba(0,0,0,.06);
+            --shadow: 0 8px 25px rgba(0, 0, 0, .06);
         }
 
-        * { box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
 
         body {
             margin: 0;
@@ -32,7 +37,10 @@
             color: var(--text);
         }
 
-        a { color: inherit; text-decoration: none; }
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
 
         /* ---------------- HEADER ---------------- */
 
@@ -54,10 +62,22 @@
             gap: 20px;
         }
 
-        .logo { font-size: 25px; font-weight: 900; letter-spacing: -1px; white-space: nowrap; }
-        .logo span { color: var(--accent); }
+        .logo {
+            font-size: 25px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            white-space: nowrap;
+        }
 
-        .header-right { display: flex; align-items: center; gap: 12px; }
+        .logo span {
+            color: var(--accent);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
         .nav-link {
             font-size: 13px;
@@ -69,12 +89,25 @@
             transition: .2s ease;
             white-space: nowrap;
         }
-        .nav-link:hover { border-color: #bbb; }
-        .nav-link.active { background: #222; color: #fff; border-color: #222; }
+
+        .nav-link:hover {
+            border-color: #bbb;
+        }
+
+        .nav-link.active {
+            background: #222;
+            color: #fff;
+            border-color: #222;
+        }
 
         /* ---------------- HERO ---------------- */
 
-        .hero { max-width: 900px; margin: auto; padding: 55px 22px 25px; text-align: center; }
+        .hero {
+            max-width: 900px;
+            margin: auto;
+            padding: 55px 22px 25px;
+            text-align: center;
+        }
 
         .hero-kicker {
             display: inline-block;
@@ -96,7 +129,10 @@
             letter-spacing: -3px;
             font-weight: 950;
         }
-        .hero h1 span { color: var(--accent); }
+
+        .hero h1 span {
+            color: var(--accent);
+        }
 
         .hero-description {
             max-width: 720px;
@@ -108,7 +144,11 @@
 
         /* ---------------- CONTROLS ---------------- */
 
-        .controls-wrapper { max-width: 720px; margin: 15px auto 25px; padding: 0 22px; }
+        .controls-wrapper {
+            max-width: 900px;
+            margin: 15px auto 25px;
+            padding: 0 22px;
+        }
 
         .controls {
             background: #fff;
@@ -119,7 +159,7 @@
             align-items: center;
             gap: 8px;
             box-shadow: var(--shadow);
-            justify-content: center;
+            flex-wrap: wrap;
         }
 
         .feed-tab {
@@ -134,12 +174,49 @@
             transition: .2s ease;
             color: #666;
         }
-        .feed-tab:hover { border-color: #bbb; color: #202020; }
-        .feed-tab.active { background: #222; color: #fff; border-color: #222; }
+
+        .feed-tab:hover {
+            border-color: #bbb;
+            color: #202020;
+        }
+
+        .feed-tab.active {
+            background: #222;
+            color: #fff;
+            border-color: #222;
+        }
+
+        .feed-search {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .feed-search input {
+            width: 100%;
+            height: 40px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0 14px;
+            font-size: 13px;
+            font-family: inherit;
+            outline: none;
+            background: #fafafa;
+            color: var(--text);
+            transition: .2s ease;
+        }
+
+        .feed-search input:focus {
+            border-color: var(--accent);
+            background: #fff;
+        }
 
         /* ---------------- FEED ---------------- */
 
-        .feed-wrapper { max-width: 720px; margin: auto; padding: 0 22px 70px; }
+        .feed-wrapper {
+            max-width: 900px;
+            margin: auto;
+            padding: 0 22px 70px;
+        }
 
         .results-info {
             display: flex;
@@ -152,7 +229,11 @@
             flex-wrap: wrap;
         }
 
-        .tape-list { display: flex; flex-direction: column; gap: 16px; }
+        .tape-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
 
         .tape-card {
             background: var(--card);
@@ -161,7 +242,10 @@
             padding: 18px 20px;
             transition: box-shadow .18s ease;
         }
-        .tape-card:hover { box-shadow: 0 12px 30px rgba(0,0,0,.06); }
+
+        .tape-card:hover {
+            box-shadow: 0 12px 30px rgba(0, 0, 0, .06);
+        }
 
         /* Head */
         .tape-head {
@@ -190,10 +274,19 @@
             font-size: 13px;
             color: var(--text);
         }
-        .tape-author-name:hover { color: var(--accent-dark); }
 
-        .tape-dot { color: #ccc; }
-        .tape-time { font-size: 12px; color: var(--muted); }
+        .tape-author-name:hover {
+            color: var(--accent-dark);
+        }
+
+        .tape-dot {
+            color: #ccc;
+        }
+
+        .tape-time {
+            font-size: 12px;
+            color: var(--muted);
+        }
 
         .tape-actions {
             margin-left: auto;
@@ -213,8 +306,16 @@
             font-family: inherit;
             transition: .15s ease;
         }
-        .tape-action-btn:hover { border-color: #bbb; color: var(--text); }
-        .tape-action-btn.danger:hover { border-color: var(--accent); color: var(--accent-dark); }
+
+        .tape-action-btn:hover {
+            border-color: #bbb;
+            color: var(--text);
+        }
+
+        .tape-action-btn.danger:hover {
+            border-color: var(--accent);
+            color: var(--accent-dark);
+        }
 
         /* Product block */
         .tape-product {
@@ -227,7 +328,10 @@
             margin-bottom: 12px;
             transition: .15s ease;
         }
-        .tape-product:hover { background: #f5f2ea; }
+
+        .tape-product:hover {
+            background: #f5f2ea;
+        }
 
         .tape-product img {
             width: 92px;
@@ -297,12 +401,18 @@
             color: #444;
             line-height: 1;
         }
-        .reaction-btn:hover { border-color: #bbb; background: #fafafa; }
+
+        .reaction-btn:hover {
+            border-color: #bbb;
+            background: #fafafa;
+        }
+
         .reaction-btn.active {
             background: var(--pill);
             border-color: var(--accent);
             color: var(--accent-dark);
         }
+
         .reaction-btn .reaction-count {
             font-size: 11px;
             font-weight: 800;
@@ -310,8 +420,15 @@
             min-width: 12px;
             text-align: right;
         }
-        .reaction-btn.active .reaction-count { color: var(--accent-dark); }
-        .reaction-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+        .reaction-btn.active .reaction-count {
+            color: var(--accent-dark);
+        }
+
+        .reaction-btn:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
 
         /* Foot */
         .tape-foot {
@@ -335,7 +452,11 @@
             border: 1px solid var(--border);
             transition: .15s ease;
         }
-        .tape-comment-link:hover { border-color: var(--accent); background: var(--pill); }
+
+        .tape-comment-link:hover {
+            border-color: var(--accent);
+            background: var(--pill);
+        }
 
         /* ---------------- EMPTY / LOADING ---------------- */
 
@@ -347,9 +468,24 @@
             border: 1px dashed var(--border);
             border-radius: 18px;
         }
-        .empty-state .emoji { font-size: 42px; margin-bottom: 10px; }
-        .empty-state h2 { margin: 0 0 8px; color: var(--text); font-size: 20px; }
-        .empty-state p { margin: 0 0 18px; font-size: 14px; line-height: 1.6; }
+
+        .empty-state .emoji {
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+        .empty-state h2 {
+            margin: 0 0 8px;
+            color: var(--text);
+            font-size: 20px;
+        }
+
+        .empty-state p {
+            margin: 0 0 18px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
         .empty-state a {
             display: inline-block;
             background: var(--accent);
@@ -360,7 +496,10 @@
             font-size: 13px;
             transition: .2s ease;
         }
-        .empty-state a:hover { background: var(--accent-dark); }
+
+        .empty-state a:hover {
+            background: var(--accent-dark);
+        }
 
         .loading {
             text-align: center;
@@ -382,6 +521,7 @@
             gap: 8px;
             align-items: center;
         }
+
         .toast {
             padding: 12px 20px;
             border-radius: 50px;
@@ -389,22 +529,57 @@
             color: #fff;
             font-size: 13px;
             font-weight: 600;
-            box-shadow: 0 10px 30px rgba(0,0,0,.25);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
             animation: toastIn .2s ease-out;
         }
-        .toast.ok { background: #16a34a; }
-        .toast.err { background: #dc2626; }
+
+        .toast.ok {
+            background: #16a34a;
+        }
+
+        .toast.err {
+            background: #dc2626;
+        }
+
         @keyframes toastIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* ---------------- FOOTER ---------------- */
 
-        footer { background: #222; color: #fff; padding: 40px 22px; text-align: center; margin-top: 40px; }
-        .footer-title { font-size: 22px; font-weight: 900; margin-bottom: 10px; }
-        .footer-title span { color: var(--accent); }
-        footer p { max-width: 650px; margin: auto; color: #bbb; font-size: 12px; line-height: 1.7; }
+        footer {
+            background: #222;
+            color: #fff;
+            padding: 40px 22px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .footer-title {
+            font-size: 22px;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+
+        .footer-title span {
+            color: var(--accent);
+        }
+
+        footer p {
+            max-width: 650px;
+            margin: auto;
+            color: #bbb;
+            font-size: 12px;
+            line-height: 1.7;
+        }
 
         .footer-links {
             margin-top: 22px;
@@ -414,38 +589,105 @@
             gap: 8px 18px;
             font-size: 12px;
         }
-        .footer-links a { color: #bbb; font-weight: 700; transition: .2s ease; }
-        .footer-links a:hover { color: var(--accent); }
 
-        .footer-disclosure { margin-top: 18px; font-size: 11px; color: #888; }
+        .footer-links a {
+            color: #bbb;
+            font-weight: 700;
+            transition: .2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .footer-disclosure {
+            margin-top: 18px;
+            font-size: 11px;
+            color: #888;
+        }
 
         /* ---------------- MOBILE ---------------- */
 
         @media (max-width: 700px) {
-            .header-inner { padding: 13px 15px; flex-wrap: wrap; }
-            .logo { font-size: 21px; }
-            .nav-link { font-size: 11px; padding: 7px 11px; }
+            .header-inner {
+                padding: 13px 15px;
+                flex-wrap: wrap;
+            }
 
-            .hero { padding: 40px 18px 20px; }
-            .hero h1 { font-size: 44px; letter-spacing: -2px; }
-            .hero-description { font-size: 14px; line-height: 1.65; }
+            .logo {
+                font-size: 21px;
+            }
 
-            .controls-wrapper { padding: 0 15px; }
-            .feed-tab { padding: 8px 14px; font-size: 12px; }
+            .nav-link {
+                font-size: 11px;
+                padding: 7px 11px;
+            }
 
-            .feed-wrapper { padding: 0 15px 55px; }
-            .tape-card { padding: 15px; border-radius: 15px; }
-            .tape-product { padding: 10px; gap: 10px; }
-            .tape-product img { width: 72px; height: 72px; }
-            .tape-product-name { font-size: 14px; }
-            .tape-caption { font-size: 13px; }
+            .hero {
+                padding: 40px 18px 20px;
+            }
 
-            .reaction-btn { padding: 5px 10px; font-size: 13px; gap: 5px; }
-            .reaction-btn .reaction-count { font-size: 10px; }
+            .hero h1 {
+                font-size: 44px;
+                letter-spacing: -2px;
+            }
+
+            .hero-description {
+                font-size: 14px;
+                line-height: 1.65;
+            }
+
+            .controls-wrapper {
+                padding: 0 15px;
+            }
+
+            .feed-tab {
+                padding: 8px 14px;
+                font-size: 12px;
+            }
+
+            .feed-wrapper {
+                padding: 0 15px 55px;
+            }
+
+            .tape-card {
+                padding: 15px;
+                border-radius: 15px;
+            }
+
+            .tape-product {
+                padding: 10px;
+                gap: 10px;
+            }
+
+            .tape-product img {
+                width: 72px;
+                height: 72px;
+            }
+
+            .tape-product-name {
+                font-size: 14px;
+            }
+
+            .tape-caption {
+                font-size: 13px;
+            }
+
+            .reaction-btn {
+                padding: 5px 10px;
+                font-size: 13px;
+                gap: 5px;
+            }
+
+            .reaction-btn .reaction-count {
+                font-size: 10px;
+            }
         }
 
         @media (max-width: 380px) {
-            .hero h1 { font-size: 38px; }
+            .hero h1 {
+                font-size: 38px;
+            }
         }
     </style>
 </head>
@@ -479,6 +721,9 @@
         <div class="controls">
             <button class="feed-tab active" data-tab="following">👥 Following</button>
             <button class="feed-tab" data-tab="everyone">🌍 Everyone</button>
+            <div class="feed-search">
+                <input type="search" id="tape-search" placeholder="Search captions…" autocomplete="off">
+            </div>
         </div>
     </div>
 
@@ -527,32 +772,46 @@
     <script src="report.js"></script>
 
     <script>
-        (function () {
+        (function() {
             const sb = window.wr.sb;
-            const REACTIONS = ["👍","👎","🤣","🤬","🎉","💝"];
+            const REACTIONS = ["👍", "👎", "🤣", "🤬", "🎉", "💝"];
             const PAGE_SIZE = 25;
 
             let session = null;
             let me = null;
             let tab = "following";
             let tapes = [];
-            let myReactions = {};   // { tapeId: emoji }
+            let searchTerm = "";
+            let searchDebounce = null;
+            let myReactions = {}; // { tapeId: emoji }
 
             const els = {
-                tapeList:    document.getElementById("tape-list"),
+                tapeList: document.getElementById("tape-list"),
                 resultCount: document.getElementById("result-count"),
-                emptyState:  document.getElementById("empty-state"),
-                emptyTitle:  document.getElementById("empty-title"),
-                emptySub:    document.getElementById("empty-sub"),
-                tabs:        document.querySelectorAll(".feed-tab"),
-                toastBox:    document.getElementById("toast-container")
+                emptyState: document.getElementById("empty-state"),
+                emptyTitle: document.getElementById("empty-title"),
+                emptySub: document.getElementById("empty-sub"),
+                tabs: document.querySelectorAll(".feed-tab"),
+                toastBox: document.getElementById("toast-container")
             };
 
             /* ---------------- Utils ---------------- */
             function esc(s) {
                 return String(s ?? "").replace(/[&<>"']/g, c => ({
-                    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-                }[c]));
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    '"': "&quot;",
+                    "'": "&#39;"
+                } [c]));
+            }
+
+            function sanitizeSearch(s) {
+                return String(s || "")
+                    .replace(/[%,()]/g, " ")
+                    .replace(/\s+/g, " ")
+                    .trim()
+                    .slice(0, 100);
             }
 
             function initials(name) {
@@ -563,11 +822,11 @@
             function timeAgo(iso) {
                 const d = new Date(iso);
                 const s = Math.floor((Date.now() - d.getTime()) / 1000);
-                if (s < 60)      return "just now";
-                if (s < 3600)    return Math.floor(s/60) + "m ago";
-                if (s < 86400)   return Math.floor(s/3600) + "h ago";
-                if (s < 604800)  return Math.floor(s/86400) + "d ago";
-                if (s < 2592000) return Math.floor(s/604800) + "w ago";
+                if (s < 60) return "just now";
+                if (s < 3600) return Math.floor(s / 60) + "m ago";
+                if (s < 86400) return Math.floor(s / 3600) + "h ago";
+                if (s < 604800) return Math.floor(s / 86400) + "d ago";
+                if (s < 2592000) return Math.floor(s / 604800) + "w ago";
                 return d.toLocaleDateString();
             }
 
@@ -582,12 +841,18 @@
             /* ---------------- Data ---------------- */
 
             async function loadSession() {
-                const { data: { session: s } } = await sb.auth.getSession();
+                const {
+                    data: {
+                        session: s
+                    }
+                } = await sb.auth.getSession();
                 session = s;
                 if (session) {
                     me = window.wr.getProfile();
                     if (!me) {
-                        const { data } = await sb.from("profiles")
+                        const {
+                            data
+                        } = await sb.from("profiles")
                             .select("id, username")
                             .eq("id", session.user.id)
                             .maybeSingle();
@@ -598,10 +863,16 @@
 
             async function loadFollowingIds() {
                 if (!session) return [];
-                const { data, error } = await sb.from("follows")
+                const {
+                    data,
+                    error
+                } = await sb.from("follows")
                     .select("following_id")
                     .eq("follower_id", session.user.id);
-                if (error) { console.error(error); return []; }
+                if (error) {
+                    console.error(error);
+                    return [];
+                }
                 return (data || []).map(r => r.following_id);
             }
 
@@ -617,7 +888,9 @@
                         product:products!tapes_product_id_fkey(id, name, image, category, link)
                     `)
                     .eq("is_deleted", false)
-                    .order("created_at", { ascending: false })
+                    .order("created_at", {
+                        ascending: false
+                    })
                     .limit(PAGE_SIZE);
 
                 if (tab === "following") {
@@ -632,7 +905,17 @@
                     query = query.in("user_id", feedIds);
                 }
 
-                const { data, error } = await query;
+                if (searchTerm) {
+                    const safe = sanitizeSearch(searchTerm);
+                    if (safe) {
+                        query = query.ilike("caption", `%${safe}%`);
+                    }
+                }
+
+                const {
+                    data,
+                    error
+                } = await query;
                 if (error) {
                     console.error(error);
                     els.tapeList.innerHTML = `<div class="loading">Couldn't load Tapes. Try again.</div>`;
@@ -643,18 +926,24 @@
                 // Load my reactions on these tapes
                 if (session && tapes.length > 0) {
                     const ids = tapes.map(t => t.id);
-                    const { data: rRows } = await sb.from("tape_reactions")
+                    const {
+                        data: rRows
+                    } = await sb.from("tape_reactions")
                         .select("tape_id, reaction")
                         .eq("user_id", session.user.id)
                         .in("tape_id", ids);
                     myReactions = {};
-                    (rRows || []).forEach(r => { myReactions[r.tape_id] = r.reaction; });
+                    (rRows || []).forEach(r => {
+                        myReactions[r.tape_id] = r.reaction;
+                    });
                 }
 
                 // Load per-reaction breakdown for each tape
                 if (tapes.length > 0) {
                     const ids = tapes.map(t => t.id);
-                    const { data: allReactions } = await sb.from("tape_reactions")
+                    const {
+                        data: allReactions
+                    } = await sb.from("tape_reactions")
                         .select("tape_id, reaction")
                         .in("tape_id", ids);
                     const breakdown = {};
@@ -662,7 +951,9 @@
                         if (!breakdown[r.tape_id]) breakdown[r.tape_id] = {};
                         breakdown[r.tape_id][r.reaction] = (breakdown[r.tape_id][r.reaction] || 0) + 1;
                     });
-                    tapes.forEach(t => { t._breakdown = breakdown[t.id] || {}; });
+                    tapes.forEach(t => {
+                        t._breakdown = breakdown[t.id] || {};
+                    });
                 }
 
                 render();
@@ -674,7 +965,10 @@
                 if (tapes.length === 0) {
                     els.tapeList.innerHTML = "";
                     els.emptyState.hidden = false;
-                    if (tab === "following") {
+                    if (searchTerm) {
+                        els.emptyTitle.textContent = `Nothing matches "${searchTerm}"`;
+                        els.emptySub.textContent = "Try another word, or clear the search.";
+                    } else if (tab === "following") {
                         if (!session) {
                             els.emptyTitle.textContent = "Sign in to see your feed";
                             els.emptySub.innerHTML = `Your Following feed shows Tapes from you and the people you follow. <a href="login.html">Sign in</a> or tap the <strong>Everyone</strong> tab.`;
@@ -686,7 +980,9 @@
                         els.emptyTitle.textContent = "Nobody has taped anything yet";
                         els.emptySub.textContent = "Be the first. Head to the Shop and hit Tape it! on something weird.";
                     }
-                    els.resultCount.textContent = "0 Tapes";
+                    els.resultCount.textContent = searchTerm ?
+                        `0 Tapes matching "${searchTerm}"` :
+                        "0 Tapes";
                     return;
                 }
                 els.emptyState.hidden = true;
@@ -696,8 +992,13 @@
                 els.tapeList.innerHTML = "";
                 els.tapeList.appendChild(frag);
 
-                els.resultCount.textContent =
-                    `${tapes.length} Tape${tapes.length === 1 ? "" : "s"}`;
+                if (searchTerm) {
+                    els.resultCount.textContent =
+                        `${tapes.length} Tape${tapes.length === 1 ? "" : "s"} matching "${searchTerm}"`;
+                } else {
+                    els.resultCount.textContent =
+                        `${tapes.length} Tape${tapes.length === 1 ? "" : "s"}`;
+                }
             }
 
             function createTapeCard(t) {
@@ -771,7 +1072,9 @@
             async function handleReact(tapeId, reaction) {
                 if (!session) {
                     toast("Sign in to react.", "err");
-                    setTimeout(() => { window.location.href = "login.html"; }, 900);
+                    setTimeout(() => {
+                        window.location.href = "login.html";
+                    }, 900);
                     return;
                 }
 
@@ -781,18 +1084,24 @@
                 card.querySelectorAll(".reaction-btn").forEach(b => b.disabled = true);
 
                 try {
-                    const { error } = await sb.rpc("react_tape", {
+                    const {
+                        error
+                    } = await sb.rpc("react_tape", {
                         p_tape_id: tapeId,
                         p_reaction: reaction
                     });
                     if (error) throw error;
 
                     // Reload just this tape's reaction data
-                    const { data: tData } = await sb.from("tapes")
+                    const {
+                        data: tData
+                    } = await sb.from("tapes")
                         .select("reaction_count")
                         .eq("id", tapeId).maybeSingle();
 
-                    const { data: rRows } = await sb.from("tape_reactions")
+                    const {
+                        data: rRows
+                    } = await sb.from("tape_reactions")
                         .select("reaction")
                         .eq("tape_id", tapeId);
 
@@ -803,7 +1112,9 @@
 
                     const mine = (rRows || []).find(r => r.user_id === session.user.id);
                     // The above won't work since we filtered by tape_id only; refetch properly:
-                    const { data: myRow } = await sb.from("tape_reactions")
+                    const {
+                        data: myRow
+                    } = await sb.from("tape_reactions")
                         .select("reaction")
                         .eq("tape_id", tapeId)
                         .eq("user_id", session.user.id)
@@ -828,7 +1139,12 @@
             async function handleDelete(tapeId) {
                 if (!confirm("Delete this Tape? If it has comments, it'll show as [deleted] instead.")) return;
                 try {
-                    const { data, error } = await sb.rpc("delete_tape", { p_tape_id: tapeId });
+                    const {
+                        data,
+                        error
+                    } = await sb.rpc("delete_tape", {
+                        p_tape_id: tapeId
+                    });
                     if (error) throw error;
                     toast((data?.mode === "soft") ? "Tape marked as deleted." : "Tape deleted.", "ok");
                     await loadTapes();
@@ -837,7 +1153,16 @@
                     toast(err.message || "Delete failed.", "err");
                 }
             }
-
+            const searchInput = document.getElementById("tape-search");
+            if (searchInput) {
+                searchInput.addEventListener("input", () => {
+                    clearTimeout(searchDebounce);
+                    searchDebounce = setTimeout(() => {
+                        searchTerm = searchInput.value.trim();
+                        loadTapes();
+                    }, 300);
+                });
+            }
             /* ---------------- Events ---------------- */
 
             els.tabs.forEach(t => {
@@ -881,4 +1206,5 @@
     </script>
 
 </body>
+
 </html>

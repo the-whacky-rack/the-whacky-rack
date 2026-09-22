@@ -518,6 +518,7 @@
             display: flex;
             gap: 6px;
             margin-left: auto;
+            flex-wrap: wrap;
         }
 
         .yap-action-btn {
@@ -531,6 +532,7 @@
             cursor: pointer;
             font-family: inherit;
             transition: .15s ease;
+            white-space: nowrap;
         }
 
         .yap-action-btn:hover {
@@ -1146,7 +1148,7 @@
     <script src="auth.js"></script>
 
     <script>
-        (function() {
+        (function () {
             const sb = window.wr.sb;
 
             /* ---------------- State ---------------- */
@@ -1155,7 +1157,7 @@
             let session = null;
             let me = null;
             let yaps = [];
-            let myVotes = {}; // { yapId: 1 | -1 }
+            let myVotes = {};        // { yapId: 1 | -1 }
             let myBookmarks = new Set();
             let currentSort = "top";
             let filterProductId = null;
@@ -1168,24 +1170,24 @@
 
             /* ---------------- Elements ---------------- */
             const els = {
-                yapsList: document.getElementById("yaps-list"),
-                resultCount: document.getElementById("result-count"),
-                emptyState: document.getElementById("empty-state"),
+                yapsList:      document.getElementById("yaps-list"),
+                resultCount:   document.getElementById("result-count"),
+                emptyState:    document.getElementById("empty-state"),
                 productBanner: document.getElementById("product-banner"),
-                newYapBtn: document.getElementById("new-yap-btn"),
+                newYapBtn:     document.getElementById("new-yap-btn"),
                 emptyStartBtn: document.getElementById("empty-start-btn"),
-                sortTabs: document.querySelectorAll(".sort-tab"),
-                modal: document.getElementById("new-yap-modal"),
-                modalClose: document.getElementById("modal-close"),
-                modalCancel: document.getElementById("modal-cancel"),
-                modalProduct: document.getElementById("modal-product"),
-                modalPreview: document.getElementById("modal-product-preview"),
-                modalTitle: document.getElementById("modal-title"),
-                modalBody: document.getElementById("modal-body"),
-                modalSubmit: document.getElementById("modal-submit"),
-                modalStatus: document.getElementById("modal-status"),
-                bodyCount: document.getElementById("body-count"),
-                toastBox: document.getElementById("toast-container")
+                sortTabs:      document.querySelectorAll(".sort-tab"),
+                modal:         document.getElementById("new-yap-modal"),
+                modalClose:    document.getElementById("modal-close"),
+                modalCancel:   document.getElementById("modal-cancel"),
+                modalProduct:  document.getElementById("modal-product"),
+                modalPreview:  document.getElementById("modal-product-preview"),
+                modalTitle:    document.getElementById("modal-title"),
+                modalBody:     document.getElementById("modal-body"),
+                modalSubmit:   document.getElementById("modal-submit"),
+                modalStatus:   document.getElementById("modal-status"),
+                bodyCount:     document.getElementById("body-count"),
+                toastBox:      document.getElementById("toast-container")
             };
 
             /* ---------------- Utils ---------------- */
@@ -1229,18 +1231,12 @@
             /* ---------------- Data loading ---------------- */
 
             async function loadSession() {
-                const {
-                    data: {
-                        session: s
-                    }
-                } = await sb.auth.getSession();
+                const { data: { session: s } } = await sb.auth.getSession();
                 session = s;
                 if (session) {
                     me = window.wr.getProfile() || null;
                     if (!me) {
-                        const {
-                            data
-                        } = await sb.from("profiles")
+                        const { data } = await sb.from("profiles")
                             .select("id, username")
                             .eq("id", session.user.id)
                             .maybeSingle();
@@ -1259,9 +1255,7 @@
                     return;
                 }
 
-                const {
-                    data
-                } = await sb.from("products")
+                const { data } = await sb.from("products")
                     .select("id, name, image, category, link")
                     .eq("id", filterProductId)
                     .maybeSingle();
@@ -1314,25 +1308,16 @@
                 }
 
                 if (currentSort === "top") {
-                    query = query.order("net_votes", {
-                        ascending: false
-                    });
+                    query = query.order("net_votes", { ascending: false });
                 } else {
-                    query = query.order("created_at", {
-                        ascending: false
-                    });
+                    query = query.order("created_at", { ascending: false });
                 }
                 // Secondary sort for stable ordering
-                query = query.order("created_at", {
-                    ascending: false
-                });
+                query = query.order("created_at", { ascending: false });
 
                 query = query.range(offset, offset + PAGE_SIZE - 1);
 
-                const {
-                    data,
-                    error
-                } = await query;
+                const { data, error } = await query;
                 if (error) {
                     console.error(error);
                     els.yapsList.innerHTML = `<div class="loading">Couldn't load Yaps. Try again.</div>`;
@@ -1346,9 +1331,10 @@
                 offset += rows.length;
                 hasMore = rows.length === PAGE_SIZE;
 
-                              // Fetch my votes for these yaps
+                // Fetch my votes and bookmarks
                 if (session && yaps.length > 0) {
                     const ids = yaps.map(y => y.id);
+
                     const { data: voteRows } = await sb.from("yap_votes")
                         .select("yap_id, vote")
                         .eq("user_id", session.user.id)
@@ -1356,7 +1342,6 @@
                     myVotes = {};
                     (voteRows || []).forEach(v => { myVotes[v.yap_id] = v.vote; });
 
-                    // Fetch my bookmarks (all of them; small set)
                     const { data: bmRows } = await sb.from("yap_bookmarks")
                         .select("yap_id")
                         .eq("user_id", session.user.id);
@@ -1372,24 +1357,27 @@
                 if (yaps.length === 0) {
                     els.yapsList.innerHTML = "";
                     els.emptyState.hidden = false;
+
+                    const cta = els.emptyState.querySelector(".empty-cta");
+                    const h2 = els.emptyState.querySelector("h2");
+                    const p = els.emptyState.querySelector("p");
+
                     if (searchTerm) {
-                        els.emptyState.querySelector("h2").textContent = `Nothing matches "${searchTerm}"`;
-                        els.emptyState.querySelector("p").textContent = "Try another word, or clear the search.";
-                        els.emptyState.querySelector(".empty-cta").textContent = "Clear search";
-                        els.emptyState.querySelector(".empty-cta").dataset.clearsearch = "1";
-                    } else {
-                        els.emptyState.querySelector("h2").textContent = "No Yaps here yet.";
-                        els.emptyState.querySelector("p").textContent = "Start the first thread. Be the legend.";
-                        els.emptyState.querySelector(".empty-cta").textContent = "+ Start a Yap";
-                        delete els.emptyState.querySelector(".empty-cta").dataset.clearsearch;
-                    }
-                    if (searchTerm) {
+                        h2.textContent = `Nothing matches "${searchTerm}"`;
+                        p.textContent = "Try another word, or clear the search.";
+                        cta.textContent = "Clear search";
+                        cta.dataset.clearsearch = "1";
                         els.resultCount.textContent = `0 Yaps matching "${searchTerm}"`;
                     } else {
+                        h2.textContent = "No Yaps here yet.";
+                        p.textContent = "Start the first thread. Be the legend.";
+                        cta.textContent = "+ Start a Yap";
+                        delete cta.dataset.clearsearch;
                         els.resultCount.textContent = "0 Yaps";
                     }
                     return;
                 }
+
                 els.emptyState.hidden = true;
 
                 const frag = document.createDocumentFragment();
@@ -1418,6 +1406,7 @@
                 const netClass = net > 0 ? "positive" : net < 0 ? "negative" : "";
 
                 const isAuthor = me && author.id === me.id;
+                const isSaved = myBookmarks.has(y.id);
 
                 // Truncate body preview
                 let bodyPreview = y.body || "";
@@ -1455,13 +1444,13 @@
                                 💬 ${y.comment_count} comment${y.comment_count === 1 ? "" : "s"}
                             </span>
 
-                                                       <div class="yap-actions">
+                            <div class="yap-actions">
                                 ${session ? `
-                                    <button class="yap-action-btn bookmark-btn${myBookmarks.has(y.id) ? " saved" : ""}"
+                                    <button class="yap-action-btn bookmark-btn${isSaved ? " saved" : ""}"
                                             data-action="bookmark"
                                             data-yap-id="${esc(y.id)}"
-                                            title="${myBookmarks.has(y.id) ? "Remove bookmark" : "Save this Yap"}">
-                                        ${myBookmarks.has(y.id) ? "🔖 Saved" : "🔖 Save"}
+                                            title="${isSaved ? "Remove bookmark" : "Save this Yap"}">
+                                        ${isSaved ? "🔖 Saved" : "🔖 Save"}
                                     </button>
                                 ` : ""}
                                 ${isAuthor ? `
@@ -1470,6 +1459,7 @@
                                 ` : ""}
                                 <a class="yap-action-btn" href="yap-thread.html?id=${esc(y.id)}">Open thread →</a>
                             </div>
+                        </div>
                     </div>
                 `;
 
@@ -1489,26 +1479,18 @@
                 card.querySelectorAll(".vote-btn").forEach(b => b.disabled = true);
 
                 try {
-                    const {
-                        error
-                    } = await sb.rpc("vote_yap", {
+                    const { error } = await sb.rpc("vote_yap", {
                         p_yap_id: yapId,
                         p_vote: direction
                     });
                     if (error) throw error;
 
-                    // Refetch just this row to get correct counters
-                    const {
-                        data
-                    } = await sb.from("yaps")
+                    const { data } = await sb.from("yaps")
                         .select("id, upvotes, downvotes, net_votes")
                         .eq("id", yapId)
                         .maybeSingle();
 
-                    // Refetch my vote on this row
-                    const {
-                        data: voteRow
-                    } = await sb.from("yap_votes")
+                    const { data: voteRow } = await sb.from("yap_votes")
                         .select("vote")
                         .eq("user_id", session.user.id)
                         .eq("yap_id", yapId)
@@ -1534,28 +1516,23 @@
 
             /* ---------------- Click handling ---------------- */
 
-            document.addEventListener("click", (e) => {
+            document.addEventListener("click", async (e) => {
                 const btn = e.target.closest("[data-action]");
                 if (!btn) return;
                 const action = btn.dataset.action;
                 const yapId = btn.dataset.yapId;
-                if (btn.dataset.clearsearch === "1") {
-                    e.preventDefault();
-                    searchTerm = "";
-                    const si = document.getElementById("yap-search");
-                    if (si) si.value = "";
-                    loadYaps(true);
-                    return;
-                }
+
                 if (action === "vote-up") {
                     e.preventDefault();
                     handleVote(yapId, 1);
+                    return;
                 }
                 if (action === "vote-down") {
                     e.preventDefault();
                     handleVote(yapId, -1);
+                    return;
                 }
-                                if (action === "bookmark") {
+                if (action === "bookmark") {
                     e.preventDefault();
                     if (!session) { toast("Sign in to save Yaps.", "err"); return; }
                     const isSaved = myBookmarks.has(yapId);
@@ -1578,22 +1555,19 @@
                 if (action === "edit") {
                     e.preventDefault();
                     openEditModal(yapId);
+                    return;
                 }
                 if (action === "delete") {
                     e.preventDefault();
                     handleDelete(yapId);
+                    return;
                 }
             });
 
             async function handleDelete(yapId) {
                 if (!confirm("Delete this Yap? If it has comments, it'll show as [deleted] instead.")) return;
                 try {
-                    const {
-                        data,
-                        error
-                    } = await sb.rpc("delete_yap", {
-                        p_yap_id: yapId
-                    });
+                    const { data, error } = await sb.rpc("delete_yap", { p_yap_id: yapId });
                     if (error) throw error;
                     const mode = data?.mode || "hard";
                     toast(mode === "soft" ? "Yap marked as deleted." : "Yap deleted.", "ok");
@@ -1603,6 +1577,9 @@
                     toast(err.message || "Delete failed.", "err");
                 }
             }
+
+            /* ---------------- Search input ---------------- */
+
             const searchInput = document.getElementById("yap-search");
             if (searchInput) {
                 searchInput.addEventListener("input", () => {
@@ -1613,6 +1590,7 @@
                     }, 300);
                 });
             }
+
             /* ---------------- Sort tabs ---------------- */
 
             els.sortTabs.forEach(tab => {
@@ -1629,10 +1607,7 @@
 
             async function loadProductsForModal() {
                 if (productsCache) return productsCache;
-                const {
-                    data,
-                    error
-                } = await sb.from("products")
+                const { data, error } = await sb.from("products")
                     .select("id, name, image, category")
                     .order("name");
                 if (error) {
@@ -1663,15 +1638,16 @@
             async function openNewModal() {
                 if (!session) {
                     toast("Sign in to post a Yap.", "err");
-                    setTimeout(() => {
-                        window.location.href = "login.html";
-                    }, 900);
+                    setTimeout(() => { window.location.href = "login.html"; }, 900);
                     return;
                 }
 
                 els.modalProduct.innerHTML = `<option value="">Loading products…</option>`;
                 els.modalProduct.disabled = true;
                 els.modalSubmit.disabled = true;
+                els.modalSubmit.textContent = "Post Yap";
+                els.modalSubmit.onclick = null;
+                els.modal.querySelector("h3").textContent = "Start a Yap";
                 els.modalStatus.className = "status";
                 els.modalTitle.value = "";
                 els.modalBody.value = "";
@@ -1683,7 +1659,6 @@
                 const products = await loadProductsForModal();
 
                 if (filterProductId) {
-                    // Locked to current product
                     els.modalProduct.innerHTML = `<option value="${filterProductId}" selected>${esc(filterProduct?.name || "Product #" + filterProductId)}</option>`;
                     els.modalProduct.disabled = true;
                 } else {
@@ -1701,6 +1676,10 @@
             function closeModal() {
                 els.modal.classList.remove("open");
                 els.modal.setAttribute("aria-hidden", "true");
+                // Reset any edit-mode state
+                els.modal.querySelector("h3").textContent = "Start a Yap";
+                els.modalSubmit.textContent = "Post Yap";
+                els.modalSubmit.onclick = null;
             }
 
             function validateModal() {
@@ -1723,10 +1702,7 @@
                 els.modalStatus.className = "status";
 
                 try {
-                    const {
-                        data,
-                        error
-                    } = await sb.rpc("create_yap", {
+                    const { data, error } = await sb.rpc("create_yap", {
                         p_product_id: pid,
                         p_title: title,
                         p_body: body
@@ -1735,7 +1711,6 @@
 
                     toast("Yap posted!", "ok");
                     closeModal();
-                    // Redirect to thread view
                     setTimeout(() => {
                         window.location.href = `yap-thread.html?id=${data}`;
                     }, 500);
@@ -1748,20 +1723,18 @@
                 }
             }
 
-            /* ---------------- Edit modal (reuses the same modal shell) ---------------- */
+            /* ---------------- Edit modal ---------------- */
 
             async function openEditModal(yapId) {
                 const y = yaps.find(x => x.id === yapId);
                 if (!y) return;
 
-                // Reuse the new modal in "edit" mode
                 els.modalProduct.innerHTML = `<option value="${y.product_id}" selected>${esc(y.product?.name || "Product #" + y.product_id)}</option>`;
                 els.modalProduct.disabled = true;
                 els.modalTitle.value = y.title;
                 els.modalBody.value = y.body;
                 els.bodyCount.textContent = String(y.body.length);
                 els.modal.querySelector("h3").textContent = "Edit Yap";
-                els.modalSub.parentElement && (els.modalSub.parentElement.textContent = "");
                 els.modalSubmit.textContent = "Save changes";
                 els.modalSubmit.disabled = false;
                 els.modalStatus.className = "status";
@@ -1777,9 +1750,7 @@
                     els.modalSubmit.disabled = true;
                     els.modalSubmit.textContent = "Saving…";
                     try {
-                        const {
-                            error
-                        } = await sb.rpc("update_yap", {
+                        const { error } = await sb.rpc("update_yap", {
                             p_yap_id: yapId,
                             p_title: title,
                             p_body: body
@@ -1801,7 +1772,18 @@
             /* ---------------- Modal wiring ---------------- */
 
             els.newYapBtn.addEventListener("click", openNewModal);
-            els.emptyStartBtn.addEventListener("click", openNewModal);
+
+            els.emptyStartBtn.addEventListener("click", () => {
+                if (els.emptyStartBtn.dataset.clearsearch === "1") {
+                    searchTerm = "";
+                    const si = document.getElementById("yap-search");
+                    if (si) si.value = "";
+                    loadYaps(true);
+                    return;
+                }
+                openNewModal();
+            });
+
             els.modalClose.addEventListener("click", closeModal);
             els.modalCancel.addEventListener("click", closeModal);
             els.modal.addEventListener("click", (e) => {
@@ -1822,20 +1804,7 @@
                 validateModal();
             });
 
-            // Reset the submit handler to the default new-Yap flow
-            // (openEditModal overrides this — closing resets it)
-            els.modalClose.addEventListener("click", () => {
-                els.modal.querySelector("h3").textContent = "Start a Yap";
-                els.modalSubmit.textContent = "Post Yap";
-                els.modalSubmit.onclick = null; // fall back to addEventListener handler below
-            });
-            els.modalCancel.addEventListener("click", () => {
-                els.modal.querySelector("h3").textContent = "Start a Yap";
-                els.modalSubmit.textContent = "Post Yap";
-                els.modalSubmit.onclick = null;
-            });
-
-            els.modalSubmit.addEventListener("click", (e) => {
+            els.modalSubmit.addEventListener("click", () => {
                 // If an inline onclick was set (edit mode), let it run
                 if (els.modalSubmit.onclick) return;
                 submitNewYap();

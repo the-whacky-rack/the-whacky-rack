@@ -543,6 +543,12 @@
             color: var(--accent-dark);
         }
 
+        .bookmark-btn.saved {
+            background: var(--pill);
+            border-color: var(--accent);
+            color: var(--accent-dark);
+        }
+
         /* ---------------- EMPTY STATE ---------------- */
 
         .empty-state {
@@ -1150,6 +1156,7 @@
             let me = null;
             let yaps = [];
             let myVotes = {}; // { yapId: 1 | -1 }
+            let myBookmarks = new Set();
             let currentSort = "top";
             let filterProductId = null;
             let filterProduct = null;
@@ -1339,19 +1346,21 @@
                 offset += rows.length;
                 hasMore = rows.length === PAGE_SIZE;
 
-                // Fetch my votes for these yaps
+                              // Fetch my votes for these yaps
                 if (session && yaps.length > 0) {
                     const ids = yaps.map(y => y.id);
-                    const {
-                        data: voteRows
-                    } = await sb.from("yap_votes")
+                    const { data: voteRows } = await sb.from("yap_votes")
                         .select("yap_id, vote")
                         .eq("user_id", session.user.id)
                         .in("yap_id", ids);
                     myVotes = {};
-                    (voteRows || []).forEach(v => {
-                        myVotes[v.yap_id] = v.vote;
-                    });
+                    (voteRows || []).forEach(v => { myVotes[v.yap_id] = v.vote; });
+
+                    // Fetch my bookmarks (all of them; small set)
+                    const { data: bmRows } = await sb.from("yap_bookmarks")
+                        .select("yap_id")
+                        .eq("user_id", session.user.id);
+                    myBookmarks = new Set((bmRows || []).map(r => r.yap_id));
                 }
 
                 render();
@@ -1446,14 +1455,21 @@
                                 💬 ${y.comment_count} comment${y.comment_count === 1 ? "" : "s"}
                             </span>
 
-                            <div class="yap-actions">
+                                                       <div class="yap-actions">
+                                ${session ? `
+                                    <button class="yap-action-btn bookmark-btn${myBookmarks.has(y.id) ? " saved" : ""}"
+                                            data-action="bookmark"
+                                            data-yap-id="${esc(y.id)}"
+                                            title="${myBookmarks.has(y.id) ? "Remove bookmark" : "Save this Yap"}">
+                                        ${myBookmarks.has(y.id) ? "🔖 Saved" : "🔖 Save"}
+                                    </button>
+                                ` : ""}
                                 ${isAuthor ? `
                                     <button class="yap-action-btn" data-action="edit" data-yap-id="${esc(y.id)}">Edit</button>
                                     <button class="yap-action-btn danger" data-action="delete" data-yap-id="${esc(y.id)}">Delete</button>
                                 ` : ""}
                                 <a class="yap-action-btn" href="yap-thread.html?id=${esc(y.id)}">Open thread →</a>
                             </div>
-                        </div>
                     </div>
                 `;
 
@@ -1538,6 +1554,26 @@
                 if (action === "vote-down") {
                     e.preventDefault();
                     handleVote(yapId, -1);
+                }
+                                if (action === "bookmark") {
+                    e.preventDefault();
+                    if (!session) { toast("Sign in to save Yaps.", "err"); return; }
+                    const isSaved = myBookmarks.has(yapId);
+                    // Optimistic
+                    if (isSaved) myBookmarks.delete(yapId); else myBookmarks.add(yapId);
+                    render();
+                    try {
+                        const { error } = await sb.rpc("toggle_bookmark", { p_yap_id: yapId });
+                        if (error) throw error;
+                        toast(isSaved ? "Removed from saved." : "Saved.", "ok");
+                    } catch (err) {
+                        console.error(err);
+                        // Revert
+                        if (isSaved) myBookmarks.add(yapId); else myBookmarks.delete(yapId);
+                        render();
+                        toast(err.message || "Bookmark failed.", "err");
+                    }
+                    return;
                 }
                 if (action === "edit") {
                     e.preventDefault();

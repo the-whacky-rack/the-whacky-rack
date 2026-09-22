@@ -323,7 +323,11 @@
             border-color: var(--accent);
             color: var(--accent-dark);
         }
-
+        .bookmark-btn.saved {
+            background: var(--pill);
+            border-color: var(--accent);
+            color: var(--accent-dark);
+        }
         /* Deleted yap banner */
         .yap-deleted-banner {
             background: #fafafa;
@@ -1025,6 +1029,7 @@
             let comments = []; // flat list
             let commentTree = []; // nested
             let myYapVote = 0;
+                        let isBookmarked = false;
             let myCommentVotes = {}; // { commentId: 1 | -1 }
             let commentsSort = "new";
             let editingYap = false;
@@ -1116,15 +1121,20 @@
                 }
                 yap = data;
 
-                if (session) {
-                    const {
-                        data: v
-                    } = await sb.from("yap_votes")
+                                if (session) {
+                    const { data: v } = await sb.from("yap_votes")
                         .select("vote")
                         .eq("user_id", session.user.id)
                         .eq("yap_id", yapId)
                         .maybeSingle();
                     myYapVote = v ? v.vote : 0;
+
+                    const { data: bm } = await sb.from("yap_bookmarks")
+                        .select("id")
+                        .eq("user_id", session.user.id)
+                        .eq("yap_id", yapId)
+                        .maybeSingle();
+                    isBookmarked = !!bm;
                 }
             }
 
@@ -1281,12 +1291,19 @@
                             <span>${esc(timeAgo(yap.created_at))}</span>
                             ${yap.edited_at ? `<span class="yap-dot">·</span><span class="yap-edited">edited ${esc(timeAgo(yap.edited_at))}</span>` : ""}
 
-                                                       ${isAuthor ? `
-                                <div class="yap-actions">
+                                                                                 <div class="yap-actions">
+                                ${session ? `
+                                    <button class="yap-action-btn bookmark-btn${isBookmarked ? " saved" : ""}"
+                                            data-action="bookmark-yap"
+                                            type="button">
+                                        ${isBookmarked ? "🔖 Saved" : "🔖 Save"}
+                                    </button>
+                                ` : ""}
+                                ${isAuthor ? `
                                     <button class="yap-action-btn" data-action="start-edit-yap" type="button">Edit</button>
                                     <button class="yap-action-btn danger" data-action="delete-yap" type="button">Delete</button>
-                                </div>
-                            ` : (session ? `<div class="yap-actions">${window.report.link("yap", yap.id, yap.title)}</div>` : "")}
+                                ` : (session ? window.report.link("yap", yap.id, yap.title) : "")}
+                            </div>
                         </div>
                     </div>
                 `;
@@ -1442,7 +1459,24 @@
                     await voteYap(-1);
                     return;
                 }
-
+                if (action === "bookmark-yap") {
+                    e.preventDefault();
+                    if (!session) { toast("Sign in to save Yaps.", "err"); return; }
+                    const wasSaved = isBookmarked;
+                    isBookmarked = !wasSaved;
+                    render();
+                    try {
+                        const { error } = await sb.rpc("toggle_bookmark", { p_yap_id: yapId });
+                        if (error) throw error;
+                        toast(wasSaved ? "Removed from saved." : "Saved.", "ok");
+                    } catch (err) {
+                        console.error(err);
+                        isBookmarked = wasSaved;
+                        render();
+                        toast(err.message || "Bookmark failed.", "err");
+                    }
+                    return;
+                }
                 // Yap edit / delete
                 if (action === "start-edit-yap") {
                     e.preventDefault();

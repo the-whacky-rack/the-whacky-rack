@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find people — The Whacky Rack</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <style>
+        :root {
+            --bg: #f7f5ef;
+            --card: #ffffff;
+            --text: #202020;
+            --muted: #777;
+            --accent: #ff5a36;
+            --accent-dark: #e84625;
+            --border: #e8e4dc;
+            --pill: #fff0eb;
+            --shadow: 0 8px 25px rgba(0,0,0,.06);
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        header {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-inner {
+            max-width: 1250px;
+            margin: auto;
+            padding: 16px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .logo { font-size: 25px; font-weight: 900; letter-spacing: -1px; white-space: nowrap; }
+        .logo span { color: var(--accent); }
+
+        .header-right { display: flex; align-items: center; gap: 12px; }
+
+        .nav-link {
+            font-size: 13px;
+            font-weight: 700;
+            padding: 8px 14px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            background: #fff;
+            transition: .2s ease;
+            white-space: nowrap;
+        }
+        .nav-link:hover { border-color: #bbb; }
+        .nav-link.active { background: #222; color: #fff; border-color: #222; }
+
+        .wrap { max-width: 720px; margin: auto; padding: 40px 22px 70px; }
+
+        .page-head { text-align: center; margin-bottom: 26px; }
+        .page-head h1 {
+            margin: 0 0 8px; font-size: clamp(32px, 5vw, 44px);
+            letter-spacing: -2px; font-weight: 950;
+        }
+        .page-head h1 span { color: var(--accent); }
+        .page-head p { margin: 0; color: #555; font-size: 15px; line-height: 1.6; }
+
+        .search-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 22px;
+        }
+        .search-bar input {
+            flex: 1;
+            height: 50px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 0 18px;
+            font-size: 15px;
+            font-family: inherit;
+            outline: none;
+            background: #fff;
+            color: var(--text);
+            box-shadow: var(--shadow);
+            transition: .2s ease;
+        }
+        .search-bar input:focus {
+            border-color: var(--accent);
+        }
+        .search-bar button {
+            background: #fff;
+            border: 1px solid var(--border);
+            padding: 0 18px;
+            border-radius: 14px;
+            font-family: inherit;
+            font-weight: 800;
+            font-size: 12px;
+            color: var(--muted);
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: .15s ease;
+        }
+        .search-bar button:hover { border-color: #bbb; color: var(--text); }
+        .search-bar button[hidden] { display: none; }
+
+        .status-line {
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 12px;
+            min-height: 18px;
+        }
+
+        .list-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .user-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border);
+            transition: background .15s ease;
+        }
+        .user-row:last-child { border-bottom: 0; }
+        .user-row:hover { background: #fafafa; }
+
+        .user-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--pill);
+            color: var(--accent-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 17px;
+            flex-shrink: 0;
+            transition: .15s ease;
+        }
+        .user-avatar:hover { background: #ffe2d8; }
+
+        .user-info { flex: 1; min-width: 0; }
+
+        .user-name-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 2px;
+        }
+
+        .user-name {
+            font-weight: 800;
+            font-size: 15px;
+            color: var(--text);
+        }
+        .user-name:hover { color: var(--accent-dark); }
+
+        .rank-chip {
+            font-size: 10px;
+            font-weight: 900;
+            background: #222;
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 50px;
+        }
+
+        .follows-you-badge {
+            font-size: 10px;
+            font-weight: 800;
+            background: var(--pill);
+            color: var(--accent-dark);
+            padding: 2px 8px;
+            border-radius: 50px;
+        }
+
+        .user-meta {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.4;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .user-action { flex-shrink: 0; }
+
+        .action-follow,
+        .action-unfollow,
+        .action-you {
+            font-size: 12px;
+            font-weight: 800;
+            padding: 8px 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: inherit;
+            border: 1px solid transparent;
+            transition: .15s ease;
+        }
+        .action-follow {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+        .action-follow:hover:not(:disabled) { background: var(--accent-dark); border-color: var(--accent-dark); }
+        .action-unfollow {
+            background: #fff;
+            color: #444;
+            border-color: var(--border);
+        }
+        .action-unfollow:hover:not(:disabled) { border-color: var(--accent); color: var(--accent-dark); }
+        .action-you {
+            background: #f1eee8;
+            color: var(--muted);
+            cursor: default;
+            border-color: #f1eee8;
+        }
+        .action-follow:disabled,
+        .action-unfollow:disabled { opacity: .55; cursor: not-allowed; }
+
+        .empty {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .empty .emoji { font-size: 42px; margin-bottom: 10px; }
+        .empty strong { color: var(--text); display: block; font-size: 17px; margin-bottom: 6px; }
+
+        .loading {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        @media (max-width: 700px) {
+            .header-inner { padding: 13px 15px; flex-wrap: wrap; }
+            .logo { font-size: 21px; }
+            .nav-link { font-size: 11px; padding: 7px 11px; }
+            .wrap { padding: 20px 15px 60px; }
+            .page-head h1 { font-size: 28px; }
+            .search-bar input { height: 46px; font-size: 14px; padding: 0 14px; }
+            .user-row { padding: 12px 14px; gap: 10px; }
+            .user-avatar { width: 40px; height: 40px; font-size: 15px; }
+            .action-follow, .action-unfollow, .action-you {
+                font-size: 11px; padding: 6px 13px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="header-inner">
+            <a href="index.html" class="logo">The <span>Whacky</span> Rack</a>
+            <div class="header-right">
+                <a href="index.html" class="nav-link">Shop</a>
+                <a href="world.html" class="nav-link">World</a>
+                <a href="history.html" class="nav-link">History</a>
+                <a href="about.html" class="nav-link">About</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="wrap">
+        <div class="page-head">
+            <h1>Find <span>people</span></h1>
+            <p>Search users by username. Type at least 2 characters.</p>
+        </div>
+
+        <div class="search-bar">
+            <input type="search" id="q" placeholder="e.g. Zany_Durian…" autocomplete="off" autofocus>
+            <button type="button" id="clear-btn" hidden>Clear</button>
+        </div>
+
+        <div class="status-line" id="status"></div>
+
+        <div class="list-card" id="results">
+            <div class="empty">
+                <div class="emoji">🔎</div>
+                <strong>Start typing</strong>
+                Usernames look like <em>Zany_Durian_45</em>.
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth.js"></script>
+
+    <script>
+        (function () {
+            const sb = window.wr.sb;
+            const qEl = document.getElementById("q");
+            const clearBtn = document.getElementById("clear-btn");
+            const statusEl = document.getElementById("status");
+            const resultsEl = document.getElementById("results");
+
+            let session = null;
+            let me = null;
+            let debounce = null;
+            let currentQuery = "";
+
+            function esc(s) {
+                return String(s ?? "").replace(/[&<>"']/g, c => ({
+                    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+                }[c]));
+            }
+            function initials(name) {
+                const p = String(name || "?").replace(/[^A-Za-z0-9]/g, " ").trim().split(/\s+/);
+                return (p[0]?.[0] || "?").toUpperCase();
+            }
+            function sanitizeSearch(s) {
+                return String(s || "")
+                    .replace(/[%,()]/g, " ")
+                    .replace(/\s+/g, " ")
+                    .trim()
+                    .slice(0, 60);
+            }
+
+            async function boot() {
+                const { data: { session: s } } = await sb.auth.getSession();
+                session = s;
+                if (session) {
+                    me = window.wr.getProfile();
+                    if (!me) {
+                        const { data } = await sb.from("profiles")
+                            .select("id, username")
+                            .eq("id", session.user.id)
+                            .maybeSingle();
+                        me = data;
+                    }
+                }
+                qEl.focus();
+            }
+
+            function renderEmpty(message, sub) {
+                resultsEl.innerHTML = `
+                    <div class="empty">
+                        <div class="emoji">🔎</div>
+                        <strong>${esc(message)}</strong>
+                        ${sub || ""}
+                    </div>
+                `;
+            }
+
+            async function runSearch(term) {
+                const safe = sanitizeSearch(term);
+                if (safe.length < 2) {
+                    statusEl.textContent = "";
+                    clearBtn.hidden = term.length === 0;
+                    renderEmpty("Start typing", "Usernames look like <em>Zany_Durian_45</em>.");
+                    return;
+                }
+
+                resultsEl.innerHTML = `<div class="loading">Searching…</div>`;
+                statusEl.textContent = "";
+
+                const { data, error } = await sb.from("profiles")
+                    .select("id, username, rank, avatar_url, country, bio, deleted_at")
+                    .ilike("username", `%${safe}%`)
+                    .is("deleted_at", null)
+                    .order("rank", { ascending: true })
+                    .limit(50);
+
+                if (error) {
+                    console.error(error);
+                    renderEmpty("Search failed", "Please try again in a moment.");
+                    return;
+                }
+
+                const rows = data || [];
+
+                // Fetch follow relations
+                let viewerFollowingSet = new Set();
+                if (session && rows.length > 0) {
+                    const ids = rows.map(r => r.id);
+                    const { data: vf } = await sb.from("follows")
+                        .select("following_id")
+                        .eq("follower_id", session.user.id)
+                        .in("following_id", ids);
+                    viewerFollowingSet = new Set((vf || []).map(r => r.following_id));
+                }
+
+                // Does each result follow me?
+                let followersSet = new Set();
+                if (session && rows.length > 0) {
+                    const ids = rows.map(r => r.id);
+                    const { data: tf } = await sb.from("follows")
+                        .select("follower_id")
+                        .eq("following_id", session.user.id)
+                        .in("follower_id", ids);
+                    followersSet = new Set((tf || []).map(r => r.follower_id));
+                }
+
+                if (rows.length === 0) {
+                    renderEmpty(
+                        `No users match "${safe}"`,
+                        "Try a shorter search, or check the spelling."
+                    );
+                    statusEl.textContent = "0 users";
+                    return;
+                }
+
+                statusEl.textContent = `${rows.length} user${rows.length === 1 ? "" : "s"}`;
+
+                resultsEl.innerHTML = rows.map(row => {
+                    const isMe = session && row.id === session.user.id;
+                    const youFollow = viewerFollowingSet.has(row.id);
+                    const followsYou = followersSet.has(row.id);
+
+                    let actionHtml;
+                    if (isMe) {
+                        actionHtml = `<span class="action-you">You</span>`;
+                    } else if (!session) {
+                        actionHtml = `<a class="action-follow" href="login.html">Follow</a>`;
+                    } else if (youFollow) {
+                        actionHtml = `<button class="action-unfollow" type="button" data-action="unfollow" data-user-id="${esc(row.id)}">Unfollow</button>`;
+                    } else {
+                        actionHtml = `<button class="action-follow" type="button" data-action="follow" data-user-id="${esc(row.id)}">Follow</button>`;
+                    }
+
+                    const meta = [];
+                    if (row.rank) meta.push(`#${row.rank}`);
+                    if (row.country) meta.push(esc(row.country));
+                    if (row.bio) meta.push(esc(row.bio.slice(0, 60)) + (row.bio.length > 60 ? "…" : ""));
+                    const metaStr = meta.join(" · ");
+
+                    return `
+                        <div class="user-row">
+                            <a class="user-avatar" href="profile.html?id=${esc(row.id)}" aria-hidden="true">${esc(initials(row.username))}</a>
+                            <div class="user-info">
+                                <div class="user-name-row">
+                                    <a class="user-name" href="profile.html?id=${esc(row.id)}">${esc(row.username)}</a>
+                                    ${row.rank ? `<span class="rank-chip">#${row.rank}</span>` : ""}
+                                    ${followsYou && !isMe ? `<span class="follows-you-badge">Follows you</span>` : ""}
+                                </div>
+                                ${metaStr ? `<div class="user-meta">${metaStr}</div>` : ""}
+                            </div>
+                            <div class="user-action">${actionHtml}</div>
+                        </div>
+                    `;
+                }).join("");
+            }
+
+            qEl.addEventListener("input", () => {
+                clearTimeout(debounce);
+                clearBtn.hidden = qEl.value.length === 0;
+                debounce = setTimeout(() => {
+                    currentQuery = qEl.value;
+                    runSearch(currentQuery);
+                }, 300);
+            });
+
+            clearBtn.addEventListener("click", () => {
+                qEl.value = "";
+                clearBtn.hidden = true;
+                statusEl.textContent = "";
+                currentQuery = "";
+                renderEmpty("Start typing", "Usernames look like <em>Zany_Durian_45</em>.");
+                qEl.focus();
+            });
+
+            resultsEl.addEventListener("click", async (e) => {
+                const btn = e.target.closest("[data-action]");
+                if (!btn) return;
+                const action = btn.dataset.action;
+                const userId = btn.dataset.userId;
+
+                if (action === "follow") {
+                    btn.disabled = true;
+                    try {
+                        const { error } = await sb.from("follows").insert({
+                            follower_id: session.user.id,
+                            following_id: userId
+                        });
+                        if (error && error.code !== "23505") throw error;
+                        btn.outerHTML = `<button class="action-unfollow" type="button" data-action="unfollow" data-user-id="${esc(userId)}">Unfollow</button>`;
+                    } catch (err) {
+                        console.error(err);
+                        btn.disabled = false;
+                    }
+                    return;
+                }
+
+                if (action === "unfollow") {
+                    if (!confirm("Unfollow this user?")) return;
+                    btn.disabled = true;
+                    try {
+                        const { error } = await sb.from("follows").delete()
+                            .eq("follower_id", session.user.id)
+                            .eq("following_id", userId);
+                        if (error) throw error;
+                        btn.outerHTML = `<button class="action-follow" type="button" data-action="follow" data-user-id="${esc(userId)}">Follow</button>`;
+                    } catch (err) {
+                        console.error(err);
+                        btn.disabled = false;
+                    }
+                }
+            });
+
+            boot();
+        })();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Yaps — The Whacky Rack</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <style>
+        :root {
+            --bg: #f7f5ef;
+            --card: #ffffff;
+            --text: #202020;
+            --muted: #777;
+            --accent: #ff5a36;
+            --accent-dark: #e84625;
+            --border: #e8e4dc;
+            --pill: #fff0eb;
+            --shadow: 0 8px 25px rgba(0,0,0,.06);
+        }
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--bg); color: var(--text); }
+        a { color: inherit; text-decoration: none; }
+
+        header { background: #fff; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
+        .header-inner { max-width: 1250px; margin: auto; padding: 16px 22px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+        .logo { font-size: 25px; font-weight: 900; letter-spacing: -1px; white-space: nowrap; }
+        .logo span { color: var(--accent); }
+        .header-right { display: flex; align-items: center; gap: 12px; }
+        .nav-link { font-size: 13px; font-weight: 700; padding: 8px 14px; border-radius: 50px; border: 1px solid var(--border); background: #fff; transition: .2s ease; white-space: nowrap; }
+        .nav-link:hover { border-color: #bbb; }
+
+        .wrap { max-width: 900px; margin: auto; padding: 32px 22px 70px; }
+
+        .breadcrumb {
+            font-size: 13px; color: var(--muted); margin-bottom: 18px;
+        }
+        .breadcrumb a { color: var(--accent-dark); font-weight: 700; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .page-head { margin-bottom: 22px; }
+        .page-head h1 { margin: 0 0 6px; font-size: 32px; letter-spacing: -1px; font-weight: 950; }
+        .page-head h1 span { color: var(--accent); }
+        .page-head p { margin: 0; color: var(--muted); font-size: 14px; }
+
+        .yaps-list { display: flex; flex-direction: column; gap: 14px; }
+
+        .yap-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 18px 20px;
+            display: flex;
+            gap: 16px;
+            transition: transform .15s ease, box-shadow .15s ease;
+        }
+        .yap-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(0,0,0,.07);
+        }
+
+        .yap-votes {
+            display: flex; flex-direction: column; align-items: center;
+            gap: 4px; min-width: 42px;
+        }
+        .vote-count {
+            font-size: 14px; font-weight: 900; color: #444;
+            min-width: 26px; text-align: center;
+        }
+        .vote-count.positive { color: var(--accent-dark); }
+        .vote-count.negative { color: #3b82f6; }
+
+        .yap-main { flex: 1; min-width: 0; }
+        .yap-title { margin: 0 0 6px; font-size: 18px; font-weight: 900; letter-spacing: -.3px; line-height: 1.3; }
+        .yap-body {
+            color: #444; font-size: 14px; line-height: 1.65; margin: 0 0 12px;
+            display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+            overflow: hidden; word-wrap: break-word;
+        }
+        .yap-body.deleted { color: #999; font-style: italic; }
+
+        .yap-meta {
+            display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px;
+            font-size: 12px; color: var(--muted);
+        }
+        .yap-author { font-weight: 800; color: var(--accent-dark); }
+        .yap-author:hover { text-decoration: underline; }
+        .yap-dot { opacity: .5; }
+        .yap-edited { font-style: italic; }
+
+        .yap-footer {
+            margin-top: 12px; padding-top: 12px;
+            border-top: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+            gap: 10px; flex-wrap: wrap;
+        }
+        .yap-comment-count {
+            font-size: 12px; font-weight: 700; color: var(--muted);
+            background: #fafafa; padding: 5px 12px; border-radius: 50px;
+            border: 1px solid var(--border);
+        }
+        .yap-actions { display: flex; gap: 6px; margin-left: auto; }
+        .yap-action-btn {
+            font-size: 11px; font-weight: 700; color: var(--muted);
+            background: transparent; border: 1px solid var(--border);
+            padding: 5px 11px; border-radius: 50px;
+            cursor: pointer; font-family: inherit;
+            transition: .15s ease;
+        }
+        .yap-action-btn:hover { border-color: #bbb; color: var(--text); }
+        .yap-action-btn.danger:hover { border-color: var(--accent); color: var(--accent-dark); }
+        .yap-action-btn.saved {
+            background: var(--pill);
+            border-color: var(--accent);
+            color: var(--accent-dark);
+        }
+
+        .empty-state {
+            text-align: center; padding: 60px 20px; color: var(--muted);
+            background: #fff; border: 1px dashed var(--border); border-radius: 18px;
+        }
+        .empty-state .emoji { font-size: 42px; margin-bottom: 10px; }
+        .empty-state h2 { margin: 0 0 8px; color: var(--text); font-size: 20px; }
+        .empty-state p { margin: 0 0 18px; font-size: 14px; line-height: 1.6; }
+        .empty-state a {
+            display: inline-block; background: var(--accent); color: #fff;
+            padding: 12px 22px; border-radius: 50px; font-weight: 800;
+            font-size: 13px; transition: .2s ease;
+        }
+        .empty-state a:hover { background: var(--accent-dark); }
+
+        .loading { text-align: center; padding: 50px 20px; color: var(--muted); font-size: 14px; }
+        .err-card { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; padding: 18px 22px; border-radius: 14px; font-size: 14px; line-height: 1.6; }
+        .err-card a { color: #7f1d1d; font-weight: 800; text-decoration: underline; }
+
+        .toast-container {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            z-index: 99999; display: flex; flex-direction: column; gap: 8px; align-items: center;
+        }
+        .toast {
+            padding: 12px 20px; border-radius: 50px; background: #222; color: #fff;
+            font-size: 13px; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,.25);
+            animation: toastIn .2s ease-out;
+        }
+        .toast.ok { background: #16a34a; }
+        .toast.err { background: #dc2626; }
+        @keyframes toastIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 700px) {
+            .header-inner { padding: 13px 15px; flex-wrap: wrap; }
+            .logo { font-size: 21px; }
+            .nav-link { font-size: 11px; padding: 7px 11px; }
+            .wrap { padding: 20px 15px 60px; }
+            .page-head h1 { font-size: 24px; }
+            .yap-card { padding: 14px 15px; gap: 10px; border-radius: 14px; }
+            .yap-title { font-size: 16px; }
+            .yap-body { font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-inner">
+        <a href="index.html" class="logo">The <span>Whacky</span> Rack</a>
+        <div class="header-right">
+            <a href="index.html" class="nav-link">Shop</a>
+            <a href="yap.html" class="nav-link">Yap it!</a>
+            <a href="tape.html" class="nav-link">Tape it!</a>
+            <a href="about.html" class="nav-link">About</a>
+        </div>
+    </div>
+</header>
+
+<main class="wrap" id="root">
+    <div class="loading">Loading…</div>
+</main>
+
+<div class="toast-container" id="toast-container"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js"></script>
+
+<script>
+(function () {
+    const sb = window.wr.sb;
+    const root = document.getElementById("root");
+    const toastBox = document.getElementById("toast-container");
+
+    let session = null;
+    let me = null;
+    let yaps = [];
+    let myBookmarks = new Set();
+
+    function esc(s) {
+        return String(s ?? "").replace(/[&<>"']/g, c => ({
+            "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+        }[c]));
+    }
+    function timeAgo(iso) {
+        const d = new Date(iso);
+        const s = Math.floor((Date.now() - d.getTime()) / 1000);
+        if (s < 60)      return "just now";
+        if (s < 3600)    return Math.floor(s/60) + "m ago";
+        if (s < 86400)   return Math.floor(s/3600) + "h ago";
+        if (s < 604800)  return Math.floor(s/86400) + "d ago";
+        if (s < 2592000) return Math.floor(s/604800) + "w ago";
+        return d.toLocaleDateString();
+    }
+    function toast(msg, kind = "ok") {
+        const el = document.createElement("div");
+        el.className = "toast " + kind;
+        el.textContent = msg;
+        toastBox.appendChild(el);
+        setTimeout(() => el.remove(), 2500);
+    }
+
+    async function boot() {
+        const { data: { session: s } } = await sb.auth.getSession();
+        session = s;
+        if (!session) {
+            root.innerHTML = `<div class="err-card">Sign in to view your saved Yaps. <a href="login.html">Sign in →</a></div>`;
+            return;
+        }
+        me = window.wr.getProfile();
+        if (!me) {
+            const { data } = await sb.from("profiles")
+                .select("id, username")
+                .eq("id", session.user.id)
+                .maybeSingle();
+            me = data;
+        }
+        await loadBookmarks();
+        render();
+    }
+
+    async function loadBookmarks() {
+        // Get bookmark rows in order
+        const { data: bm, error: bmErr } = await sb.from("yap_bookmarks")
+            .select("yap_id, created_at")
+            .eq("user_id", session.user.id)
+            .order("created_at", { ascending: false });
+        if (bmErr) { console.error(bmErr); yaps = []; return; }
+
+        const rows = bm || [];
+        myBookmarks = new Set(rows.map(r => r.yap_id));
+
+        if (rows.length === 0) { yaps = []; return; }
+
+        // Fetch the actual Yaps
+        const ids = rows.map(r => r.yap_id);
+        const { data: yapRows, error: yErr } = await sb.from("yaps")
+            .select(`
+                id, product_id, title, body, upvotes, downvotes, net_votes,
+                comment_count, is_deleted, edited_at, created_at,
+                author:profiles!yaps_author_id_fkey(id, username),
+                product:products!yaps_product_id_fkey(id, name, image, category)
+            `)
+            .in("id", ids);
+        if (yErr) { console.error(yErr); yaps = []; return; }
+
+        // Preserve bookmark order
+        const byId = {};
+        (yapRows || []).forEach(y => { byId[y.id] = y; });
+        yaps = ids.map(id => byId[id]).filter(Boolean);
+    }
+
+    function render() {
+        root.innerHTML = `
+            <div class="breadcrumb"><a href="profile.html">← Back to profile</a></div>
+            <div class="page-head">
+                <h1>Saved <span>Yaps</span></h1>
+                <p>${yaps.length === 0 ? "Nothing saved yet." : `${yaps.length} Yap${yaps.length === 1 ? "" : "s"} you've saved for later.`}</p>
+            </div>
+            <div class="yaps-list" id="list"></div>
+        `;
+        renderList();
+    }
+
+    function renderList() {
+        const list = document.getElementById("list");
+        if (!list) return;
+
+        if (yaps.length === 0) {
+            list.innerHTML = `
+                <div class="empty-state">
+                    <div class="emoji">🔖</div>
+                    <h2>No saved Yaps</h2>
+                    <p>Hit the <strong>Save</strong> button on any Yap to bookmark it. They'll appear here.</p>
+                    <a href="yap.html">Explore the board</a>
+                </div>
+            `;
+            return;
+        }
+
+        list.innerHTML = yaps.map(y => {
+            const author = y.author || {};
+            const product = y.product || {};
+            const net = y.net_votes ?? (y.upvotes - y.downvotes);
+            const netClass = net > 0 ? "positive" : net < 0 ? "negative" : "";
+            const isSaved = myBookmarks.has(y.id);
+
+            let bodyPreview = y.body || "";
+            if (y.is_deleted) bodyPreview = "[deleted]";
+            else if (bodyPreview.length > 260) bodyPreview = bodyPreview.slice(0, 260) + "…";
+
+            return `
+                <article class="yap-card" data-yap-id="${esc(y.id)}">
+                    <div class="yap-votes">
+                        <div class="vote-count ${netClass}">${net}</div>
+                    </div>
+                    <div class="yap-main">
+                        <h2 class="yap-title">${esc(y.title)}</h2>
+                        <p class="yap-body${y.is_deleted ? " deleted" : ""}">${esc(bodyPreview)}</p>
+                        <div class="yap-meta">
+                            <a class="yap-author" href="profile.html?id=${esc(author.id)}">${esc(author.username || "unknown")}</a>
+                            <span class="yap-dot">·</span>
+                            <span>${esc(timeAgo(y.created_at))}</span>
+                            ${y.edited_at ? `<span class="yap-dot">·</span><span class="yap-edited">edited</span>` : ""}
+                            ${product.id ? `<span class="yap-dot">·</span><span>${esc(product.name || "")}</span>` : ""}
+                        </div>
+                        <div class="yap-footer">
+                            <span class="yap-comment-count">💬 ${y.comment_count} comment${y.comment_count === 1 ? "" : "s"}</span>
+                            <div class="yap-actions">
+                                <button class="yap-action-btn${isSaved ? " saved" : ""}"
+                                        type="button"
+                                        data-action="unsave"
+                                        data-yap-id="${esc(y.id)}">
+                                    ${isSaved ? "🔖 Saved" : "🔖 Save"}
+                                </button>
+                                <a class="yap-action-btn" href="yap-thread.html?id=${esc(y.id)}">Open thread →</a>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            `;
+        }).join("");
+    }
+
+    root.addEventListener("click", async (e) => {
+        const btn = e.target.closest("[data-action='unsave']");
+        if (!btn) return;
+        e.preventDefault();
+        const yapId = btn.dataset.yapId;
+        const wasSaved = myBookmarks.has(yapId);
+        if (wasSaved) myBookmarks.delete(yapId); else myBookmarks.add(yapId);
+        renderList();
+        try {
+            const { error } = await sb.rpc("toggle_bookmark", { p_yap_id: yapId });
+            if (error) throw error;
+            // If we removed it, remove from yaps list too
+            if (wasSaved) {
+                yaps = yaps.filter(y => y.id !== yapId);
+                render();
+            }
+            toast(wasSaved ? "Removed from saved." : "Saved.", "ok");
+        } catch (err) {
+            console.error(err);
+            if (wasSaved) myBookmarks.add(yapId); else myBookmarks.delete(yapId);
+            renderList();
+            toast(err.message || "Bookmark failed.", "err");
+        }
+    });
+
+    boot();
+})();
+</script>
+</body>
+</html>

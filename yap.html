@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Yap it! — The Whacky Rack</title>
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <meta name="description" content="The Yap it! board — threaded discussions about every weird product on The Whacky Rack.">
 
     <style>
@@ -19,11 +19,16 @@
             --accent-dark: #e84625;
             --border: #e8e4dc;
             --pill: #fff0eb;
-            --shadow: 0 8px 25px rgba(0,0,0,.06);
+            --shadow: 0 8px 25px rgba(0, 0, 0, .06);
         }
 
-        * { box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
 
         body {
             margin: 0;
@@ -32,7 +37,10 @@
             color: var(--text);
         }
 
-        a { color: inherit; text-decoration: none; }
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
 
         /* ---------------- HEADER ---------------- */
 
@@ -54,10 +62,22 @@
             gap: 20px;
         }
 
-        .logo { font-size: 25px; font-weight: 900; letter-spacing: -1px; white-space: nowrap; }
-        .logo span { color: var(--accent); }
+        .logo {
+            font-size: 25px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            white-space: nowrap;
+        }
 
-        .header-right { display: flex; align-items: center; gap: 12px; }
+        .logo span {
+            color: var(--accent);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
         .nav-link {
             font-size: 13px;
@@ -69,12 +89,25 @@
             transition: .2s ease;
             white-space: nowrap;
         }
-        .nav-link:hover { border-color: #bbb; }
-        .nav-link.active { background: #222; color: #fff; border-color: #222; }
+
+        .nav-link:hover {
+            border-color: #bbb;
+        }
+
+        .nav-link.active {
+            background: #222;
+            color: #fff;
+            border-color: #222;
+        }
 
         /* ---------------- HERO ---------------- */
 
-        .hero { max-width: 1050px; margin: auto; padding: 55px 22px 25px; text-align: center; }
+        .hero {
+            max-width: 1050px;
+            margin: auto;
+            padding: 55px 22px 25px;
+            text-align: center;
+        }
 
         .hero-kicker {
             display: inline-block;
@@ -97,7 +130,9 @@
             font-weight: 950;
         }
 
-        .hero h1 span { color: var(--accent); }
+        .hero h1 span {
+            color: var(--accent);
+        }
 
         .hero-description {
             max-width: 720px;
@@ -109,7 +144,11 @@
 
         /* ---------------- CONTROLS ---------------- */
 
-        .controls-wrapper { max-width: 1050px; margin: 15px auto 25px; padding: 0 22px; }
+        .controls-wrapper {
+            max-width: 1050px;
+            margin: 15px auto 25px;
+            padding: 0 22px;
+        }
 
         .controls {
             background: #fff;
@@ -123,7 +162,10 @@
             flex-wrap: wrap;
         }
 
-        .sort-tabs { display: flex; gap: 6px; }
+        .sort-tabs {
+            display: flex;
+            gap: 6px;
+        }
 
         .sort-tab {
             border: 1px solid var(--border);
@@ -137,10 +179,48 @@
             transition: .2s ease;
             color: #666;
         }
-        .sort-tab:hover { border-color: #bbb; color: #202020; }
-        .sort-tab.active { background: #222; color: #fff; border-color: #222; }
 
-        .controls-right { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+        .sort-tab:hover {
+            border-color: #bbb;
+            color: #202020;
+        }
+
+        .sort-tab.active {
+            background: #222;
+            color: #fff;
+            border-color: #222;
+        }
+
+        .controls .search-box {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .controls .search-box input {
+            width: 100%;
+            height: 40px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0 14px;
+            font-size: 13px;
+            font-family: inherit;
+            outline: none;
+            background: #fafafa;
+            color: var(--text);
+            transition: .2s ease;
+        }
+
+        .controls .search-box input:focus {
+            border-color: var(--accent);
+            background: #fff;
+        }
+
+        .controls-right {
+            margin-left: auto;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
 
         .new-yap-btn {
             background: var(--accent);
@@ -155,7 +235,11 @@
             transition: .2s ease;
             white-space: nowrap;
         }
-        .new-yap-btn:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
+
+        .new-yap-btn:hover {
+            background: var(--accent-dark);
+            border-color: var(--accent-dark);
+        }
 
         /* ---------------- PRODUCT BANNER ---------------- */
 
@@ -183,7 +267,10 @@
             flex-shrink: 0;
         }
 
-        .product-banner-info { flex: 1; min-width: 200px; }
+        .product-banner-info {
+            flex: 1;
+            min-width: 200px;
+        }
 
         .product-banner-cat {
             font-size: 10px;
@@ -194,7 +281,11 @@
             margin-bottom: 4px;
         }
 
-        .product-banner-name { font-size: 15px; font-weight: 800; line-height: 1.3; }
+        .product-banner-name {
+            font-size: 15px;
+            font-weight: 800;
+            line-height: 1.3;
+        }
 
         .product-banner-clear {
             font-size: 12px;
@@ -206,11 +297,19 @@
             white-space: nowrap;
             transition: .2s ease;
         }
-        .product-banner-clear:hover { border-color: #bbb; color: var(--text); }
+
+        .product-banner-clear:hover {
+            border-color: #bbb;
+            color: var(--text);
+        }
 
         /* ---------------- YAP LIST ---------------- */
 
-        .yaps-wrapper { max-width: 1050px; margin: auto; padding: 0 22px 70px; }
+        .yaps-wrapper {
+            max-width: 1050px;
+            margin: auto;
+            padding: 0 22px 70px;
+        }
 
         .results-info {
             display: flex;
@@ -223,7 +322,11 @@
             flex-wrap: wrap;
         }
 
-        .yaps-list { display: flex; flex-direction: column; gap: 14px; }
+        .yaps-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
 
         .yap-card {
             background: var(--card);
@@ -237,7 +340,7 @@
 
         .yap-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 28px rgba(0,0,0,.07);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, .07);
         }
 
         /* Vote column */
@@ -265,10 +368,28 @@
             font-family: inherit;
             padding: 0;
         }
-        .vote-btn:hover:not(:disabled) { border-color: #bbb; color: #555; }
-        .vote-btn.up.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-        .vote-btn.down.active { background: #3b82f6; border-color: #3b82f6; color: #fff; }
-        .vote-btn:disabled { opacity: .55; cursor: not-allowed; }
+
+        .vote-btn:hover:not(:disabled) {
+            border-color: #bbb;
+            color: #555;
+        }
+
+        .vote-btn.up.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+
+        .vote-btn.down.active {
+            background: #3b82f6;
+            border-color: #3b82f6;
+            color: #fff;
+        }
+
+        .vote-btn:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+        }
 
         .vote-count {
             font-size: 14px;
@@ -278,11 +399,20 @@
             min-width: 26px;
             text-align: center;
         }
-        .vote-count.positive { color: var(--accent-dark); }
-        .vote-count.negative { color: #3b82f6; }
+
+        .vote-count.positive {
+            color: var(--accent-dark);
+        }
+
+        .vote-count.negative {
+            color: #3b82f6;
+        }
 
         /* Main content column */
-        .yap-main { flex: 1; min-width: 0; }
+        .yap-main {
+            flex: 1;
+            min-width: 0;
+        }
 
         .yap-title {
             margin: 0 0 6px;
@@ -303,7 +433,11 @@
             overflow: hidden;
             word-wrap: break-word;
         }
-        .yap-body.deleted { color: #999; font-style: italic; }
+
+        .yap-body.deleted {
+            color: #999;
+            font-style: italic;
+        }
 
         .yap-meta {
             display: flex;
@@ -318,9 +452,14 @@
             font-weight: 800;
             color: var(--accent-dark);
         }
-        .yap-author:hover { text-decoration: underline; }
 
-        .yap-dot { opacity: .5; }
+        .yap-author:hover {
+            text-decoration: underline;
+        }
+
+        .yap-dot {
+            opacity: .5;
+        }
 
         .yap-product-link {
             font-size: 11px;
@@ -332,7 +471,10 @@
             border-radius: 50px;
             transition: .2s ease;
         }
-        .yap-product-link:hover { border-color: #bbb; }
+
+        .yap-product-link:hover {
+            border-color: #bbb;
+        }
 
         .yap-edited {
             font-size: 11px;
@@ -356,7 +498,10 @@
             font-weight: 800;
             color: var(--accent-dark);
         }
-        .open-thread:hover { text-decoration: underline; }
+
+        .open-thread:hover {
+            text-decoration: underline;
+        }
 
         .yap-comment-count {
             font-size: 12px;
@@ -387,8 +532,16 @@
             font-family: inherit;
             transition: .15s ease;
         }
-        .yap-action-btn:hover { border-color: #bbb; color: var(--text); }
-        .yap-action-btn.danger:hover { border-color: var(--accent); color: var(--accent-dark); }
+
+        .yap-action-btn:hover {
+            border-color: #bbb;
+            color: var(--text);
+        }
+
+        .yap-action-btn.danger:hover {
+            border-color: var(--accent);
+            color: var(--accent-dark);
+        }
 
         /* ---------------- EMPTY STATE ---------------- */
 
@@ -400,9 +553,22 @@
             border: 1px dashed var(--border);
             border-radius: 18px;
         }
-        .empty-state .emoji { font-size: 42px; margin-bottom: 10px; }
-        .empty-state h2 { margin: 0 0 8px; color: var(--text); font-size: 20px; }
-        .empty-state p { margin: 0 0 18px; font-size: 14px; }
+
+        .empty-state .emoji {
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+        .empty-state h2 {
+            margin: 0 0 8px;
+            color: var(--text);
+            font-size: 20px;
+        }
+
+        .empty-state p {
+            margin: 0 0 18px;
+            font-size: 14px;
+        }
 
         .empty-cta {
             display: inline-block;
@@ -417,7 +583,10 @@
             font-family: inherit;
             transition: .2s ease;
         }
-        .empty-cta:hover { background: var(--accent-dark); }
+
+        .empty-cta:hover {
+            background: var(--accent-dark);
+        }
 
         /* ---------------- LOADING ---------------- */
 
@@ -430,10 +599,30 @@
 
         /* ---------------- FOOTER ---------------- */
 
-        footer { background: #222; color: #fff; padding: 40px 22px; text-align: center; }
-        .footer-title { font-size: 22px; font-weight: 900; margin-bottom: 10px; }
-        .footer-title span { color: var(--accent); }
-        footer p { max-width: 650px; margin: auto; color: #bbb; font-size: 12px; line-height: 1.7; }
+        footer {
+            background: #222;
+            color: #fff;
+            padding: 40px 22px;
+            text-align: center;
+        }
+
+        .footer-title {
+            font-size: 22px;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+
+        .footer-title span {
+            color: var(--accent);
+        }
+
+        footer p {
+            max-width: 650px;
+            margin: auto;
+            color: #bbb;
+            font-size: 12px;
+            line-height: 1.7;
+        }
 
         .footer-links {
             margin-top: 22px;
@@ -443,10 +632,22 @@
             gap: 8px 18px;
             font-size: 12px;
         }
-        .footer-links a { color: #bbb; font-weight: 700; transition: .2s ease; }
-        .footer-links a:hover { color: var(--accent); }
 
-        .footer-disclosure { margin-top: 18px; font-size: 11px; color: #888; }
+        .footer-links a {
+            color: #bbb;
+            font-weight: 700;
+            transition: .2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .footer-disclosure {
+            margin-top: 18px;
+            font-size: 11px;
+            color: #888;
+        }
 
         /* ---------------- MODAL ---------------- */
 
@@ -454,13 +655,16 @@
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,.5);
+            background: rgba(0, 0, 0, .5);
             z-index: 10000;
             align-items: center;
             justify-content: center;
             padding: 20px;
         }
-        .modal.open { display: flex; }
+
+        .modal.open {
+            display: flex;
+        }
 
         .modal-inner {
             background: #fff;
@@ -470,14 +674,21 @@
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0,0,0,.25);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .25);
             position: relative;
             animation: modalIn .18s ease-out;
         }
 
         @keyframes modalIn {
-            from { opacity: 0; transform: translateY(10px) scale(.98); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+            from {
+                opacity: 0;
+                transform: translateY(10px) scale(.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
         .modal-close {
@@ -499,7 +710,11 @@
             font-family: inherit;
             transition: .2s ease;
         }
-        .modal-close:hover { background: #e8e4dc; color: #222; }
+
+        .modal-close:hover {
+            background: #e8e4dc;
+            color: #222;
+        }
 
         .modal h3 {
             margin: 0 0 4px;
@@ -507,6 +722,7 @@
             font-weight: 900;
             letter-spacing: -.3px;
         }
+
         .modal .modal-sub {
             margin: 0 0 20px;
             font-size: 13px;
@@ -540,9 +756,16 @@
 
         .modal input:focus,
         .modal select:focus,
-        .modal textarea:focus { border-color: var(--accent); background: #fff; }
+        .modal textarea:focus {
+            border-color: var(--accent);
+            background: #fff;
+        }
 
-        .modal textarea { resize: vertical; min-height: 110px; line-height: 1.55; }
+        .modal textarea {
+            resize: vertical;
+            min-height: 110px;
+            line-height: 1.55;
+        }
 
         .modal .char-count {
             font-size: 11px;
@@ -569,12 +792,31 @@
             transition: .2s ease;
         }
 
-        .btn-ghost { background: #fff; color: #444; border-color: var(--border); }
-        .btn-ghost:hover { border-color: #bbb; }
+        .btn-ghost {
+            background: #fff;
+            color: #444;
+            border-color: var(--border);
+        }
 
-        .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
-        .btn-primary:hover:not(:disabled) { background: var(--accent-dark); border-color: var(--accent-dark); }
-        .btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+        .btn-ghost:hover {
+            border-color: #bbb;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--accent-dark);
+            border-color: var(--accent-dark);
+        }
+
+        .btn-primary:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
 
         .modal .status {
             margin-top: 14px;
@@ -583,8 +825,16 @@
             font-size: 13px;
             display: none;
         }
-        .modal .status.show { display: block; }
-        .modal .status.err { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+
+        .modal .status.show {
+            display: block;
+        }
+
+        .modal .status.err {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
 
         .modal .product-preview {
             display: flex;
@@ -596,6 +846,7 @@
             border-radius: 12px;
             margin-top: 6px;
         }
+
         .modal .product-preview img {
             width: 48px;
             height: 48px;
@@ -603,6 +854,7 @@
             border-radius: 8px;
             background: #f1eee8;
         }
+
         .modal .product-preview .pp-cat {
             font-size: 10px;
             font-weight: 800;
@@ -610,6 +862,7 @@
             color: var(--accent-dark);
             letter-spacing: .4px;
         }
+
         .modal .product-preview .pp-name {
             font-size: 13px;
             font-weight: 700;
@@ -638,50 +891,133 @@
             color: #fff;
             font-size: 13px;
             font-weight: 600;
-            box-shadow: 0 10px 30px rgba(0,0,0,.25);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
             animation: toastIn .2s ease-out;
         }
 
-        .toast.ok { background: #16a34a; }
-        .toast.err { background: #dc2626; }
+        .toast.ok {
+            background: #16a34a;
+        }
+
+        .toast.err {
+            background: #dc2626;
+        }
 
         @keyframes toastIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* ---------------- MOBILE ---------------- */
 
         @media (max-width: 700px) {
-            .header-inner { padding: 13px 15px; flex-wrap: wrap; }
-            .logo { font-size: 21px; }
-            .nav-link { font-size: 11px; padding: 7px 11px; }
+            .header-inner {
+                padding: 13px 15px;
+                flex-wrap: wrap;
+            }
 
-            .hero { padding: 40px 18px 20px; }
-            .hero h1 { font-size: 44px; letter-spacing: -2px; }
-            .hero-description { font-size: 14px; line-height: 1.65; }
+            .logo {
+                font-size: 21px;
+            }
 
-            .controls-wrapper { padding: 0 15px; }
-            .controls { padding: 10px 12px; border-radius: 15px; }
-            .sort-tab { padding: 8px 13px; font-size: 12px; }
-            .new-yap-btn { padding: 9px 14px; font-size: 12px; }
+            .nav-link {
+                font-size: 11px;
+                padding: 7px 11px;
+            }
 
-            .product-banner { margin: 0 15px 18px; padding: 13px 15px; gap: 12px; }
-            .product-banner-img { width: 48px; height: 48px; }
+            .hero {
+                padding: 40px 18px 20px;
+            }
 
-            .yaps-wrapper { padding: 0 15px 55px; }
-            .yap-card { padding: 15px 15px; gap: 10px; border-radius: 14px; }
-            .yap-title { font-size: 16px; }
-            .yap-body { font-size: 13px; }
-            .vote-btn { width: 30px; height: 30px; font-size: 13px; }
-            .vote-count { font-size: 13px; }
+            .hero h1 {
+                font-size: 44px;
+                letter-spacing: -2px;
+            }
 
-            .modal-inner { padding: 22px 20px; border-radius: 16px; }
-            .modal h3 { font-size: 19px; }
+            .hero-description {
+                font-size: 14px;
+                line-height: 1.65;
+            }
+
+            .controls-wrapper {
+                padding: 0 15px;
+            }
+
+            .controls {
+                padding: 10px 12px;
+                border-radius: 15px;
+            }
+
+            .sort-tab {
+                padding: 8px 13px;
+                font-size: 12px;
+            }
+
+            .new-yap-btn {
+                padding: 9px 14px;
+                font-size: 12px;
+            }
+
+            .product-banner {
+                margin: 0 15px 18px;
+                padding: 13px 15px;
+                gap: 12px;
+            }
+
+            .product-banner-img {
+                width: 48px;
+                height: 48px;
+            }
+
+            .yaps-wrapper {
+                padding: 0 15px 55px;
+            }
+
+            .yap-card {
+                padding: 15px 15px;
+                gap: 10px;
+                border-radius: 14px;
+            }
+
+            .yap-title {
+                font-size: 16px;
+            }
+
+            .yap-body {
+                font-size: 13px;
+            }
+
+            .vote-btn {
+                width: 30px;
+                height: 30px;
+                font-size: 13px;
+            }
+
+            .vote-count {
+                font-size: 13px;
+            }
+
+            .modal-inner {
+                padding: 22px 20px;
+                border-radius: 16px;
+            }
+
+            .modal h3 {
+                font-size: 19px;
+            }
         }
 
         @media (max-width: 380px) {
-            .hero h1 { font-size: 38px; }
+            .hero h1 {
+                font-size: 38px;
+            }
         }
     </style>
 </head>
@@ -716,6 +1052,9 @@
             <div class="sort-tabs">
                 <button class="sort-tab active" data-sort="top">🔥 Top</button>
                 <button class="sort-tab" data-sort="new">✨ New</button>
+            </div>
+            <div class="search-box">
+                <input type="search" id="yap-search" placeholder="Search titles and bodies…" autocomplete="off">
             </div>
             <div class="controls-right">
                 <button class="new-yap-btn" id="new-yap-btn">+ Start a Yap</button>
@@ -800,7 +1139,7 @@
     <script src="auth.js"></script>
 
     <script>
-        (function () {
+        (function() {
             const sb = window.wr.sb;
 
             /* ---------------- State ---------------- */
@@ -809,51 +1148,65 @@
             let session = null;
             let me = null;
             let yaps = [];
-            let myVotes = {};       // { yapId: 1 | -1 }
+            let myVotes = {}; // { yapId: 1 | -1 }
             let currentSort = "top";
             let filterProductId = null;
             let filterProduct = null;
             let offset = 0;
             let hasMore = true;
+            let searchTerm = "";
+            let searchDebounce = null;
             let productsCache = null; // lazily populated
 
             /* ---------------- Elements ---------------- */
             const els = {
-                yapsList:      document.getElementById("yaps-list"),
-                resultCount:   document.getElementById("result-count"),
-                emptyState:    document.getElementById("empty-state"),
+                yapsList: document.getElementById("yaps-list"),
+                resultCount: document.getElementById("result-count"),
+                emptyState: document.getElementById("empty-state"),
                 productBanner: document.getElementById("product-banner"),
-                newYapBtn:     document.getElementById("new-yap-btn"),
+                newYapBtn: document.getElementById("new-yap-btn"),
                 emptyStartBtn: document.getElementById("empty-start-btn"),
-                sortTabs:      document.querySelectorAll(".sort-tab"),
-                modal:         document.getElementById("new-yap-modal"),
-                modalClose:    document.getElementById("modal-close"),
-                modalCancel:   document.getElementById("modal-cancel"),
-                modalProduct:  document.getElementById("modal-product"),
-                modalPreview:  document.getElementById("modal-product-preview"),
-                modalTitle:    document.getElementById("modal-title"),
-                modalBody:     document.getElementById("modal-body"),
-                modalSubmit:   document.getElementById("modal-submit"),
-                modalStatus:   document.getElementById("modal-status"),
-                bodyCount:     document.getElementById("body-count"),
-                toastBox:      document.getElementById("toast-container")
+                sortTabs: document.querySelectorAll(".sort-tab"),
+                modal: document.getElementById("new-yap-modal"),
+                modalClose: document.getElementById("modal-close"),
+                modalCancel: document.getElementById("modal-cancel"),
+                modalProduct: document.getElementById("modal-product"),
+                modalPreview: document.getElementById("modal-product-preview"),
+                modalTitle: document.getElementById("modal-title"),
+                modalBody: document.getElementById("modal-body"),
+                modalSubmit: document.getElementById("modal-submit"),
+                modalStatus: document.getElementById("modal-status"),
+                bodyCount: document.getElementById("body-count"),
+                toastBox: document.getElementById("toast-container")
             };
 
             /* ---------------- Utils ---------------- */
             function esc(s) {
                 return String(s ?? "").replace(/[&<>"']/g, c => ({
-                    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-                }[c]));
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    '"': "&quot;",
+                    "'": "&#39;"
+                } [c]));
+            }
+
+            function sanitizeSearch(s) {
+                return String(s || "")
+                    .replace(/[%,()]/g, " ")
+                    .replace(/\s+/g, " ")
+                    .trim()
+                    .slice(0, 100);
             }
 
             function timeAgo(iso) {
                 const d = new Date(iso);
                 const s = Math.floor((Date.now() - d.getTime()) / 1000);
-                if (s < 60)     return "just now";
-                if (s < 3600)   return Math.floor(s/60) + "m ago";
-                if (s < 86400)  return Math.floor(s/3600) + "h ago";
-                if (s < 604800) return Math.floor(s/86400) + "d ago";
-                if (s < 2592000) return Math.floor(s/604800) + "w ago";
+                if (s < 60) return "just now";
+                if (s < 3600) return Math.floor(s / 60) + "m ago";
+                if (s < 86400) return Math.floor(s / 3600) + "h ago";
+                if (s < 604800) return Math.floor(s / 86400) + "d ago";
+                if (s < 2592000) return Math.floor(s / 604800) + "w ago";
                 return d.toLocaleDateString();
             }
 
@@ -868,12 +1221,18 @@
             /* ---------------- Data loading ---------------- */
 
             async function loadSession() {
-                const { data: { session: s } } = await sb.auth.getSession();
+                const {
+                    data: {
+                        session: s
+                    }
+                } = await sb.auth.getSession();
                 session = s;
                 if (session) {
                     me = window.wr.getProfile() || null;
                     if (!me) {
-                        const { data } = await sb.from("profiles")
+                        const {
+                            data
+                        } = await sb.from("profiles")
                             .select("id, username")
                             .eq("id", session.user.id)
                             .maybeSingle();
@@ -887,9 +1246,14 @@
                 const pid = params.get("product");
                 if (!pid) return;
                 filterProductId = parseInt(pid, 10);
-                if (Number.isNaN(filterProductId)) { filterProductId = null; return; }
+                if (Number.isNaN(filterProductId)) {
+                    filterProductId = null;
+                    return;
+                }
 
-                const { data } = await sb.from("products")
+                const {
+                    data
+                } = await sb.from("products")
                     .select("id, name, image, category, link")
                     .eq("id", filterProductId)
                     .maybeSingle();
@@ -934,17 +1298,33 @@
                     query = query.eq("product_id", filterProductId);
                 }
 
+                if (searchTerm) {
+                    const safe = sanitizeSearch(searchTerm);
+                    if (safe) {
+                        query = query.or(`title.ilike.%${safe}%,body.ilike.%${safe}%`);
+                    }
+                }
+
                 if (currentSort === "top") {
-                    query = query.order("net_votes", { ascending: false });
+                    query = query.order("net_votes", {
+                        ascending: false
+                    });
                 } else {
-                    query = query.order("created_at", { ascending: false });
+                    query = query.order("created_at", {
+                        ascending: false
+                    });
                 }
                 // Secondary sort for stable ordering
-                query = query.order("created_at", { ascending: false });
+                query = query.order("created_at", {
+                    ascending: false
+                });
 
                 query = query.range(offset, offset + PAGE_SIZE - 1);
 
-                const { data, error } = await query;
+                const {
+                    data,
+                    error
+                } = await query;
                 if (error) {
                     console.error(error);
                     els.yapsList.innerHTML = `<div class="loading">Couldn't load Yaps. Try again.</div>`;
@@ -961,12 +1341,16 @@
                 // Fetch my votes for these yaps
                 if (session && yaps.length > 0) {
                     const ids = yaps.map(y => y.id);
-                    const { data: voteRows } = await sb.from("yap_votes")
+                    const {
+                        data: voteRows
+                    } = await sb.from("yap_votes")
                         .select("yap_id, vote")
                         .eq("user_id", session.user.id)
                         .in("yap_id", ids);
                     myVotes = {};
-                    (voteRows || []).forEach(v => { myVotes[v.yap_id] = v.vote; });
+                    (voteRows || []).forEach(v => {
+                        myVotes[v.yap_id] = v.vote;
+                    });
                 }
 
                 render();
@@ -978,7 +1362,22 @@
                 if (yaps.length === 0) {
                     els.yapsList.innerHTML = "";
                     els.emptyState.hidden = false;
-                    els.resultCount.textContent = "0 Yaps";
+                    if (searchTerm) {
+                        els.emptyState.querySelector("h2").textContent = `Nothing matches "${searchTerm}"`;
+                        els.emptyState.querySelector("p").textContent = "Try another word, or clear the search.";
+                        els.emptyState.querySelector(".empty-cta").textContent = "Clear search";
+                        els.emptyState.querySelector(".empty-cta").dataset.clearsearch = "1";
+                    } else {
+                        els.emptyState.querySelector("h2").textContent = "No Yaps here yet.";
+                        els.emptyState.querySelector("p").textContent = "Start the first thread. Be the legend.";
+                        els.emptyState.querySelector(".empty-cta").textContent = "+ Start a Yap";
+                        delete els.emptyState.querySelector(".empty-cta").dataset.clearsearch;
+                    }
+                    if (searchTerm) {
+                        els.resultCount.textContent = `0 Yaps matching "${searchTerm}"`;
+                    } else {
+                        els.resultCount.textContent = "0 Yaps";
+                    }
                     return;
                 }
                 els.emptyState.hidden = true;
@@ -988,8 +1387,13 @@
                 els.yapsList.innerHTML = "";
                 els.yapsList.appendChild(frag);
 
-                els.resultCount.textContent =
-                    `${yaps.length} Yap${yaps.length === 1 ? "" : "s"}`;
+                if (searchTerm) {
+                    els.resultCount.textContent =
+                        `${yaps.length} Yap${yaps.length === 1 ? "" : "s"} matching "${searchTerm}"`;
+                } else {
+                    els.resultCount.textContent =
+                        `${yaps.length} Yap${yaps.length === 1 ? "" : "s"}`;
+                }
             }
 
             function createYapCard(y) {
@@ -1068,20 +1472,26 @@
                 card.querySelectorAll(".vote-btn").forEach(b => b.disabled = true);
 
                 try {
-                    const { error } = await sb.rpc("vote_yap", {
+                    const {
+                        error
+                    } = await sb.rpc("vote_yap", {
                         p_yap_id: yapId,
                         p_vote: direction
                     });
                     if (error) throw error;
 
                     // Refetch just this row to get correct counters
-                    const { data } = await sb.from("yaps")
+                    const {
+                        data
+                    } = await sb.from("yaps")
                         .select("id, upvotes, downvotes, net_votes")
                         .eq("id", yapId)
                         .maybeSingle();
 
                     // Refetch my vote on this row
-                    const { data: voteRow } = await sb.from("yap_votes")
+                    const {
+                        data: voteRow
+                    } = await sb.from("yap_votes")
                         .select("vote")
                         .eq("user_id", session.user.id)
                         .eq("yap_id", yapId)
@@ -1112,17 +1522,41 @@
                 if (!btn) return;
                 const action = btn.dataset.action;
                 const yapId = btn.dataset.yapId;
-
-                if (action === "vote-up")   { e.preventDefault(); handleVote(yapId, 1);  }
-                if (action === "vote-down") { e.preventDefault(); handleVote(yapId, -1); }
-                if (action === "edit")      { e.preventDefault(); openEditModal(yapId); }
-                if (action === "delete")    { e.preventDefault(); handleDelete(yapId); }
+                if (btn.dataset.clearsearch === "1") {
+                    e.preventDefault();
+                    searchTerm = "";
+                    const si = document.getElementById("yap-search");
+                    if (si) si.value = "";
+                    loadYaps(true);
+                    return;
+                }
+                if (action === "vote-up") {
+                    e.preventDefault();
+                    handleVote(yapId, 1);
+                }
+                if (action === "vote-down") {
+                    e.preventDefault();
+                    handleVote(yapId, -1);
+                }
+                if (action === "edit") {
+                    e.preventDefault();
+                    openEditModal(yapId);
+                }
+                if (action === "delete") {
+                    e.preventDefault();
+                    handleDelete(yapId);
+                }
             });
 
             async function handleDelete(yapId) {
                 if (!confirm("Delete this Yap? If it has comments, it'll show as [deleted] instead.")) return;
                 try {
-                    const { data, error } = await sb.rpc("delete_yap", { p_yap_id: yapId });
+                    const {
+                        data,
+                        error
+                    } = await sb.rpc("delete_yap", {
+                        p_yap_id: yapId
+                    });
                     if (error) throw error;
                     const mode = data?.mode || "hard";
                     toast(mode === "soft" ? "Yap marked as deleted." : "Yap deleted.", "ok");
@@ -1132,7 +1566,16 @@
                     toast(err.message || "Delete failed.", "err");
                 }
             }
-
+            const searchInput = document.getElementById("yap-search");
+            if (searchInput) {
+                searchInput.addEventListener("input", () => {
+                    clearTimeout(searchDebounce);
+                    searchDebounce = setTimeout(() => {
+                        searchTerm = searchInput.value.trim();
+                        loadYaps(true);
+                    }, 300);
+                });
+            }
             /* ---------------- Sort tabs ---------------- */
 
             els.sortTabs.forEach(tab => {
@@ -1149,10 +1592,16 @@
 
             async function loadProductsForModal() {
                 if (productsCache) return productsCache;
-                const { data, error } = await sb.from("products")
+                const {
+                    data,
+                    error
+                } = await sb.from("products")
                     .select("id, name, image, category")
                     .order("name");
-                if (error) { console.error(error); return []; }
+                if (error) {
+                    console.error(error);
+                    return [];
+                }
                 productsCache = data || [];
                 return productsCache;
             }
@@ -1177,7 +1626,9 @@
             async function openNewModal() {
                 if (!session) {
                     toast("Sign in to post a Yap.", "err");
-                    setTimeout(() => { window.location.href = "login.html"; }, 900);
+                    setTimeout(() => {
+                        window.location.href = "login.html";
+                    }, 900);
                     return;
                 }
 
@@ -1235,7 +1686,10 @@
                 els.modalStatus.className = "status";
 
                 try {
-                    const { data, error } = await sb.rpc("create_yap", {
+                    const {
+                        data,
+                        error
+                    } = await sb.rpc("create_yap", {
                         p_product_id: pid,
                         p_title: title,
                         p_body: body
@@ -1286,7 +1740,9 @@
                     els.modalSubmit.disabled = true;
                     els.modalSubmit.textContent = "Saving…";
                     try {
-                        const { error } = await sb.rpc("update_yap", {
+                        const {
+                            error
+                        } = await sb.rpc("update_yap", {
                             p_yap_id: yapId,
                             p_title: title,
                             p_body: body
@@ -1363,4 +1819,5 @@
     </script>
 
 </body>
+
 </html>

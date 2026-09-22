@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications — The Whacky Rack</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <style>
+        :root {
+            --bg: #f7f5ef;
+            --card: #ffffff;
+            --text: #202020;
+            --muted: #777;
+            --accent: #ff5a36;
+            --accent-dark: #e84625;
+            --border: #e8e4dc;
+            --pill: #fff0eb;
+            --shadow: 0 8px 25px rgba(0,0,0,.06);
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        header {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-inner {
+            max-width: 1250px;
+            margin: auto;
+            padding: 16px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .logo { font-size: 25px; font-weight: 900; letter-spacing: -1px; white-space: nowrap; }
+        .logo span { color: var(--accent); }
+
+        .header-right { display: flex; align-items: center; gap: 12px; }
+
+        .nav-link {
+            font-size: 13px;
+            font-weight: 700;
+            padding: 8px 14px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            background: #fff;
+            transition: .2s ease;
+            white-space: nowrap;
+        }
+        .nav-link:hover { border-color: #bbb; }
+        .nav-link.active { background: #222; color: #fff; border-color: #222; }
+
+        .wrap { max-width: 720px; margin: auto; padding: 32px 22px 70px; }
+
+        .page-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 22px;
+        }
+
+        .page-head h1 {
+            margin: 0 0 4px;
+            font-size: 32px;
+            letter-spacing: -1px;
+            font-weight: 950;
+        }
+        .page-head h1 span { color: var(--accent); }
+
+        .page-head p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .mark-all-btn {
+            background: #fff;
+            border: 1px solid var(--border);
+            padding: 10px 18px;
+            border-radius: 50px;
+            font-family: inherit;
+            font-weight: 800;
+            font-size: 12px;
+            color: #444;
+            cursor: pointer;
+            transition: .15s ease;
+            white-space: nowrap;
+        }
+        .mark-all-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent-dark); background: var(--pill); }
+        .mark-all-btn:disabled { opacity: .4; cursor: not-allowed; }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            border: 1px solid var(--border);
+            background: #fff;
+            padding: 12px;
+            border-radius: 14px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            color: var(--muted);
+            transition: .2s ease;
+        }
+        .tab-btn:hover { border-color: #bbb; color: var(--text); }
+        .tab-btn.active { background: #222; color: #fff; border-color: #222; }
+        .tab-btn .tab-count {
+            display: inline-block;
+            background: var(--pill);
+            color: var(--accent-dark);
+            padding: 1px 8px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 900;
+            margin-left: 6px;
+        }
+        .tab-btn.active .tab-count {
+            background: rgba(255,255,255,.2);
+            color: #fff;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .notif-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: .15s ease;
+            position: relative;
+        }
+        .notif-row:last-child { border-bottom: 0; }
+        .notif-row:hover { background: #fafafa; }
+        .notif-row.unread { background: #fff5f0; }
+        .notif-row.unread:hover { background: #ffe9e0; }
+
+        .notif-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--pill);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+
+        .notif-body {
+            flex: 1;
+            min-width: 0;
+            padding-right: 30px;
+        }
+
+        .notif-text {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #333;
+            margin-bottom: 4px;
+            word-wrap: break-word;
+        }
+        .notif-text strong { color: #202020; font-weight: 800; }
+        .notif-text .snippet { color: #888; font-style: italic; }
+
+        .notif-time {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .notif-delete {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: #fff;
+            border: 1px solid var(--border);
+            color: #999;
+            font-size: 14px;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: inherit;
+            padding: 0;
+            opacity: 0;
+            transition: .15s ease;
+        }
+        .notif-row:hover .notif-delete { opacity: 1; }
+        .notif-delete:hover { background: #fef2f2; border-color: #fecaca; color: #dc2626; }
+
+        .empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+        .empty .emoji { font-size: 42px; margin-bottom: 10px; }
+        .empty strong { color: var(--text); display: block; font-size: 17px; margin-bottom: 6px; }
+
+        .loading {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .err-card {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            padding: 18px 22px;
+            border-radius: 14px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .err-card a { color: #7f1d1d; font-weight: 800; text-decoration: underline; }
+
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+        .toast {
+            padding: 12px 20px;
+            border-radius: 50px;
+            background: #222;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0,0,0,.25);
+            animation: toastIn .2s ease-out;
+        }
+        .toast.ok { background: #16a34a; }
+        .toast.err { background: #dc2626; }
+        @keyframes toastIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 700px) {
+            .header-inner { padding: 13px 15px; flex-wrap: wrap; }
+            .logo { font-size: 21px; }
+            .nav-link { font-size: 11px; padding: 7px 11px; }
+            .wrap { padding: 20px 15px 60px; }
+            .page-head h1 { font-size: 24px; }
+            .notif-row { padding: 14px 16px; gap: 10px; }
+            .notif-icon { width: 36px; height: 36px; font-size: 16px; }
+            .notif-body { padding-right: 28px; }
+            .notif-delete { opacity: 1; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="header-inner">
+            <a href="index.html" class="logo">The <span>Whacky</span> Rack</a>
+            <div class="header-right">
+                <a href="index.html" class="nav-link">Shop</a>
+                <a href="world.html" class="nav-link">World</a>
+                <a href="history.html" class="nav-link">History</a>
+                <a href="about.html" class="nav-link">About</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="wrap" id="root">
+        <div class="loading">Loading…</div>
+    </main>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth.js"></script>
+
+    <script>
+        (function () {
+            const sb = window.wr.sb;
+            const root = document.getElementById("root");
+            const toastBox = document.getElementById("toast-container");
+
+            let session = null;
+            let tab = "all";
+            let notifications = [];
+
+            function esc(s) {
+                return String(s ?? "").replace(/[&<>"']/g, c => ({
+                    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+                }[c]));
+            }
+
+            function timeAgo(iso) {
+                const d = new Date(iso);
+                const s = Math.floor((Date.now() - d.getTime()) / 1000);
+                if (s < 60)      return "just now";
+                if (s < 3600)    return Math.floor(s/60) + "m ago";
+                if (s < 86400)   return Math.floor(s/3600) + "h ago";
+                if (s < 604800)  return Math.floor(s/86400) + "d ago";
+                if (s < 2592000) return Math.floor(s/604800) + "w ago";
+                return d.toLocaleDateString();
+            }
+
+            function toast(msg, kind = "ok") {
+                const el = document.createElement("div");
+                el.className = "toast " + kind;
+                el.textContent = msg;
+                toastBox.appendChild(el);
+                setTimeout(() => el.remove(), 2500);
+            }
+
+            function notifMeta(n) {
+                const actor = n.actor?.username || "Someone";
+                const actorId = n.actor?.id || n.actor_id || "";
+                const followUrl = `profile.html?id=${actorId}`;
+
+                switch (n.type) {
+                    case "follow":
+                        return {
+                            icon: "👤",
+                            text: `<strong>${esc(actor)}</strong> started following you`,
+                            url: followUrl
+                        };
+                    case "yap_comment":
+                        return {
+                            icon: "💬",
+                            text: `<strong>${esc(actor)}</strong> commented on your Yap` +
+                                  (n.snippet ? ` <span class="snippet">"${esc(n.snippet)}"</span>` : ""),
+                            url: n.context_id ? `yap-thread.html?id=${n.context_id}` : "#"
+                        };
+                    case "yap_reply":
+                        return {
+                            icon: "↪️",
+                            text: `<strong>${esc(actor)}</strong> replied to your comment` +
+                                  (n.snippet ? ` <span class="snippet">"${esc(n.snippet)}"</span>` : ""),
+                            url: n.context_id ? `yap-thread.html?id=${n.context_id}` : "#"
+                        };
+                    case "tape_comment":
+                        return {
+                            icon: "💬",
+                            text: `<strong>${esc(actor)}</strong> commented on your Tape` +
+                                  (n.snippet ? ` <span class="snippet">"${esc(n.snippet)}"</span>` : ""),
+                            url: n.context_id ? `tape-thread.html?id=${n.context_id}` : "#"
+                        };
+                    case "tape_reply":
+                        return {
+                            icon: "↪️",
+                            text: `<strong>${esc(actor)}</strong> replied to your comment` +
+                                  (n.snippet ? ` <span class="snippet">"${esc(n.snippet)}"</span>` : ""),
+                            url: n.context_id ? `tape-thread.html?id=${n.context_id}` : "#"
+                        };
+                    case "tape_reaction":
+                        return {
+                            icon: n.snippet || "👍",
+                            text: `<strong>${esc(actor)}</strong> reacted to your Tape`,
+                            url: n.context_id ? `tape-thread.html?id=${n.context_id}` : "#"
+                        };
+                    case "comment_upvote":
+                        return {
+                            icon: "▲",
+                            text: `<strong>${esc(actor)}</strong> upvoted your comment`,
+                            url: n.context_id ? `yap-thread.html?id=${n.context_id}` : "#"
+                        };
+                    default:
+                        return { icon: "🔔", text: "New activity", url: "#" };
+                }
+            }
+
+            async function boot() {
+                const { data: { session: s } } = await sb.auth.getSession();
+                session = s;
+                if (!session) {
+                    root.innerHTML = `<div class="err-card">You need to be signed in to see notifications. <a href="login.html">Sign in →</a></div>`;
+                    return;
+                }
+                await load();
+                render();
+            }
+
+            async function load() {
+                const { data, error } = await sb.from("notifications")
+                    .select(`
+                        id, type, actor_id, target_type, target_id,
+                        context_type, context_id, snippet, is_read, created_at,
+                        actor:profiles!notifications_actor_id_fkey(id, username, avatar_url)
+                    `)
+                    .eq("user_id", session.user.id)
+                    .order("created_at", { ascending: false })
+                    .limit(100);
+                if (error) {
+                    console.error(error);
+                    notifications = [];
+                    return;
+                }
+                notifications = data || [];
+            }
+
+            function render() {
+                const unreadCount = notifications.filter(n => !n.is_read).length;
+                const visible = tab === "unread"
+                    ? notifications.filter(n => !n.is_read)
+                    : notifications;
+
+                root.innerHTML = `
+                    <div class="page-head">
+                        <div>
+                            <h1>Notifi<span>cations</span></h1>
+                            <p>${unreadCount === 0 ? "You're all caught up." : `${unreadCount} unread.`}</p>
+                        </div>
+                        <button class="mark-all-btn" id="mark-all-btn" ${unreadCount === 0 ? "disabled" : ""}>
+                            Mark all read
+                        </button>
+                    </div>
+
+                    <div class="tabs">
+                        <button class="tab-btn ${tab === "all" ? "active" : ""}" data-tab="all">
+                            All<span class="tab-count">${notifications.length}</span>
+                        </button>
+                        <button class="tab-btn ${tab === "unread" ? "active" : ""}" data-tab="unread">
+                            Unread<span class="tab-count">${unreadCount}</span>
+                        </button>
+                    </div>
+
+                    <div class="card" id="list"></div>
+                `;
+
+                renderList(visible);
+            }
+
+            function renderList(items) {
+                const list = document.getElementById("list");
+                if (!list) return;
+
+                if (items.length === 0) {
+                    list.innerHTML = `
+                        <div class="empty">
+                            <div class="emoji">${tab === "unread" ? "✅" : "🔕"}</div>
+                            <strong>${tab === "unread" ? "Nothing unread" : "No notifications yet"}</strong>
+                            ${tab === "unread"
+                                ? "You've read everything. Nice."
+                                : "When someone follows you, comments, or reacts — it'll show up here."}
+                        </div>
+                    `;
+                    return;
+                }
+
+                list.innerHTML = items.map(n => {
+                    const meta = notifMeta(n);
+                    return `
+                        <div class="notif-row${n.is_read ? "" : " unread"}"
+                             data-notif-id="${esc(n.id)}"
+                             data-notif-url="${esc(meta.url)}">
+                            <div class="notif-icon">${meta.icon}</div>
+                            <div class="notif-body">
+                                <div class="notif-text">${meta.text}</div>
+                                <div class="notif-time">${esc(timeAgo(n.created_at))}</div>
+                            </div>
+                            <button class="notif-delete" type="button"
+                                    data-action="delete"
+                                    data-notif-id="${esc(n.id)}"
+                                    aria-label="Delete">×</button>
+                        </div>
+                    `;
+                }).join("");
+            }
+
+            /* Mark all */
+            root.addEventListener("click", async (e) => {
+                const tabBtn = e.target.closest(".tab-btn");
+                if (tabBtn) {
+                    tab = tabBtn.dataset.tab;
+                    render();
+                    return;
+                }
+
+                if (e.target.id === "mark-all-btn") {
+                    const btn = e.target;
+                    btn.disabled = true;
+                    const { error } = await sb.rpc("mark_all_notifications_read");
+                    if (error) {
+                        toast(error.message || "Failed.", "err");
+                        btn.disabled = false;
+                        return;
+                    }
+                    notifications.forEach(n => { n.is_read = true; });
+                    window.wr.refreshUnreadCount();
+                    toast("All marked as read.", "ok");
+                    render();
+                    return;
+                }
+
+                const deleteBtn = e.target.closest("[data-action='delete']");
+                if (deleteBtn) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const id = deleteBtn.dataset.notifId;
+                    const { error } = await sb.rpc("delete_notification", { p_notification_id: id });
+                    if (error) {
+                        toast(error.message || "Delete failed.", "err");
+                        return;
+                    }
+                    notifications = notifications.filter(n => n.id !== id);
+                    window.wr.refreshUnreadCount();
+                    render();
+                    return;
+                }
+
+                const row = e.target.closest(".notif-row");
+                if (row) {
+                    const id = row.dataset.notifId;
+                    const url = row.dataset.notifUrl;
+
+                    // Mark as read (fire and forget)
+                    const n = notifications.find(x => x.id === id);
+                    if (n && !n.is_read) {
+                        sb.rpc("mark_notification_read", { p_notification_id: id }).catch(() => {});
+                        window.wr.refreshUnreadCount();
+                    }
+                    if (url && url !== "#") window.location.href = url;
+                }
+            });
+
+            boot();
+        })();
+    </script>
+
+</body>
+</html>

@@ -22,6 +22,7 @@ let panelEl = null;
 /* ---------- Styles ---------- */
 const style = document.createElement("style");
 style.textContent = `
+header .header-right { flex-wrap: wrap; }
 .wr-auth-area { display: flex; align-items: center; gap: 10px; }
 
 .wr-auth-user {

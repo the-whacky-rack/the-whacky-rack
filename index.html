@@ -1176,19 +1176,19 @@
     </style>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="The Whacky Rack">
-<meta property="og:title" content="The Whacky Rack — bizarre products you didn't know you needed">
-<meta property="og:description" content="A cult for people who love weird things. Curation of the internet's most wonderfully unnecessary products.">
-<meta property="og:url" content="https://the-whacky-rack.github.io/the-whacky-rack/">
-<meta property="og:image" content="https://the-whacky-rack.github.io/the-whacky-rack/og-image.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="The Whacky Rack">
+    <meta property="og:title" content="The Whacky Rack — bizarre products you didn't know you needed">
+    <meta property="og:description" content="A cult for people who love weird things. Curation of the internet's most wonderfully unnecessary products.">
+    <meta property="og:url" content="https://the-whacky-rack.github.io/the-whacky-rack/">
+    <meta property="og:image" content="https://the-whacky-rack.github.io/the-whacky-rack/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
 
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="The Whacky Rack — bizarre products you didn't know you needed">
-<meta name="twitter:description" content="A cult for people who love weird things.">
-<meta name="twitter:image" content="https://the-whacky-rack.github.io/the-whacky-rack/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="The Whacky Rack — bizarre products you didn't know you needed">
+    <meta name="twitter:description" content="A cult for people who love weird things.">
+    <meta name="twitter:image" content="https://the-whacky-rack.github.io/the-whacky-rack/og-image.png">
 </head>
 
 <body>
@@ -1207,6 +1207,7 @@
                 <a href="world.html" class="nav-link">World</a>
                 <a href="history.html" class="nav-link">History</a>
                 <a href="about.html" class="nav-link">About</a>
+                <a href="search-users.html" class="nav-link">People</a>
             </div>
 
         </div>
@@ -2181,115 +2182,125 @@
         initCompanion();
     </script>
     <script>
-    (function () {
-        function ready() {
-            if (!window.wr || !window.wr.sb) return setTimeout(ready, 50);
-            const sb = window.wr.sb;
+        (function() {
+            function ready() {
+                if (!window.wr || !window.wr.sb) return setTimeout(ready, 50);
+                const sb = window.wr.sb;
 
-            const modal        = document.getElementById("tapeModal");
-            const modalClose   = document.getElementById("tapeModalClose");
-            const modalCancel  = document.getElementById("tapeModalCancel");
-            const modalSubmit  = document.getElementById("tapeModalSubmit");
-            const preview      = document.getElementById("tapeModalPreview");
-            const caption      = document.getElementById("tapeCaption");
-            const charCount    = document.getElementById("tapeCharCount");
-            const statusEl     = document.getElementById("tapeStatus");
+                const modal = document.getElementById("tapeModal");
+                const modalClose = document.getElementById("tapeModalClose");
+                const modalCancel = document.getElementById("tapeModalCancel");
+                const modalSubmit = document.getElementById("tapeModalSubmit");
+                const preview = document.getElementById("tapeModalPreview");
+                const caption = document.getElementById("tapeCaption");
+                const charCount = document.getElementById("tapeCharCount");
+                const statusEl = document.getElementById("tapeStatus");
 
-            let currentProduct = null;
+                let currentProduct = null;
 
-            function esc(s) {
-                return String(s ?? "").replace(/[&<>"']/g, c => ({
-                    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-                }[c]));
-            }
+                function esc(s) {
+                    return String(s ?? "").replace(/[&<>"']/g, c => ({
+                        "&": "&amp;",
+                        "<": "&lt;",
+                        ">": "&gt;",
+                        '"': "&quot;",
+                        "'": "&#39;"
+                    } [c]));
+                }
 
-            function openModal(product) {
-                currentProduct = product;
-                preview.innerHTML = `
+                function openModal(product) {
+                    currentProduct = product;
+                    preview.innerHTML = `
                     <img src="${esc(product.image)}" alt="">
                     <div>
                         <div class="pcat">${esc(product.category)}</div>
                         <div class="pname">${esc(product.name)}</div>
                     </div>
                 `;
-                caption.value = "";
-                charCount.textContent = "0";
-                statusEl.className = "tape-status";
-                statusEl.textContent = "";
-                modalSubmit.disabled = false;
-                modalSubmit.textContent = "Tape it!";
-                modal.classList.add("open");
-                modal.setAttribute("aria-hidden", "false");
-                setTimeout(() => caption.focus(), 100);
-            }
-
-            function closeModal() {
-                modal.classList.remove("open");
-                modal.setAttribute("aria-hidden", "true");
-                currentProduct = null;
-            }
-
-            caption.addEventListener("input", () => {
-                charCount.textContent = String(caption.value.length);
-            });
-            modalClose.addEventListener("click", closeModal);
-            modalCancel.addEventListener("click", closeModal);
-            modal.addEventListener("click", (e) => {
-                if (e.target === modal) closeModal();
-            });
-            document.addEventListener("keydown", (e) => {
-                if (e.key === "Escape" && modal.classList.contains("open")) closeModal();
-            });
-
-            document.addEventListener("click", async (e) => {
-                const btn = e.target.closest(".tape-btn");
-                if (!btn) return;
-                e.preventDefault();
-
-                const { data: { session } } = await sb.auth.getSession();
-                if (!session) {
-                    window.location.href = "login.html";
-                    return;
-                }
-                openModal({
-                    id: parseInt(btn.dataset.productId, 10),
-                    name: btn.dataset.productName,
-                    image: btn.dataset.productImage,
-                    category: btn.dataset.productCategory
-                });
-            });
-
-            modalSubmit.addEventListener("click", async () => {
-                if (!currentProduct) return;
-                modalSubmit.disabled = true;
-                modalSubmit.textContent = "Taping…";
-                statusEl.className = "tape-status";
-
-                try {
-                    const cap = caption.value.trim();
-                    const { error } = await sb.rpc("create_tape", {
-                        p_product_id: currentProduct.id,
-                        p_caption: cap || null
-                    });
-                    if (error) throw error;
-
-                    statusEl.className = "tape-status show ok";
-                    statusEl.textContent = "Taped! Redirecting…";
-
-                    setTimeout(() => {
-                        window.location.href = "tape.html";
-                    }, 500);
-                } catch (err) {
-                    console.error(err);
-                    statusEl.className = "tape-status show err";
-                    statusEl.textContent = err.message || "Could not Tape it.";
+                    caption.value = "";
+                    charCount.textContent = "0";
+                    statusEl.className = "tape-status";
+                    statusEl.textContent = "";
                     modalSubmit.disabled = false;
                     modalSubmit.textContent = "Tape it!";
+                    modal.classList.add("open");
+                    modal.setAttribute("aria-hidden", "false");
+                    setTimeout(() => caption.focus(), 100);
                 }
-            });
-        }
-        ready();
-    })();
+
+                function closeModal() {
+                    modal.classList.remove("open");
+                    modal.setAttribute("aria-hidden", "true");
+                    currentProduct = null;
+                }
+
+                caption.addEventListener("input", () => {
+                    charCount.textContent = String(caption.value.length);
+                });
+                modalClose.addEventListener("click", closeModal);
+                modalCancel.addEventListener("click", closeModal);
+                modal.addEventListener("click", (e) => {
+                    if (e.target === modal) closeModal();
+                });
+                document.addEventListener("keydown", (e) => {
+                    if (e.key === "Escape" && modal.classList.contains("open")) closeModal();
+                });
+
+                document.addEventListener("click", async (e) => {
+                    const btn = e.target.closest(".tape-btn");
+                    if (!btn) return;
+                    e.preventDefault();
+
+                    const {
+                        data: {
+                            session
+                        }
+                    } = await sb.auth.getSession();
+                    if (!session) {
+                        window.location.href = "login.html";
+                        return;
+                    }
+                    openModal({
+                        id: parseInt(btn.dataset.productId, 10),
+                        name: btn.dataset.productName,
+                        image: btn.dataset.productImage,
+                        category: btn.dataset.productCategory
+                    });
+                });
+
+                modalSubmit.addEventListener("click", async () => {
+                    if (!currentProduct) return;
+                    modalSubmit.disabled = true;
+                    modalSubmit.textContent = "Taping…";
+                    statusEl.className = "tape-status";
+
+                    try {
+                        const cap = caption.value.trim();
+                        const {
+                            error
+                        } = await sb.rpc("create_tape", {
+                            p_product_id: currentProduct.id,
+                            p_caption: cap || null
+                        });
+                        if (error) throw error;
+
+                        statusEl.className = "tape-status show ok";
+                        statusEl.textContent = "Taped! Redirecting…";
+
+                        setTimeout(() => {
+                            window.location.href = "tape.html";
+                        }, 500);
+                    } catch (err) {
+                        console.error(err);
+                        statusEl.className = "tape-status show err";
+                        statusEl.textContent = err.message || "Could not Tape it.";
+                        modalSubmit.disabled = false;
+                        modalSubmit.textContent = "Tape it!";
+                    }
+                });
+            }
+            ready();
+        })();
     </script>
 </body>
 

@@ -493,8 +493,9 @@
         <h1>Privacy <span>Policy</span></h1>
         <p class="hero-description">
             This policy explains what information The Whacky Rack collects, how we use it,
-            and the choices you have. The short version: <strong>we collect as little as
-                possible</strong>, we don't sell your data, and we don't ask you to create an account.
+            and the choices you have. The short version: <strong>we collect the minimum
+                required to run accounts, community features, and moderation</strong>, we don't
+            sell your data, and you can delete your account at any time.
         </p>
         <span class="updated-pill">Last updated: 2026</span>
     </section>
@@ -504,13 +505,14 @@
         <div class="notice-card">
             <h2>Plain-English summary</h2>
             <p>
-                The Whacky Rack does not have user accounts, logins, comment sections, or a
-                newsletter. We don't collect names, emails, or payment details. If you use
-                the like button, we store an anonymous identifier and your likes in your
-                browser's localStorage and in our database — no personal information is
-                involved. The only third parties that may set cookies on your device are
-                Amazon (when you click an affiliate link) and a social platform (when you
-                click a share button). That's it.
+                The Whacky Rack has user accounts and community features. To run them we
+                collect your email address, a hashed password (managed by Supabase Auth),
+                and whatever you choose to add to your profile and post. We do not collect
+                real names, phone numbers, or payment details. We do not sell your data.
+                The third parties that may set cookies or trackers on your device are
+                Cloudflare (bot protection on signup, login, and password reset), Amazon
+                (affiliate links), and social platforms (when you use the share button).
+                You can delete your account at any time from your settings page.
             </p>
         </div>
 
@@ -519,8 +521,10 @@
             <p>
                 The Whacky Rack ("we", "us", "our") is an independently operated editorial
                 website that publishes curated product recommendations and factual
-                stories from around the world. We are the <strong>data controller</strong>
-                for any personal information collected through this site.
+                stories from around the world, and hosts community features where users
+                can post, comment, vote, and follow each other. We are the
+                <strong>data controller</strong> for any personal information collected
+                through this site.
             </p>
             <p>
                 For questions about this policy or your data, contact us at
@@ -531,58 +535,90 @@
         <div class="content-section">
             <h2><span class="num">2</span>Information we collect</h2>
 
-            <h3>Information you give us</h3>
+            <h3>Account information</h3>
             <p>
-                We only receive personal information if you voluntarily send it to us —
-                typically by emailing our contact address. In that case we receive your
-                email address and whatever you choose to include in your message. We use
-                it solely to reply to you.
+                When you create an account, we collect your <strong>email address</strong>
+                and a <strong>password</strong>. The password is hashed and stored by our
+                authentication provider (Supabase Auth). We never see your plaintext
+                password. We also store the date you joined, a sequential
+                <strong>rank</strong> number, and a randomly generated
+                <strong>username</strong> (formats like <code>Zany_Durian_45</code>).
+                Usernames cannot be changed after signup.
+            </p>
+
+            <h3>Profile information (optional)</h3>
+            <p>
+                You may optionally add a <strong>bio</strong>, <strong>country</strong>,
+                <strong>gender</strong>, <strong>age</strong>, and an emoji
+                <strong>avatar</strong> to your profile. You also declare that you are
+                <strong>18 or older</strong> at signup. We store your browser's
+                <strong>IANA timezone</strong> so that timestamps display correctly for you.
+            </p>
+
+            <h3>User-generated content</h3>
+            <p>
+                Everything you post is stored on our servers and is publicly visible
+                unless noted. This includes:
+            </p>
+            <ul>
+                <li><strong>Yaps</strong> — posts you create about products, and any comments and replies underneath them (nested up to 6 levels deep).</li>
+                <li><strong>Tapes</strong> — products you post to your personal timeline, with optional captions, plus any comments underneath them.</li>
+                <li><strong>Votes and reactions</strong> — upvotes and downvotes on Yaps and comments, and your choice of reaction emoji (👍👎🤣🤬🎉💝) on Tapes. These are tied to your account so we can prevent double-voting.</li>
+                <li><strong>Bookmarks</strong> — Yaps you save for later. Visible only to you.</li>
+                <li><strong>Follows</strong> — accounts you follow and accounts that follow you. Visible to other logged-in users on followers pages.</li>
+                <li><strong>Reports</strong> — reports you file against other users' content. Visible only to you and to moderators.</li>
+                <li><strong>Notifications</strong> — a log of actions on your content (someone commented, reacted, followed, upvoted). Visible only to you.</li>
+            </ul>
+
+            <h3>Anonymous likes</h3>
+            <p>
+                On product cards, the "like" button works without an account. We store a
+                randomly generated identifier (a UUID) in your browser's
+                <strong>localStorage</strong> and send it, together with the product ID,
+                to our database so the like can be counted. This identifier has no
+                connection to your account, your name, or your email. If you later create
+                an account, these anonymous likes remain separate from it.
             </p>
 
             <h3>Information collected automatically</h3>
             <p>
-                Like virtually all websites, our hosting provider records basic technical
-                information when you visit — IP address, browser type, referring page,
-                pages viewed, and timestamps. This is standard server-log data used for
-                security, debugging, and understanding aggregate traffic patterns. It is
-                not linked to any identifiable individual by us.
+                Our hosting and backend providers record basic technical information when
+                you visit — IP address, browser type, referring page, pages viewed, and
+                timestamps. This is standard server-log data used for security, debugging,
+                and understanding aggregate traffic patterns. It is not linked to your
+                account by us.
             </p>
 
-            <h3>Information stored when you like a product</h3>
+            <h3>Session data</h3>
             <p>
-                When you use the like button on a product, two pieces of information are
-                stored in your browser's <strong>localStorage</strong>:
-            </p>
-            <ul>
-                <li>A randomly generated identifier (a UUID) that has no connection to your name, email, or any other personal information.</li>
-                <li>A list of the product IDs you have liked, so the heart icon stays filled when you return to the site.</li>
-            </ul>
-            <p>
-                When you like a product, we also send that random identifier and the
-                product ID to our database (hosted on Supabase) so that the like can be
-                counted and displayed. <strong>No personal information is transmitted</strong>
-                — only the anonymous identifier and the product ID.
+                After you sign in, Supabase Auth stores a session token in your browser's
+                <strong>localStorage</strong>. This token authenticates your requests to
+                the backend. It is not a cookie and is not sent automatically to
+                third-party websites. Signing out clears it.
             </p>
 
             <h3>Information we do <em>not</em> collect</h3>
             <ul>
-                <li>We do not require or offer account registration.</li>
-                <li>We do not collect names, phone numbers, or postal addresses.</li>
+                <li>We do not collect real names, phone numbers, or postal addresses.</li>
                 <li>We do not collect payment information — we don't sell anything directly.</li>
-                <li>We do not operate a newsletter or mailing list at this time.</li>
-                <li>We do not use fingerprinting, session recording, or cross-site tracking scripts.</li>
-                <li>We do not collect your identity through the like feature — the identifier we use is random and cannot be traced back to you.</li>
+                <li>We do not operate a marketing newsletter or mailing list. We only send transactional emails such as password reset links, and only when you request them.</li>
+                <li>We do not use session recording, cross-site tracking scripts, or browser fingerprinting.</li>
+                <li>We do not collect data from children under 13. The site is intended for adults 18+.</li>
             </ul>
         </div>
 
         <div class="content-section">
             <h2><span class="num">3</span>How we use information</h2>
-            <p>The limited information we receive is used only to:</p>
+            <p>The information we collect is used only to:</p>
             <ul>
-                <li>Respond to messages you send us.</li>
-                <li>Keep the website secure and functioning (server logs).</li>
+                <li>Create and authenticate your account and keep you signed in.</li>
+                <li>Display your profile, Yaps, Tapes, comments, votes, and reactions to other users as intended by the community features.</li>
+                <li>Show you notifications when others interact with your content.</li>
+                <li>Enforce rate limits and prevent spam, bot signups, and abuse (including via Cloudflare Turnstile).</li>
+                <li>Review reports filed by users and take moderation action.</li>
+                <li>Send transactional emails you request (e.g. password reset links, delivered via Resend).</li>
                 <li>Understand aggregate, anonymised traffic patterns.</li>
-                <li>Display like counts on product cards.</li>
+                <li>Respond to messages you send us.</li>
                 <li>Comply with legal obligations if required.</li>
             </ul>
             <p>
@@ -593,6 +629,33 @@
         <div class="content-section">
             <h2><span class="num">4</span>Third parties who may receive data</h2>
 
+            <h3>Supabase (backend and authentication)</h3>
+            <p>
+                Supabase hosts our database and provides our authentication service. Your
+                account credentials, profile data, and all user-generated content are
+                stored on Supabase infrastructure. When you sign in, Supabase issues and
+                validates session tokens. Supabase may log requests as part of normal
+                infrastructure operation.
+            </p>
+
+            <h3>Cloudflare Turnstile (bot protection)</h3>
+            <p>
+                Cloudflare Turnstile is used on the signup, login, and password reset
+                forms to prevent automated account creation and credential-stuffing
+                attacks. When you submit one of those forms, Cloudflare processes a
+                challenge on your device. Cloudflare may set a short-lived challenge
+                cookie and may log your IP address and user agent as part of the
+                challenge. Turnstile is designed to be privacy-preserving and does not
+                track you across sites.
+            </p>
+
+            <h3>Resend (transactional email)</h3>
+            <p>
+                We use Resend to deliver password reset emails. When you request a reset
+                link, Resend receives your email address and the content of the message.
+                We do not use Resend for marketing.
+            </p>
+
             <h3>Amazon (affiliate links)</h3>
             <p>
                 When you click an Amazon affiliate link on this site, Amazon.com, Inc. may
@@ -602,24 +665,13 @@
                 <a class="inline-link" href="https://www.amazon.com/gp/help/customer/display.html?nodeId=GX7NJQ4ZB8MHFRNJ" target="_blank" rel="noopener noreferrer">Amazon Privacy Notice</a>.
             </p>
 
-            <h3>Supabase (content delivery and likes)</h3>
-            <p>
-                Our product and story data is hosted on Supabase. When your browser loads
-                content from Supabase, Supabase may log the request as part of normal
-                infrastructure operation. When you like a product, the anonymous
-                identifier described in section 2 and the product ID are stored in a
-                Supabase-hosted database. We do not use Supabase authentication, so no
-                session or account cookies are set on your device by our use of it.
-            </p>
-
             <h3>Social sharing platforms</h3>
             <p>
                 When you use the share button on a product, your browser opens a page on
                 the platform you choose — Twitter/X, Facebook, Pinterest, Reddit, or
                 WhatsApp. Those platforms may set their own cookies and collect
                 information about your visit under their own privacy and cookie policies.
-                We do not receive any personal information from those platforms, and we do
-                not know which products you share or with whom.
+                We do not receive any personal information from those platforms.
             </p>
 
             <h3>Image hosts</h3>
@@ -631,8 +683,8 @@
 
             <h3>Hosting provider</h3>
             <p>
-                Our website is hosted on a third-party platform that keeps standard
-                access logs for security and operational purposes.
+                Our website is hosted on a third-party platform (GitHub Pages) that keeps
+                standard access logs for security and operational purposes.
             </p>
         </div>
 
@@ -643,16 +695,11 @@
                 Switzerland, we rely on the following legal bases:
             </p>
             <ul>
-                <li><strong>Legitimate interests</strong> — for server logs, security, and preventing abuse.</li>
-                <li><strong>Consent</strong> — where required, for any non-essential cookies set by third parties.</li>
-                <li><strong>Contract</strong> — where you have contacted us and we need to respond.</li>
-                <li><strong>Legal obligation</strong> — where we are required to retain or disclose information by law.</li>
+                <li><strong>Contract</strong> — to create your account, authenticate you, and provide the community features you signed up for.</li>
+                <li><strong>Legitimate interests</strong> — for server logs, security, spam prevention, moderation, and understanding aggregate traffic.</li>
+                <li><strong>Consent</strong> — where required, for any non-essential cookies set by third parties. We do not currently set any non-essential cookies ourselves.</li>
+                <li><strong>Legal obligation</strong> — where we are required to retain or disclose information by law, including responding to valid legal requests.</li>
             </ul>
-            <p>
-                Because the like feature stores only an anonymous identifier and a list
-                of product IDs, and does not track you across other sites, we treat it as
-                a functional, user-initiated feature rather than tracking.
-            </p>
         </div>
 
         <div class="content-section">
@@ -664,7 +711,7 @@
             <ul>
                 <li><strong>Access</strong> — request a copy of the data we hold about you.</li>
                 <li><strong>Correction</strong> — ask us to fix inaccurate data.</li>
-                <li><strong>Deletion</strong> — ask us to delete your data ("right to be forgotten").</li>
+                <li><strong>Deletion</strong> — delete your account from your settings page, or ask us to delete specific data.</li>
                 <li><strong>Restriction</strong> — ask us to limit how we use your data.</li>
                 <li><strong>Portability</strong> — receive your data in a portable format.</li>
                 <li><strong>Objection</strong> — object to processing based on legitimate interests.</li>
@@ -677,11 +724,29 @@
                 We will respond within the timeframe required by applicable law
                 (typically 30 days).
             </p>
+
+            <h3>Account deletion</h3>
             <p>
-                Because the like identifier is stored only in your browser and is not
-                linked to your identity, you can remove it at any time by clearing your
-                browser's local storage or site data for this site. This will also clear
-                any likes you have registered on this device.
+                You can delete your account at any time from your
+                <strong>settings page</strong>. When you do:
+            </p>
+            <ul>
+                <li>Your profile is soft-deleted: your username becomes <code>[deleted]_xxxxxxxx</code> and your bio, avatar, country, gender, and age are erased.</li>
+                <li>Your profile page stops being publicly viewable.</li>
+                <li>Your Yaps, Tapes, and comments remain visible (so discussions don't break) but are attributed to <code>[deleted]_xxxxxxxx</code>.</li>
+                <li>Your session is cleared and you cannot sign back in.</li>
+            </ul>
+            <p>
+                If you want your content removed too, email us after deleting your
+                account and we will process it on request.
+            </p>
+
+            <h3>Session tokens and anonymous IDs</h3>
+            <p>
+                Your session token and the anonymous like identifier are stored in your
+                browser's localStorage. You can clear them at any time from your browser
+                settings, which will sign you out and reset your anonymous likes on this
+                device. This is a browser-level operation and does not delete your account.
             </p>
 
             <h3>California residents (CCPA / CPRA)</h3>
@@ -706,24 +771,26 @@
         <div class="content-section">
             <h2><span class="num">8</span>International data transfers</h2>
             <p>
-                Our service providers (hosting, Supabase, Amazon, image hosts, and any
-                social platform you choose to share to) may store or process data in
-                countries outside your own, including the United States. Where required,
-                these providers rely on approved transfer mechanisms such as Standard
-                Contractual Clauses.
+                Our service providers (hosting, Supabase, Cloudflare, Resend, Amazon,
+                image hosts, and any social platform you choose to share to) may store or
+                process data in countries outside your own, including the United States.
+                Where required, these providers rely on approved transfer mechanisms such
+                as Standard Contractual Clauses.
             </p>
         </div>
 
         <div class="content-section">
             <h2><span class="num">9</span>Data retention</h2>
-            <p>
-                We retain email correspondence only as long as needed to resolve the
-                matter at hand, after which it is deleted. Server logs are retained by
-                our hosting provider according to their standard retention schedule.
-                Like records in our database are retained indefinitely so that like
-                counts remain accurate over time; the identifier associated with a like
-                is anonymous and cannot be linked to an individual.
-            </p>
+            <ul>
+                <li><strong>Account data</strong> (email, hashed password, username, rank, join date) is retained while your account is active.</li>
+                <li><strong>Profile data</strong> (bio, country, gender, age, avatar, timezone) is retained while your account is active and is erased when you delete your account.</li>
+                <li><strong>User-generated content</strong> (Yaps, Tapes, comments, votes, reactions, bookmarks, follows) is retained while your account is active. After you delete your account, content is kept but attributed to <code>[deleted]_xxxxxxxx</code>, unless you separately request its removal.</li>
+                <li><strong>Soft-deleted content</strong> (content removed by its author or by a moderator that has replies underneath it) is displayed as <code>[deleted]</code> but kept in the database to preserve thread structure.</li>
+                <li><strong>Reports and moderation logs</strong> are retained so we can review abuse patterns and respond to legal requests.</li>
+                <li><strong>Server logs</strong> are retained by our hosting and backend providers according to their standard retention schedules.</li>
+                <li><strong>Transactional email logs</strong> (Resend) are retained only as long as needed to confirm delivery.</li>
+                <li><strong>Anonymous like records</strong> are retained indefinitely so product like counts remain accurate. The identifier associated with a like is anonymous and cannot be linked to an individual.</li>
+            </ul>
         </div>
 
         <div class="content-section">

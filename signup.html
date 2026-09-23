@@ -399,7 +399,7 @@
                 </div>
 
                 <label for="country" class="optional">Country</label>
-                <input id="country" type="text" placeholder="Detecting…" autocomplete="country-name">
+                <input id="country" type="text" placeholder="Detecting…" autocomplete="country-name" maxlength="60">
 
                 <label>Username</label>
                 <div class="username-box">
@@ -421,7 +421,7 @@
                 <input id="age" type="number" min="18" max="120" inputmode="numeric">
 
                 <label for="bio">Bio</label>
-                <textarea id="bio" minlength="20" placeholder="At least 20 characters. What kind of weird are you?" required></textarea>
+                <textarea id="bio" minlength="20" maxlength="2000" placeholder="At least 20 characters. What kind of weird are you?" required></textarea>
                 <div class="bio-counter" id="bio-counter">0 / 200 words</div>
 
                 <div class="check-row">

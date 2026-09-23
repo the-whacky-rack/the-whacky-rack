@@ -1146,7 +1146,7 @@
     <!-- SUPABASE + AUTH -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="auth.js"></script>
-
+    <script src="report.js"></script>
     <script>
         (function () {
             const sb = window.wr.sb;
@@ -1453,10 +1453,10 @@
                                         ${isSaved ? "🔖 Saved" : "🔖 Save"}
                                     </button>
                                 ` : ""}
-                                ${isAuthor ? `
+                                                                ${isAuthor ? `
                                     <button class="yap-action-btn" data-action="edit" data-yap-id="${esc(y.id)}">Edit</button>
                                     <button class="yap-action-btn danger" data-action="delete" data-yap-id="${esc(y.id)}">Delete</button>
-                                ` : ""}
+                                ` : (session ? window.report.link("yap", y.id, y.title) : "")}
                                 <a class="yap-action-btn" href="yap-thread.html?id=${esc(y.id)}">Open thread →</a>
                             </div>
                         </div>

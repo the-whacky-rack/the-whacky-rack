@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Tape — The Whacky Rack</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
     <meta name="description" content="A single Tape thread — full discussion with nested replies.">
 
@@ -19,11 +20,16 @@
             --accent-dark: #e84625;
             --border: #e8e4dc;
             --pill: #fff0eb;
-            --shadow: 0 8px 25px rgba(0,0,0,.06);
+            --shadow: 0 8px 25px rgba(0, 0, 0, .06);
         }
 
-        * { box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
 
         body {
             margin: 0;
@@ -32,7 +38,10 @@
             color: var(--text);
         }
 
-        a { color: inherit; text-decoration: none; }
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
 
         /* ---------------- HEADER ---------------- */
 
@@ -54,10 +63,22 @@
             gap: 20px;
         }
 
-        .logo { font-size: 25px; font-weight: 900; letter-spacing: -1px; white-space: nowrap; }
-        .logo span { color: var(--accent); }
+        .logo {
+            font-size: 25px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            white-space: nowrap;
+        }
 
-        .header-right { display: flex; align-items: center; gap: 12px; }
+        .logo span {
+            color: var(--accent);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
         .nav-link {
             font-size: 13px;
@@ -69,7 +90,10 @@
             transition: .2s ease;
             white-space: nowrap;
         }
-        .nav-link:hover { border-color: #bbb; }
+
+        .nav-link:hover {
+            border-color: #bbb;
+        }
 
         /* ---------------- BREADCRUMB ---------------- */
 
@@ -85,12 +109,22 @@
             flex-wrap: wrap;
         }
 
-        .breadcrumb a { color: var(--accent-dark); font-weight: 700; }
-        .breadcrumb a:hover { text-decoration: underline; }
+        .breadcrumb a {
+            color: var(--accent-dark);
+            font-weight: 700;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
 
         /* ---------------- MAIN ---------------- */
 
-        .thread-wrap { max-width: 900px; margin: auto; padding: 18px 22px 70px; }
+        .thread-wrap {
+            max-width: 900px;
+            margin: auto;
+            padding: 18px 22px 70px;
+        }
 
         .tape-main-card {
             background: var(--card);
@@ -128,10 +162,20 @@
             font-size: 14px;
             color: var(--text);
         }
-        .tape-author-name:hover { color: var(--accent-dark); }
 
-        .tape-dot { color: #ccc; font-size: 12px; }
-        .tape-time { font-size: 12px; color: var(--muted); }
+        .tape-author-name:hover {
+            color: var(--accent-dark);
+        }
+
+        .tape-dot {
+            color: #ccc;
+            font-size: 12px;
+        }
+
+        .tape-time {
+            font-size: 12px;
+            color: var(--muted);
+        }
 
         .tape-actions {
             margin-left: auto;
@@ -151,8 +195,16 @@
             font-family: inherit;
             transition: .15s ease;
         }
-        .tape-action-btn:hover { border-color: #bbb; color: var(--text); }
-        .tape-action-btn.danger:hover { border-color: var(--accent); color: var(--accent-dark); }
+
+        .tape-action-btn:hover {
+            border-color: #bbb;
+            color: var(--text);
+        }
+
+        .tape-action-btn.danger:hover {
+            border-color: var(--accent);
+            color: var(--accent-dark);
+        }
 
         /* Product block */
         .tape-product {
@@ -165,7 +217,10 @@
             margin-bottom: 14px;
             transition: .15s ease;
         }
-        .tape-product:hover { background: #f5f2ea; }
+
+        .tape-product:hover {
+            background: #f5f2ea;
+        }
 
         .tape-product img {
             width: 108px;
@@ -243,12 +298,18 @@
             color: #444;
             line-height: 1;
         }
-        .reaction-btn:hover:not(:disabled) { border-color: #bbb; background: #fafafa; }
+
+        .reaction-btn:hover:not(:disabled) {
+            border-color: #bbb;
+            background: #fafafa;
+        }
+
         .reaction-btn.active {
             background: var(--pill);
             border-color: var(--accent);
             color: var(--accent-dark);
         }
+
         .reaction-btn .reaction-count {
             font-size: 11px;
             font-weight: 800;
@@ -256,8 +317,15 @@
             min-width: 12px;
             text-align: right;
         }
-        .reaction-btn.active .reaction-count { color: var(--accent-dark); }
-        .reaction-btn:disabled { opacity: .55; cursor: not-allowed; }
+
+        .reaction-btn.active .reaction-count {
+            color: var(--accent-dark);
+        }
+
+        .reaction-btn:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+        }
 
         /* Deleted banner */
         .tape-deleted-banner {
@@ -305,8 +373,17 @@
             color: var(--muted);
             transition: .15s ease;
         }
-        .sort-mini:hover { border-color: #bbb; color: var(--text); }
-        .sort-mini.active { background: #222; color: #fff; border-color: #222; }
+
+        .sort-mini:hover {
+            border-color: #bbb;
+            color: var(--text);
+        }
+
+        .sort-mini.active {
+            background: #222;
+            color: #fff;
+            border-color: #222;
+        }
 
         /* ---------------- TOP COMMENT FORM ---------------- */
 
@@ -340,7 +417,11 @@
             color: var(--text);
             transition: .2s ease;
         }
-        .comment-form textarea:focus { border-color: var(--accent); background: #fff; }
+
+        .comment-form textarea:focus {
+            border-color: var(--accent);
+            background: #fff;
+        }
 
         .comment-form-row {
             display: flex;
@@ -350,7 +431,10 @@
             margin-top: 10px;
         }
 
-        .char-mini { font-size: 11px; color: var(--muted); }
+        .char-mini {
+            font-size: 11px;
+            color: var(--muted);
+        }
 
         .btn-primary-sm {
             padding: 9px 18px;
@@ -364,15 +448,32 @@
             cursor: pointer;
             transition: .2s ease;
         }
-        .btn-primary-sm:hover:not(:disabled) { background: var(--accent-dark); }
-        .btn-primary-sm:disabled { opacity: .5; cursor: not-allowed; }
 
-        .signin-prompt { color: var(--accent-dark); font-weight: 800; }
-        .signin-prompt:hover { text-decoration: underline; }
+        .btn-primary-sm:hover:not(:disabled) {
+            background: var(--accent-dark);
+        }
+
+        .btn-primary-sm:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        .signin-prompt {
+            color: var(--accent-dark);
+            font-weight: 800;
+        }
+
+        .signin-prompt:hover {
+            text-decoration: underline;
+        }
 
         /* ---------------- COMMENT TREE ---------------- */
 
-        .comment-tree { display: flex; flex-direction: column; gap: 4px; }
+        .comment-tree {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
 
         .comment {
             padding-left: 18px;
@@ -380,13 +481,35 @@
             margin-top: 14px;
         }
 
-        .comment.level-0 { padding-left: 0; border-left: 0; margin-top: 18px; }
-        .comment.level-1 { border-left-color: #ffd8cc; }
-        .comment.level-2 { border-left-color: #ffc0ac; }
-        .comment.level-3 { border-left-color: #ffa88d; }
-        .comment.level-4 { border-left-color: #ff8f6e; }
-        .comment.level-5 { border-left-color: #ff7750; }
-        .comment.level-6 { border-left-color: var(--accent); }
+        .comment.level-0 {
+            padding-left: 0;
+            border-left: 0;
+            margin-top: 18px;
+        }
+
+        .comment.level-1 {
+            border-left-color: #ffd8cc;
+        }
+
+        .comment.level-2 {
+            border-left-color: #ffc0ac;
+        }
+
+        .comment.level-3 {
+            border-left-color: #ffa88d;
+        }
+
+        .comment.level-4 {
+            border-left-color: #ff8f6e;
+        }
+
+        .comment.level-5 {
+            border-left-color: #ff7750;
+        }
+
+        .comment.level-6 {
+            border-left-color: var(--accent);
+        }
 
         .comment-inner {
             display: flex;
@@ -420,10 +543,28 @@
             font-family: inherit;
             padding: 0;
         }
-        .comment-votes .vote-btn:hover:not(:disabled) { border-color: #bbb; color: #555; }
-        .comment-votes .vote-btn.up.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-        .comment-votes .vote-btn.down.active { background: #3b82f6; border-color: #3b82f6; color: #fff; }
-        .comment-votes .vote-btn:disabled { opacity: .55; cursor: not-allowed; }
+
+        .comment-votes .vote-btn:hover:not(:disabled) {
+            border-color: #bbb;
+            color: #555;
+        }
+
+        .comment-votes .vote-btn.up.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+
+        .comment-votes .vote-btn.down.active {
+            background: #3b82f6;
+            border-color: #3b82f6;
+            color: #fff;
+        }
+
+        .comment-votes .vote-btn:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+        }
 
         .comment-votes .vote-count {
             font-size: 11px;
@@ -432,10 +573,19 @@
             min-width: 22px;
             text-align: center;
         }
-        .comment-votes .vote-count.positive { color: var(--accent-dark); }
-        .comment-votes .vote-count.negative { color: #3b82f6; }
 
-        .comment-body-col { flex: 1; min-width: 0; }
+        .comment-votes .vote-count.positive {
+            color: var(--accent-dark);
+        }
+
+        .comment-votes .vote-count.negative {
+            color: #3b82f6;
+        }
+
+        .comment-body-col {
+            flex: 1;
+            min-width: 0;
+        }
 
         .comment-head {
             display: flex;
@@ -452,11 +602,24 @@
             color: var(--accent-dark);
             font-size: 13px;
         }
-        .comment-author:hover { text-decoration: underline; }
-        .comment-author.deleted { color: var(--muted); font-weight: 700; font-style: italic; }
-        .comment-author.deleted:hover { text-decoration: none; }
 
-        .comment-edited { font-style: italic; }
+        .comment-author:hover {
+            text-decoration: underline;
+        }
+
+        .comment-author.deleted {
+            color: var(--muted);
+            font-weight: 700;
+            font-style: italic;
+        }
+
+        .comment-author.deleted:hover {
+            text-decoration: none;
+        }
+
+        .comment-edited {
+            font-style: italic;
+        }
 
         .comment-text {
             font-size: 14px;
@@ -465,7 +628,11 @@
             word-wrap: break-word;
             white-space: pre-wrap;
         }
-        .comment-text.deleted { color: #999; font-style: italic; }
+
+        .comment-text.deleted {
+            color: #999;
+            font-style: italic;
+        }
 
         .comment-foot {
             display: flex;
@@ -486,15 +653,26 @@
             padding: 0;
             transition: .15s ease;
         }
-        .comment-foot-btn:hover { color: var(--accent-dark); text-decoration: underline; }
-        .comment-foot-btn.danger:hover { color: #c2410c; }
+
+        .comment-foot-btn:hover {
+            color: var(--accent-dark);
+            text-decoration: underline;
+        }
+
+        .comment-foot-btn.danger:hover {
+            color: #c2410c;
+        }
 
         /* Reply form */
         .reply-form {
             display: none;
             margin-top: 10px;
         }
-        .reply-form.open { display: block; }
+
+        .reply-form.open {
+            display: block;
+        }
+
         .reply-form textarea {
             width: 100%;
             padding: 9px 12px;
@@ -508,13 +686,19 @@
             min-height: 60px;
             transition: .2s ease;
         }
-        .reply-form textarea:focus { border-color: var(--accent); background: #fff; }
+
+        .reply-form textarea:focus {
+            border-color: var(--accent);
+            background: #fff;
+        }
+
         .reply-form-actions {
             display: flex;
             justify-content: flex-end;
             gap: 8px;
             margin-top: 8px;
         }
+
         .btn-ghost-sm {
             padding: 7px 14px;
             border-radius: 50px;
@@ -527,7 +711,11 @@
             cursor: pointer;
             transition: .2s ease;
         }
-        .btn-ghost-sm:hover { border-color: #bbb; color: var(--text); }
+
+        .btn-ghost-sm:hover {
+            border-color: #bbb;
+            color: var(--text);
+        }
 
         /* Continue thread */
         .continue-thread {
@@ -545,13 +733,19 @@
             margin-top: 8px;
             transition: .15s ease;
         }
-        .continue-thread:hover { text-decoration: underline; }
+
+        .continue-thread:hover {
+            text-decoration: underline;
+        }
 
         .deeper-replies {
             display: none;
             margin-top: 4px;
         }
-        .deeper-replies.open { display: block; }
+
+        .deeper-replies.open {
+            display: block;
+        }
 
         /* Empty / loading */
         .empty-comments {
@@ -577,7 +771,12 @@
             font-size: 14px;
             line-height: 1.6;
         }
-        .error-card a { color: #7f1d1d; font-weight: 800; text-decoration: underline; }
+
+        .error-card a {
+            color: #7f1d1d;
+            font-weight: 800;
+            text-decoration: underline;
+        }
 
         /* Toast */
         .toast-container {
@@ -591,6 +790,7 @@
             gap: 8px;
             align-items: center;
         }
+
         .toast {
             padding: 12px 20px;
             border-radius: 50px;
@@ -598,21 +798,57 @@
             color: #fff;
             font-size: 13px;
             font-weight: 600;
-            box-shadow: 0 10px 30px rgba(0,0,0,.25);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
             animation: toastIn .2s ease-out;
         }
-        .toast.ok { background: #16a34a; }
-        .toast.err { background: #dc2626; }
+
+        .toast.ok {
+            background: #16a34a;
+        }
+
+        .toast.err {
+            background: #dc2626;
+        }
+
         @keyframes toastIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Footer */
-        footer { background: #222; color: #fff; padding: 40px 22px; text-align: center; margin-top: 40px; }
-        .footer-title { font-size: 22px; font-weight: 900; margin-bottom: 10px; }
-        .footer-title span { color: var(--accent); }
-        footer p { max-width: 650px; margin: auto; color: #bbb; font-size: 12px; line-height: 1.7; }
+        footer {
+            background: #222;
+            color: #fff;
+            padding: 40px 22px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .footer-title {
+            font-size: 22px;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+
+        .footer-title span {
+            color: var(--accent);
+        }
+
+        footer p {
+            max-width: 650px;
+            margin: auto;
+            color: #bbb;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
         .footer-links {
             margin-top: 22px;
             display: flex;
@@ -621,33 +857,98 @@
             gap: 8px 18px;
             font-size: 12px;
         }
-        .footer-links a { color: #bbb; font-weight: 700; transition: .2s ease; }
-        .footer-links a:hover { color: var(--accent); }
-        .footer-disclosure { margin-top: 18px; font-size: 11px; color: #888; }
+
+        .footer-links a {
+            color: #bbb;
+            font-weight: 700;
+            transition: .2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .footer-disclosure {
+            margin-top: 18px;
+            font-size: 11px;
+            color: #888;
+        }
 
         /* Mobile */
         @media (max-width: 700px) {
-            .header-inner { padding: 13px 15px; flex-wrap: wrap; }
-            .logo { font-size: 21px; }
-            .nav-link { font-size: 11px; padding: 7px 11px; }
+            .header-inner {
+                padding: 13px 15px;
+                flex-wrap: wrap;
+            }
 
-            .breadcrumb { padding: 16px 15px 0; font-size: 12px; }
-            .thread-wrap { padding: 14px 15px 50px; }
+            .logo {
+                font-size: 21px;
+            }
 
-            .tape-main-card { padding: 18px 16px; border-radius: 15px; }
-            .tape-product img { width: 84px; height: 84px; }
-            .tape-product-name { font-size: 15px; }
-            .tape-caption { font-size: 14px; }
+            .nav-link {
+                font-size: 11px;
+                padding: 7px 11px;
+            }
 
-            .reaction-btn { padding: 6px 10px; font-size: 14px; gap: 5px; }
-            .reaction-btn .reaction-count { font-size: 10px; }
+            .breadcrumb {
+                padding: 16px 15px 0;
+                font-size: 12px;
+            }
 
-            .comment { padding-left: 12px; }
-            .comment-inner { gap: 8px; }
-            .comment-votes .vote-btn { width: 24px; height: 24px; font-size: 10px; }
-            .comment-text { font-size: 13px; }
+            .thread-wrap {
+                padding: 14px 15px 50px;
+            }
 
-            .comment-form { padding: 14px; border-radius: 14px; }
+            .tape-main-card {
+                padding: 18px 16px;
+                border-radius: 15px;
+            }
+
+            .tape-product img {
+                width: 84px;
+                height: 84px;
+            }
+
+            .tape-product-name {
+                font-size: 15px;
+            }
+
+            .tape-caption {
+                font-size: 14px;
+            }
+
+            .reaction-btn {
+                padding: 6px 10px;
+                font-size: 14px;
+                gap: 5px;
+            }
+
+            .reaction-btn .reaction-count {
+                font-size: 10px;
+            }
+
+            .comment {
+                padding-left: 12px;
+            }
+
+            .comment-inner {
+                gap: 8px;
+            }
+
+            .comment-votes .vote-btn {
+                width: 24px;
+                height: 24px;
+                font-size: 10px;
+            }
+
+            .comment-text {
+                font-size: 13px;
+            }
+
+            .comment-form {
+                padding: 14px;
+                border-radius: 14px;
+            }
         }
     </style>
 </head>
@@ -700,9 +1001,9 @@
     <script src="report.js"></script>
 
     <script>
-        (function () {
+        (function() {
             const sb = window.wr.sb;
-            const REACTIONS = ["👍","👎","🤣","🤬","🎉","💝"];
+            const REACTIONS = ["👍", "👎", "🤣", "🤬", "🎉", "💝"];
             const MAX_DEPTH = 6;
 
             /* ---------------- State ---------------- */
@@ -723,8 +1024,12 @@
             /* ---------------- Utils ---------------- */
             function esc(s) {
                 return String(s ?? "").replace(/[&<>"']/g, c => ({
-                    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-                }[c]));
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    '"': "&quot;",
+                    "'": "&#39;"
+                } [c]));
             }
 
             function initials(name) {
@@ -735,11 +1040,11 @@
             function timeAgo(iso) {
                 const d = new Date(iso);
                 const s = Math.floor((Date.now() - d.getTime()) / 1000);
-                if (s < 60)      return "just now";
-                if (s < 3600)    return Math.floor(s/60) + "m ago";
-                if (s < 86400)   return Math.floor(s/3600) + "h ago";
-                if (s < 604800)  return Math.floor(s/86400) + "d ago";
-                if (s < 2592000) return Math.floor(s/604800) + "w ago";
+                if (s < 60) return "just now";
+                if (s < 3600) return Math.floor(s / 60) + "m ago";
+                if (s < 86400) return Math.floor(s / 3600) + "h ago";
+                if (s < 604800) return Math.floor(s / 86400) + "d ago";
+                if (s < 2592000) return Math.floor(s / 604800) + "w ago";
                 return d.toLocaleDateString();
             }
 
@@ -761,12 +1066,18 @@
                     return;
                 }
 
-                const { data: { session: s } } = await sb.auth.getSession();
+                const {
+                    data: {
+                        session: s
+                    }
+                } = await sb.auth.getSession();
                 session = s;
                 if (session) {
                     me = window.wr.getProfile();
                     if (!me) {
-                        const { data } = await sb.from("profiles")
+                        const {
+                            data
+                        } = await sb.from("profiles")
                             .select("id, username")
                             .eq("id", session.user.id)
                             .maybeSingle();
@@ -780,7 +1091,10 @@
             }
 
             async function loadTape() {
-                const { data, error } = await sb.from("tapes")
+                const {
+                    data,
+                    error
+                } = await sb.from("tapes")
                     .select(`
                         id, user_id, product_id, caption, reaction_count, comment_count,
                         is_deleted, created_at,
@@ -797,7 +1111,9 @@
                 tape = data;
 
                 // Reactions
-                const { data: rRows } = await sb.from("tape_reactions")
+                const {
+                    data: rRows
+                } = await sb.from("tape_reactions")
                     .select("reaction, user_id")
                     .eq("tape_id", tapeId);
 
@@ -812,7 +1128,10 @@
             }
 
             async function loadComments() {
-                const { data, error } = await sb.from("tape_comments")
+                const {
+                    data,
+                    error
+                } = await sb.from("tape_comments")
                     .select(`
                         id, tape_id, parent_id, depth, body, upvotes, downvotes, net_votes,
                         is_deleted, edited_at, created_at,
@@ -830,7 +1149,12 @@
 
                 // Build tree
                 const byId = {};
-                comments.forEach(c => { byId[c.id] = { ...c, children: [] }; });
+                comments.forEach(c => {
+                    byId[c.id] = {
+                        ...c,
+                        children: []
+                    };
+                });
                 const roots = [];
                 comments.forEach(c => {
                     const node = byId[c.id];
@@ -860,12 +1184,16 @@
                 // My votes
                 if (session && comments.length > 0) {
                     const ids = comments.map(c => c.id);
-                    const { data: vRows } = await sb.from("tape_comment_votes")
+                    const {
+                        data: vRows
+                    } = await sb.from("tape_comment_votes")
                         .select("comment_id, vote")
                         .eq("user_id", session.user.id)
                         .in("comment_id", ids);
                     myCommentVotes = {};
-                    (vRows || []).forEach(v => { myCommentVotes[v.comment_id] = v.vote; });
+                    (vRows || []).forEach(v => {
+                        myCommentVotes[v.comment_id] = v.vote;
+                    });
                 }
             }
 
@@ -1009,13 +1337,13 @@
                 const netClass = net > 0 ? "positive" : net < 0 ? "negative" : "";
                 const myVote = myCommentVotes[node.id] || 0;
 
-                const authorHtml = node.is_deleted
-                    ? `<span class="comment-author deleted">[deleted]</span>`
-                    : `<a class="comment-author" href="profile.html?id=${esc(node.author?.id || "")}">${esc(node.author?.username || "unknown")}</a>`;
+                const authorHtml = node.is_deleted ?
+                    `<span class="comment-author deleted">[deleted]</span>` :
+                    `<a class="comment-author" href="profile.html?id=${esc(node.author?.id || "")}">${esc(node.author?.username || "unknown")}</a>`;
 
-                const textHtml = node.is_deleted
-                    ? `<div class="comment-text deleted">[deleted]</div>`
-                    : `<div class="comment-text">${esc(node.body)}</div>`;
+                const textHtml = node.is_deleted ?
+                    `<div class="comment-text deleted">[deleted]</div>` :
+                    `<div class="comment-text">${esc(node.body)}</div>`;
 
                 const canReply = !node.is_deleted && session && !atCap;
 
@@ -1089,30 +1417,74 @@
                 if (!btn) return;
                 const action = btn.dataset.action;
 
-                if (action === "react")            { e.preventDefault(); await handleReact(btn.dataset.reaction); return; }
-                if (action === "delete-tape")      { e.preventDefault(); await deleteTape(); return; }
+                if (action === "react") {
+                    e.preventDefault();
+                    await handleReact(btn.dataset.reaction);
+                    return;
+                }
+                if (action === "delete-tape") {
+                    e.preventDefault();
+                    await deleteTape();
+                    return;
+                }
 
-                if (action === "sort-new")         { commentsSort = "new"; await reloadComments(); return; }
-                if (action === "sort-top")         { commentsSort = "top"; await reloadComments(); return; }
+                if (action === "sort-new") {
+                    commentsSort = "new";
+                    await reloadComments();
+                    return;
+                }
+                if (action === "sort-top") {
+                    commentsSort = "top";
+                    await reloadComments();
+                    return;
+                }
 
-                if (action === "vote-cmt-up")      { e.preventDefault(); await voteComment(btn.dataset.commentId, 1);  return; }
-                if (action === "vote-cmt-down")    { e.preventDefault(); await voteComment(btn.dataset.commentId, -1); return; }
+                if (action === "vote-cmt-up") {
+                    e.preventDefault();
+                    await voteComment(btn.dataset.commentId, 1);
+                    return;
+                }
+                if (action === "vote-cmt-down") {
+                    e.preventDefault();
+                    await voteComment(btn.dataset.commentId, -1);
+                    return;
+                }
 
-                if (action === "reply-open")       { e.preventDefault(); openReplyForm(btn.dataset.commentId);   return; }
-                if (action === "reply-cancel")     { e.preventDefault(); closeReplyForm(btn.dataset.commentId);  return; }
-                if (action === "reply-submit")     { e.preventDefault(); await submitReply(btn.dataset.commentId); return; }
+                if (action === "reply-open") {
+                    e.preventDefault();
+                    openReplyForm(btn.dataset.commentId);
+                    return;
+                }
+                if (action === "reply-cancel") {
+                    e.preventDefault();
+                    closeReplyForm(btn.dataset.commentId);
+                    return;
+                }
+                if (action === "reply-submit") {
+                    e.preventDefault();
+                    await submitReply(btn.dataset.commentId);
+                    return;
+                }
 
-                if (action === "edit-comment")     { e.preventDefault(); await editComment(btn.dataset.commentId);   return; }
-                if (action === "delete-comment")   { e.preventDefault(); await deleteComment(btn.dataset.commentId); return; }
+                if (action === "edit-comment") {
+                    e.preventDefault();
+                    await editComment(btn.dataset.commentId);
+                    return;
+                }
+                if (action === "delete-comment") {
+                    e.preventDefault();
+                    await deleteComment(btn.dataset.commentId);
+                    return;
+                }
 
                 if (action === "toggle-deeper") {
                     e.preventDefault();
                     const target = document.getElementById(btn.dataset.target);
                     if (!target) return;
                     const open = target.classList.toggle("open");
-                    btn.textContent = open
-                        ? "← Collapse thread"
-                        : `Continue thread → (${target.children.length} ${target.children.length === 1 ? "reply" : "replies"})`;
+                    btn.textContent = open ?
+                        "← Collapse thread" :
+                        `Continue thread → (${target.children.length} ${target.children.length === 1 ? "reply" : "replies"})`;
                     return;
                 }
             });
@@ -1143,20 +1515,26 @@
             async function handleReact(reaction) {
                 if (!session) {
                     toast("Sign in to react.", "err");
-                    setTimeout(() => { window.location.href = "login.html"; }, 900);
+                    setTimeout(() => {
+                        window.location.href = "login.html";
+                    }, 900);
                     return;
                 }
                 document.querySelectorAll(".reaction-btn").forEach(b => b.disabled = true);
 
                 try {
-                    const { error } = await sb.rpc("react_tape", {
+                    const {
+                        error
+                    } = await sb.rpc("react_tape", {
                         p_tape_id: tapeId,
                         p_reaction: reaction
                     });
                     if (error) throw error;
 
                     // Refetch reactions
-                    const { data: rRows } = await sb.from("tape_reactions")
+                    const {
+                        data: rRows
+                    } = await sb.from("tape_reactions")
                         .select("reaction, user_id")
                         .eq("tape_id", tapeId);
 
@@ -1168,7 +1546,9 @@
                     });
 
                     // Refetch reaction count on tape
-                    const { data: tData } = await sb.from("tapes")
+                    const {
+                        data: tData
+                    } = await sb.from("tapes")
                         .select("reaction_count")
                         .eq("id", tapeId).maybeSingle();
                     if (tData) tape.reaction_count = tData.reaction_count;
@@ -1184,11 +1564,18 @@
             async function deleteTape() {
                 if (!confirm("Delete this Tape? If it has comments, it'll show as [deleted] instead.")) return;
                 try {
-                    const { data, error } = await sb.rpc("delete_tape", { p_tape_id: tapeId });
+                    const {
+                        data,
+                        error
+                    } = await sb.rpc("delete_tape", {
+                        p_tape_id: tapeId
+                    });
                     if (error) throw error;
                     toast((data?.mode === "soft") ? "Tape marked as deleted." : "Tape deleted.", "ok");
                     if (data?.mode === "hard") {
-                        setTimeout(() => { location.href = "tape.html"; }, 700);
+                        setTimeout(() => {
+                            location.href = "tape.html";
+                        }, 700);
                     } else {
                         await loadTape();
                         render();
@@ -1205,12 +1592,17 @@
                     return;
                 }
                 try {
-                    const { error } = await sb.rpc("vote_tape_comment", {
-                        p_comment_id: commentId, p_vote: direction
+                    const {
+                        error
+                    } = await sb.rpc("vote_tape_comment", {
+                        p_comment_id: commentId,
+                        p_vote: direction
                     });
                     if (error) throw error;
 
-                    const { data } = await sb.from("tape_comments")
+                    const {
+                        data
+                    } = await sb.from("tape_comments")
                         .select("upvotes, downvotes, net_votes")
                         .eq("id", commentId).maybeSingle();
                     if (data) {
@@ -1221,7 +1613,9 @@
                             c.net_votes = data.net_votes;
                         }
                     }
-                    const { data: v } = await sb.from("tape_comment_votes")
+                    const {
+                        data: v
+                    } = await sb.from("tape_comment_votes")
                         .select("vote")
                         .eq("user_id", session.user.id).eq("comment_id", commentId).maybeSingle();
                     myCommentVotes[commentId] = v ? v.vote : 0;
@@ -1237,14 +1631,19 @@
                 if (!input) return;
                 const body = input.value.trim();
                 if (!body) return;
-                if (!session) { toast("Sign in to comment.", "err"); return; }
+                if (!session) {
+                    toast("Sign in to comment.", "err");
+                    return;
+                }
 
                 const btn = document.getElementById("top-comment-submit");
                 btn.disabled = true;
                 btn.textContent = "Posting…";
 
                 try {
-                    const { error } = await sb.rpc("create_tape_comment", {
+                    const {
+                        error
+                    } = await sb.rpc("create_tape_comment", {
                         p_tape_id: tapeId,
                         p_parent_id: null,
                         p_body: body
@@ -1284,14 +1683,19 @@
                 const ta = f.querySelector("textarea");
                 const body = ta.value.trim();
                 if (!body) return;
-                if (!session) { toast("Sign in to reply.", "err"); return; }
+                if (!session) {
+                    toast("Sign in to reply.", "err");
+                    return;
+                }
 
                 const btn = f.querySelector(`[data-action="reply-submit"]`);
                 btn.disabled = true;
                 btn.textContent = "Replying…";
 
                 try {
-                    const { error } = await sb.rpc("create_tape_comment", {
+                    const {
+                        error
+                    } = await sb.rpc("create_tape_comment", {
                         p_tape_id: tapeId,
                         p_parent_id: commentId,
                         p_body: body
@@ -1316,8 +1720,11 @@
                 if (!trimmed || trimmed === c.body) return;
 
                 try {
-                    const { error } = await sb.rpc("update_tape_comment", {
-                        p_comment_id: commentId, p_body: trimmed
+                    const {
+                        error
+                    } = await sb.rpc("update_tape_comment", {
+                        p_comment_id: commentId,
+                        p_body: trimmed
                     });
                     if (error) throw error;
                     toast("Comment updated.", "ok");
@@ -1331,7 +1738,12 @@
             async function deleteComment(commentId) {
                 if (!confirm("Delete this comment? If it has replies, it'll show as [deleted] instead.")) return;
                 try {
-                    const { data, error } = await sb.rpc("delete_tape_comment", { p_comment_id: commentId });
+                    const {
+                        data,
+                        error
+                    } = await sb.rpc("delete_tape_comment", {
+                        p_comment_id: commentId
+                    });
                     if (error) throw error;
                     toast((data?.mode === "soft") ? "Comment marked as deleted." : "Comment deleted.", "ok");
                     await reloadComments();
@@ -1351,4 +1763,5 @@
     </script>
 
 </body>
+
 </html>

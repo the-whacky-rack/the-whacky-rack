@@ -529,10 +529,12 @@
         <div class="hero-kicker">The smallest possible footprint</div>
         <h1>Cookie <span>Policy</span></h1>
         <p class="hero-description">
-            We keep cookies to an absolute minimum. There are no advertising trackers,
-            no analytics scripts, and no profiling. We set no first-party cookies.
-            The only cookies on this site come from Amazon when you click an affiliate
-            link, and from a social platform if you use the share button.
+            We keep cookies to an absolute minimum. We set no first-party cookies and
+            run no advertising or analytics trackers. We do use your browser's
+            <strong>localStorage</strong> to hold your sign-in session and remember
+            which products you've liked — this is not a cookie and is never sent
+            automatically. Third-party cookies may be set by Cloudflare (bot
+            protection), Amazon (affiliate links), and social platforms (share button).
         </p>
         <span class="updated-pill">Last updated: 2026</span>
     </section>
@@ -542,13 +544,15 @@
         <div class="notice-card">
             <h2>Plain-English summary</h2>
             <p>
-                The Whacky Rack itself sets <strong>no cookies</strong>. We do use your
-                browser's <strong>localStorage</strong> to remember which products you've
-                liked — this is not a cookie and is never sent to our servers automatically.
-                When you click an Amazon affiliate link, Amazon sets its own tracking cookie
-                so it can credit a purchase to us. If you use a share button, the platform
-                you choose may set its own cookies. You can clear cookies and localStorage
-                at any time through your browser settings — the site will still work fine.
+                The Whacky Rack itself sets <strong>no first-party cookies</strong>. We use
+                your browser's <strong>localStorage</strong> to hold your Supabase Auth
+                session token (so you stay signed in) and to remember which products you've
+                liked. When you submit the signup, login, or password reset form, Cloudflare
+                Turnstile may set a short-lived challenge cookie. When you click an Amazon
+                affiliate link, Amazon sets its own tracking cookie. When you use the share
+                button, the platform you chose may set cookies. You can clear cookies and
+                localStorage at any time through your browser settings — the site will still
+                work, but you'll be signed out.
             </p>
         </div>
 
@@ -571,21 +575,24 @@
         <div class="content-section">
             <h2><span class="num">2</span>Cookies we set ourselves</h2>
             <div class="callout">
-                <strong>No cookies.</strong> The Whacky Rack does not set any first-party
-                cookies, does not install analytics or advertising scripts, and does not
-                run any form of cross-site tracking.
+                <strong>No first-party cookies.</strong> The Whacky Rack does not set any
+                first-party cookies, does not install analytics or advertising scripts,
+                and does not run any form of cross-site tracking.
             </div>
             <p>
-                We do use your browser's <strong>localStorage</strong> for one
-                user-facing purpose: remembering which products you've liked, and
-                assigning your browser an anonymous identifier so that like counts
-                can be tallied. Unlike cookies, localStorage data is never sent to
-                any server automatically, and it is not used for tracking, advertising,
-                or profiling.
+                We do use your browser's <strong>localStorage</strong> for two purposes:
+            </p>
+            <ul>
+                <li><strong>Session token</strong> — after you sign in, Supabase Auth stores a token in localStorage so you stay signed in across page loads. Signing out clears it.</li>
+                <li><strong>Anonymous like identifier</strong> — on the product pages, the like button works without an account. We store a random UUID in localStorage so we can remember which products you've liked on this device, and send the UUID with each like so the count stays accurate.</li>
+            </ul>
+            <p>
+                Unlike cookies, localStorage data is never sent automatically to any
+                server, and it is not used for tracking, advertising, or profiling.
             </p>
             <p>
-                There is no cookie consent banner because there is nothing for us to ask
-                consent for on our own behalf. If we ever add analytics or a newsletter,
+                There is no cookie consent banner because we do not set any
+                non-essential cookies ourselves. If we ever add analytics or a newsletter,
                 we will update this page and add a consent mechanism where required.
             </p>
         </div>
@@ -593,9 +600,9 @@
         <div class="content-section">
             <h2><span class="num">3</span>Third-party cookies</h2>
             <p>
-                Third-party cookies may be set on this site in two situations: when you
-                click an Amazon affiliate link, and when you use the share button to
-                share a product on a social platform.
+                Third-party cookies may be set on this site in three situations: when you
+                submit a protected form, when you click an Amazon affiliate link, and when
+                you use the share button to share a product on a social platform.
             </p>
 
             <table class="data-table">
@@ -608,6 +615,12 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <tr>
+                        <td><strong>Cloudflare Turnstile</strong></td>
+                        <td>When you submit the signup, login, or password reset form</td>
+                        <td>Runs a challenge to confirm you're a real person and prevent automated account creation and credential-stuffing attacks</td>
+                        <td>Session-length; short-lived challenge cookie</td>
+                    </tr>
                     <tr>
                         <td><strong>Amazon</strong></td>
                         <td>When you click an Amazon affiliate link</td>
@@ -625,9 +638,9 @@
 
             <p>
                 Amazon's use of these cookies is governed by the
-                <a class="inline-link" href="https://www.amazon.com/gp/help/customer/display.html?nodeId=GX7NJQ4ZB8MHFRNJ" target="_blank" rel="noopener noreferrer">Amazon Privacy Notice</a>
-                and the
-                <a class="inline-link" href="https://www.amazon.com/gp/help/customer/display.html?nodeId=468496" target="_blank" rel="noopener noreferrer">Amazon Conditions of Use</a>.
+                <a class="inline-link" href="https://www.amazon.com/gp/help/customer/display.html?nodeId=GX7NJQ4ZB8MHFRNJ" target="_blank" rel="noopener noreferrer">Amazon Privacy Notice</a>.
+                Cloudflare's is governed by
+                <a class="inline-link" href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer">Cloudflare's Privacy Policy</a>.
                 For the social platforms, please refer to the cookie and privacy
                 policies of the specific platform you choose to use.
             </p>
@@ -640,8 +653,9 @@
                 site but do not place cookies on your device:
             </p>
             <ul>
-                <li><strong>Supabase</strong> — used to fetch product and story data, and to store like counts. Since we do not use Supabase authentication, no session cookies are created.</li>
-                <li><strong>localStorage (our like feature)</strong> — we use your browser's localStorage to remember which products you've liked and to assign you an anonymous identifier. This is not a cookie, is not sent to any server automatically, and can be cleared at any time through your browser's site data settings.</li>
+                <li><strong>Supabase (backend)</strong> — hosts our database and, via Supabase Auth, provides our authentication service. Session tokens are stored in <strong>localStorage</strong>, not in cookies.</li>
+                <li><strong>localStorage</strong> — we use your browser's localStorage to remember your sign-in session and which products you've liked. This is not a cookie, is not sent to any server automatically, and can be cleared at any time through your browser's site data settings.</li>
+                <li><strong>Resend</strong> — delivers password reset emails. It is a server-side service and does not run on your device.</li>
                 <li><strong>ImgBB and other image hosts</strong> — serve product images. No cookies are set for anonymous image requests.</li>
                 <li><strong>Our fonts and stylesheets</strong> — served from the same domain as the site.</li>
             </ul>
@@ -667,9 +681,9 @@
                 <li><a class="inline-link" href="https://support.microsoft.com/en-us/microsoft-edge/delete-cookies-in-microsoft-edge-63947406-40ac-c3b8-57b9-2a946a29ae09" target="_blank" rel="noopener noreferrer">Microsoft Edge</a></li>
             </ul>
             <p>
-                Clearing your browser's site data or localStorage will remove the
-                anonymous identifier we use and the record of products you've liked
-                on this device. Your likes will reset to zero the next time you visit.
+                Clearing your browser's site data or localStorage will sign you out of
+                the site and reset the anonymous like identifier we use on this device.
+                Your account and content are not affected.
             </p>
             <p>
                 Blocking cookies will not break this site. It may, however, prevent Amazon
@@ -684,8 +698,8 @@
             <p>
                 Some browsers send a "Do Not Track" (DNT) signal. Because we do not track
                 users ourselves and do not run analytics, there is nothing for us to
-                disable in response. Amazon's and the social platforms' handling of DNT
-                signals is governed by their own policies.
+                disable in response. Cloudflare's, Amazon's, and the social platforms'
+                handling of DNT signals is governed by their own policies.
             </p>
         </div>
 

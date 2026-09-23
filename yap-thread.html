@@ -323,11 +323,13 @@
             border-color: var(--accent);
             color: var(--accent-dark);
         }
+
         .bookmark-btn.saved {
             background: var(--pill);
             border-color: var(--accent);
             color: var(--accent-dark);
         }
+
         /* Deleted yap banner */
         .yap-deleted-banner {
             background: #fafafa;
@@ -974,8 +976,9 @@
             <a href="index.html" class="logo">The <span>Whacky</span> Rack</a>
             <div class="header-right">
                 <a href="index.html" class="nav-link">Shop</a>
-                <a href="world.html" class="nav-link">World</a>
-                <a href="history.html" class="nav-link">History</a>
+                <a href="yap.html" class="nav-link">Yap it!</a>
+                <a href="tape.html" class="nav-link">Tape it!</a>
+                <a href="search-users.html" class="nav-link">People</a>
                 <a href="about.html" class="nav-link">About</a>
             </div>
         </div>
@@ -1029,7 +1032,7 @@
             let comments = []; // flat list
             let commentTree = []; // nested
             let myYapVote = 0;
-                        let isBookmarked = false;
+            let isBookmarked = false;
             let myCommentVotes = {}; // { commentId: 1 | -1 }
             let commentsSort = "new";
             let editingYap = false;
@@ -1121,15 +1124,19 @@
                 }
                 yap = data;
 
-                                if (session) {
-                    const { data: v } = await sb.from("yap_votes")
+                if (session) {
+                    const {
+                        data: v
+                    } = await sb.from("yap_votes")
                         .select("vote")
                         .eq("user_id", session.user.id)
                         .eq("yap_id", yapId)
                         .maybeSingle();
                     myYapVote = v ? v.vote : 0;
 
-                    const { data: bm } = await sb.from("yap_bookmarks")
+                    const {
+                        data: bm
+                    } = await sb.from("yap_bookmarks")
                         .select("id")
                         .eq("user_id", session.user.id)
                         .eq("yap_id", yapId)
@@ -1461,12 +1468,19 @@
                 }
                 if (action === "bookmark-yap") {
                     e.preventDefault();
-                    if (!session) { toast("Sign in to save Yaps.", "err"); return; }
+                    if (!session) {
+                        toast("Sign in to save Yaps.", "err");
+                        return;
+                    }
                     const wasSaved = isBookmarked;
                     isBookmarked = !wasSaved;
                     render();
                     try {
-                        const { error } = await sb.rpc("toggle_bookmark", { p_yap_id: yapId });
+                        const {
+                            error
+                        } = await sb.rpc("toggle_bookmark", {
+                            p_yap_id: yapId
+                        });
                         if (error) throw error;
                         toast(wasSaved ? "Removed from saved." : "Saved.", "ok");
                     } catch (err) {

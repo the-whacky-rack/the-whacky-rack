@@ -1111,8 +1111,6 @@
                         breakdown[r.reaction] = (breakdown[r.reaction] || 0) + 1;
                     });
 
-                    const mine = (rRows || []).find(r => r.user_id === session.user.id);
-                    // The above won't work since we filtered by tape_id only; refetch properly:
                     const {
                         data: myRow
                     } = await sb.from("tape_reactions")

@@ -353,6 +353,98 @@
             padding: 8px 0;
         }
 
+        /* Mini Tape feed */
+        .mini-tape-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .mini-tape {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 14px 16px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            transition: transform .15s ease, box-shadow .15s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .mini-tape:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, .07);
+        }
+
+        .mini-tape-img {
+            width: 64px;
+            height: 64px;
+            object-fit: cover;
+            border-radius: 10px;
+            background: #f1eee8;
+            flex-shrink: 0;
+        }
+
+        .mini-tape-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .mini-tape-cat {
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            color: var(--accent-dark);
+            margin-bottom: 3px;
+        }
+
+        .mini-tape-name {
+            font-size: 14px;
+            font-weight: 800;
+            line-height: 1.35;
+            margin: 0 0 4px;
+            color: var(--text);
+        }
+
+        .mini-tape-caption {
+            font-size: 12px;
+            line-height: 1.5;
+            color: #555;
+            margin: 0 0 6px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .mini-tape-meta {
+            font-size: 11px;
+            color: var(--muted);
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .mini-tape-meta .pill {
+            background: var(--pill);
+            color: var(--accent-dark);
+            padding: 2px 8px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 10px;
+        }
+
+        .mini-tape-empty {
+            text-align: center;
+            padding: 26px 16px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
         /* Tape feed placeholder */
         .placeholder {
             background: #fff;
@@ -478,6 +570,7 @@
             let isOwnProfile = false;
             let profileFollowsMe = false;
             let savedCount = 0;
+            let profileTapes = [];
 
             /* ---------- Utilities ---------- */
             function esc(s) {
@@ -588,6 +681,27 @@
                     .eq("following_id", profileId)
                     .maybeSingle();
                 return !!data;
+            }
+            async function fetchProfileTapes(profileId) {
+                const {
+                    data,
+                    error
+                } = await sb.from("tapes")
+                    .select(`
+                        id, caption, reaction_count, comment_count, created_at,
+                        product:products!tapes_product_id_fkey(id, name, image, category)
+                    `)
+                    .eq("user_id", profileId)
+                    .eq("is_deleted", false)
+                    .order("created_at", {
+                        ascending: false
+                    })
+                    .limit(6);
+                if (error) {
+                    console.error(error);
+                    return [];
+                }
+                return data || [];
             }
 
             async function recordVisit(profileId) {
@@ -750,12 +864,54 @@
         <div class="status" id="follow-status"></div>
       </div>
 
-      <div class="placeholder">
-        <div class="big">📼</div>
-        <h3>Tape it! feed coming soon</h3>
-        <p>This is where ${esc(profile.username)}'s Tapes will appear. Phase 3 will fill this in.</p>
+           <div class="card">
+        <h2 class="card-title">
+          Tape it!
+          <span class="count">${profileTapes.length}</span>
+        </h2>
+        ${renderMiniTapeFeed()}
       </div>
     `;
+            }
+            function renderMiniTapeFeed() {
+                if (profileTapes.length === 0) {
+                    if (isOwnProfile) {
+                        return `<div class="mini-tape-empty">
+                            You haven't taped anything yet. Go to the <a href="index.html" style="color:var(--accent-dark);font-weight:800;text-decoration:underline;">Shop</a> and hit <strong>Tape it!</strong> on something weird.
+                        </div>`;
+                    }
+                    return `<div class="mini-tape-empty">
+                        ${esc(profile.username)} hasn't taped anything yet.
+                    </div>`;
+                }
+
+                const cardsHtml = profileTapes.map(t => {
+                    const product = t.product || {};
+                    const caption = (t.caption || "").trim();
+                    return `
+                        <a class="mini-tape" href="tape-thread.html?id=${esc(t.id)}">
+                            <img class="mini-tape-img" src="${esc(product.image || "")}" alt="" loading="lazy" decoding="async">
+                            <div class="mini-tape-info">
+                                <div class="mini-tape-cat">${esc(product.category || "")}</div>
+                                <h3 class="mini-tape-name">${esc(product.name || "")}</h3>
+                                ${caption ? `<p class="mini-tape-caption">${esc(caption)}</p>` : ""}
+                                <div class="mini-tape-meta">
+                                    <span>${esc(timeAgo(t.created_at))}</span>
+                                    <span class="pill">📼 ${t.reaction_count || 0}</span>
+                                    <span class="pill">💬 ${t.comment_count || 0}</span>
+                                </div>
+                            </div>
+                        </a>
+                    `;
+                }).join("");
+
+                const viewAll = profileTapes.length >= 6
+                    ? `<div style="text-align:center;margin-top:12px;">
+                           <a href="tape.html" style="color:var(--accent-dark);font-size:12px;font-weight:800;text-decoration:none;">See more on the Tape feed →</a>
+                       </div>`
+                    : "";
+
+                return `<div class="mini-tape-list">${cardsHtml}</div>${viewAll}`;
             }
 
             async function renderAll() {
@@ -886,6 +1042,8 @@
                             .eq("user_id", profile.id);
                         savedCount = count || 0;
                     }
+
+                    profileTapes = await fetchProfileTapes(profile.id);
 
                     await renderAll();
                 } catch (e) {

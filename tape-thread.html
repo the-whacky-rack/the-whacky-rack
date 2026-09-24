@@ -206,6 +206,12 @@
             color: var(--accent-dark);
         }
 
+        .bookmark-btn.saved {
+            background: var(--pill);
+            border-color: var(--accent);
+            color: var(--accent-dark);
+        }
+
         /* Product block */
         .tape-product {
             display: flex;
@@ -1015,6 +1021,7 @@
             let comments = [];
             let commentTree = [];
             let myReaction = null;
+            let isBookmarked = false;
             let reactionBreakdown = {};
             let myCommentVotes = {};
             let commentsSort = "new";
@@ -1126,6 +1133,17 @@
                         myReaction = r.reaction;
                     }
                 });
+
+                if (session) {
+                    const {
+                        data: bm
+                    } = await sb.from("tape_bookmarks")
+                        .select("id")
+                        .eq("user_id", session.user.id)
+                        .eq("tape_id", tapeId)
+                        .maybeSingle();
+                    isBookmarked = !!bm;
+                }
             }
 
             async function loadComments() {
@@ -1258,11 +1276,18 @@
                         <a class="tape-author-name" href="profile.html?id=${esc(author.id || "")}">${esc(author.username || "unknown")}</a>
                         <span class="tape-dot">·</span>
                         <span class="tape-time">${esc(timeAgo(tape.created_at))}</span>
-                                                ${isAuthor ? `
-                            <div class="tape-actions">
-                                <button class="tape-action-btn danger" type="button" data-action="delete-tape">Delete</button>
-                            </div>
-                        ` : (session ? `<div class="tape-actions">${window.report.link("tape", tape.id, tape.caption || "Tape")}</div>` : "")}
+                                                                    <div class="tape-actions">
+                        ${session ? `
+                            <button class="tape-action-btn bookmark-btn${isBookmarked ? " saved" : ""}"
+                                    type="button"
+                                    data-action="bookmark-tape">
+                                ${isBookmarked ? "🔖 Saved" : "🔖 Save"}
+                            </button>
+                        ` : ""}
+                        ${isAuthor ? `
+                            <button class="tape-action-btn danger" type="button" data-action="delete-tape">Delete</button>
+                        ` : (session ? window.report.link("tape", tape.id, tape.caption || "Tape") : "")}
+                    </div>
                     </div>
 
                     ${product.id ? `
@@ -1418,14 +1443,24 @@
                 if (!btn) return;
                 const action = btn.dataset.action;
 
-                if (action === "react") {
+                                if (action === "react")            { e.preventDefault(); await handleReact(btn.dataset.reaction); return; }
+                if (action === "delete-tape")      { e.preventDefault(); await deleteTape(); return; }
+                if (action === "bookmark-tape") {
                     e.preventDefault();
-                    await handleReact(btn.dataset.reaction);
-                    return;
-                }
-                if (action === "delete-tape") {
-                    e.preventDefault();
-                    await deleteTape();
+                    if (!session) { toast("Sign in to save Tapes.", "err"); return; }
+                    const wasSaved = isBookmarked;
+                    isBookmarked = !wasSaved;
+                    render();
+                    try {
+                        const { error } = await sb.rpc("toggle_tape_bookmark", { p_tape_id: tapeId });
+                        if (error) throw error;
+                        toast(wasSaved ? "Removed from saved." : "Saved.", "ok");
+                    } catch (err) {
+                        console.error(err);
+                        isBookmarked = wasSaved;
+                        render();
+                        toast(err.message || "Bookmark failed.", "err");
+                    }
                     return;
                 }
 

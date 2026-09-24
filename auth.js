@@ -513,6 +513,7 @@ return String(s ?? "").replace(/[&<>"']/g, c => ({
             /* ---------- Public API ---------- */
             window.wr = {
             sb,
+            turnstileSiteKey: "0x4AAAAAAE-T6yl4RUNhYl0a",
             refresh,
             getProfile: () => cached,
             async requireAuth(redirect = "login.html") {

@@ -222,6 +222,16 @@
 
         .bio-counter.over {
             color: #c2410c;
+            font-weight: 700;
+        }
+
+        .bio-counter .bio-min {
+            color: #aaa;
+        }
+
+        .bio-counter.under .bio-min {
+            color: #c2410c;
+            font-weight: 700;
         }
 
         .check-row {
@@ -424,6 +434,7 @@
                 <textarea id="bio" minlength="20" maxlength="2000" placeholder="At least 20 characters. What kind of weird are you?" required></textarea>
                 <div class="bio-counter" id="bio-counter">0 / 200 words</div>
 
+
                 <div class="check-row">
                     <input id="adult" type="checkbox" required>
                     <label for="adult">I confirm I am 18 years or older.</label>
@@ -448,7 +459,7 @@
         (function() {
             const sb = window.wr.sb;
 
-              const TURNSTILE_SITE_KEY = window.wr.turnstileSiteKey;
+            const TURNSTILE_SITE_KEY = window.wr.turnstileSiteKey;
 
             const form = document.getElementById("signup-form");
             const emailEl = document.getElementById("email");
@@ -519,10 +530,17 @@
             });
 
             /* ---------- Bio counter ---------- */
+            const bioCharsEl = document.getElementById("bio-chars");
+            const bioWordsEl = document.getElementById("bio-words");
+
             bioEl.addEventListener("input", () => {
-                const words = bioEl.value.trim().split(/\s+/).filter(Boolean).length;
-                bioCounter.textContent = `${words} / 200 words`;
+                const text = bioEl.value.trim();
+                const chars = text.length;
+                const words = text.split(/\s+/).filter(Boolean).length;
+                bioCharsEl.textContent = chars;
+                bioWordsEl.textContent = words;
                 bioCounter.classList.toggle("over", words > 200);
+                bioCounter.classList.toggle("under", chars > 0 && chars < 20);
                 validate();
             });
 

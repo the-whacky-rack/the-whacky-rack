@@ -317,6 +317,34 @@
             color: var(--accent-dark);
         }
 
+        .tape-bookmark-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--muted);
+            background: #fff;
+            border: 1px solid var(--border);
+            padding: 6px 12px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: .15s ease;
+            white-space: nowrap;
+        }
+
+        .tape-bookmark-btn:hover {
+            border-color: #bbb;
+            color: var(--text);
+        }
+
+        .tape-bookmark-btn.saved {
+            background: var(--pill);
+            border-color: var(--accent);
+            color: var(--accent-dark);
+        }
+
         /* Product block */
         .tape-product {
             display: flex;
@@ -697,7 +725,7 @@
     <header>
         <div class="header-inner">
             <a href="index.html" class="logo">The <span>Whacky</span> Rack</a>
-                        <div class="header-right">
+            <div class="header-right">
                 <a href="index.html" class="nav-link">Shop</a>
                 <a href="yap.html" class="nav-link">Yap it!</a>
                 <a href="tape.html" class="nav-link active">Tape it!</a>
@@ -785,6 +813,7 @@
             let searchTerm = "";
             let searchDebounce = null;
             let myReactions = {}; // { tapeId: emoji }
+            let myBookmarks = new Set();
 
             const els = {
                 tapeList: document.getElementById("tape-list"),
@@ -938,6 +967,16 @@
                         myReactions[r.tape_id] = r.reaction;
                     });
                 }
+                // Load my bookmarks
+                if (session) {
+                    const {
+                        data: bmRows
+                    } = await sb.from("tape_bookmarks")
+                        .select("tape_id")
+                        .eq("user_id", session.user.id);
+                    myBookmarks = new Set((bmRows || []).map(r => r.tape_id));
+                }
+
 
                 // Load per-reaction breakdown for each tape
                 if (tapes.length > 0) {
@@ -1058,10 +1097,18 @@
                         ${reactionsHtml}
                     </div>
 
-                    <div class="tape-foot">
+                                        <div class="tape-foot">
                         <a class="tape-comment-link" href="tape-thread.html?id=${esc(t.id)}">
                             💬 ${t.comment_count} comment${t.comment_count === 1 ? "" : "s"}
                         </a>
+                        ${session ? `
+                            <button class="tape-bookmark-btn${myBookmarks.has(t.id) ? " saved" : ""}"
+                                    type="button"
+                                    data-action="bookmark"
+                                    data-tape-id="${esc(t.id)}">
+                                ${myBookmarks.has(t.id) ? "🔖 Saved" : "🔖 Save"}
+                            </button>
+                        ` : ""}
                     </div>
                 `;
 
@@ -1174,16 +1221,48 @@
                 });
             });
 
-            document.addEventListener("click", (e) => {
+            document.addEventListener("click", async (e) => {
                 const btn = e.target.closest("[data-action]");
                 if (!btn) return;
                 const action = btn.dataset.action;
+
                 if (action === "react") {
                     e.preventDefault();
                     handleReact(btn.dataset.tapeId, btn.dataset.reaction);
-                } else if (action === "delete-tape") {
+                    return;
+                }
+                if (action === "delete-tape") {
                     e.preventDefault();
                     handleDelete(btn.dataset.tapeId);
+                    return;
+                }
+                if (action === "bookmark") {
+                    e.preventDefault();
+                    if (!session) {
+                        toast("Sign in to save Tapes.", "err");
+                        return;
+                    }
+                    const tapeId = btn.dataset.tapeId;
+                    const wasSaved = myBookmarks.has(tapeId);
+                    if (wasSaved) myBookmarks.delete(tapeId);
+                    else myBookmarks.add(tapeId);
+                    render();
+                    try {
+                        const {
+                            error
+                        } = await sb.rpc("toggle_tape_bookmark", {
+                            p_tape_id: tapeId
+                        });
+                        if (error) throw error;
+                        toast(wasSaved ? "Removed from saved." : "Saved.", "ok");
+                    } catch (err) {
+                        console.error(err);
+                        if (wasSaved) myBookmarks.add(tapeId);
+                        else myBookmarks.delete(tapeId);
+                        render();
+                        toast(err.message || "Bookmark failed.", "err");
+                    }
+                    return;
                 }
             });
 

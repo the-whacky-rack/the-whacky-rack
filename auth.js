@@ -69,6 +69,15 @@ transition: .2s ease;
 }
 .wr-auth-settings:hover { border-color: #bbb; background: #fafafa; }
 
+.wr-auth-admin {
+display: inline-flex; align-items: center; justify-content: center;
+width: 36px; height: 36px; border-radius: 50%;
+background: #fff5f0; border: 1px solid #ff5a36;
+font-size: 15px; text-decoration: none;
+transition: .2s ease;
+}
+.wr-auth-admin:hover { background: #ffe2d8; }
+
 .wr-auth-logout {
 font-size: 12px; font-weight: 700;
 background: transparent; border: 1px solid #e8e4dc;
@@ -181,7 +190,7 @@ text-decoration: none;
 
 @media (max-width: 700px) {
 .wr-auth-user, .wr-auth-logout, .wr-auth-cta { font-size: 11px; padding: 7px 11px; }
-.wr-bell, .wr-auth-settings { width: 32px; height: 32px; font-size: 14px; }
+.wr-bell, .wr-auth-settings, .wr-auth-admin { width: 32px; height: 32px; font-size: 14px; }
 .wr-bell-panel { width: calc(100vw - 20px); }
 }
 `;
@@ -405,6 +414,7 @@ return String(s ?? "").replace(/[&<>"']/g, c => ({
             <button class="wr-bell" type="button" aria-label="Notifications">
                 🔔<span class="wr-bell-badge" id="wr-bell-badge"></span>
             </button>
+            ${profile.is_admin ? `<a class="wr-auth-admin" href="admin.html" title="Admin panel">🛡️</a>` : ""}
             <a class="wr-auth-settings" href="settings.html" title="Settings">⚙️</a>
             <button class="wr-auth-logout" type="button" id="wr-logout-btn">Logout</button>
             `;
@@ -436,7 +446,7 @@ return String(s ?? "").replace(/[&<>"']/g, c => ({
             /* ---------- Data ---------- */
             async function fetchProfile(userId) {
             const { data, error } = await sb.from("profiles")
-            .select("id, username, rank, bio, country, avatar_url")
+            .select("id, username, rank, bio, country, avatar_url, is_admin")
             .eq("id", userId)
             .maybeSingle();
             if (error) { console.warn("profile fetch:", error); return null; }

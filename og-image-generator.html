@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    width: 1200px;
+    height: 630px;
+    background: #f7f5ef;
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+  .deco-1, .deco-2 {
+    position: absolute;
+    border-radius: 50%;
+    opacity: .1;
+  }
+  .deco-1 {
+    width: 500px; height: 500px;
+    background: #ff5a36;
+    top: -200px; right: -150px;
+  }
+  .deco-2 {
+    width: 400px; height: 400px;
+    background: #ff5a36;
+    bottom: -180px; left: -120px;
+  }
+  .inner {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    padding: 40px;
+  }
+  .brand {
+    font-size: 96px;
+    font-weight: 900;
+    letter-spacing: -4px;
+    color: #202020;
+    line-height: 1;
+    margin-bottom: 24px;
+  }
+  .brand span { color: #ff5a36; }
+  .tagline {
+    font-size: 32px;
+    color: #555;
+    font-weight: 500;
+    line-height: 1.4;
+    max-width: 900px;
+    margin: 0 auto 32px;
+  }
+  .pill {
+    display: inline-block;
+    background: #202020;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 800;
+    padding: 12px 28px;
+    border-radius: 60px;
+    letter-spacing: .5px;
+  }
+  .emoji {
+    position: absolute;
+    font-size: 60px;
+    opacity: .25;
+  }
+  .e1 { top: 80px; left: 80px; transform: rotate(-15deg); }
+  .e2 { bottom: 80px; right: 100px; transform: rotate(20deg); }
+  .e3 { top: 120px; right: 200px; transform: rotate(10deg); }
+</style>
+</head>
+<body>
+  <div class="deco-1"></div>
+  <div class="deco-2"></div>
+  <div class="emoji e1">🦆</div>
+  <div class="emoji e2">🎩</div>
+  <div class="emoji e3">🥑</div>
+  <div class="inner">
+    <div class="brand">The <span>Whacky</span> Rack</div>
+    <div class="tagline">Bizarre products you didn't know you needed.</div>
+    <div class="pill">the-whacky-rack.github.io</div>
+  </div>
+</body>
+</html>

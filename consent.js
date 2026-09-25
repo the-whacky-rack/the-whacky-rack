@@ -64,9 +64,12 @@
   `;
   document.body.appendChild(el);
 
-  function save(value) {
+    function save(value) {
     try { localStorage.setItem(KEY, JSON.stringify(value)); } catch (e) {}
     el.remove();
+    if (value && value.all === true) {
+      window.dispatchEvent(new Event("wr-consent-accepted"));
+    }
   }
 
   el.querySelector(".accept").addEventListener("click", function () {

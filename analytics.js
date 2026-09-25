@@ -1,34 +1,50 @@
-/* The Whacky Rack — analytics tracking
-   Requires: consent.js loaded first, and consent must be 'Accept all'.
-   Records page views and link clicks. IP + country are filled server-side. */
+/* The Whacky Rack — analytics tracking v2
+   v2 changes:
+   - Click inserts use fetch with keepalive:true (survives page navigation on mobile)
+   - Debug mode via ?debugAnalytics=1 (persists in localStorage until ?debugAnalytics=0)
+   - Logs every step to browser console when debug is on
+   - Captures user_id + is_anonymous for signed-in / anonymous clicker split */
 (function () {
-  var CONSENT_KEY   = "wr_cookie_consent_v1";
-  var SESSION_KEY   = "wr_analytics_session_id";
+  var CONSENT_KEY     = "wr_cookie_consent_v1";
+  var SESSION_KEY     = "wr_analytics_session_id";
   var PV_DEBOUNCE_KEY = "wr_analytics_last_pv";
+  var DEBUG_KEY       = "wr_analytics_debug";
 
-  // Pages we don't track (avoid self-tracking the dashboard and admin)
-  var EXCLUDED_PATHS = [
-    /\/analytics\.html?$/i,
-    /\/admin\.html?$/i
-  ];
+  var EXCLUDED_PATHS = [/\/analytics\.html?$/i, /\/admin\.html?$/i];
 
-  /* ------------------------------------------------------------
-     Consent gate
-     ------------------------------------------------------------ */
+  /* ---------------- Debug ---------------- */
+  var DEBUG = false;
+  try {
+    var qp = new URLSearchParams(location.search);
+    if (qp.get("debugAnalytics") === "1") {
+      DEBUG = true;
+      localStorage.setItem(DEBUG_KEY, "1");
+    }
+    if (qp.get("debugAnalytics") === "0") {
+      DEBUG = false;
+      localStorage.removeItem(DEBUG_KEY);
+    }
+    if (localStorage.getItem(DEBUG_KEY) === "1") DEBUG = true;
+  } catch (e) {}
+
+  function log() {
+    if (!DEBUG) return;
+    var args = Array.prototype.slice.call(arguments);
+    args.unshift("[analytics]");
+    console.log.apply(console, args);
+  }
+
+  /* ---------------- Consent gate ---------------- */
   function hasFullConsent() {
     try {
       var raw = localStorage.getItem(CONSENT_KEY);
       if (!raw) return false;
       var parsed = JSON.parse(raw);
       return parsed && parsed.all === true;
-    } catch (e) {
-      return false;
-    }
+    } catch (e) { return false; }
   }
 
-  /* ------------------------------------------------------------
-     Anonymous session ID (per browser, not linked to any account)
-     ------------------------------------------------------------ */
+  /* ---------------- Session ID ---------------- */
   function getSessionId() {
     try {
       var id = localStorage.getItem(SESSION_KEY);
@@ -44,62 +60,129 @@
     }
   }
 
-  /* ------------------------------------------------------------
-     Wait for window.wr.sb to be ready
-     ------------------------------------------------------------ */
+  /* ---------------- Current user detection ---------------- */
+  var _cachedUserId = null;
+  var _cachedUserIdResolved = false;
+
+  function detectCurrentUser() {
+    if (_cachedUserIdResolved) return _cachedUserId;
+
+    try {
+      if (window.wr && typeof window.wr.getProfile === "function") {
+        var p = window.wr.getProfile();
+        if (p && p.id) {
+          _cachedUserId = p.id;
+          _cachedUserIdResolved = true;
+          return _cachedUserId;
+        }
+      }
+    } catch (e) {}
+
+    try {
+      var keys = Object.keys(localStorage);
+      for (var i = 0; i < keys.length; i++) {
+        var k = keys[i];
+        if (k.indexOf("sb-") === 0 && k.indexOf("-auth-token") !== -1) {
+          var parsed = JSON.parse(localStorage.getItem(k) || "{}");
+          if (parsed && parsed.user && parsed.user.id) {
+            _cachedUserId = parsed.user.id;
+            _cachedUserIdResolved = true;
+            return _cachedUserId;
+          }
+        }
+      }
+    } catch (e) {}
+
+    _cachedUserId = null;
+    _cachedUserIdResolved = true;
+    return null;
+  }
+
+  /* ---------------- Wait for window.wr.sb ---------------- */
   function waitForSb(cb, tries) {
     tries = tries || 0;
     if (window.wr && window.wr.sb) return cb(window.wr.sb);
-    if (tries > 100) return; // ~5s timeout, then give up silently
+    if (tries > 100) { log("sb never became available — giving up"); return; }
     setTimeout(function () { waitForSb(cb, tries + 1); }, 50);
   }
 
-  /* ------------------------------------------------------------
-     Common payload for both tables
-     ------------------------------------------------------------ */
+  /* ---------------- Base payload ---------------- */
   function basePayload() {
+    var uid = detectCurrentUser();
     return {
-      session_id: getSessionId(),
-      page_path: location.pathname + location.search,
-      timezone: (Intl.DateTimeFormat().resolvedOptions().timeZone) || null,
-      language: navigator.language || null,
-      referrer: document.referrer || null,
-      consented: true
+      session_id:   getSessionId(),
+      page_path:    location.pathname + location.search,
+      timezone:     (Intl.DateTimeFormat().resolvedOptions().timeZone) || null,
+      language:     navigator.language || null,
+      referrer:     document.referrer || null,
+      consented:    true,
+      user_id:      uid,
+      is_anonymous: uid === null
     };
   }
 
-  /* ------------------------------------------------------------
-     Page view
-     ------------------------------------------------------------ */
+  /* ---------------- Page view ---------------- */
   function trackPageView(sb) {
-    // Skip excluded pages
     for (var i = 0; i < EXCLUDED_PATHS.length; i++) {
-      if (EXCLUDED_PATHS[i].test(location.pathname)) return;
+      if (EXCLUDED_PATHS[i].test(location.pathname)) { log("excluded path — skip"); return; }
     }
 
-    // Debounce: one page view per session per page per minute
     try {
       var key = PV_DEBOUNCE_KEY + ":" + location.pathname;
       var last = parseInt(sessionStorage.getItem(key) || "0", 10);
       var now = Date.now();
-      if (now - last < 60 * 1000) return;
+      if (now - last < 60 * 1000) { log("page view debounced"); return; }
       sessionStorage.setItem(key, String(now));
-    } catch (e) { /* ignore */ }
+    } catch (e) {}
 
     var payload = basePayload();
     payload.screen_size = window.innerWidth + "x" + window.innerHeight;
     payload.user_agent  = navigator.userAgent;
 
+    log("page view payload:", payload);
     sb.from("analytics_page_views").insert(payload)
       .then(function (r) {
-        if (r.error) console.debug("pv insert:", r.error.message);
+        if (r.error) log("page view ERROR:", r.error);
+        else log("page view OK");
       })
-      .catch(function () { /* silent */ });
+      .catch(function (e) { log("page view THREW:", e); });
   }
 
-  /* ------------------------------------------------------------
-     Link click
-     ------------------------------------------------------------ */
+  /* ---------------- Click insert (keepalive) ---------------- */
+  function insertClickKeepalive(sb, payload) {
+    var baseUrl = sb.supabaseUrl || "";
+    var anonKey = sb.supabaseKey || "";
+
+    if (!baseUrl || !anonKey) {
+      log("no supabase url/key on client — falling back to SDK");
+      return sb.from("analytics_link_clicks").insert(payload)
+        .then(function (r) { log("fallback insert result", r); })
+        .catch(function (e) { log("fallback insert threw", e); });
+    }
+
+    var url = baseUrl.replace(/\/+$/, "") + "/rest/v1/analytics_link_clicks";
+    log("keepalive POST →", url, payload);
+
+    return fetch(url, {
+      method: "POST",
+      headers: {
+        "apikey": anonKey,
+        "Authorization": "Bearer " + anonKey,
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal"
+      },
+      body: JSON.stringify(payload),
+      keepalive: true
+    })
+    .then(function (res) {
+      log("keepalive HTTP status:", res.status);
+      if (!res.ok) {
+        return res.text().then(function (t) { log("keepalive error body:", t); });
+      }
+    })
+    .catch(function (e) { log("keepalive fetch THREW:", e); });
+  }
+
   function trackLinkClick(sb, data) {
     var payload = basePayload();
     payload.product_id   = data.product_id || null;
@@ -109,35 +192,33 @@
     payload.link_type    = data.link_type || "product";
     payload.user_agent   = navigator.userAgent;
 
-    sb.from("analytics_link_clicks").insert(payload)
-      .then(function (r) {
-        if (r.error) console.debug("lc insert:", r.error.message);
-      })
-      .catch(function () { /* silent */ });
+    log("click payload:", payload);
+    insertClickKeepalive(sb, payload);
   }
 
-  /* ------------------------------------------------------------
-     Attach click tracking (capture phase so we never miss)
-     ------------------------------------------------------------ */
+  /* ---------------- Click detection ---------------- */
   function attachClickTracking(sb) {
+    log("click tracker attached");
     document.addEventListener("click", function (e) {
       var link = e.target.closest("a[href]");
-      if (!link) return;
+      if (!link) { log("click: no anchor found"); return; }
 
       var href = link.getAttribute("href") || "";
-      if (!href || href.charAt(0) === "#") return;
+      if (!href || href.charAt(0) === "#") { log("click: skip empty/hash href"); return; }
 
       var isExternal  = link.target === "_blank" || /^https?:\/\//i.test(href);
       var isSponsored = (link.getAttribute("rel") || "").indexOf("sponsored") !== -1;
       var isAmazon    = /amazon\./i.test(href) || /amzn\.to/i.test(href);
       var isShare     = link.classList.contains("share-option");
 
-      if (!isExternal && !isSponsored && !isAmazon && !isShare) return;
+      if (!isExternal && !isSponsored && !isAmazon && !isShare) {
+        log("click: not a tracked link", href);
+        return;
+      }
 
       var productId = null;
       var productName = null;
 
-      // Try to find the product card that this link belongs to
       var card = link.closest(".product-card");
       if (card) {
         var nameEl = card.querySelector(".product-name");
@@ -148,16 +229,17 @@
         }
       }
 
-      // For share modal clicks, grab the product name from the modal
       if (!productName && isShare) {
         var sn = document.getElementById("shareProductName");
         if (sn) productName = sn.textContent.trim();
       }
 
-      var linkType = isAmazon  ? "amazon"
-                   : isShare   ? "share"
+      var linkType = isAmazon   ? "amazon"
+                   : isShare    ? "share"
                    : isExternal ? "external"
                    : "internal";
+
+      log("click tracked:", { type: linkType, product: productName, href: href });
 
       trackLinkClick(sb, {
         product_id:   productId,
@@ -166,44 +248,44 @@
         link_label:   (link.textContent || "").trim().slice(0, 120),
         link_type:    linkType
       });
-    }, true); // capture phase
+    }, true);
   }
 
-  /* ------------------------------------------------------------
-     Main loop — poll for consent (in case user accepts after load)
-     ------------------------------------------------------------ */
+  /* ---------------- Start ---------------- */
   var started = false;
-
   function runTracking() {
     if (started) return;
     started = true;
+    log("starting tracking…");
     waitForSb(function (sb) {
+      log("sb ready");
       trackPageView(sb);
       attachClickTracking(sb);
     });
   }
 
   function init() {
+    log("init — consent state:", hasFullConsent());
     if (hasFullConsent()) {
       runTracking();
       return;
     }
 
-    // Poll for up to 5 minutes in case the user accepts later
     var attempts = 0;
     var timer = setInterval(function () {
       attempts++;
       if (hasFullConsent()) {
         clearInterval(timer);
+        log("consent detected via poll");
         runTracking();
       } else if (attempts > 300) {
         clearInterval(timer);
       }
     }, 1000);
 
-    // Also listen for a custom event (if consent.js is updated to fire it)
     window.addEventListener("wr-consent-accepted", function () {
       clearInterval(timer);
+      log("consent detected via event");
       runTracking();
     });
   }

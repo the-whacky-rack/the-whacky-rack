@@ -627,6 +627,27 @@
                     }
                 });
 
+                // Friendly client-side validation before sending to the server
+                const ageVal = ageEl.value ? parseInt(ageEl.value, 10) : null;
+                if (ageVal !== null && (ageVal < 13 || ageVal > 120)) {
+                    status("Age must be between 13 and 120.", "err");
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Create account";
+                    return;
+                }
+                if (bioEl.value.trim().length < 20) {
+                    status("Bio must be at least 20 characters.", "err");
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Create account";
+                    return;
+                }
+                if (countryEl.value && countryEl.value.trim().length > 60) {
+                    status("Country name is too long (max 60 characters).", "err");
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Create account";
+                    return;
+                }
+
                 if (error) {
                     console.error(error);
                     status(error.message || "Signup failed.", "err");

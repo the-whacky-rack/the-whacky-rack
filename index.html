@@ -1424,7 +1424,7 @@
             <a href="terms.html">Terms of Service</a>
             <a href="cookies.html">Cookie Policy</a>
             <a href="disclosure.html">Affiliate Disclosure</a>
-                  <a href="grievance.html">Grievance Officer</a>
+            <a href="grievance.html">Grievance Officer</a>
         </div>
 
         <div class="footer-disclosure">
@@ -1612,17 +1612,14 @@
             const {
                 data: likesData,
                 error: likesError
-            } = await supabaseClient
-                .from(LIKES_TABLE)
-                .select("product_id");
+            } = await supabaseClient.rpc("product_like_counts");
 
             if (likesError) {
                 console.error("Likes error:", likesError);
             } else {
                 likeCounts = {};
                 (likesData || []).forEach(row => {
-                    const key = row.product_id;
-                    likeCounts[key] = (likeCounts[key] || 0) + 1;
+                    likeCounts[row.product_id] = Number(row.like_count);
                 });
             }
 

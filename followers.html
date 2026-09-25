@@ -763,13 +763,17 @@
                     byId[p.id] = p;
                 });
 
-                // Who follows the target (for "Follows you" badges on the Followers tab)
-                const {
-                    data: tFollowers
-                } = await sb.from("follows")
-                    .select("follower_id")
-                    .eq("following_id", targetId);
-                const targetFollowerSet = new Set((tFollowers || []).map(r => r.follower_id));
+                // Who follows *the viewer*? (Used for "Follows you" badges.)
+                // We want to know: does each row's user follow the person viewing this page?
+                let viewerFollowerSet = new Set();
+                if (session) {
+                    const {
+                        data: vf
+                    } = await sb.from("follows")
+                        .select("follower_id")
+                        .eq("following_id", session.user.id);
+                    viewerFollowerSet = new Set((vf || []).map(r => r.follower_id));
+                }
 
                 // Whom the viewer follows (to decide Follow vs Unfollow buttons)
                 let viewerFollowingSet = new Set();
@@ -792,7 +796,7 @@
                         country: p.country,
                         isDeleted: !!p.deleted_at,
                         since: e.since,
-                        followsYou: targetFollowerSet.has(e.user_id),
+                        followsYou: viewerFollowerSet.has(e.user_id),
                         youFollow: viewerFollowingSet.has(e.user_id),
                         isMe: session && e.user_id === session.user.id
                     };

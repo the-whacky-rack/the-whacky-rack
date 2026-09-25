@@ -190,6 +190,7 @@
     payload.link_url     = data.link_url;
     payload.link_label   = data.link_label || null;
     payload.link_type    = data.link_type || "product";
+         payload.screen_size  = window.innerWidth + "x" + window.innerHeight;
     payload.user_agent   = navigator.userAgent;
 
     log("click payload:", payload);

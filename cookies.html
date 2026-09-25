@@ -42,8 +42,6 @@
             text-decoration: none;
         }
 
-        /* ---------------- HEADER ---------------- */
-
         header {
             background: #fff;
             border-bottom: 1px solid var(--border);
@@ -113,8 +111,6 @@
             white-space: nowrap;
         }
 
-        /* ---------------- HERO ---------------- */
-
         .hero {
             max-width: 900px;
             margin: auto;
@@ -171,8 +167,6 @@
             color: var(--muted);
             letter-spacing: .3px;
         }
-
-        /* ---------------- CONTENT ---------------- */
 
         .content-wrapper {
             max-width: 900px;
@@ -302,8 +296,6 @@
             color: #5a1e0c;
         }
 
-        /* ---------------- TABLE (cookie policy only) ---------------- */
-
         .data-table {
             width: 100%;
             border-collapse: collapse;
@@ -332,8 +324,6 @@
         .data-table tr:last-child td {
             border-bottom: 0;
         }
-
-        /* ---------------- CONTACT CARD ---------------- */
 
         .contact-card {
             background: #222;
@@ -372,8 +362,6 @@
         .contact-card a.email:hover {
             background: var(--accent-dark);
         }
-
-        /* ---------------- FOOTER ---------------- */
 
         footer {
             background: #222;
@@ -424,8 +412,6 @@
             font-size: 11px;
             color: #888;
         }
-
-        /* ---------------- MOBILE ---------------- */
 
         @media (max-width: 700px) {
 
@@ -532,11 +518,12 @@
         <h1>Cookie <span>Policy</span></h1>
         <p class="hero-description">
             We keep cookies to an absolute minimum. We set no first-party cookies and
-            run no advertising or analytics trackers. We do use your browser's
-            <strong>localStorage</strong> to hold your sign-in session and remember
-            which products you've liked — this is not a cookie and is never sent
-            automatically. Third-party cookies may be set by Cloudflare (bot
-            protection), Amazon (affiliate links), and social platforms (share button).
+            run no advertising trackers. We do use your browser's <strong>localStorage</strong>
+            to hold your sign-in session, remember which products you've liked, and store
+            an anonymous analytics ID. We also record anonymous analytics (page views and
+            product link clicks) in our own database when you accept all cookies. Third-party
+            cookies may be set by Cloudflare (bot protection), Amazon (affiliate links),
+            and social platforms (share button).
         </p>
         <span class="updated-pill">Last updated: 2026</span>
     </section>
@@ -546,15 +533,21 @@
         <div class="notice-card">
             <h2>Plain-English summary</h2>
             <p>
-                The Whacky Rack itself sets <strong>no first-party cookies</strong>. We use
-                your browser's <strong>localStorage</strong> to hold your Supabase Auth
-                session token (so you stay signed in) and to remember which products you've
-                liked. When you submit the signup, login, or password reset form, Cloudflare
-                Turnstile may set a short-lived challenge cookie. When you click an Amazon
-                affiliate link, Amazon sets its own tracking cookie. When you use the share
-                button, the platform you chose may set cookies. You can clear cookies and
-                localStorage at any time through your browser settings — the site will still
-                work, but you'll be signed out.
+                The Whacky Rack itself sets <strong>no first-party cookies</strong>.
+                We use your browser's <strong>localStorage</strong> to hold your
+                Supabase Auth session token (so you stay signed in), to remember
+                which products you've liked, and to store an anonymous analytics
+                session ID. When you visit the Shop page and have accepted all
+                cookies, we record anonymous page views and product link clicks
+                (IP, country, timezone, screen size, user agent) in our own
+                database. When you submit the signup, login, or password reset
+                form, Cloudflare Turnstile may set a short-lived challenge cookie.
+                When you click an Amazon affiliate link, Amazon sets its own
+                tracking cookie. When you use the share button, the platform you
+                chose may set cookies. You can clear cookies and localStorage at
+                any time through your browser settings — the site will still
+                work, but you'll be signed out and no analytics will be
+                collected for your visit.
             </p>
         </div>
 
@@ -578,33 +571,36 @@
             <h2><span class="num">2</span>Cookies we set ourselves</h2>
             <div class="callout">
                 <strong>No first-party cookies.</strong> The Whacky Rack does not set any
-                first-party cookies, does not install analytics or advertising scripts,
-                and does not run any form of cross-site tracking.
+                first-party cookies, does not install analytics or advertising scripts
+                from third parties, and does not run any form of cross-site tracking.
             </div>
             <p>
-                We do use your browser's <strong>localStorage</strong> for two purposes:
+                We do use your browser's <strong>localStorage</strong> for three purposes:
             </p>
             <ul>
                 <li><strong>Session token</strong> — after you sign in, Supabase Auth stores a token in localStorage so you stay signed in across page loads. Signing out clears it.</li>
                 <li><strong>Anonymous like identifier</strong> — on the product pages, the like button works without an account. We store a random UUID in localStorage so we can remember which products you've liked on this device, and send the UUID with each like so the count stays accurate.</li>
+                <li><strong>Anonymous analytics ID</strong> — a random session ID stored in localStorage, used only to distinguish repeat visitors from new ones in the Shop analytics. It is not linked to your account.</li>
             </ul>
             <p>
                 Unlike cookies, localStorage data is never sent automatically to any
-                server, and it is not used for tracking, advertising, or profiling.
+                server, and it is not used for cross-site tracking, advertising, or profiling.
             </p>
             <p>
-                There is no cookie consent banner because we do not set any
-                non-essential cookies ourselves. If we ever add analytics or a newsletter,
-                we will update this page and add a consent mechanism where required.
+                There is no cookie consent banner for EU/UK visitors because we do not set
+                non-essential cookies ourselves. Our own analytics only runs after you
+                click "Accept all" in the cookie banner.
             </p>
         </div>
 
         <div class="content-section">
-            <h2><span class="num">3</span>Third-party cookies</h2>
+            <h2><span class="num">3</span>Third-party cookies and analytics</h2>
             <p>
                 Third-party cookies may be set on this site in three situations: when you
                 submit a protected form, when you click an Amazon affiliate link, and when
-                you use the share button to share a product on a social platform.
+                you use the share button to share a product on a social platform. In
+                addition, our own analytics records page views and product link clicks in
+                our database when you accept all cookies.
             </p>
 
             <table class="data-table">
@@ -617,6 +613,12 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <tr>
+                        <td><strong>The Whacky Rack Analytics</strong></td>
+                        <td>When you visit the Shop page after accepting all cookies</td>
+                        <td>Records anonymous page views and product link clicks (IP, country, timezone, screen size, user agent) to help us understand which products interest visitors. Stored in our Supabase database, never shared with third parties.</td>
+                        <td>90 days, then auto-deleted</td>
+                    </tr>
                     <tr>
                         <td><strong>Cloudflare Turnstile</strong></td>
                         <td>When you submit the signup, login, or password reset form</td>
@@ -656,7 +658,7 @@
             </p>
             <ul>
                 <li><strong>Supabase (backend)</strong> — hosts our database and, via Supabase Auth, provides our authentication service. Session tokens are stored in <strong>localStorage</strong>, not in cookies.</li>
-                <li><strong>localStorage</strong> — we use your browser's localStorage to remember your sign-in session and which products you've liked. This is not a cookie, is not sent to any server automatically, and can be cleared at any time through your browser's site data settings.</li>
+                <li><strong>localStorage</strong> — we use your browser's localStorage to remember your sign-in session, which products you've liked, and your anonymous analytics ID. This is not a cookie, is not sent to any server automatically, and can be cleared at any time through your browser's site data settings.</li>
                 <li><strong>Resend</strong> — delivers password reset emails. It is a server-side service and does not run on your device.</li>
                 <li><strong>ImgBB and other image hosts</strong> — serve product images. No cookies are set for anonymous image requests.</li>
                 <li><strong>Our fonts and stylesheets</strong> — served from the same domain as the site.</li>
@@ -684,8 +686,8 @@
             </ul>
             <p>
                 Clearing your browser's site data or localStorage will sign you out of
-                the site and reset the anonymous like identifier we use on this device.
-                Your account and content are not affected.
+                the site and reset the anonymous like identifier and analytics ID we use
+                on this device. Your account and content are not affected.
             </p>
             <p>
                 Blocking cookies will not break this site. It may, however, prevent Amazon
@@ -699,8 +701,10 @@
             <h2><span class="num">6</span>Do Not Track signals</h2>
             <p>
                 Some browsers send a "Do Not Track" (DNT) signal. Because we do not track
-                users ourselves and do not run analytics, there is nothing for us to
-                disable in response. Cloudflare's, Amazon's, and the social platforms'
+                users across sites and do not run third-party advertising analytics, there
+                is nothing for us to disable in response. Our own Shop analytics respects
+                your cookie consent choice — if you reject non-essential cookies, no
+                analytics are recorded. Cloudflare's, Amazon's, and the social platforms'
                 handling of DNT signals is governed by their own policies.
             </p>
         </div>
@@ -709,9 +713,9 @@
             <h2><span class="num">7</span>Changes to this policy</h2>
             <p>
                 We may update this Cookie Policy if we add new features or services that
-                use cookies. When that happens, we will update the "Last updated" date and
-                — where required by law — ask for your consent before setting any new
-                non-essential cookies.
+                use cookies or analytics. When that happens, we will update the "Last
+                updated" date and — where required by law — ask for your consent before
+                setting any new non-essential cookies.
             </p>
         </div>
 
@@ -739,15 +743,18 @@
             <a href="terms.html">Terms of Service</a>
             <a href="cookies.html">Cookie Policy</a>
             <a href="disclosure.html">Affiliate Disclosure</a>
-                  <a href="grievance.html">Grievance Officer</a>
-                  <a href="privacy.html#do-not-sell">Do Not Sell or Share</a>
+            <a href="grievance.html">Grievance Officer</a>
+            <a href="privacy.html#do-not-sell">Do Not Sell or Share</a>
         </div>
         <div class="footer-disclosure">
             Products and availability may change depending on Amazon.com policies.
         </div>
     </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="auth.js"></script>
+    <script src="consent.js"></script>
+    <script src="analytics.js"></script>
 </body>
 
 </html>

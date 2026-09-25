@@ -42,8 +42,6 @@
             text-decoration: none;
         }
 
-        /* ---------------- HEADER ---------------- */
-
         header {
             background: #fff;
             border-bottom: 1px solid var(--border);
@@ -100,8 +98,6 @@
             border-color: #222;
         }
 
-        /* ---------------- HERO ---------------- */
-
         .hero {
             max-width: 1050px;
             margin: auto;
@@ -141,8 +137,6 @@
             font-size: 16px;
             line-height: 1.75;
         }
-
-        /* ---------------- CONTROLS ---------------- */
 
         .controls-wrapper {
             max-width: 1050px;
@@ -241,8 +235,6 @@
             border-color: var(--accent-dark);
         }
 
-        /* ---------------- PRODUCT BANNER ---------------- */
-
         .product-banner {
             max-width: 1050px;
             margin: 0 auto 22px;
@@ -303,8 +295,6 @@
             color: var(--text);
         }
 
-        /* ---------------- YAP LIST ---------------- */
-
         .yaps-wrapper {
             max-width: 1050px;
             margin: auto;
@@ -343,7 +333,6 @@
             box-shadow: 0 12px 28px rgba(0, 0, 0, .07);
         }
 
-        /* Vote column */
         .yap-votes {
             display: flex;
             flex-direction: column;
@@ -408,7 +397,6 @@
             color: #3b82f6;
         }
 
-        /* Main content column */
         .yap-main {
             flex: 1;
             min-width: 0;
@@ -513,7 +501,6 @@
             border: 1px solid var(--border);
         }
 
-        /* Author actions */
         .yap-actions {
             display: flex;
             gap: 6px;
@@ -550,8 +537,6 @@
             border-color: var(--accent);
             color: var(--accent-dark);
         }
-
-        /* ---------------- EMPTY STATE ---------------- */
 
         .empty-state {
             text-align: center;
@@ -596,7 +581,36 @@
             background: var(--accent-dark);
         }
 
-        /* ---------------- LOADING ---------------- */
+        .load-more-wrap {
+            text-align: center;
+            padding: 30px 20px 10px;
+        }
+
+        .load-more {
+            border: 0;
+            background: #222;
+            color: #fff;
+            border-radius: 50px;
+            padding: 13px 25px;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            font-family: inherit;
+            transition: .2s ease;
+        }
+
+        .load-more:hover:not(:disabled) {
+            background: #000;
+        }
+
+        .load-more:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        .load-more.hidden {
+            display: none;
+        }
 
         .loading {
             text-align: center;
@@ -604,8 +618,6 @@
             color: var(--muted);
             font-size: 14px;
         }
-
-        /* ---------------- FOOTER ---------------- */
 
         footer {
             background: #222;
@@ -656,8 +668,6 @@
             font-size: 11px;
             color: #888;
         }
-
-        /* ---------------- MODAL ---------------- */
 
         .modal {
             display: none;
@@ -878,8 +888,6 @@
             margin-top: 2px;
         }
 
-        /* ---------------- TOAST ---------------- */
-
         .toast-container {
             position: fixed;
             bottom: 20px;
@@ -922,8 +930,6 @@
                 transform: translateY(0);
             }
         }
-
-        /* ---------------- MOBILE ---------------- */
 
         @media (max-width: 700px) {
             .header-inner {
@@ -1035,7 +1041,7 @@
     <header>
         <div class="header-inner">
             <a href="index.html" class="logo">The <span>Whacky</span> Rack</a>
-                        <div class="header-right">
+            <div class="header-right">
                 <a href="index.html" class="nav-link">Shop</a>
                 <a href="yap.html" class="nav-link active">Yap it!</a>
                 <a href="tape.html" class="nav-link">Tape it!</a>
@@ -1045,7 +1051,6 @@
         </div>
     </header>
 
-    <!-- HERO -->
     <section class="hero">
         <div class="hero-kicker">Yap it! Board</div>
         <h1>What did you <span>actually</span> think?</h1>
@@ -1055,7 +1060,6 @@
         </p>
     </section>
 
-    <!-- CONTROLS -->
     <div class="controls-wrapper">
         <div class="controls">
             <div class="sort-tabs">
@@ -1071,10 +1075,8 @@
         </div>
     </div>
 
-    <!-- PRODUCT BANNER (populated by JS when filtered) -->
     <div id="product-banner" class="product-banner" hidden></div>
 
-    <!-- YAP LIST -->
     <main class="yaps-wrapper">
         <div class="results-info">
             <span id="result-count">Loading...</span>
@@ -1091,9 +1093,12 @@
             <p>Start the first thread. Be the legend.</p>
             <button class="empty-cta" id="empty-start-btn">+ Start a Yap</button>
         </div>
+
+        <div class="load-more-wrap">
+            <button class="load-more hidden" id="load-more-btn" type="button">Load more Yaps</button>
+        </div>
     </main>
 
-    <!-- NEW YAP MODAL -->
     <div class="modal" id="new-yap-modal" role="dialog" aria-modal="true" aria-hidden="true">
         <div class="modal-inner">
             <button class="modal-close" id="modal-close" type="button" aria-label="Close">×</button>
@@ -1120,10 +1125,8 @@
         </div>
     </div>
 
-    <!-- TOAST -->
     <div class="toast-container" id="toast-container"></div>
 
-    <!-- FOOTER -->
     <footer>
         <div class="footer-title">The <span>Whacky</span> Rack</div>
         <p>
@@ -1137,14 +1140,13 @@
             <a href="terms.html">Terms of Service</a>
             <a href="cookies.html">Cookie Policy</a>
             <a href="disclosure.html">Affiliate Disclosure</a>
-                  <a href="grievance.html">Grievance Officer</a>
+            <a href="grievance.html">Grievance Officer</a>
         </div>
         <div class="footer-disclosure">
             Products and availability may change depending on Amazon.com policies.
         </div>
     </footer>
 
-    <!-- SUPABASE + AUTH -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="auth.js"></script>
     <script src="consent.js"></script>
@@ -1153,13 +1155,12 @@
         (function () {
             const sb = window.wr.sb;
 
-            /* ---------------- State ---------------- */
             const PAGE_SIZE = 20;
 
             let session = null;
             let me = null;
             let yaps = [];
-            let myVotes = {};        // { yapId: 1 | -1 }
+            let myVotes = {};
             let myBookmarks = new Set();
             let currentSort = "top";
             let filterProductId = null;
@@ -1168,9 +1169,8 @@
             let hasMore = true;
             let searchTerm = "";
             let searchDebounce = null;
-            let productsCache = null; // lazily populated
+            let productsCache = null;
 
-            /* ---------------- Elements ---------------- */
             const els = {
                 yapsList:      document.getElementById("yaps-list"),
                 resultCount:   document.getElementById("result-count"),
@@ -1189,10 +1189,10 @@
                 modalSubmit:   document.getElementById("modal-submit"),
                 modalStatus:   document.getElementById("modal-status"),
                 bodyCount:     document.getElementById("body-count"),
-                toastBox:      document.getElementById("toast-container")
+                toastBox:      document.getElementById("toast-container"),
+                loadMoreBtn:   document.getElementById("load-more-btn")
             };
 
-            /* ---------------- Utils ---------------- */
             function esc(s) {
                 return String(s ?? "").replace(/[&<>"']/g, c => ({
                     "&": "&amp;",
@@ -1229,8 +1229,6 @@
                 els.toastBox.appendChild(el);
                 setTimeout(() => el.remove(), 2800);
             }
-
-            /* ---------------- Data loading ---------------- */
 
             async function loadSession() {
                 const { data: { session: s } } = await sb.auth.getSession();
@@ -1287,6 +1285,7 @@
                     hasMore = true;
                     els.yapsList.innerHTML = `<div class="loading">Loading Yaps...</div>`;
                     els.emptyState.hidden = true;
+                    els.loadMoreBtn.classList.add("hidden");
                 }
 
                 let query = sb.from("yaps")
@@ -1314,7 +1313,6 @@
                 } else {
                     query = query.order("created_at", { ascending: false });
                 }
-                // Secondary sort for stable ordering
                 query = query.order("created_at", { ascending: false });
 
                 query = query.range(offset, offset + PAGE_SIZE - 1);
@@ -1333,7 +1331,6 @@
                 offset += rows.length;
                 hasMore = rows.length === PAGE_SIZE;
 
-                // Fetch my votes and bookmarks
                 if (session && yaps.length > 0) {
                     const ids = yaps.map(y => y.id);
 
@@ -1350,10 +1347,14 @@
                     myBookmarks = new Set((bmRows || []).map(r => r.yap_id));
                 }
 
+                if (hasMore) {
+                    els.loadMoreBtn.classList.remove("hidden");
+                } else {
+                    els.loadMoreBtn.classList.add("hidden");
+                }
+
                 render();
             }
-
-            /* ---------------- Render ---------------- */
 
             function render() {
                 if (yaps.length === 0) {
@@ -1410,7 +1411,6 @@
                 const isAuthor = me && author.id === me.id;
                 const isSaved = myBookmarks.has(y.id);
 
-                // Truncate body preview
                 let bodyPreview = y.body || "";
                 if (bodyPreview.length > 260) bodyPreview = bodyPreview.slice(0, 260) + "…";
 
@@ -1455,7 +1455,7 @@
                                         ${isSaved ? "🔖 Saved" : "🔖 Save"}
                                     </button>
                                 ` : ""}
-                                                                ${isAuthor ? `
+                                ${isAuthor ? `
                                     <button class="yap-action-btn" data-action="edit" data-yap-id="${esc(y.id)}">Edit</button>
                                     <button class="yap-action-btn danger" data-action="delete" data-yap-id="${esc(y.id)}">Delete</button>
                                 ` : (session ? window.report.link("yap", y.id, y.title) : "")}
@@ -1467,8 +1467,6 @@
 
                 return card;
             }
-
-            /* ---------------- Vote handling ---------------- */
 
             async function handleVote(yapId, direction) {
                 if (!session) {
@@ -1516,8 +1514,6 @@
                 }
             }
 
-            /* ---------------- Click handling ---------------- */
-
             document.addEventListener("click", async (e) => {
                 const btn = e.target.closest("[data-action]");
                 if (!btn) return;
@@ -1538,7 +1534,6 @@
                     e.preventDefault();
                     if (!session) { toast("Sign in to save Yaps.", "err"); return; }
                     const isSaved = myBookmarks.has(yapId);
-                    // Optimistic
                     if (isSaved) myBookmarks.delete(yapId); else myBookmarks.add(yapId);
                     render();
                     try {
@@ -1547,7 +1542,6 @@
                         toast(isSaved ? "Removed from saved." : "Saved.", "ok");
                     } catch (err) {
                         console.error(err);
-                        // Revert
                         if (isSaved) myBookmarks.add(yapId); else myBookmarks.delete(yapId);
                         render();
                         toast(err.message || "Bookmark failed.", "err");
@@ -1580,8 +1574,6 @@
                 }
             }
 
-            /* ---------------- Search input ---------------- */
-
             const searchInput = document.getElementById("yap-search");
             if (searchInput) {
                 searchInput.addEventListener("input", () => {
@@ -1593,8 +1585,6 @@
                 });
             }
 
-            /* ---------------- Sort tabs ---------------- */
-
             els.sortTabs.forEach(tab => {
                 tab.addEventListener("click", () => {
                     const s = tab.dataset.sort;
@@ -1605,7 +1595,13 @@
                 });
             });
 
-            /* ---------------- New Yap modal ---------------- */
+            els.loadMoreBtn.addEventListener("click", async () => {
+                els.loadMoreBtn.disabled = true;
+                els.loadMoreBtn.textContent = "Loading…";
+                await loadYaps(false);
+                els.loadMoreBtn.disabled = false;
+                els.loadMoreBtn.textContent = "Load more Yaps";
+            });
 
             async function loadProductsForModal() {
                 if (productsCache) return productsCache;
@@ -1678,7 +1674,6 @@
             function closeModal() {
                 els.modal.classList.remove("open");
                 els.modal.setAttribute("aria-hidden", "true");
-                // Reset any edit-mode state
                 els.modal.querySelector("h3").textContent = "Start a Yap";
                 els.modalSubmit.textContent = "Post Yap";
                 els.modalSubmit.onclick = null;
@@ -1725,8 +1720,6 @@
                 }
             }
 
-            /* ---------------- Edit modal ---------------- */
-
             async function openEditModal(yapId) {
                 const y = yaps.find(x => x.id === yapId);
                 if (!y) return;
@@ -1771,8 +1764,6 @@
                 };
             }
 
-            /* ---------------- Modal wiring ---------------- */
-
             els.newYapBtn.addEventListener("click", openNewModal);
 
             els.emptyStartBtn.addEventListener("click", () => {
@@ -1807,12 +1798,9 @@
             });
 
             els.modalSubmit.addEventListener("click", () => {
-                // If an inline onclick was set (edit mode), let it run
                 if (els.modalSubmit.onclick) return;
                 submitNewYap();
             });
-
-            /* ---------------- Boot ---------------- */
 
             async function boot() {
                 await loadSession();

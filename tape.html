@@ -42,8 +42,6 @@
             text-decoration: none;
         }
 
-        /* ---------------- HEADER ---------------- */
-
         header {
             background: #fff;
             border-bottom: 1px solid var(--border);
@@ -100,8 +98,6 @@
             border-color: #222;
         }
 
-        /* ---------------- HERO ---------------- */
-
         .hero {
             max-width: 900px;
             margin: auto;
@@ -141,8 +137,6 @@
             font-size: 16px;
             line-height: 1.75;
         }
-
-        /* ---------------- CONTROLS ---------------- */
 
         .controls-wrapper {
             max-width: 900px;
@@ -210,8 +204,6 @@
             background: #fff;
         }
 
-        /* ---------------- FEED ---------------- */
-
         .feed-wrapper {
             max-width: 900px;
             margin: auto;
@@ -247,7 +239,6 @@
             box-shadow: 0 12px 30px rgba(0, 0, 0, .06);
         }
 
-        /* Head */
         .tape-head {
             display: flex;
             align-items: center;
@@ -345,7 +336,6 @@
             color: var(--accent-dark);
         }
 
-        /* Product block */
         .tape-product {
             display: flex;
             gap: 14px;
@@ -395,7 +385,6 @@
             margin: 0;
         }
 
-        /* Caption */
         .tape-caption {
             font-size: 14px;
             line-height: 1.6;
@@ -405,7 +394,6 @@
             word-wrap: break-word;
         }
 
-        /* Reaction bar */
         .tape-reactions {
             display: flex;
             flex-wrap: wrap;
@@ -458,7 +446,6 @@
             cursor: not-allowed;
         }
 
-        /* Foot */
         .tape-foot {
             display: flex;
             align-items: center;
@@ -485,8 +472,6 @@
             border-color: var(--accent);
             background: var(--pill);
         }
-
-        /* ---------------- EMPTY / LOADING ---------------- */
 
         .empty-state {
             text-align: center;
@@ -529,14 +514,43 @@
             background: var(--accent-dark);
         }
 
+        .load-more-wrap {
+            text-align: center;
+            padding: 30px 20px 10px;
+        }
+
+        .load-more {
+            border: 0;
+            background: #222;
+            color: #fff;
+            border-radius: 50px;
+            padding: 13px 25px;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            font-family: inherit;
+            transition: .2s ease;
+        }
+
+        .load-more:hover:not(:disabled) {
+            background: #000;
+        }
+
+        .load-more:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        .load-more.hidden {
+            display: none;
+        }
+
         .loading {
             text-align: center;
             padding: 50px 20px;
             color: var(--muted);
             font-size: 14px;
         }
-
-        /* ---------------- TOAST ---------------- */
 
         .toast-container {
             position: fixed;
@@ -580,8 +594,6 @@
                 transform: translateY(0);
             }
         }
-
-        /* ---------------- FOOTER ---------------- */
 
         footer {
             background: #222;
@@ -633,8 +645,6 @@
             font-size: 11px;
             color: #888;
         }
-
-        /* ---------------- MOBILE ---------------- */
 
         @media (max-width: 700px) {
             .header-inner {
@@ -735,7 +745,6 @@
         </div>
     </header>
 
-    <!-- HERO -->
     <section class="hero">
         <div class="hero-kicker">Tape it!</div>
         <h1>What the Rack is <span>taping</span></h1>
@@ -745,7 +754,6 @@
         </p>
     </section>
 
-    <!-- CONTROLS -->
     <div class="controls-wrapper">
         <div class="controls">
             <button class="feed-tab active" data-tab="following">👥 Following</button>
@@ -756,7 +764,6 @@
         </div>
     </div>
 
-    <!-- FEED -->
     <main class="feed-wrapper">
         <div class="results-info">
             <span id="result-count">Loading...</span>
@@ -772,6 +779,10 @@
             <h2 id="empty-title">Nothing taped here yet.</h2>
             <p id="empty-sub">Head to the Shop, find something weird, and hit Tape it!.</p>
             <a href="index.html">Go to the Shop</a>
+        </div>
+
+        <div class="load-more-wrap">
+            <button class="load-more hidden" id="load-more-btn" type="button">Load more Tapes</button>
         </div>
     </main>
 
@@ -790,7 +801,7 @@
             <a href="terms.html">Terms of Service</a>
             <a href="cookies.html">Cookie Policy</a>
             <a href="disclosure.html">Affiliate Disclosure</a>
-                  <a href="grievance.html">Grievance Officer</a>
+            <a href="grievance.html">Grievance Officer</a>
         </div>
         <div class="footer-disclosure">
             Products and availability may change depending on Amazon.com policies.
@@ -814,8 +825,10 @@
             let tapes = [];
             let searchTerm = "";
             let searchDebounce = null;
-            let myReactions = {}; // { tapeId: emoji }
+            let myReactions = {};
             let myBookmarks = new Set();
+            let offset = 0;
+            let hasMore = false;
 
             const els = {
                 tapeList: document.getElementById("tape-list"),
@@ -824,7 +837,8 @@
                 emptyTitle: document.getElementById("empty-title"),
                 emptySub: document.getElementById("empty-sub"),
                 tabs: document.querySelectorAll(".feed-tab"),
-                toastBox: document.getElementById("toast-container")
+                toastBox: document.getElementById("toast-container"),
+                loadMoreBtn: document.getElementById("load-more-btn")
             };
 
             /* ---------------- Utils ---------------- */
@@ -908,9 +922,15 @@
                 return (data || []).map(r => r.following_id);
             }
 
-            async function loadTapes() {
-                els.tapeList.innerHTML = `<div class="loading">Loading Tapes...</div>`;
-                els.emptyState.hidden = true;
+            async function loadTapes(reset = true) {
+                if (reset) {
+                    offset = 0;
+                    tapes = [];
+                    hasMore = false;
+                    els.tapeList.innerHTML = `<div class="loading">Loading Tapes...</div>`;
+                    els.emptyState.hidden = true;
+                    els.loadMoreBtn.classList.add("hidden");
+                }
 
                 let query = sb.from("tapes")
                     .select(`
@@ -923,11 +943,10 @@
                     .order("created_at", {
                         ascending: false
                     })
-                    .limit(PAGE_SIZE);
+                    .range(offset, offset + PAGE_SIZE - 1);
 
                 if (tab === "following") {
                     if (!session) {
-                        // Not signed in — show empty state with sign-in prompt
                         tapes = [];
                         render();
                         return;
@@ -953,9 +972,16 @@
                     els.tapeList.innerHTML = `<div class="loading">Couldn't load Tapes. Try again.</div>`;
                     return;
                 }
-                tapes = data || [];
 
-                // Load my reactions on these tapes
+                const rows = data || [];
+                if (reset) {
+                    tapes = rows;
+                } else {
+                    tapes = tapes.concat(rows);
+                }
+                offset += rows.length;
+                hasMore = rows.length === PAGE_SIZE;
+
                 if (session && tapes.length > 0) {
                     const ids = tapes.map(t => t.id);
                     const {
@@ -969,7 +995,6 @@
                         myReactions[r.tape_id] = r.reaction;
                     });
                 }
-                // Load my bookmarks
                 if (session) {
                     const {
                         data: bmRows
@@ -979,8 +1004,6 @@
                     myBookmarks = new Set((bmRows || []).map(r => r.tape_id));
                 }
 
-
-                // Load per-reaction breakdown for each tape
                 if (tapes.length > 0) {
                     const ids = tapes.map(t => t.id);
                     const {
@@ -996,6 +1019,12 @@
                     tapes.forEach(t => {
                         t._breakdown = breakdown[t.id] || {};
                     });
+                }
+
+                if (hasMore) {
+                    els.loadMoreBtn.classList.remove("hidden");
+                } else {
+                    els.loadMoreBtn.classList.add("hidden");
                 }
 
                 render();
@@ -1128,7 +1157,6 @@
                     return;
                 }
 
-                // Disable reaction buttons on this card while in flight
                 const card = els.tapeList.querySelector(`[data-tape-id="${tapeId}"]`);
                 if (!card) return;
                 card.querySelectorAll(".reaction-btn").forEach(b => b.disabled = true);
@@ -1142,7 +1170,6 @@
                     });
                     if (error) throw error;
 
-                    // Reload just this tape's reaction data
                     const {
                         data: tData
                     } = await sb.from("tapes")
@@ -1169,7 +1196,6 @@
                         .maybeSingle();
                     myReactions[tapeId] = myRow ? myRow.reaction : null;
 
-                    // Update local state
                     const t = tapes.find(x => x.id === tapeId);
                     if (t) {
                         t.reaction_count = tData ? tData.reaction_count : (t.reaction_count || 0);
@@ -1195,22 +1221,24 @@
                     });
                     if (error) throw error;
                     toast((data?.mode === "soft") ? "Tape marked as deleted." : "Tape deleted.", "ok");
-                    await loadTapes();
+                    await loadTapes(true);
                 } catch (err) {
                     console.error(err);
                     toast(err.message || "Delete failed.", "err");
                 }
             }
+
             const searchInput = document.getElementById("tape-search");
             if (searchInput) {
                 searchInput.addEventListener("input", () => {
                     clearTimeout(searchDebounce);
                     searchDebounce = setTimeout(() => {
                         searchTerm = searchInput.value.trim();
-                        loadTapes();
+                        loadTapes(true);
                     }, 300);
                 });
             }
+
             /* ---------------- Events ---------------- */
 
             els.tabs.forEach(t => {
@@ -1219,8 +1247,16 @@
                     if (next === tab) return;
                     tab = next;
                     els.tabs.forEach(x => x.classList.toggle("active", x === t));
-                    loadTapes();
+                    loadTapes(true);
                 });
+            });
+
+            els.loadMoreBtn.addEventListener("click", async () => {
+                els.loadMoreBtn.disabled = true;
+                els.loadMoreBtn.textContent = "Loading…";
+                await loadTapes(false);
+                els.loadMoreBtn.disabled = false;
+                els.loadMoreBtn.textContent = "Load more Tapes";
             });
 
             document.addEventListener("click", async (e) => {
@@ -1272,12 +1308,11 @@
 
             async function boot() {
                 await loadSession();
-                // Default tab based on session
                 if (!session) {
                     tab = "everyone";
                     els.tabs.forEach(x => x.classList.toggle("active", x.dataset.tab === "everyone"));
                 }
-                await loadTapes();
+                await loadTapes(true);
             }
 
             boot();

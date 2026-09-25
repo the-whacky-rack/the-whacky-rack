@@ -2,12 +2,18 @@
 (function () {
   const KEY = "wr_cookie_consent_v1";
 
+    // Testing override: append ?forceConsent=1 to any URL to force the banner.
+  const forceShow = new URLSearchParams(location.search).get("forceConsent") === "1";
+
   let stored = null;
   try { stored = JSON.parse(localStorage.getItem(KEY) || "null"); } catch (e) {}
-  if (stored && stored.essential !== undefined) return;
+  if (stored && stored.essential !== undefined && !forceShow) return;
+  if (forceShow) {
+    try { localStorage.removeItem(KEY); } catch (e) {}
+  }
 
   const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
-  const isEUUK = /Europe\//.test(tz) || /London|Dublin|Lisbon/.test(tz);
+  const isEUUK = /Europe\//.test(tz) || /London|Dublin|Lisbon/.test(tz) || forceShow;
 
   const style = document.createElement("style");
   style.textContent = `

@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analytics — The Whacky Rack</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+  :root {
+    --bg:#f7f5ef; --card:#fff; --text:#202020; --muted:#5a5a5a;
+    --accent:#ff5a36; --accent-dark:#e84625;
+    --border:#e8e4dc; --pill:#fff0eb;
+    --shadow:0 8px 25px rgba(0,0,0,.06);
+    --green:#16a34a; --blue:#3b82f6;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--bg); color: var(--text); }
+  a { color: inherit; text-decoration: none; }
+
+  header { background: #fff; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
+  .header-inner { max-width: 1400px; margin: auto; padding: 16px 22px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+  .logo { font-size: 25px; font-weight: 900; letter-spacing: -1px; white-space: nowrap; }
+  .logo span { color: var(--accent); }
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .nav-link { font-size: 13px; font-weight: 700; padding: 8px 14px; border-radius: 50px; border: 1px solid var(--border); background: #fff; transition: .2s ease; white-space: nowrap; }
+  .nav-link:hover { border-color: #bbb; }
+  .nav-link.active { background: #222; color: #fff; border-color: #222; }
+
+  .wrap { max-width: 1400px; margin: auto; padding: 24px 22px 70px; }
+
+  .page-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 22px; }
+  .page-head h1 { margin: 0 0 4px; font-size: 32px; letter-spacing: -1px; font-weight: 950; }
+  .page-head h1 span { color: var(--accent); }
+  .page-head p { margin: 0; color: var(--muted); font-size: 14px; }
+
+  .range-picker { display: flex; gap: 6px; }
+  .range-btn { border: 1px solid var(--border); background: #fff; padding: 9px 16px; border-radius: 50px; font-family: inherit; font-size: 12px; font-weight: 800; cursor: pointer; color: var(--muted); transition: .15s ease; }
+  .range-btn:hover { border-color: #bbb; color: var(--text); }
+  .range-btn.active { background: #222; color: #fff; border-color: #222; }
+
+  .cards { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; margin-bottom: 22px; }
+  @media (max-width: 1100px) { .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 700px)  { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+  .card-stat { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 16px 18px; box-shadow: var(--shadow); }
+  .card-stat .label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); margin-bottom: 8px; }
+  .card-stat .value { font-size: 28px; font-weight: 950; letter-spacing: -1px; line-height: 1.1; }
+  .card-stat .sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .card-stat .value.accent { color: var(--accent-dark); }
+
+  .panel { background: #fff; border: 1px solid var(--border); border-radius: 18px; padding: 22px 24px; box-shadow: var(--shadow); margin-bottom: 20px; }
+  .panel h2 { margin: 0 0 14px; font-size: 15px; font-weight: 900; text-transform: uppercase; letter-spacing: .5px; color: #555; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .panel h2 .count { font-size: 12px; background: var(--pill); color: var(--accent-dark); padding: 3px 10px; border-radius: 50px; letter-spacing: 0; text-transform: none; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  .map { height: 340px; border-radius: 12px; overflow: hidden; }
+
+  .trend-chart { display: flex; align-items: flex-end; gap: 3px; height: 120px; padding-top: 10px; }
+  .trend-bar-group { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 2px; min-width: 0; }
+  .trend-bar { width: 100%; background: var(--blue); border-radius: 3px 3px 0 0; min-height: 2px; }
+  .trend-bar.visits { background: #c7d2fe; }
+  .trend-bar.clicks { background: var(--accent); }
+  .trend-legend { display: flex; gap: 16px; font-size: 11px; color: var(--muted); margin-top: 8px; }
+  .trend-legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+  .trend-legend .visits::before { background: #c7d2fe; }
+  .trend-legend .clicks::before { background: var(--accent); }
+
+  table.data { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table.data th { text-align: left; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--border); }
+  table.data td { padding: 10px; border-bottom: 1px solid #f5f2ea; vertical-align: top; word-break: break-word; }
+  table.data tr:last-child td { border-bottom: 0; }
+  table.data tr:hover td { background: #fafafa; }
+  table.data .mono { font-family: ui-monospace, monospace; font-size: 11px; color: #666; }
+  table.data .num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; }
+  table.data .flag { font-size: 16px; margin-right: 4px; }
+
+  .empty { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 13px; }
+  .empty .emoji { font-size: 36px; margin-bottom: 8px; opacity: .5; }
+
+  .loading { text-align: center; padding: 50px 20px; color: var(--muted); font-size: 14px; }
+
+  .err-card { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; padding: 20px 24px; border-radius: 16px; font-size: 14px; line-height: 1.6; }
+  .err-card h2 { margin: 0 0 8px; font-size: 20px; }
+  .err-card a { color: #7f1d1d; font-weight: 800; text-decoration: underline; }
+
+  .bar-row { display: grid; grid-template-columns: 120px 1fr 60px; gap: 10px; align-items: center; padding: 6px 0; font-size: 12px; }
+  .bar-row .name { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bar-row .bar { background: #f1eee8; border-radius: 4px; height: 14px; overflow: hidden; }
+  .bar-row .bar > div { height: 100%; background: var(--accent); border-radius: 4px; }
+  .bar-row .val { text-align: right; font-weight: 800; color: #555; font-variant-numeric: tabular-nums; }
+
+  .log-filter { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+  .log-filter input, .log-filter select { padding: 9px 12px; border: 1px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 12px; background: #fafafa; outline: none; }
+  .log-filter input:focus, .log-filter select:focus { border-color: var(--accent); background: #fff; }
+  .log-filter input { flex: 1; min-width: 180px; }
+
+  .csv-btn { font-size: 11px; font-weight: 800; border: 1px solid var(--border); background: #fff; padding: 6px 12px; border-radius: 50px; cursor: pointer; font-family: inherit; color: var(--muted); }
+  .csv-btn:hover { border-color: #bbb; color: var(--text); }
+
+  footer { background: #222; color: #fff; padding: 40px 22px; text-align: center; }
+  .footer-title { font-size: 22px; font-weight: 900; margin-bottom: 10px; }
+  .footer-title span { color: var(--accent); }
+  footer p { max-width: 650px; margin: auto; color: #bbb; font-size: 12px; line-height: 1.7; }
+
+  @media (max-width: 700px) {
+    .header-inner { padding: 13px 15px; flex-wrap: wrap; }
+    .logo { font-size: 21px; }
+    .nav-link { font-size: 11px; padding: 7px 11px; }
+    .wrap { padding: 16px 14px 50px; }
+    .page-head h1 { font-size: 24px; }
+    .panel { padding: 18px 16px; border-radius: 15px; }
+    .bar-row { grid-template-columns: 90px 1fr 48px; font-size: 11px; }
+    .map { height: 260px; }
+  }
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">The <span>Whacky</span> Rack</a>
+    <div class="header-right">
+      <a href="index.html" class="nav-link">Shop</a>
+      <a href="admin.html" class="nav-link">Admin</a>
+      <a href="analytics.html" class="nav-link active">Analytics</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="root">
+  <div class="loading">Checking access…</div>
+</main>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js"></script>
+<script>
+(function () {
+  const sb = window.wr.sb;
+  const root = document.getElementById("root");
+
+  let days = 30;
+  let summary, visitsByCountry, clicksByCountry, topLinks, topClickers,
+      recentClicks, referrers, dailyTrend;
+
+  /* ---------- Country coordinates ---------- */
+  const COORDS = {
+    IN:[20.59,78.96], US:[37.09,-95.71], GB:[55.37,-3.43], CA:[56.13,-106.34],
+    AU:[-25.27,133.77], DE:[51.16,10.45], FR:[46.22,2.21], NL:[52.13,5.29],
+    ES:[40.46,-3.74], IT:[41.87,12.56], BR:[-14.23,-51.92], MX:[23.63,-102.55],
+    JP:[36.20,138.25], CN:[35.86,104.19], KR:[35.90,127.76], RU:[61.52,105.31],
+    ZA:[-30.55,22.93], NG:[9.08,8.67], KE:[-0.02,37.90], EG:[26.82,30.80],
+    PK:[30.37,69.34], BD:[23.68,90.35], LK:[7.87,80.77], NP:[28.39,84.12],
+    ID:[-0.78,113.92], PH:[12.87,121.77], TH:[15.87,100.99], MY:[4.21,101.97],
+    SG:[1.35,103.81], VN:[14.05,108.27], TR:[38.96,35.24], SA:[23.88,45.07],
+    AE:[23.42,53.84], IL:[31.04,34.85], PL:[51.91,19.14], SE:[60.12,18.64],
+    NO:[60.47,8.46], DK:[56.26,9.50], FI:[61.92,25.74], IE:[53.41,-8.24],
+    PT:[39.39,-8.22], GR:[39.07,21.82], CZ:[49.81,15.47], HU:[47.16,19.50],
+    RO:[45.94,24.96], UA:[48.37,31.16], AR:[-38.41,-63.61], CL:[-35.67,-71.54],
+    CO:[4.57,-74.29], PE:[-9.18,-75.01], VE:[6.42,-66.58], NZ:[-40.90,174.88]
+  };
+
+  function flagFor(cc) {
+    if (!cc || cc === "XX" || cc.length !== 2) return "🌍";
+    const A = 0x1F1E6;
+    return String.fromCodePoint(A + cc.toUpperCase().charCodeAt(0) - 65,
+                                A + cc.toUpperCase().charCodeAt(1) - 65);
+  }
+
+  /* ---------- Utils ---------- */
+  function esc(s) {
+    return String(s ?? "").replace(/[&<>"']/g, c => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    }[c]));
+  }
+  function fmtDate(iso) {
+    const d = new Date(iso);
+    return d.toLocaleString(undefined, {
+      year:"numeric", month:"short", day:"2-digit",
+      hour:"2-digit", minute:"2-digit"
+    });
+  }
+  function timeAgo(iso) {
+    const d = new Date(iso);
+    const s = Math.floor((Date.now() - d.getTime()) / 1000);
+    if (s < 60) return "just now";
+    if (s < 3600) return Math.floor(s/60) + "m ago";
+    if (s < 86400) return Math.floor(s/3600) + "h ago";
+    if (s < 604800) return Math.floor(s/86400) + "d ago";
+    return d.toLocaleDateString();
+  }
+  function shortUrl(u) {
+    if (!u) return "";
+    try {
+      const x = new URL(u);
+      const path = x.pathname.length > 30 ? x.pathname.slice(0, 30) + "…" : x.pathname;
+      return x.hostname.replace("www.","") + path;
+    } catch { return String(u).slice(0, 60); }
+  }
+
+  /* ---------- CSV export ---------- */
+  function downloadCsv(filename, rows) {
+    if (!rows.length) return;
+    const headers = Object.keys(rows[0]);
+    const lines = [headers.join(",")];
+    for (const r of rows) {
+      lines.push(headers.map(h => {
+        const v = r[h];
+        if (v === null || v === undefined) return "";
+        const s = String(v).replace(/"/g, '""');
+        return /[",\n]/.test(s) ? `"${s}"` : s;
+      }).join(","));
+    }
+    const blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  /* ---------- Data loaders ---------- */
+  async function loadAll() {
+    const [
+      sumRes, vcRes, ccRes, tlRes, tcRes, rcRes, rfRes, dtRes
+    ] = await Promise.all([
+      sb.rpc("analytics_summary", { p_days: days }),
+      sb.rpc("analytics_visits_by_country", { p_days: days }),
+      sb.rpc("analytics_clicks_by_country", { p_days: days }),
+      sb.rpc("analytics_top_links", { p_days: days, p_limit: 50 }),
+      sb.rpc("analytics_top_clickers", { p_days: days, p_limit: 50 }),
+      sb.rpc("analytics_recent_clicks", { p_days: days, p_limit: 200 }),
+      sb.rpc("analytics_referrers", { p_days: days, p_limit: 30 }),
+      sb.rpc("analytics_daily_trend", { p_days: days })
+    ]);
+
+    const err = [sumRes, vcRes, ccRes, tlRes, tcRes, rcRes, rfRes, dtRes].find(r => r.error);
+    if (err) throw err.error;
+
+    summary           = sumRes.data?.[0] || {};
+    visitsByCountry   = vcRes.data || [];
+    clicksByCountry   = ccRes.data || [];
+    topLinks          = tlRes.data || [];
+    topClickers       = tcRes.data || [];
+    recentClicks      = rcRes.data || [];
+    referrers         = rfRes.data || [];
+    dailyTrend        = dtRes.data || [];
+  }
+
+  /* ---------- Render helpers ---------- */
+  function renderRangePicker() {
+    const ranges = [[1,"Today"],[7,"7 days"],[30,"30 days"],[90,"90 days"],[365,"All time"]];
+    return `
+      <div class="range-picker">
+        ${ranges.map(([d,label]) => `
+          <button class="range-btn${d === days ? " active" : ""}" data-days="${d}">${label}</button>
+        `).join("")}
+      </div>
+    `;
+  }
+
+  function renderCards() {
+    const s = summary || {};
+    return `
+      <div class="cards">
+        <div class="card-stat">
+          <div class="label">Page Visits</div>
+          <div class="value">${s.total_visits ?? 0}</div>
+          <div class="sub">${s.unique_visitors ?? 0} unique visitors</div>
+        </div>
+        <div class="card-stat">
+          <div class="label">Link Clicks</div>
+          <div class="value accent">${s.total_clicks ?? 0}</div>
+          <div class="sub">${s.unique_clickers ?? 0} unique clickers</div>
+        </div>
+        <div class="card-stat">
+          <div class="label">Top Link</div>
+          <div class="value" style="font-size:16px; letter-spacing:0;">
+            ${esc(s.top_link_name || "—")}
+          </div>
+          <div class="sub">${s.top_link_clicks ?? 0} clicks</div>
+        </div>
+        <div class="card-stat">
+          <div class="label">Top Country</div>
+          <div class="value" style="font-size:22px;">
+            ${s.top_country ? flagFor(s.top_country) + " " + esc(s.top_country) : "—"}
+          </div>
+          <div class="sub">${s.top_country_clicks ?? 0} clicks</div>
+        </div>
+        <div class="card-stat">
+          <div class="label">Conversion</div>
+          <div class="value">${s.total_visits ? Math.round((s.total_clicks / s.total_visits) * 100) + "%" : "—"}</div>
+          <div class="sub">clicks per visit</div>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderMaps() {
+    return `
+      <div class="grid-2">
+        <div class="panel">
+          <h2>Visits by Country<span class="count">${visitsByCountry.length} countries</span></h2>
+          <div class="map" id="map-visits"></div>
+        </div>
+        <div class="panel">
+          <h2>Clicks by Country<span class="count">${clicksByCountry.length} countries</span></h2>
+          <div class="map" id="map-clicks"></div>
+        </div>
+      </div>
+    `;
+  }
+
+  function initMap(elId, data, valueField, color) {
+    const el = document.getElementById(elId);
+    if (!el) return;
+    if (!data.length) {
+      el.innerHTML = '<div class="empty"><div class="emoji">🗺️</div>No data yet.</div>';
+      return;
+    }
+    const map = L.map(elId, { scrollWheelZoom: false }).setView([20, 0], 2);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: '&copy; OpenStreetMap', maxZoom: 8
+    }).addTo(map);
+
+    const values = data.map(d => Number(d[valueField]) || 0);
+    const maxV = Math.max(...values, 1);
+
+    data.forEach(d => {
+      const cc = d.country_code;
+      const coords = COORDS[cc];
+      if (!coords) return;
+      const v = Number(d[valueField]) || 0;
+      const radius = 6 + (v / maxV) * 22;
+      L.circleMarker(coords, {
+        radius, color, fillColor: color, fillOpacity: 0.45, weight: 2
+      })
+      .bindPopup(`
+        <strong>${flagFor(cc)} ${esc(cc)}</strong><br>
+        ${valueField === "visits" ? "Visits" : "Clicks"}: ${v}<br>
+        ${valueField === "visits"
+          ? "Unique visitors: " + (d.unique_visitors ?? 0)
+          : "Unique clickers: " + (d.unique_clickers ?? 0)}
+      `)
+      .addTo(map);
+    });
+  }
+
+  function renderTrend() {
+    if (!dailyTrend.length) {
+      return `<div class="panel"><h2>Daily Trend</h2>
+        <div class="empty"><div class="emoji">📈</div>No data yet.</div></div>`;
+    }
+    const max = Math.max(
+      ...dailyTrend.map(d => Math.max(Number(d.visits)||0, Number(d.clicks)||0)),
+      1
+    );
+    const bars = dailyTrend.map(d => {
+      const vh = ((Number(d.visits)||0) / max) * 100;
+      const ch = ((Number(d.clicks)||0) / max) * 100;
+      const label = new Date(d.day).toLocaleDateString(undefined, { month:"short", day:"numeric" });
+      return `
+        <div class="trend-bar-group" title="${label}: ${d.visits} visits, ${d.clicks} clicks">
+          <div class="trend-bar visits" style="height:${vh}%"></div>
+          <div class="trend-bar clicks" style="height:${ch}%"></div>
+        </div>
+      `;
+    }).join("");
+    return `
+      <div class="panel">
+        <h2>Daily Trend<span class="count">${dailyTrend.length} days</span></h2>
+        <div class="trend-chart">${bars}</div>
+        <div class="trend-legend">
+          <span class="visits">Visits</span>
+          <span class="clicks">Clicks</span>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderRegionalBars(data, valueField) {
+    if (!data.length) return '<div class="empty"><div class="emoji">🌍</div>No data yet.</div>';
+    const max = Math.max(...data.map(d => Number(d[valueField])||0), 1);
+    return data.slice(0, 15).map(d => {
+      const v = Number(d[valueField]) || 0;
+      const pct = (v / max) * 100;
+      return `
+        <div class="bar-row">
+          <div class="name">${flagFor(d.country_code)} ${esc(d.country_code)}</div>
+          <div class="bar"><div style="width:${pct}%"></div></div>
+          <div class="val">${v}</div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function renderTopLinks() {
+    if (!topLinks.length) {
+      return `<div class="panel"><h2>Top Links</h2>
+        <div class="empty"><div class="emoji">🔗</div>No clicks yet.</div></div>`;
+    }
+    const rows = topLinks.map(l => `
+      <tr>
+        <td>
+          <div style="font-weight:800;">${esc(l.product_name || l.link_url)}</div>
+          <div class="mono">${esc(shortUrl(l.link_url))}</div>
+        </td>
+        <td>${l.link_type ? `<span style="background:var(--pill); color:var(--accent-dark); padding:2px 8px; border-radius:50px; font-size:10px; font-weight:800; text-transform:uppercase;">${esc(l.link_type)}</span>` : ""}</td>
+        <td>${l.top_country ? flagFor(l.top_country) + " " + esc(l.top_country) : "—"}</td>
+        <td class="num">${l.clicks}</td>
+        <td class="num">${l.unique_clickers}</td>
+        <td style="white-space:nowrap;">${esc(timeAgo(l.last_clicked))}</td>
+      </tr>
+    `).join("");
+    return `
+      <div class="panel">
+        <h2>
+          Top Links
+          <button class="csv-btn" data-csv="links">Export CSV</button>
+        </h2>
+        <table class="data">
+          <thead>
+            <tr>
+              <th>Link</th><th>Type</th><th>Top Country</th>
+              <th style="text-align:right;">Clicks</th>
+              <th style="text-align:right;">Unique</th>
+              <th>Last clicked</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  function renderTopClickers() {
+    if (!topClickers.length) {
+      return `<div class="panel"><h2>Top Clickers</h2>
+        <div class="empty"><div class="emoji">👥</div>No clicks yet.</div></div>`;
+    }
+    const rows = topClickers.map(c => `
+      <tr>
+        <td class="mono">${esc(c.session_id.slice(0, 18))}…</td>
+        <td>${c.country_code ? flagFor(c.country_code) + " " + esc(c.country_code) : "—"}</td>
+        <td class="num">${c.clicks}</td>
+        <td class="num">${c.unique_links}</td>
+        <td style="white-space:nowrap;">${esc(timeAgo(c.first_click))}</td>
+        <td style="white-space:nowrap;">${esc(timeAgo(c.last_click))}</td>
+      </tr>
+    `).join("");
+    return `
+      <div class="panel">
+        <h2>
+          Top Clickers (anonymous session IDs)
+          <button class="csv-btn" data-csv="clickers">Export CSV</button>
+        </h2>
+        <table class="data">
+          <thead>
+            <tr>
+              <th>Session ID</th><th>Country</th>
+              <th style="text-align:right;">Clicks</th>
+              <th style="text-align:right;">Unique links</th>
+              <th>First seen</th><th>Last seen</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  function renderReferrers() {
+    if (!referrers.length) {
+      return `<div class="panel"><h2>Referring Pages</h2>
+        <div class="empty"><div class="emoji">🔗</div>No visits yet.</div></div>`;
+    }
+    const rows = referrers.map(r => `
+      <tr>
+        <td class="mono">${esc(r.referrer === "(direct)" ? "(direct)" : shortUrl(r.referrer))}</td>
+        <td class="num">${r.visits}</td>
+        <td class="num">${r.unique_visitors}</td>
+        <td class="num">${r.clicks}</td>
+      </tr>
+    `).join("");
+    return `
+      <div class="panel">
+        <h2>
+          Referring Pages
+          <button class="csv-btn" data-csv="referrers">Export CSV</button>
+        </h2>
+        <table class="data">
+          <thead>
+            <tr>
+              <th>Source</th>
+              <th style="text-align:right;">Visits</th>
+              <th style="text-align:right;">Unique</th>
+              <th style="text-align:right;">Clicks</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  function renderRecentClicks() {
+    return `
+      <div class="panel">
+        <h2>
+          Recent Clicks
+          <button class="csv-btn" data-csv="recent">Export CSV</button>
+        </h2>
+        <div class="log-filter">
+          <input type="search" id="log-search" placeholder="Search product, URL, IP…" autocomplete="off">
+          <select id="log-country"><option value="">All countries</option></select>
+        </div>
+        <div id="log-body"></div>
+      </div>
+    `;
+  }
+
+  function renderLogRows(filterText, filterCountry) {
+    let rows = recentClicks;
+    if (filterCountry) rows = rows.filter(r => r.country_code === filterCountry);
+    if (filterText) {
+      const t = filterText.toLowerCase();
+      rows = rows.filter(r =>
+        (r.product_name || "").toLowerCase().includes(t) ||
+        (r.link_url || "").toLowerCase().includes(t) ||
+        (r.ip_address || "").toLowerCase().includes(t)
+      );
+    }
+    if (!rows.length) {
+      return '<div class="empty"><div class="emoji">🔍</div>No matching clicks.</div>';
+    }
+    const body = rows.slice(0, 200).map(c => `
+      <tr>
+        <td style="white-space:nowrap;">${esc(fmtDate(c.created_at))}</td>
+        <td>${esc(c.product_name || "—")}</td>
+        <td>${c.country_code ? flagFor(c.country_code) + " " + esc(c.country_code) : "—"}</td>
+        <td class="mono">${esc(c.ip_address || "—")}</td>
+        <td class="mono">${esc(c.session_id.slice(0, 10))}…</td>
+        <td class="mono">${esc(shortUrl(c.link_url))}</td>
+      </tr>
+    `).join("");
+    return `
+      <table class="data">
+        <thead>
+          <tr>
+            <th>When</th><th>Product</th><th>Country</th>
+            <th>IP</th><th>Session</th><th>Link</th>
+          </tr>
+        </thead>
+        <tbody>${body}</tbody>
+      </table>
+    `;
+  }
+
+  function populateCountryFilter() {
+    const sel = document.getElementById("log-country");
+    if (!sel) return;
+    const set = new Set();
+    recentClicks.forEach(c => { if (c.country_code) set.add(c.country_code); });
+    const arr = [...set].sort();
+    sel.innerHTML = '<option value="">All countries</option>' +
+      arr.map(cc => `<option value="${esc(cc)}">${flagFor(cc)} ${esc(cc)}</option>`).join("");
+  }
+
+  function renderAll() {
+    root.innerHTML = `
+      <div class="page-head">
+        <div>
+          <h1>Shop <span>analytics</span></h1>
+          <p>Anonymous link tracking for the Shop page. IP-based. Consent-gated.</p>
+        </div>
+        ${renderRangePicker()}
+      </div>
+
+      ${renderCards()}
+
+      ${renderMaps()}
+
+      ${renderTrend()}
+
+      <div class="grid-2">
+        <div class="panel">
+          <h2>Visits by Country</h2>
+          ${renderRegionalBars(visitsByCountry, "visits")}
+        </div>
+        <div class="panel">
+          <h2>Clicks by Country</h2>
+          ${renderRegionalBars(clicksByCountry, "clicks")}
+        </div>
+      </div>
+
+      ${renderTopLinks()}
+      ${renderTopClickers()}
+      ${renderReferrers()}
+      ${renderRecentClicks()}
+    `;
+
+    initMap("map-visits", visitsByCountry, "visits", "#3b82f6");
+    initMap("map-clicks", clicksByCountry, "clicks", "#ff5a36");
+
+    populateCountryFilter();
+    const logBody = document.getElementById("log-body");
+    if (logBody) logBody.innerHTML = renderLogRows("", "");
+
+    /* Range buttons */
+    document.querySelectorAll(".range-btn").forEach(b => {
+      b.addEventListener("click", async () => {
+        days = parseInt(b.dataset.days, 10);
+        await reload();
+      });
+    });
+
+    /* CSV buttons */
+    document.querySelectorAll("[data-csv]").forEach(b => {
+      b.addEventListener("click", () => {
+        const which = b.dataset.csv;
+        if (which === "links") {
+          downloadCsv(`analytics-links-${days}d.csv`, topLinks);
+        } else if (which === "clickers") {
+          downloadCsv(`analytics-clickers-${days}d.csv`, topClickers);
+        } else if (which === "referrers") {
+          downloadCsv(`analytics-referrers-${days}d.csv`, referrers);
+        } else if (which === "recent") {
+          downloadCsv(`analytics-recent-${days}d.csv`, recentClicks);
+        }
+      });
+    });
+
+    /* Log filters */
+    const searchEl = document.getElementById("log-search");
+    const countryEl = document.getElementById("log-country");
+    if (searchEl) searchEl.addEventListener("input", () => {
+      logBody.innerHTML = renderLogRows(searchEl.value.trim(), countryEl.value);
+    });
+    if (countryEl) countryEl.addEventListener("change", () => {
+      logBody.innerHTML = renderLogRows((searchEl?.value || "").trim(), countryEl.value);
+    });
+  }
+
+  async function reload() {
+    root.innerHTML = '<div class="loading">Loading…</div>';
+    try {
+      await loadAll();
+      renderAll();
+    } catch (e) {
+      console.error(e);
+      root.innerHTML = `<div class="err-card">
+        <h2>Couldn't load analytics</h2>
+        <p>${esc(e.message || "Unknown error")}</p>
+      </div>`;
+    }
+  }
+
+  /* ---------- Boot ---------- */
+  async function boot() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) {
+      root.innerHTML = `<div class="err-card">
+        <h2>Sign in required</h2>
+        <p>You must be signed in as an admin to view analytics.</p>
+        <p><a href="login.html">Sign in →</a></p>
+      </div>`;
+      return;
+    }
+
+    const { data: prof } = await sb.from("profiles")
+      .select("id, username, is_admin")
+      .eq("id", session.user.id)
+      .maybeSingle();
+
+    if (!prof || !prof.is_admin) {
+      root.innerHTML = `<div class="err-card">
+        <h2>Admins only</h2>
+        <p>This dashboard is only visible to site administrators.</p>
+        <p><a href="index.html">← Back home</a></p>
+      </div>`;
+      return;
+    }
+
+    await reload();
+  }
+
+  boot();
+})();
+</script>
+
+</body>
+</html>

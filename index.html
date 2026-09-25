@@ -1738,7 +1738,7 @@
             card.innerHTML = `
 
         <a
-            href="${product.link}"
+            href="${escapeHTML(product.link)}"
             target="_blank"
             rel="nofollow sponsored noopener"
             aria-label="View ${escapeHTML(product.name)}"
@@ -1748,7 +1748,7 @@
 
                 <img
                     class="product-image"
-                    src="${product.image}"
+                    src="${escapeHTML(product.image)}"
                     alt="${escapeHTML(product.name)}"
                     loading="lazy"
                     decoding="async"
@@ -1768,12 +1768,7 @@
                 ${escapeHTML(product.name)}
             </h2>
 
-            <a
-                class="product-button"
-                href="${product.link}"
-                target="_blank"
-                rel="nofollow sponsored noopener"
-            >
+            <a class="product-button" href="${escapeHTML(product.link)}" target="_blank" rel="nofollow sponsored noopener">
                 Check It Out →
             </a>
 
@@ -1802,7 +1797,7 @@
               type="button"
               data-product-id="${product.id}"
               data-product-name="${escapeHTML(product.name)}"
-              data-product-image="${product.image}"
+              data-product-image="${escapeHTML(product.image)}"
               data-product-category="${escapeHTML(product.category)}"
               aria-label="Tape this product"
             >

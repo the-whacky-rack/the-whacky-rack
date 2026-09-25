@@ -10,5 +10,6 @@ Disallow: /profile.html
 Disallow: /followers.html
 Disallow: /yap-thread.html
 Disallow: /tape-thread.html
+Disallow: /og-image-generator.html
 
 Sitemap: https://the-whacky-rack.github.io/the-whacky-rack/sitemap.xml

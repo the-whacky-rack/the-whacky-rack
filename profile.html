@@ -91,7 +91,6 @@
             padding: 36px 22px 80px;
         }
 
-        /* Hero */
         .hero {
             background: var(--card);
             border: 1px solid var(--border);
@@ -155,7 +154,6 @@
             color: #444;
         }
 
-        /* Grid */
         .grid {
             display: grid;
             grid-template-columns: 1fr 1.7fr;
@@ -306,7 +304,6 @@
             flex-wrap: wrap;
         }
 
-        /* Visitors */
         .visitor-row {
             display: flex;
             align-items: center;
@@ -353,7 +350,6 @@
             padding: 8px 0;
         }
 
-        /* Mini Tape feed */
         .mini-tape-list {
             display: flex;
             flex-direction: column;
@@ -445,7 +441,6 @@
             line-height: 1.6;
         }
 
-        /* Tape feed placeholder */
         .placeholder {
             background: #fff;
             border: 1px dashed var(--border);
@@ -574,7 +569,6 @@
             let savedTapesCount = 0;
             let profileTapes = [];
 
-            /* ---------- Utilities ---------- */
             function esc(s) {
                 return String(s ?? "").replace(/[&<>"']/g, c => ({
                     "&": "&amp;",
@@ -626,7 +620,6 @@
                 return map[String(name || "").toLowerCase()] || "🌍";
             }
 
-            /* ---------- Data ---------- */
             async function fetchMyProfile() {
                 if (!session) return null;
                 const {
@@ -684,6 +677,7 @@
                     .maybeSingle();
                 return !!data;
             }
+
             async function fetchProfileTapes(profileId) {
                 const {
                     data,
@@ -758,7 +752,6 @@
                 }));
             }
 
-            /* ---------- Render ---------- */
             function renderHero() {
                 const joined = new Date(profile.created_at).toLocaleDateString(undefined, {
                     year: "numeric",
@@ -940,7 +933,6 @@
 
             }
 
-            /* ---------- Actions ---------- */
             async function handleFollowToggle() {
                 const btn = document.getElementById("follow-btn");
                 const status = document.getElementById("follow-status");
@@ -968,7 +960,7 @@
                             follower_id: session.user.id,
                             following_id: profile.id
                         });
-                        if (error) throw error;
+                        if (error && error.code !== "23505") throw error;
                         btn.dataset.following = "1";
                         btn.textContent = "Unfollow";
                         btn.className = "btn btn-ghost";
@@ -983,8 +975,6 @@
                 }
             }
 
-
-            /* ---------- Bootstrap ---------- */
             async function init() {
                 try {
                     const {
@@ -1023,7 +1013,6 @@
 
                     if (session && !isOwnProfile) {
                         recordVisit(profile.id).catch(() => {});
-                        // Does this profile follow me?
                         const {
                             data: f
                         } = await sb.from("follows")

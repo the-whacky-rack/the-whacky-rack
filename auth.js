@@ -13,7 +13,9 @@ const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 /* ---------- Module state ---------- */
 let session = null;
-let cached = null; // cached profile row for the current user
+let cached = null;               // cached profile row for the current user
+let cachedVendor = null;         // cached vendor row (or null)
+let vendorResolved = false;      // whether we've checked the vendor table
 let unreadCount = 0;
 let notifChannel = null;
 let subscribedUserId = null;
@@ -77,6 +79,15 @@ font-size: 15px; text-decoration: none;
 transition: .2s ease;
 }
 .wr-auth-admin:hover { background: #ffe2d8; }
+
+.wr-auth-vendor {
+display: inline-flex; align-items: center; justify-content: center;
+width: 36px; height: 36px; border-radius: 50%;
+background: #ecfdf5; border: 1px solid #16a34a;
+font-size: 15px; text-decoration: none;
+transition: .2s ease;
+}
+.wr-auth-vendor:hover { background: #d1fae5; }
 
 .wr-auth-logout {
 font-size: 12px; font-weight: 700;
@@ -190,7 +201,7 @@ text-decoration: none;
 
 @media (max-width: 700px) {
 .wr-auth-user, .wr-auth-logout, .wr-auth-cta { font-size: 11px; padding: 7px 11px; }
-.wr-bell, .wr-auth-settings, .wr-auth-admin { width: 32px; height: 32px; font-size: 14px; }
+.wr-bell, .wr-auth-settings, .wr-auth-admin, .wr-auth-vendor { width: 32px; height: 32px; font-size: 14px; }
 .wr-bell-panel { width: calc(100vw - 20px); }
 }
 `;
@@ -267,6 +278,46 @@ return String(s ?? "").replace(/[&<>"']/g, c => ({
             text: `<strong>${esc(actor)}</strong> upvoted your comment`,
             url: n.context_id ? `yap-thread.html?id=${n.context_id}` : "#"
             };
+
+            /* ---------- Vendor lifecycle ---------- */
+            case "vendor_approved":
+            return {
+            icon: "🎉",
+            text: n.snippet
+              ? `<strong>${esc(n.snippet)}</strong> was approved as a vendor`
+              : `Your vendor application was approved`,
+            url: "vendor-portal.html"
+            };
+            case "vendor_rejected":
+            return {
+            icon: "🚫",
+            text: `Your vendor application was not approved` +
+            (n.snippet ? ` <span class="snippet">"${esc(n.snippet)}"</span>` : ""),
+            url: "vendor-apply.html"
+            };
+            case "vendor_suspended":
+            return {
+            icon: "⚠️",
+            text: `Your vendor account was suspended` +
+            (n.snippet ? ` <span class="snippet">"${esc(n.snippet)}"</span>` : ""),
+            url: "vendor-apply.html"
+            };
+            case "vendor_product_approved":
+            return {
+            icon: "✅",
+            text: n.snippet
+              ? `Your product <strong>${esc(n.snippet)}</strong> was approved`
+              : `Your product was approved`,
+            url: "vendor-portal.html"
+            };
+            case "vendor_product_rejected":
+            return {
+            icon: "❌",
+            text: `Your product was not approved` +
+            (n.snippet ? ` <span class="snippet">"${esc(n.snippet)}"</span>` : ""),
+            url: "vendor-portal.html"
+            };
+
             default:
             return { icon: "🔔", text: "New activity", url: "#" };
             }
@@ -398,15 +449,45 @@ return String(s ?? "").replace(/[&<>"']/g, c => ({
             subscribedUserId = null;
             }
 
+            /* ---------- Vendor lookup ---------- */
+            async function fetchVendorForUser(userId) {
+            const { data, error } = await sb.from("vendors")
+            .select("id, business_name, status")
+            .eq("id", userId)
+            .maybeSingle();
+            if (error) { console.warn("vendor fetch:", error); return null; }
+            return data;
+            }
+
+            async function ensureVendor() {
+            if (!session) return null;
+            if (vendorResolved) return cachedVendor;
+            cachedVendor = await fetchVendorForUser(session.user.id);
+            vendorResolved = true;
+            return cachedVendor;
+            }
+
             /* ---------- Header render ---------- */
-            function render(sess, profile) {
+            async function render(sess, profile) {
             session = sess;
             cached = profile;
+            cachedVendor = null;
+            vendorResolved = false;
 
             const area = getArea();
             if (!area) return;
 
             if (sess && profile) {
+            /* Check vendor status (cheap: one query, cached for the session) */
+            let vendor = null;
+            try {
+              vendor = await ensureVendor();
+            } catch (e) {
+              console.warn("vendor lookup failed:", e);
+            }
+
+            const isApprovedVendor = vendor && vendor.status === "approved";
+
             area.innerHTML = `
             <a class="wr-auth-user" href="profile.html" title="Your profile">
                 ${esc(profile.username)}
@@ -414,6 +495,7 @@ return String(s ?? "").replace(/[&<>"']/g, c => ({
             <button class="wr-bell" type="button" aria-label="Notifications">
                 🔔<span class="wr-bell-badge" id="wr-bell-badge"></span>
             </button>
+            ${isApprovedVendor ? `<a class="wr-auth-vendor" href="vendor-portal.html" title="Vendor Portal">🏪</a>` : ""}
             ${profile.is_admin ? `<a class="wr-auth-admin" href="admin.html" title="Admin panel">🛡️</a>` : ""}
             <a class="wr-auth-settings" href="settings.html" title="Settings">⚙️</a>
             <button class="wr-auth-logout" type="button" id="wr-logout-btn">Logout</button>
@@ -459,7 +541,7 @@ return String(s ?? "").replace(/[&<>"']/g, c => ({
             if (s?.user) {
             profile = await fetchProfile(s.user.id);
             }
-            render(s, profile);
+            await render(s, profile);
             }
 
             sb.auth.onAuthStateChange(() => { refresh(); });
@@ -526,6 +608,8 @@ return String(s ?? "").replace(/[&<>"']/g, c => ({
             turnstileSiteKey: "0x4AAAAAAE-T6yl4RUNhYl0a",
             refresh,
             getProfile: () => cached,
+            getVendor: async () => await ensureVendor(),
+            isVendor: () => !!(cachedVendor && cachedVendor.status === "approved"),
             async requireAuth(redirect = "login.html") {
             const { data: { session } } = await sb.auth.getSession();
             if (!session) { window.location.href = redirect; return null; }

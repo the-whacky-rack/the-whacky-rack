@@ -241,8 +241,8 @@
             <a href="index.html" class="logo">The <span>Whacky</span> Rack</a>
             <div class="header-right">
                 <a href="index.html" class="nav-link">Shop</a>
+                <a href="side-rack.html" class="nav-link">Side Rack</a>
                 <a href="world.html" class="nav-link">World</a>
-                <a href="history.html" class="nav-link">History</a>
                 <a href="about.html" class="nav-link">About</a>
             </div>
         </div>
@@ -281,7 +281,7 @@
     <script>
         (function() {
             const sb = window.wr.sb;
-             const TURNSTILE_SITE_KEY = window.wr.turnstileSiteKey;
+            const TURNSTILE_SITE_KEY = window.wr.turnstileSiteKey;
 
             const form = document.getElementById("login-form");
             const emailEl = document.getElementById("email");
@@ -325,6 +325,32 @@
                 statusEl.textContent = msg;
             }
 
+            /* ---------- Redirect based on role ---------- */
+            async function redirectAfterLogin() {
+                try {
+                    const { data: { session } } = await sb.auth.getSession();
+                    if (!session) {
+                        window.location.href = "profile.html";
+                        return;
+                    }
+
+                    // Check whether this user is an approved vendor
+                    const { data: vendor } = await sb.from("vendors")
+                        .select("status")
+                        .eq("id", session.user.id)
+                        .maybeSingle();
+
+                    if (vendor && vendor.status === "approved") {
+                        window.location.href = "vendor-portal.html";
+                    } else {
+                        window.location.href = "profile.html";
+                    }
+                } catch (e) {
+                    console.error("post-login redirect:", e);
+                    window.location.href = "profile.html";
+                }
+            }
+
             form.addEventListener("submit", async (e) => {
                 e.preventDefault();
                 if (!captchaToken) {
@@ -356,16 +382,12 @@
                     return;
                 }
 
-                window.location.href = "profile.html";
+                await redirectAfterLogin();
             });
 
-            // Already signed in? Skip.
-            sb.auth.getSession().then(({
-                data: {
-                    session
-                }
-            }) => {
-                if (session) window.location.href = "profile.html";
+            // Already signed in? Redirect by role.
+            sb.auth.getSession().then(({ data: { session } }) => {
+                if (session) redirectAfterLogin();
             });
         })();
     </script>

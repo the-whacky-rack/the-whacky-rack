@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vendor Portal — The Whacky Rack</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+  :root {
+    --bg:#f7f5ef; --card:#fff; --text:#202020; --muted:#5a5a5a;
+    --accent:#ff5a36; --accent-dark:#e84625;
+    --border:#e8e4dc; --pill:#fff0eb;
+    --shadow:0 8px 25px rgba(0,0,0,.06);
+    --green:#16a34a; --red:#dc2626; --amber:#d97706; --blue:#3b82f6;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial,Helvetica,sans-serif; background:var(--bg); color:var(--text); }
+  a { color:inherit; text-decoration:none; }
+
+  header { background:#fff; border-bottom:1px solid var(--border); position:sticky; top:0; z-index:1000; }
+  .header-inner { max-width:1400px; margin:auto; padding:16px 22px; display:flex; align-items:center; justify-content:space-between; gap:20px; }
+  .logo { font-size:25px; font-weight:900; letter-spacing:-1px; white-space:nowrap; }
+  .logo span { color:var(--accent); }
+  .header-right { display:flex; align-items:center; gap:12px; }
+  .nav-link { font-size:13px; font-weight:700; padding:8px 14px; border-radius:50px; border:1px solid var(--border); background:#fff; transition:.2s ease; white-space:nowrap; }
+  .nav-link:hover { border-color:#bbb; }
+  .nav-link.active { background:#222; color:#fff; border-color:#222; }
+
+  .wrap { max-width:1400px; margin:auto; padding:28px 22px 70px; }
+
+  .page-head { display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap; margin-bottom:22px; }
+  .page-head h1 { margin:0 0 4px; font-size:32px; letter-spacing:-1px; font-weight:950; }
+  .page-head h1 span { color:var(--accent); }
+  .page-head p { margin:0; color:var(--muted); font-size:14px; }
+
+  .range-picker { display:flex; gap:6px; }
+  .range-btn { border:1px solid var(--border); background:#fff; padding:9px 16px; border-radius:50px; font-family:inherit; font-size:12px; font-weight:800; cursor:pointer; color:var(--muted); transition:.15s ease; }
+  .range-btn:hover { border-color:#bbb; color:var(--text); }
+  .range-btn.active { background:#222; color:#fff; border-color:#222; }
+
+  .tabs { display:flex; gap:8px; margin-bottom:22px; flex-wrap:wrap; }
+  .tab-btn { border:1px solid var(--border); background:#fff; padding:11px 18px; border-radius:50px; font-family:inherit; font-weight:800; font-size:13px; cursor:pointer; color:var(--muted); transition:.2s ease; }
+  .tab-btn:hover { border-color:#bbb; color:var(--text); }
+  .tab-btn.active { background:#222; color:#fff; border-color:#222; }
+  .tab-btn .count { display:inline-block; background:var(--pill); color:var(--accent-dark); padding:1px 8px; border-radius:20px; font-size:11px; font-weight:900; margin-left:6px; }
+  .tab-btn.active .count { background:rgba(255,255,255,.2); color:#fff; }
+
+  .cards { display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:14px; margin-bottom:22px; }
+  @media (max-width:1000px) { .cards { grid-template-columns:repeat(2, minmax(0,1fr)); } }
+  @media (max-width:520px)  { .cards { grid-template-columns:1fr; } }
+
+  .card-stat { background:#fff; border:1px solid var(--border); border-radius:16px; padding:16px 18px; box-shadow:var(--shadow); }
+  .card-stat .label { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); margin-bottom:8px; }
+  .card-stat .value { font-size:28px; font-weight:950; letter-spacing:-1px; line-height:1.1; }
+  .card-stat .sub { font-size:11px; color:var(--muted); margin-top:4px; }
+  .card-stat .value.accent { color:var(--accent-dark); }
+
+  .panel { background:#fff; border:1px solid var(--border); border-radius:18px; padding:22px 24px; box-shadow:var(--shadow); margin-bottom:20px; }
+  .panel h2 { margin:0 0 14px; font-size:15px; font-weight:900; text-transform:uppercase; letter-spacing:.5px; color:#555; display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; }
+  .panel h2 .count { font-size:12px; background:var(--pill); color:var(--accent-dark); padding:3px 10px; border-radius:50px; letter-spacing:0; text-transform:none; }
+
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  @media (max-width:900px) { .grid-2 { grid-template-columns:1fr; } }
+
+  .map { height:320px; border-radius:12px; overflow:hidden; }
+
+  .trend-chart { display:flex; align-items:flex-end; gap:3px; height:100px; padding-top:10px; }
+  .trend-bar-group { flex:1; display:flex; flex-direction:column; justify-content:flex-end; min-width:0; }
+  .trend-bar { width:100%; background:var(--accent); border-radius:3px 3px 0 0; min-height:2px; }
+
+  table.data { width:100%; border-collapse:collapse; font-size:13px; }
+  table.data th { text-align:left; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.4px; color:var(--muted); padding:8px 10px; border-bottom:1px solid var(--border); }
+  table.data td { padding:10px; border-bottom:1px solid #f5f2ea; vertical-align:top; word-break:break-word; }
+  table.data tr:last-child td { border-bottom:0; }
+  table.data tr:hover td { background:#fafafa; }
+  table.data .num { text-align:right; font-variant-numeric:tabular-nums; font-weight:700; }
+  table.data .mono { font-family:ui-monospace,monospace; font-size:11px; color:#666; }
+
+  .empty { text-align:center; padding:40px 20px; color:var(--muted); font-size:13px; line-height:1.6; }
+  .empty .emoji { font-size:36px; margin-bottom:8px; opacity:.5; }
+
+  .status-pill { display:inline-block; font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:.5px; padding:4px 10px; border-radius:50px; }
+  .status-pill.pending   { background:#fef3c7; color:#92400e; }
+  .status-pill.approved  { background:#dcfce7; color:#166534; }
+  .status-pill.rejected  { background:#fee2e2; color:#991b1b; }
+
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:11px 20px; border-radius:50px; font-family:inherit; font-weight:800; font-size:13px; border:1px solid transparent; cursor:pointer; transition:.2s ease; text-decoration:none; white-space:nowrap; }
+  .btn-primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .btn-primary:hover:not(:disabled) { background:var(--accent-dark); border-color:var(--accent-dark); }
+  .btn-ghost { background:#fff; color:#333; border-color:var(--border); }
+  .btn-ghost:hover:not(:disabled) { border-color:#bbb; }
+  .btn-danger { background:var(--red); color:#fff; border-color:var(--red); }
+  .btn-danger:hover:not(:disabled) { background:#b91c1c; border-color:#b91c1c; }
+  .btn-sm { padding:6px 12px; font-size:11px; }
+  .btn:disabled { opacity:.5; cursor:not-allowed; }
+
+  .product-row { display:flex; gap:14px; padding:16px 20px; border-bottom:1px solid var(--border); align-items:flex-start; }
+  .product-row:last-child { border-bottom:0; }
+  .product-row img { width:72px; height:72px; border-radius:10px; object-fit:cover; background:#f1eee8; flex-shrink:0; }
+  .product-body { flex:1; min-width:0; }
+  .product-name { font-weight:900; font-size:15px; margin:0 0 4px; line-height:1.3; }
+  .product-meta { font-size:12px; color:var(--muted); line-height:1.5; margin-bottom:6px; }
+  .product-meta .tag { background:var(--pill); color:var(--accent-dark); padding:2px 8px; border-radius:50px; font-weight:800; font-size:10px; text-transform:uppercase; letter-spacing:.4px; }
+  .product-actions { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+
+  .loading { text-align:center; padding:60px 20px; color:var(--muted); font-size:14px; }
+  .err-card { background:#fef2f2; border:1px solid #fecaca; color:#991b1b; padding:20px 24px; border-radius:16px; font-size:14px; line-height:1.6; }
+  .err-card h2 { margin:0 0 8px; font-size:20px; }
+  .err-card a { color:#7f1d1d; font-weight:800; text-decoration:underline; }
+
+  .bar-row { display:grid; grid-template-columns:120px 1fr 60px; gap:10px; align-items:center; padding:6px 0; font-size:12px; }
+  .bar-row .name { font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .bar-row .bar { background:#f1eee8; border-radius:4px; height:14px; overflow:hidden; }
+  .bar-row .bar > div { height:100%; background:var(--accent); border-radius:4px; }
+  .bar-row .val { text-align:right; font-weight:800; color:#555; font-variant-numeric:tabular-nums; }
+
+  .activity-row { display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px dashed var(--border); font-size:13px; }
+  .activity-row:last-child { border-bottom:0; }
+  .activity-row .when { color:var(--muted); font-size:11px; margin-left:auto; white-space:nowrap; }
+
+  /* Modal */
+  .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:100000; align-items:center; justify-content:center; padding:20px; }
+  .modal.open { display:flex; }
+  .modal-inner { background:#fff; border-radius:20px; padding:28px; max-width:560px; width:100%; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,.25); position:relative; animation:modalIn .18s ease-out; }
+  @keyframes modalIn { from { opacity:0; transform:translateY(10px) scale(.98); } to { opacity:1; transform:translateY(0) scale(1); } }
+  .modal-close { position:absolute; top:12px; right:12px; width:34px; height:34px; border:0; background:#f1eee8; border-radius:50%; font-size:20px; line-height:1; cursor:pointer; color:#555; display:flex; align-items:center; justify-content:center; font-family:inherit; }
+  .modal-close:hover { background:#e8e4dc; color:#222; }
+  .modal h3 { margin:0 0 4px; font-size:22px; letter-spacing:-.3px; font-weight:900; }
+  .modal .sub { margin:0 0 18px; font-size:13px; color:var(--muted); }
+
+  label { display:block; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.4px; color:#555; margin:16px 0 6px; }
+  label .optional { color:#aaa; font-weight:600; text-transform:none; letter-spacing:0; font-size:11px; }
+  input[type=text], input[type=email], input[type=url], textarea, select {
+    width:100%; padding:12px 14px; font-family:inherit; font-size:14px;
+    background:#fafafa; border:1px solid var(--border); border-radius:12px;
+    outline:none; color:var(--text); transition:.2s ease;
+  }
+  input:focus, textarea:focus, select:focus { border-color:var(--accent); background:#fff; }
+  textarea { resize:vertical; min-height:90px; line-height:1.55; }
+  .hint { font-size:11px; color:var(--muted); margin-top:4px; line-height:1.5; }
+  .modal-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:20px; flex-wrap:wrap; }
+
+  .notice { background:#fff5f0; border-left:4px solid var(--accent); border-radius:10px; padding:12px 14px; font-size:13px; line-height:1.6; color:#7a2b12; margin-bottom:14px; }
+  .notice strong { color:#5a1e0c; }
+
+  .toast-container { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); z-index:99999; display:flex; flex-direction:column; gap:8px; align-items:center; }
+  .toast { padding:12px 20px; border-radius:50px; background:#222; color:#fff; font-size:13px; font-weight:600; box-shadow:0 10px 30px rgba(0,0,0,.25); animation:toastIn .2s ease-out; }
+  .toast.ok { background:var(--green); }
+  .toast.err { background:var(--red); }
+  @keyframes toastIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+  .settings-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media (max-width:700px) { .settings-grid { grid-template-columns:1fr; } }
+
+  @media (max-width:700px) {
+    .header-inner { padding:13px 15px; flex-wrap:wrap; }
+    .logo { font-size:21px; }
+    .nav-link { font-size:11px; padding:7px 11px; }
+    .wrap { padding:16px 14px 55px; }
+    .page-head h1 { font-size:24px; }
+    .panel { padding:18px 16px; border-radius:15px; }
+    .map { height:260px; }
+    .product-row { padding:14px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">The <span>Whacky</span> Rack</a>
+    <div class="header-right">
+      <a href="index.html" class="nav-link">Shop</a>
+      <a href="side-rack.html" class="nav-link">Side Rack</a>
+      <a href="vendor-portal.html" class="nav-link active">Vendor Portal</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="root">
+  <div class="loading">Checking vendor access…</div>
+</main>
+
+<div class="toast-container" id="toast-container"></div>
+
+<div class="modal" id="product-modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal-inner" id="product-modal-body"></div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js"></script>
+<script src="consent.js"></script>
+<script src="analytics.js"></script>
+
+<script>
+(function () {
+  const sb = window.wr.sb;
+  const root = document.getElementById("root");
+  const toastBox = document.getElementById("toast-container");
+  const productModal = document.getElementById("product-modal");
+  const productModalBody = document.getElementById("product-modal-body");
+
+  let me = null;            // profiles row
+  let vendor = null;        // vendors row
+  let days = 30;
+  let tab = "overview";     // overview | products | analytics | settings
+
+  let summary = null;
+  let products = [];
+  let categories = [];
+  let countryStats = [];
+  let recentActivity = [];
+  let dailyTrend = [];
+
+  const COORDS = {
+    IN:[20.59,78.96], US:[37.09,-95.71], GB:[55.37,-3.43], CA:[56.13,-106.34],
+    AU:[-25.27,133.77], DE:[51.16,10.45], FR:[46.22,2.21], NL:[52.13,5.29],
+    ES:[40.46,-3.74], IT:[41.87,12.56], BR:[-14.23,-51.92], MX:[23.63,-102.55],
+    JP:[36.20,138.25], CN:[35.86,104.19], RU:[61.52,105.31], ZA:[-30.55,22.93],
+    AE:[23.42,53.84], SG:[1.35,103.81], PL:[51.91,19.14], SE:[60.12,18.64]
+  };
+
+  function esc(s) {
+    return String(s ?? "").replace(/[&<>"']/g, c => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    }[c]));
+  }
+  function flagFor(cc) {
+    if (!cc || cc === "XX" || cc.length !== 2) return "🌍";
+    const A = 0x1F1E6;
+    return String.fromCodePoint(A + cc.toUpperCase().charCodeAt(0) - 65,
+                                A + cc.toUpperCase().charCodeAt(1) - 65);
+  }
+  function timeAgo(iso) {
+    const d = new Date(iso);
+    const s = Math.floor((Date.now() - d.getTime()) / 1000);
+    if (s < 60) return "just now";
+    if (s < 3600) return Math.floor(s/60) + "m ago";
+    if (s < 86400) return Math.floor(s/3600) + "h ago";
+    if (s < 604800) return Math.floor(s/86400) + "d ago";
+    return d.toLocaleDateString();
+  }
+  function toast(msg, kind = "ok") {
+    const el = document.createElement("div");
+    el.className = "toast " + kind;
+    el.textContent = msg;
+    toastBox.appendChild(el);
+    setTimeout(() => el.remove(), 2800);
+  }
+  function shortUrl(u) {
+    if (!u) return "";
+    try {
+      const x = new URL(u);
+      const path = x.pathname.length > 30 ? x.pathname.slice(0,30) + "…" : x.pathname;
+      return x.hostname.replace("www.","") + path;
+    } catch { return String(u).slice(0, 60); }
+  }
+
+  /* ---------- Data loaders ---------- */
+  async function loadSummary() {
+    const { data, error } = await sb.rpc("vendor_analytics_summary", { p_days: days });
+    if (error) { console.error(error); summary = null; return; }
+    summary = (data || [])[0] || null;
+  }
+  async function loadProducts() {
+    const { data, error } = await sb.rpc("vendor_my_products");
+    if (error) { console.error(error); products = []; return; }
+    products = data || [];
+  }
+  async function loadCategories() {
+    const { data, error } = await sb.from("vendor_categories")
+      .select("id, name, sort_order")
+      .eq("is_active", true)
+      .order("sort_order", { ascending: true })
+      .order("name", { ascending: true });
+    if (error) { console.error(error); categories = []; return; }
+    categories = data || [];
+  }
+  async function loadCountries() {
+    const { data, error } = await sb.rpc("vendor_analytics_countries", { p_days: days });
+    if (error) { console.error(error); countryStats = []; return; }
+    countryStats = data || [];
+  }
+  async function loadRecent() {
+    const { data, error } = await sb.rpc("vendor_analytics_recent_activity", { p_days: days, p_limit: 30 });
+    if (error) { console.error(error); recentActivity = []; return; }
+    recentActivity = data || [];
+  }
+  async function loadTrend() {
+    const { data, error } = await sb.rpc("vendor_analytics_daily_trend", { p_days: days });
+    if (error) { console.error(error); dailyTrend = []; return; }
+    dailyTrend = data || [];
+  }
+
+  async function loadAllForTab() {
+    if (tab === "overview") {
+      await Promise.all([loadSummary(), loadTrend(), loadRecent(), loadProducts()]);
+    } else if (tab === "products") {
+      await loadProducts();
+    } else if (tab === "analytics") {
+      await Promise.all([loadSummary(), loadCountries(), loadTrend(), loadProducts()]);
+    }
+  }
+
+  /* ---------- Renderers ---------- */
+  function render() {
+    if (!vendor) return;
+
+    root.innerHTML = `
+      <div class="page-head">
+        <div>
+          <h1>Welcome, <span>${esc(vendor.business_name)}</span></h1>
+          <p>Manage your Side Rack listings and see how they're doing.</p>
+        </div>
+        ${tab === "analytics" || tab === "overview" ? renderRangePicker() : ""}
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn ${tab==="overview"?"active":""}" data-tab="overview">📊 Overview</button>
+        <button class="tab-btn ${tab==="products"?"active":""}" data-tab="products">
+          📦 Products<span class="count">${products.length} / ${vendor.product_limit}</span>
+        </button>
+        <button class="tab-btn ${tab==="analytics"?"active":""}" data-tab="analytics">📈 Analytics</button>
+        <button class="tab-btn ${tab==="settings"?"active":""}" data-tab="settings">⚙️ Settings</button>
+      </div>
+
+      <div id="tab-content"></div>
+    `;
+
+    const content = document.getElementById("tab-content");
+    if (tab === "overview") content.innerHTML = renderOverview();
+    else if (tab === "products") content.innerHTML = renderProducts();
+    else if (tab === "analytics") content.innerHTML = renderAnalytics();
+    else content.innerHTML = renderSettings();
+
+    if (tab === "analytics") {
+      initCountryMap();
+    }
+
+    wireRangePicker();
+    wireTabButtons();
+  }
+
+  function renderRangePicker() {
+    const ranges = [[1,"Today"],[7,"7 days"],[30,"30 days"],[90,"90 days"],[365,"All time"]];
+    return `<div class="range-picker">
+      ${ranges.map(([d,l]) => `<button class="range-btn${d===days?" active":""}" data-days="${d}">${l}</button>`).join("")}
+    </div>`;
+  }
+
+  function renderOverview() {
+    const s = summary || {};
+    const productRows = recentActivity.length === 0
+      ? `<div class="empty"><div class="emoji">📭</div>No activity yet. Once buyers start clicking, you'll see it here.</div>`
+      : recentActivity.map(a => `
+          <div class="activity-row">
+            <div>${flagFor(a.country_code)} <strong>${a.clicks}</strong> click${a.clicks === 1 ? "" : "s"} on <em>${esc(a.product_name || "—")}</em></div>
+            <div class="when">${esc(timeAgo(a.last_at))}</div>
+          </div>
+        `).join("");
+
+    return `
+      <div class="cards">
+        <div class="card-stat">
+          <div class="label">Link Clicks</div>
+          <div class="value accent">${s.total_clicks ?? 0}</div>
+          <div class="sub">${s.unique_clickers ?? 0} unique clickers</div>
+        </div>
+        <div class="card-stat">
+          <div class="label">Likes</div>
+          <div class="value">${s.total_likes ?? 0}</div>
+          <div class="sub">across your listings</div>
+        </div>
+        <div class="card-stat">
+          <div class="label">Yaps</div>
+          <div class="value">${s.total_yaps ?? 0}</div>
+          <div class="sub">forum threads</div>
+        </div>
+        <div class="card-stat">
+          <div class="label">Tapes</div>
+          <div class="value">${s.total_tapes ?? 0}</div>
+          <div class="sub">timeline posts</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Top Performance<span class="count">last ${days === 1 ? "24h" : days + " days"}</span></h2>
+        ${s.top_product
+          ? `<p style="margin:0 0 8px; font-size:14px;">Top product: <strong>${esc(s.top_product)}</strong> (${s.top_product_clicks ?? 0} clicks)</p>`
+          : `<p style="margin:0; color:var(--muted); font-size:13px;">No clicks yet.</p>`}
+        ${s.top_country
+          ? `<p style="margin:0; font-size:14px;">Top country: ${flagFor(s.top_country)} <strong>${esc(s.top_country)}</strong> (${s.top_country_clicks ?? 0} clicks)</p>`
+          : ""}
+      </div>
+
+      <div class="panel">
+        <h2>Daily Clicks<span class="count">${dailyTrend.length} days</span></h2>
+        ${renderTrendChart()}
+      </div>
+
+      <div class="panel">
+        <h2>Recent Activity<span class="count">aggregate</span></h2>
+        ${productRows}
+      </div>
+    `;
+  }
+
+  function renderTrendChart() {
+    if (dailyTrend.length === 0) {
+      return `<div class="empty"><div class="emoji">📈</div>No clicks yet in this range.</div>`;
+    }
+    const max = Math.max(...dailyTrend.map(d => Number(d.clicks) || 0), 1);
+    const bars = dailyTrend.map(d => {
+      const h = ((Number(d.clicks) || 0) / max) * 100;
+      const label = new Date(d.day).toLocaleDateString(undefined, { month:"short", day:"numeric" });
+      return `<div class="trend-bar-group" title="${label}: ${d.clicks} clicks">
+        <div class="trend-bar" style="height:${h}%"></div>
+      </div>`;
+    }).join("");
+    return `<div class="trend-chart">${bars}</div>`;
+  }
+
+  function renderProducts() {
+    const addBtn = vendor.product_count >= vendor.product_limit
+      ? `<button class="btn btn-ghost" disabled title="Product limit reached">+ Add product (limit reached)</button>`
+      : `<button class="btn btn-primary" id="add-product-btn">+ Add product</button>`;
+
+    if (products.length === 0) {
+      return `
+        <div class="panel" style="text-align:center; padding:60px 20px;">
+          <div style="font-size:48px; margin-bottom:12px;">📦</div>
+          <h2 style="text-transform:none; font-size:20px; color:var(--text); justify-content:center;">No products yet</h2>
+          <p style="color:var(--muted); font-size:14px; max-width:420px; margin:0 auto 20px;">
+            Add your first listing. It'll go to the admin for review before appearing on The Side Rack.
+          </p>
+          ${addBtn}
+        </div>
+      `;
+    }
+
+    return `
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:14px; flex-wrap:wrap;">
+        <div style="color:var(--muted); font-size:13px;">
+          <strong>${products.length}</strong> of <strong>${vendor.product_limit}</strong> slots used
+        </div>
+        ${addBtn}
+      </div>
+      <div class="panel" style="padding:0;">
+        ${products.map(p => {
+          const pill = `<span class="status-pill ${esc(p.status)}">${esc(p.status)}</span>`;
+          return `
+            <div class="product-row">
+              <img src="${esc(p.image)}" alt="" loading="lazy">
+              <div class="product-body">
+                <h3 class="product-name">${esc(p.name)}</h3>
+                <div class="product-meta">
+                  <span class="tag">${esc(p.category_name || "—")}</span>
+                  ${p.price_note ? ` · ${esc(p.price_note)}` : ""}
+                  ${p.shipping_note ? ` · ${esc(p.shipping_note)}` : ""}
+                </div>
+                <div class="product-meta">
+                  <span class="mono">${esc(shortUrl(p.link))}</span>
+                </div>
+                <div class="product-meta">
+                  ${pill}
+                  · Updated ${esc(timeAgo(p.updated_at))}
+                  ${p.rejection_reason ? `<br><strong>Reason:</strong> ${esc(p.rejection_reason)}` : ""}
+                </div>
+                <div class="product-actions">
+                  <button class="btn btn-ghost btn-sm" data-action="edit-product" data-product-id="${esc(p.id)}">Edit</button>
+                  <button class="btn btn-ghost btn-sm" data-action="open-product" data-link="${esc(p.link)}">Open link</button>
+                  <button class="btn btn-danger btn-sm" data-action="delete-product" data-product-id="${esc(p.id)}">Delete</button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join("")}
+      </div>
+    `;
+  }
+
+  function renderAnalytics() {
+    const s = summary || {};
+    return `
+      <div class="cards">
+        <div class="card-stat">
+          <div class="label">Total Clicks</div>
+          <div class="value accent">${s.total_clicks ?? 0}</div>
+          <div class="sub">${s.unique_clickers ?? 0} unique clickers</div>
+        </div>
+        <div class="card-stat">
+          <div class="label">Top Product</div>
+          <div class="value" style="font-size:16px; letter-spacing:0;">${esc(s.top_product || "—")}</div>
+          <div class="sub">${s.top_product_clicks ?? 0} clicks</div>
+        </div>
+        <div class="card-stat">
+          <div class="label">Top Country</div>
+          <div class="value" style="font-size:22px;">${s.top_country ? flagFor(s.top_country) + " " + esc(s.top_country) : "—"}</div>
+          <div class="sub">${s.top_country_clicks ?? 0} clicks</div>
+        </div>
+        <div class="card-stat">
+          <div class="label">Likes</div>
+          <div class="value">${s.total_likes ?? 0}</div>
+          <div class="sub">across all listings</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Clicks by Country<span class="count">${countryStats.length} countries</span></h2>
+        <div class="map" id="map-countries"></div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel">
+          <h2>Country Breakdown</h2>
+          ${renderCountryBars()}
+        </div>
+        <div class="panel">
+          <h2>Top Products</h2>
+          ${renderTopProducts()}
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Daily Clicks<span class="count">${dailyTrend.length} days</span></h2>
+        ${renderTrendChart()}
+      </div>
+    `;
+  }
+
+  function renderCountryBars() {
+    if (!countryStats.length) return '<div class="empty"><div class="emoji">🌍</div>No country data yet.</div>';
+    const max = Math.max(...countryStats.map(c => Number(c.clicks) || 0), 1);
+    return countryStats.slice(0, 10).map(c => {
+      const v = Number(c.clicks) || 0;
+      const pct = (v / max) * 100;
+      return `
+        <div class="bar-row">
+          <div class="name">${flagFor(c.country_code)} ${esc(c.country_code)}</div>
+          <div class="bar"><div style="width:${pct}%"></div></div>
+          <div class="val">${v}</div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function renderTopProducts() {
+    const sorted = products
+      .filter(p => p.status !== "rejected")
+      .sort((a, b) => (Number(b.clicks) || 0) - (Number(a.clicks) || 0))
+      .slice(0, 10);
+    if (!sorted.length) return '<div class="empty"><div class="emoji">📭</div>No products.</div>';
+    return `
+      <table class="data">
+        <thead>
+          <tr><th>Product</th><th style="text-align:right;">Clicks</th><th style="text-align:right;">Likes</th></tr>
+        </thead>
+        <tbody>
+          ${sorted.map(p => `
+            <tr>
+              <td>${esc(p.name)}</td>
+              <td class="num">${p.clicks ?? 0}</td>
+              <td class="num">${p.likes ?? 0}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    `;
+  }
+
+  function renderSettings() {
+    return `
+      <div class="panel">
+        <h2>Business Information</h2>
+        <p style="font-size:13px; color:var(--muted); margin:0 0 16px;">
+          Update how your store appears on The Side Rack. Business name, website, and country changes require re-approval by our team.
+        </p>
+
+        <form id="settings-form" novalidate>
+          <div class="settings-grid">
+            <div>
+              <label for="s-business_name">Business name</label>
+              <input id="s-business_name" type="text" maxlength="80" value="${esc(vendor.business_name)}" required>
+            </div>
+            <div>
+              <label for="s-country">Country</label>
+              <input id="s-country" type="text" value="${esc(vendor.country)}" disabled style="background:#f1eee8; cursor:not-allowed;">
+              <div class="hint">Country cannot be changed. Contact admin.</div>
+            </div>
+          </div>
+
+          <label for="s-business_url">Business website</label>
+          <input id="s-business_url" type="url" maxlength="300" value="${esc(vendor.business_url)}" required>
+
+          <label for="s-contact_email">Contact email <span class="optional">(admin-only)</span></label>
+          <input id="s-contact_email" type="email" maxlength="200" value="${esc(vendor.contact_email)}" required>
+
+          <label for="s-logo_url">Logo URL <span class="optional">(optional)</span></label>
+          <input id="s-logo_url" type="url" maxlength="300" value="${esc(vendor.logo_url || "")}" placeholder="https://...">
+
+          <label for="s-bio">Short bio <span class="optional">(100–500 chars)</span></label>
+          <textarea id="s-bio" maxlength="500">${esc(vendor.bio)}</textarea>
+
+          <div class="notice" style="margin-top:18px;">
+            <strong>Heads-up:</strong> changes to business name, website, or country will flag your account for admin review. Products stay live in the meantime.
+          </div>
+
+          <button type="submit" class="btn btn-primary" id="save-settings-btn" style="margin-top:10px;">Save changes</button>
+        </form>
+      </div>
+    `;
+  }
+
+  /* ---------- Product modal ---------- */
+  function openProductModal(mode, product) {
+    const isEdit = mode === "edit";
+    const catOptions = categories.map(c =>
+      `<option value="${c.id}"${product && product.vendor_category_id === c.id ? " selected" : ""}>${esc(c.name)}</option>`
+    ).join("");
+
+    productModalBody.innerHTML = `
+      <button class="modal-close" type="button" id="product-modal-close" aria-label="Close">×</button>
+      <h3>${isEdit ? "Edit product" : "Add a product"}</h3>
+      <p class="sub">
+        ${isEdit
+          ? "Changes to name, link, or category will re-trigger admin review. Cosmetic edits go live immediately."
+          : "New listings go to admin for approval before appearing on The Side Rack."}
+      </p>
+
+      <form id="product-form" novalidate>
+        <label for="p-name">Product name</label>
+        <input id="p-name" type="text" maxlength="120" value="${product ? esc(product.name) : ""}" required>
+
+        <label for="p-image">Image URL</label>
+        <input id="p-image" type="url" maxlength="300" placeholder="https://..." value="${product ? esc(product.image) : ""}" required>
+
+        <label for="p-link">Check it out URL</label>
+        <input id="p-link" type="url" maxlength="300" placeholder="https://yourstore.com/product" value="${product ? esc(product.link) : ""}" required>
+        <div class="hint">Must be https. Amazon and shorteners are blocked.</div>
+
+        <label for="p-category">Category</label>
+        <select id="p-category" required>
+          <option value="">— Select category —</option>
+          ${catOptions}
+        </select>
+
+        <div class="settings-grid">
+          <div>
+            <label for="p-price">Price note <span class="optional">(optional)</span></label>
+            <input id="p-price" type="text" maxlength="60" placeholder="e.g. $20–$45" value="${product && product.price_note ? esc(product.price_note) : ""}">
+          </div>
+          <div>
+            <label for="p-shipping">Shipping note <span class="optional">(optional)</span></label>
+            <input id="p-shipping" type="text" maxlength="60" placeholder="e.g. Ships worldwide" value="${product && product.shipping_note ? esc(product.shipping_note) : ""}">
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" id="product-modal-cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="product-submit-btn">
+            ${isEdit ? "Save changes" : "Add product"}
+          </button>
+        </div>
+      </form>
+    `;
+
+    productModal.classList.add("open");
+    productModal.setAttribute("aria-hidden", "false");
+
+    const form = document.getElementById("product-form");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const submitBtn = document.getElementById("product-submit-btn");
+      submitBtn.disabled = true;
+      submitBtn.textContent = isEdit ? "Saving…" : "Adding…";
+
+      const args = {
+        p_name: document.getElementById("p-name").value.trim(),
+        p_image: document.getElementById("p-image").value.trim(),
+        p_link: document.getElementById("p-link").value.trim(),
+        p_vendor_category_id: parseInt(document.getElementById("p-category").value, 10),
+        p_price_note: document.getElementById("p-price").value.trim() || null,
+        p_shipping_note: document.getElementById("p-shipping").value.trim() || null
+      };
+
+      try {
+        if (isEdit) {
+          args.p_product_id = product.id;
+          const { error } = await sb.rpc("vendor_update_product", args);
+          if (error) throw error;
+          toast("Product updated.", "ok");
+        } else {
+          const { error } = await sb.rpc("vendor_add_product", args);
+          if (error) throw error;
+          toast("Product submitted for review.", "ok");
+        }
+        closeProductModal();
+        await loadProducts();
+        render();
+      } catch (err) {
+        console.error(err);
+        toast(err.message || "Failed.", "err");
+        submitBtn.disabled = false;
+        submitBtn.textContent = isEdit ? "Save changes" : "Add product";
+      }
+    });
+  }
+
+  function closeProductModal() {
+    productModal.classList.remove("open");
+    productModal.setAttribute("aria-hidden", "true");
+  }
+
+  /* ---------- Settings save ---------- */
+  async function saveSettings() {
+    const btn = document.getElementById("save-settings-btn");
+    btn.disabled = true;
+    btn.textContent = "Saving…";
+
+    const patch = {
+      business_name: document.getElementById("s-business_name").value.trim(),
+      business_url:  document.getElementById("s-business_url").value.trim(),
+      contact_email: document.getElementById("s-contact_email").value.trim(),
+      logo_url:      document.getElementById("s-logo_url").value.trim() || null,
+      bio:           document.getElementById("s-bio").value.trim(),
+      updated_at:    new Date().toISOString()
+    };
+
+    try {
+      const { error } = await sb.from("vendors").update(patch).eq("id", vendor.id);
+      if (error) throw error;
+      toast("Settings saved.", "ok");
+      vendor = Object.assign({}, vendor, patch);
+      render();
+    } catch (err) {
+      console.error(err);
+      toast(err.message || "Save failed.", "err");
+      btn.disabled = false;
+      btn.textContent = "Save changes";
+    }
+  }
+
+  /* ---------- Map ---------- */
+  function initCountryMap() {
+    const el = document.getElementById("map-countries");
+    if (!el) return;
+    if (!countryStats.length) {
+      el.innerHTML = '<div class="empty"><div class="emoji">🗺️</div>No country data yet.</div>';
+      return;
+    }
+    const map = L.map("map-countries", { scrollWheelZoom: false }).setView([20, 0], 2);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "&copy; OpenStreetMap", maxZoom: 8
+    }).addTo(map);
+
+    const maxV = Math.max(...countryStats.map(c => Number(c.clicks) || 0), 1);
+    countryStats.forEach(c => {
+      const coords = COORDS[c.country_code];
+      if (!coords) return;
+      const v = Number(c.clicks) || 0;
+      const radius = 6 + (v / maxV) * 22;
+      L.circleMarker(coords, {
+        radius, color: "#ff5a36", fillColor: "#ff5a36", fillOpacity: 0.4, weight: 2
+      })
+      .bindPopup(`<strong>${flagFor(c.country_code)} ${esc(c.country_code)}</strong><br>Clicks: ${v}<br>Unique: ${c.unique_clickers ?? 0}`)
+      .addTo(map);
+    });
+  }
+
+  /* ---------- Events ---------- */
+  function wireRangePicker() {
+    document.querySelectorAll(".range-btn").forEach(b => {
+      b.addEventListener("click", async () => {
+        days = parseInt(b.dataset.days, 10);
+        await loadAllForTab();
+        render();
+      });
+    });
+  }
+  function wireTabButtons() {
+    document.querySelectorAll(".tab-btn[data-tab]").forEach(b => {
+      b.addEventListener("click", async () => {
+        tab = b.dataset.tab;
+        await loadAllForTab();
+        render();
+      });
+    });
+  }
+
+  document.addEventListener("click", async (e) => {
+    /* Add product button */
+    if (e.target.id === "add-product-btn") {
+      openProductModal("add", null);
+      return;
+    }
+    /* Modal close */
+    if (e.target.id === "product-modal-close" || e.target.id === "product-modal-cancel" || e.target === productModal) {
+      closeProductModal();
+      return;
+    }
+    /* Product actions */
+    const btn = e.target.closest("[data-action]");
+    if (!btn) return;
+    const action = btn.dataset.action;
+    if (action === "edit-product") {
+      const p = products.find(x => String(x.id) === String(btn.dataset.productId));
+      if (p) openProductModal("edit", p);
+      return;
+    }
+    if (action === "open-product") {
+      window.open(btn.dataset.link, "_blank", "noopener");
+      return;
+    }
+    if (action === "delete-product") {
+      if (!confirm("Delete this listing permanently? This cannot be undone.")) return;
+      btn.disabled = true;
+      try {
+        const { error } = await sb.rpc("vendor_delete_product", { p_product_id: parseInt(btn.dataset.productId, 10) });
+        if (error) throw error;
+        toast("Product deleted.", "ok");
+        await loadProducts();
+        render();
+      } catch (err) {
+        console.error(err);
+        toast(err.message || "Delete failed.", "err");
+        btn.disabled = false;
+      }
+      return;
+    }
+  });
+
+  document.addEventListener("submit", async (e) => {
+    if (e.target.id === "settings-form") {
+      e.preventDefault();
+      await saveSettings();
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && productModal.classList.contains("open")) closeProductModal();
+  });
+
+  /* ---------- Boot ---------- */
+  async function boot() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) {
+      root.innerHTML = `<div class="err-card">
+        <h2>Sign in required</h2>
+        <p>You must be signed in to access the vendor portal.</p>
+        <p><a href="login.html">Sign in →</a></p>
+      </div>`;
+      return;
+    }
+
+    const { data: p } = await sb.from("profiles")
+      .select("id, username, is_admin")
+      .eq("id", session.user.id)
+      .maybeSingle();
+    me = p;
+
+    const { data: v } = await sb.from("vendors")
+      .select("*")
+      .eq("id", session.user.id)
+      .maybeSingle();
+    vendor = v;
+
+    if (!vendor) {
+      root.innerHTML = `<div class="err-card">
+        <h2>No vendor application</h2>
+        <p>You haven't applied to become a vendor yet.</p>
+        <p><a href="vendor-apply.html">Apply now →</a></p>
+      </div>`;
+      return;
+    }
+    if (vendor.status === "pending") {
+      root.innerHTML = `<div class="err-card" style="background:#fef3c7; border-color:#fde68a; color:#92400e;">
+        <h2>Application under review</h2>
+        <p>Your application is being reviewed. You'll get a notification when a decision is made.</p>
+      </div>`;
+      return;
+    }
+    if (vendor.status === "rejected") {
+      root.innerHTML = `<div class="err-card">
+        <h2>Application not approved</h2>
+        <p>${vendor.rejection_reason ? esc(vendor.rejection_reason) : "See your application page for details."}</p>
+        <p><a href="vendor-apply.html">Re-apply →</a></p>
+      </div>`;
+      return;
+    }
+    if (vendor.status === "suspended") {
+      root.innerHTML = `<div class="err-card">
+        <h2>Account suspended</h2>
+        <p>${vendor.rejection_reason ? esc(vendor.rejection_reason) : "Contact admin for details."}</p>
+      </div>`;
+      return;
+    }
+
+    // Approved
+    await Promise.all([loadProducts(), loadCategories()]);
+    await loadAllForTab();
+    render();
+  }
+
+  boot();
+})();
+</script>
+</body>
+</html>

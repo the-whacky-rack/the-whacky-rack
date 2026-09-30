@@ -9,14 +9,15 @@
   var path = (window.location.pathname.split("/").pop() || "index.html").toLowerCase();
   if (path === "") path = "index.html";
 
-  var links = [
-    { href: "index.html",         label: "Shop",     active: ["index.html", ""] },
-    { href: "world.html",         label: "World",    active: ["world.html"] },
-    { href: "history.html",       label: "History",  active: ["history.html"] },
-    { href: "yap.html",           label: "Yap it!",  active: ["yap.html", "yap-thread.html"] },
-    { href: "tape.html",          label: "Tape it!", active: ["tape.html", "tape-thread.html"] },
-    { href: "search-users.html",  label: "People",   active: ["search-users.html"] },
-    { href: "about.html",         label: "About",    active: ["about.html"] }
+    var links = [
+    { href: "index.html",         label: "Shop",       active: ["index.html", ""] },
+    { href: "side-rack.html",     label: "Side Rack",  active: ["side-rack.html", "vendors.html", "vendor-profile.html"] },
+    { href: "world.html",         label: "World",      active: ["world.html"] },
+    { href: "history.html",       label: "History",    active: ["history.html"] },
+    { href: "yap.html",           label: "Yap it!",    active: ["yap.html", "yap-thread.html"] },
+    { href: "tape.html",          label: "Tape it!",   active: ["tape.html", "tape-thread.html"] },
+    { href: "search-users.html",  label: "People",     active: ["search-users.html"] },
+    { href: "about.html",         label: "About",      active: ["about.html"] }
   ];
 
   var html = '<a href="index.html" class="logo">The <span>Whacky</span> Rack</a>';

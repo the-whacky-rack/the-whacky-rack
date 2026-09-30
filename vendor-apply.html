@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Become a Vendor — The Whacky Rack</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="description" content="Apply to become a vendor on The Side Rack — The Whacky Rack's marketplace for small makers.">
+<style>
+  :root {
+    --bg:#f7f5ef; --card:#fff; --text:#202020; --muted:#5a5a5a;
+    --accent:#ff5a36; --accent-dark:#e84625;
+    --border:#e8e4dc; --pill:#fff0eb;
+    --shadow:0 8px 25px rgba(0,0,0,.06);
+    --green:#16a34a; --amber:#d97706; --red:#dc2626;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:Arial,Helvetica,sans-serif; background:var(--bg); color:var(--text); }
+  a { color:inherit; text-decoration:none; }
+
+  header { background:#fff; border-bottom:1px solid var(--border); position:sticky; top:0; z-index:1000; }
+  .header-inner { max-width:1250px; margin:auto; padding:16px 22px; display:flex; align-items:center; justify-content:space-between; gap:20px; }
+  .logo { font-size:25px; font-weight:900; letter-spacing:-1px; white-space:nowrap; }
+  .logo span { color:var(--accent); }
+  .header-right { display:flex; align-items:center; gap:12px; }
+  .nav-link { font-size:13px; font-weight:700; padding:8px 14px; border-radius:50px; border:1px solid var(--border); background:#fff; transition:.2s ease; white-space:nowrap; }
+  .nav-link:hover { border-color:#bbb; }
+
+  .hero { max-width:900px; margin:auto; padding:55px 22px 25px; text-align:center; }
+  .hero-kicker { display:inline-block; padding:7px 13px; background:#222; color:#fff; border-radius:50px; font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-bottom:18px; }
+  .hero h1 { margin:0; font-size:clamp(36px,6vw,56px); line-height:1.05; letter-spacing:-2.5px; font-weight:950; }
+  .hero h1 span { color:var(--accent); }
+  .hero-description { max-width:720px; margin:20px auto 0; color:#555; font-size:16px; line-height:1.75; }
+
+  .wrap { max-width:720px; margin:auto; padding:10px 22px 70px; }
+
+  .card { background:#fff; border:1px solid var(--border); border-radius:18px; padding:30px 32px; box-shadow:var(--shadow); margin-bottom:20px; }
+  .card h2 { margin:0 0 6px; font-size:22px; letter-spacing:-.4px; font-weight:900; }
+  .card .sub { margin:0 0 20px; color:var(--muted); font-size:14px; line-height:1.6; }
+
+  label { display:block; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.4px; color:#555; margin:16px 0 6px; }
+  label .optional { color:#aaa; font-weight:600; text-transform:none; letter-spacing:0; font-size:11px; }
+  input[type=text], input[type=email], input[type=url], textarea, select {
+    width:100%; padding:12px 14px; font-family:inherit; font-size:14px;
+    background:#fafafa; border:1px solid var(--border); border-radius:12px;
+    outline:none; color:var(--text); transition:.2s ease;
+  }
+  input:focus, textarea:focus, select:focus { border-color:var(--accent); background:#fff; }
+  textarea { resize:vertical; min-height:110px; line-height:1.55; }
+  select { cursor:pointer; }
+
+  .hint { font-size:11px; color:var(--muted); margin-top:4px; line-height:1.5; }
+  .hint.warn { color:var(--amber); font-weight:700; }
+  .hint.err { color:var(--red); font-weight:700; }
+  .hint.ok { color:var(--green); font-weight:700; }
+
+  .char-counter { font-size:11px; color:var(--muted); text-align:right; margin-top:4px; }
+  .char-counter.ok { color:var(--green); }
+  .char-counter.under { color:var(--amber); }
+  .char-counter.over { color:var(--red); font-weight:700; }
+
+  .check-row { display:flex; align-items:flex-start; gap:10px; margin-top:14px; }
+  .check-row input[type=checkbox] { margin-top:3px; }
+  .check-row label { margin:0; text-transform:none; letter-spacing:0; font-weight:600; font-size:13px; color:#333; }
+
+  .submit-btn {
+    width:100%; padding:15px 20px; background:var(--accent); color:#fff;
+    border:0; border-radius:50px; font-family:inherit; font-weight:900;
+    font-size:14px; cursor:pointer; transition:.2s ease; margin-top:20px;
+  }
+  .submit-btn:hover:not(:disabled) { background:var(--accent-dark); }
+  .submit-btn:disabled { opacity:.5; cursor:not-allowed; }
+
+  .status { margin-top:16px; padding:12px 14px; border-radius:12px; font-size:13px; line-height:1.55; display:none; }
+  .status.show { display:block; }
+  .status.err { background:#fef2f2; color:#991b1b; border:1px solid #fecaca; }
+  .status.ok  { background:#f0fdf4; color:#166534; border:1px solid #bbf7d0; }
+
+  .info-screen { text-align:center; padding:20px 10px; }
+  .info-screen .emoji { font-size:56px; margin-bottom:12px; line-height:1; }
+  .info-screen h2 { margin:0 0 10px; font-size:22px; font-weight:900; letter-spacing:-.4px; }
+  .info-screen p { margin:0 auto 8px; color:#555; font-size:14px; line-height:1.7; max-width:520px; }
+  .info-screen .actions { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:20px; }
+  .info-screen .btn { padding:12px 22px; border-radius:50px; font-weight:800; font-size:13px; border:1px solid transparent; cursor:pointer; font-family:inherit; text-decoration:none; display:inline-block; }
+  .info-screen .btn.primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .info-screen .btn.primary:hover { background:var(--accent-dark); border-color:var(--accent-dark); }
+  .info-screen .btn.ghost { background:#fff; color:#333; border-color:var(--border); }
+  .info-screen .btn.ghost:hover { border-color:#bbb; }
+
+  .rejection-box { background:#fff5f0; border-left:4px solid var(--accent); border-radius:10px; padding:14px 16px; font-size:13px; line-height:1.6; color:#5a1e0c; margin-bottom:18px; }
+  .rejection-box strong { color:#7a2b12; }
+
+  .loading { text-align:center; padding:80px 20px; color:var(--muted); font-size:14px; }
+
+  footer { background:#222; color:#fff; padding:40px 22px; text-align:center; }
+  .footer-title { font-size:22px; font-weight:900; margin-bottom:10px; }
+  .footer-title span { color:var(--accent); }
+  footer p { max-width:650px; margin:auto; color:#bbb; font-size:12px; line-height:1.7; }
+  .footer-links { margin-top:22px; display:flex; flex-wrap:wrap; justify-content:center; gap:8px 18px; font-size:12px; }
+  .footer-links a { color:#bbb; font-weight:700; }
+  .footer-links a:hover { color:var(--accent); }
+  .footer-disclosure { margin-top:18px; font-size:11px; color:#888; }
+
+  @media (max-width:700px) {
+    .header-inner { padding:13px 15px; flex-wrap:wrap; }
+    .logo { font-size:21px; }
+    .nav-link { font-size:11px; padding:7px 11px; }
+    .hero { padding:40px 18px 20px; }
+    .hero h1 { font-size:38px; letter-spacing:-1.6px; }
+    .hero-description { font-size:14px; }
+    .wrap { padding:8px 15px 55px; }
+    .card { padding:22px 20px; border-radius:15px; }
+    .card h2 { font-size:19px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">The <span>Whacky</span> Rack</a>
+    <div class="header-right">
+      <a href="index.html" class="nav-link">Shop</a>
+      <a href="side-rack.html" class="nav-link">The Side Rack</a>
+      <a href="about.html" class="nav-link">About</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-kicker">Become a vendor</div>
+  <h1>Sell your weird on <span>The Side Rack</span></h1>
+  <p class="hero-description">
+    The Side Rack is our marketplace for small makers. If you handcraft or curate
+    something odd, delightful, or delightfully odd, apply below. Free to list.
+    Admin-reviewed. Link-out only — we send buyers straight to your store.
+  </p>
+</section>
+
+<main class="wrap" id="root">
+  <div class="loading">Loading your application status…</div>
+</main>
+
+<footer>
+  <div class="footer-title">The <span>Whacky</span> Rack</div>
+  <p>
+    We collect weird, wonderful, funny and completely unnecessary products
+    from around the internet. Some links on this site are affiliate links,
+    which means we may earn a commission if you make a purchase through them,
+    at no additional cost to you.
+  </p>
+  <div class="footer-links">
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="terms.html">Terms of Service</a>
+    <a href="cookies.html">Cookie Policy</a>
+    <a href="disclosure.html">Affiliate Disclosure</a>
+    <a href="grievance.html">Grievance Officer</a>
+  </div>
+  <div class="footer-disclosure">
+    Products and availability may change depending on Amazon.com policies.
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js"></script>
+<script src="consent.js"></script>
+<script src="analytics.js"></script>
+
+<script>
+(function () {
+  const sb = window.wr.sb;
+  const root = document.getElementById("root");
+
+  // Match the SQL's `vendor_eligible_countries()` array
+  const ELIGIBLE = [
+    { code:"US", name:"United States" },
+    { code:"CA", name:"Canada" },
+    { code:"MX", name:"Mexico" },
+    { code:"BR", name:"Brazil" },
+    { code:"GB", name:"United Kingdom" },
+    { code:"DE", name:"Germany" },
+    { code:"FR", name:"France" },
+    { code:"ES", name:"Spain" },
+    { code:"IT", name:"Italy" },
+    { code:"NL", name:"Netherlands" },
+    { code:"SE", name:"Sweden" },
+    { code:"PL", name:"Poland" },
+    { code:"AE", name:"United Arab Emirates" },
+    { code:"ZA", name:"South Africa" },
+    { code:"IN", name:"India" },
+    { code:"JP", name:"Japan" },
+    { code:"SG", name:"Singapore" },
+    { code:"CN", name:"China" },
+    { code:"AU", name:"Australia" }
+  ];
+
+  let session = null;
+  let profile = null;
+
+  function esc(s) {
+    return String(s ?? "").replace(/[&<>"']/g, c => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    }[c]));
+  }
+  function daysBetween(a, b) {
+    return Math.floor((b.getTime() - a.getTime()) / 86400000);
+  }
+
+  function renderLoading() { root.innerHTML = `<div class="loading">Loading…</div>`; }
+
+  function renderSignInRequired() {
+    root.innerHTML = `
+      <div class="card">
+        <div class="info-screen">
+          <div class="emoji">🔐</div>
+          <h2>Sign in to apply</h2>
+          <p>You need a Whacky Rack account to apply as a vendor. It's free and takes a minute.</p>
+          <div class="actions">
+            <a class="btn primary" href="login.html">Sign in</a>
+            <a class="btn ghost" href="signup.html">Create account</a>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderPending(v) {
+    root.innerHTML = `
+      <div class="card">
+        <div class="info-screen">
+          <div class="emoji">⏳</div>
+          <h2>Application under review</h2>
+          <p>Thanks for applying, <strong>${esc(v.business_name)}</strong>. Our team reviews every application by hand — usually within a few days.</p>
+          <p>We'll notify you via the bell in the header when there's an update. You can close this tab.</p>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderSuspended(v) {
+    root.innerHTML = `
+      <div class="card">
+        <div class="info-screen">
+          <div class="emoji">⚠️</div>
+          <h2>Account suspended</h2>
+          <p>Your vendor account for <strong>${esc(v.business_name)}</strong> is currently suspended.</p>
+          ${v.rejection_reason ? `<p><strong>Reason:</strong> ${esc(v.rejection_reason)}</p>` : ""}
+          <p>To appeal, email <a href="mailto:the.whacky.rack@limbomail.com" style="color:var(--accent-dark);font-weight:700;text-decoration:underline;">the.whacky.rack@limbomail.com</a>.</p>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderRejectedCannotReapply(v, reason) {
+    root.innerHTML = `
+      <div class="card">
+        <div class="info-screen">
+          <div class="emoji">🚫</div>
+          <h2>${reason === "max_attempts" ? "Application attempts exhausted" : "Please wait before re-applying"}</h2>
+          ${reason === "max_attempts"
+            ? `<p>You've used all 5 application attempts for <strong>${esc(v.business_name)}</strong>.</p>`
+            : `<p>You can re-apply 7 days after your last rejection. Your next eligible date is <strong>${esc(new Date(new Date(v.rejected_at).getTime() + 7*86400000).toLocaleDateString())}</strong>.</p>`
+          }
+          <p>If you believe this is a mistake, email <a href="mailto:the.whacky.rack@limbomail.com" style="color:var(--accent-dark);font-weight:700;text-decoration:underline;">the.whacky.rack@limbomail.com</a>.</p>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderForm(v) {
+    const isReapply = !!v && v.status === "rejected";
+    const preBusinessName = v?.business_name || "";
+    const preBusinessUrl  = v?.business_url  || "";
+    const preContactEmail = v?.contact_email || (session.user.email || "");
+    const preCountry      = v?.country || profile?.country || "";
+    const preBio          = v?.bio || "";
+    const preWhyList      = v?.why_list || "";
+    const preLogo         = v?.logo_url || "";
+    const preSmall        = v?.is_small_business ?? true;
+
+    const countryOptions = ELIGIBLE.map(c =>
+      `<option value="${c.code}"${c.code === preCountry ? " selected" : ""}>${esc(c.name)}</option>`
+    ).join("");
+
+    root.innerHTML = `
+      <div class="card">
+        ${isReapply ? `
+          <div class="rejection-box">
+            <strong>Your previous application was rejected.</strong><br>
+            ${v.rejection_reason ? esc(v.rejection_reason) : "No reason recorded."}<br>
+            <span style="font-size:12px;opacity:.85;">You have ${5 - (v.reapplication_count || 0)} re-application${5 - (v.reapplication_count || 0) === 1 ? "" : "s"} remaining.</span>
+          </div>
+        ` : ""}
+        <h2>${isReapply ? "Re-apply as a vendor" : "Apply to become a vendor"}</h2>
+        <p class="sub">All fields marked required must be filled in. We review every application by hand.</p>
+
+        <form id="apply-form" novalidate>
+
+          <label for="business_name">Business name</label>
+          <input id="business_name" type="text" maxlength="80" value="${esc(preBusinessName)}" required>
+
+          <label for="business_url">Business website URL</label>
+          <input id="business_url" type="url" maxlength="300" placeholder="https://yourstore.com" value="${esc(preBusinessUrl)}" required>
+          <div class="hint">Must be your own store. Amazon links and shorteners are not allowed. https:// only.</div>
+
+          <label for="contact_email">Contact email</label>
+          <input id="contact_email" type="email" maxlength="200" value="${esc(preContactEmail)}" required>
+          <div class="hint">Not shown publicly. We use it only to reach you.</div>
+
+          <label for="country">Country</label>
+          <select id="country" required>
+            <option value="">— Select your country —</option>
+            ${countryOptions}
+          </select>
+          <div class="hint">Vendors from ${ELIGIBLE.length} countries are currently eligible.</div>
+
+          <label for="bio">Short bio <span class="optional">(100–500 characters)</span></label>
+          <textarea id="bio" maxlength="500" placeholder="What do you make? Where are you based? What makes your work different?">${esc(preBio)}</textarea>
+          <div class="char-counter" id="bio-counter">0 / 500</div>
+
+          <label for="why_list">Why should we list your business? <span class="optional">(100–500 characters)</span></label>
+          <textarea id="why_list" maxlength="500" placeholder="Tell us why your products belong on The Side Rack.">${esc(preWhyList)}</textarea>
+          <div class="char-counter" id="why-counter">0 / 500</div>
+
+          <label for="logo_url">Logo URL <span class="optional">(optional)</span></label>
+          <input id="logo_url" type="url" maxlength="300" placeholder="https://..." value="${esc(preLogo)}">
+
+          <div class="check-row">
+            <input id="is_small_business" type="checkbox"${preSmall ? " checked" : ""}>
+            <label for="is_small_business">This is a small business or independent maker (not a company with 50+ employees).</label>
+          </div>
+
+          <button type="submit" class="submit-btn" id="submit-btn">${isReapply ? "Re-submit application" : "Submit application"}</button>
+          <div class="status" id="status"></div>
+        </form>
+      </div>
+    `;
+
+    wireForm();
+  }
+
+  function wireForm() {
+    const form          = document.getElementById("apply-form");
+    const businessName  = document.getElementById("business_name");
+    const businessUrl   = document.getElementById("business_url");
+    const contactEmail  = document.getElementById("contact_email");
+    const country       = document.getElementById("country");
+    const bio           = document.getElementById("bio");
+    const whyList       = document.getElementById("why_list");
+    const logoUrl       = document.getElementById("logo_url");
+    const isSmall       = document.getElementById("is_small_business");
+    const bioCounter    = document.getElementById("bio-counter");
+    const whyCounter    = document.getElementById("why-counter");
+    const submitBtn     = document.getElementById("submit-btn");
+    const statusEl      = document.getElementById("status");
+
+    function updateCounter(el, target, min, max) {
+      const len = el.value.trim().length;
+      target.textContent = `${el.value.length} / ${max}`;
+      target.classList.remove("ok", "under", "over");
+      if (len === 0) return;
+      if (len < min) target.classList.add("under");
+      else if (len > max) target.classList.add("over");
+      else target.classList.add("ok");
+    }
+
+    function validate() {
+      updateCounter(bio, bioCounter, 100, 500);
+      updateCounter(whyList, whyCounter, 100, 500);
+
+      const bnLen = businessName.value.trim().length;
+      const buVal = businessUrl.value.trim();
+      const ceVal = contactEmail.value.trim();
+      const coVal = country.value;
+      const bLen  = bio.value.trim().length;
+      const wLen  = whyList.value.trim().length;
+
+      const ok =
+        bnLen >= 2 && bnLen <= 80 &&
+        /^https:\/\/.+\..+/.test(buVal) &&
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(ceVal) &&
+        ELIGIBLE.some(c => c.code === coVal) &&
+        bLen >= 100 && bLen <= 500 &&
+        wLen >= 100 && wLen <= 500;
+
+      submitBtn.disabled = !ok;
+      return ok;
+    }
+
+    [businessName, businessUrl, contactEmail, country, bio, whyList, logoUrl]
+      .forEach(el => el.addEventListener("input", validate));
+    country.addEventListener("change", validate);
+
+    function status(msg, kind = "err") {
+      statusEl.className = "status show " + kind;
+      statusEl.textContent = msg;
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!validate()) return;
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Submitting…";
+      statusEl.className = "status";
+
+      try {
+        const { error } = await sb.rpc("apply_as_vendor", {
+          p_business_name:     businessName.value.trim(),
+          p_business_url:      businessUrl.value.trim(),
+          p_contact_email:     contactEmail.value.trim(),
+          p_country:           country.value,
+          p_bio:               bio.value.trim(),
+          p_is_small_business: isSmall.checked,
+          p_why_list:          whyList.value.trim(),
+          p_logo_url:          logoUrl.value.trim() || null
+        });
+        if (error) throw error;
+
+        status("Application submitted. Redirecting…", "ok");
+        setTimeout(() => { window.location.href = "vendor-portal.html"; }, 800);
+      } catch (err) {
+        console.error(err);
+        status(err.message || "Could not submit application.", "err");
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit application";
+        validate();
+      }
+    });
+
+    validate();
+  }
+
+  async function loadStatus() {
+    const { data: v } = await sb.from("vendors")
+      .select("id, business_name, business_url, contact_email, country, bio, why_list, is_small_business, logo_url, status, rejection_reason, rejected_at, reapplication_count")
+      .eq("id", session.user.id)
+      .maybeSingle();
+    return v;
+  }
+
+  async function boot() {
+    renderLoading();
+
+    const { data: { session: s } } = await sb.auth.getSession();
+    session = s;
+    if (!session) { renderSignInRequired(); return; }
+
+    const { data: p } = await sb.from("profiles")
+      .select("id, country")
+      .eq("id", session.user.id)
+      .maybeSingle();
+    profile = p;
+
+    const v = await loadStatus();
+
+    if (!v) { renderForm(null); return; }
+
+    if (v.status === "approved") {
+      window.location.href = "vendor-portal.html";
+      return;
+    }
+    if (v.status === "pending") { renderPending(v); return; }
+    if (v.status === "suspended") { renderSuspended(v); return; }
+
+    if (v.status === "rejected") {
+      const attempts = v.reapplication_count || 0;
+      if (attempts >= 5) { renderRejectedCannotReapply(v, "max_attempts"); return; }
+      if (v.rejected_at) {
+        const last = new Date(v.rejected_at);
+        const days = daysBetween(last, new Date());
+        if (days < 7) { renderRejectedCannotReapply(v, "wait"); return; }
+      }
+      renderForm(v);
+      return;
+    }
+
+    renderForm(v);
+  }
+
+  boot();
+})();
+</script>
+</body>
+</html>

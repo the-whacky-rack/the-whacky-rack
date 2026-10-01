@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor — The Side Rack</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <meta name="description" content="A vendor on The Side Rack.">
+    <style>
+        :root {
+            --bg: #f7f5ef;
+            --card: #fff;
+            --text: #202020;
+            --muted: #5a5a5a;
+            --accent: #ff5a36;
+            --accent-dark: #e84625;
+            --border: #e8e4dc;
+            --pill: #fff0eb;
+            --shadow: 0 8px 25px rgba(0,0,0,.06);
+            --green: #16a34a;
+        }
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--bg); color: var(--text); }
+        a { color: inherit; text-decoration: none; }
+
+        header { background: #fff; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
+        .header-inner { max-width: 1250px; margin: auto; padding: 16px 22px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+        .logo { font-size: 25px; font-weight: 900; letter-spacing: -1px; white-space: nowrap; }
+        .logo span { color: var(--accent); }
+        .header-right { display: flex; align-items: center; gap: 12px; }
+        .nav-link { font-size: 13px; font-weight: 700; padding: 8px 14px; border-radius: 50px; border: 1px solid var(--border); background: #fff; transition: .2s ease; white-space: nowrap; }
+        .nav-link:hover { border-color: #bbb; }
+
+        .breadcrumb { max-width: 1250px; margin: auto; padding: 22px 22px 0; font-size: 13px; color: var(--muted); }
+        .breadcrumb a { color: var(--accent-dark); font-weight: 700; }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .wrap { max-width: 1250px; margin: auto; padding: 18px 22px 70px; }
+
+        .vendor-hero {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 28px 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 22px;
+            display: flex;
+            gap: 22px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .vendor-logo-lg {
+            width: 96px; height: 96px; border-radius: 20px;
+            background: var(--pill); color: var(--accent-dark);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 900; font-size: 40px; flex-shrink: 0; overflow: hidden;
+        }
+        .vendor-logo-lg img { width: 100%; height: 100%; object-fit: cover; }
+
+        .vendor-info { flex: 1; min-width: 240px; }
+        .vendor-info h1 { margin: 0 0 6px; font-size: 32px; letter-spacing: -1px; font-weight: 950; }
+        .vendor-meta { font-size: 13px; color: var(--muted); line-height: 1.6; margin: 0 0 4px; }
+        .vendor-meta a { color: var(--accent-dark); font-weight: 700; text-decoration: underline; }
+
+        .vendor-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+        .vendor-actions a {
+            padding: 10px 18px; border-radius: 50px;
+            font-size: 13px; font-weight: 800;
+            border: 1px solid transparent;
+            transition: .2s ease;
+        }
+        .vendor-actions a.primary {
+            background: var(--accent); color: #fff; border-color: var(--accent);
+        }
+        .vendor-actions a.primary:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
+        .vendor-actions a.ghost {
+            background: #fff; color: #333; border-color: var(--border);
+        }
+        .vendor-actions a.ghost:hover { border-color: #bbb; }
+
+        .bio-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 22px 26px;
+            box-shadow: var(--shadow);
+            margin-bottom: 22px;
+        }
+        .bio-card h2 { margin: 0 0 10px; font-size: 14px; text-transform: uppercase; letter-spacing: .5px; color: #555; font-weight: 900; }
+        .bio-card p { margin: 0; font-size: 15px; line-height: 1.75; color: #333; white-space: pre-wrap; }
+
+        .products-section h2 {
+            font-size: 15px; font-weight: 900;
+            text-transform: uppercase; letter-spacing: .5px;
+            color: #555; margin: 0 0 16px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .products-section h2 .count {
+            background: var(--pill); color: var(--accent-dark);
+            padding: 3px 10px; border-radius: 50px;
+            font-size: 12px; letter-spacing: 0; text-transform: none;
+        }
+
+        .product-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 20px; }
+        @media (max-width: 1000px) { .product-grid { grid-template-columns: repeat(3, minmax(0,1fr)); } }
+        @media (max-width: 700px)  { .product-grid { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; } }
+
+        .product-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(0,0,0,.09);
+        }
+        .product-image-wrap {
+            aspect-ratio: 1 / 1;
+            background: #f1eee8;
+            overflow: hidden;
+            position: relative;
+            display: block;
+        }
+        .product-image { width: 100%; height: 100%; object-fit: cover; transition: transform .35s ease; }
+        .product-card:hover .product-image { transform: scale(1.04); }
+
+        .product-category {
+            position: absolute; left: 12px; top: 12px;
+            background: rgba(255,255,255,.94);
+            padding: 6px 9px; border-radius: 50px;
+            font-size: 10px; font-weight: 800; text-transform: uppercase;
+            letter-spacing: .5px; color: #333;
+        }
+
+        .product-content { padding: 16px; display: flex; flex-direction: column; flex: 1; }
+        .product-name { font-size: 15px; line-height: 1.35; font-weight: 800; margin: 0 0 8px; min-height: 40px; }
+
+        .product-notes { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; min-height: 20px; }
+        .product-notes .note {
+            font-size: 10px; font-weight: 800;
+            background: var(--pill); color: var(--accent-dark);
+            padding: 3px 8px; border-radius: 50px;
+        }
+        .product-notes .note.ship { background: #f1eee8; color: #555; }
+
+        .product-button {
+            margin-top: auto; width: 100%; text-align: center;
+            background: var(--accent); color: #fff;
+            padding: 12px 15px; border-radius: 10px;
+            font-size: 13px; font-weight: 800;
+        }
+        .product-button:hover { background: var(--accent-dark); }
+
+        .loading { text-align: center; padding: 60px 20px; color: var(--muted); font-size: 14px; }
+        .error-card {
+            background: #fef2f2; border: 1px solid #fecaca; color: #991b1b;
+            padding: 20px 24px; border-radius: 16px; font-size: 14px; line-height: 1.6;
+        }
+        .error-card a { color: #7f1d1d; font-weight: 800; text-decoration: underline; }
+
+        .empty-products {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--muted);
+            font-size: 14px;
+            border: 1px dashed var(--border);
+            border-radius: 18px;
+            background: var(--card);
+        }
+        .empty-products .emoji { font-size: 40px; margin-bottom: 10px; }
+
+        footer { background: #222; color: #fff; padding: 40px 22px; text-align: center; margin-top: 40px; }
+        .footer-title { font-size: 22px; font-weight: 900; margin-bottom: 10px; }
+        .footer-title span { color: var(--accent); }
+        footer p { max-width: 650px; margin: auto; color: #bbb; font-size: 12px; line-height: 1.7; }
+        .footer-links { margin-top: 22px; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 18px; font-size: 12px; }
+        .footer-links a { color: #bbb; font-weight: 700; }
+        .footer-links a:hover { color: var(--accent); }
+        .footer-disclosure { margin-top: 18px; font-size: 11px; color: #888; }
+
+        @media (max-width: 700px) {
+            .header-inner { padding: 13px 15px; flex-wrap: wrap; }
+            .logo { font-size: 21px; }
+            .nav-link { font-size: 11px; padding: 7px 11px; }
+            .breadcrumb { padding: 16px 15px 0; font-size: 12px; }
+            .wrap { padding: 14px 15px 55px; }
+            .vendor-hero { padding: 20px; border-radius: 15px; gap: 16px; }
+            .vendor-logo-lg { width: 72px; height: 72px; font-size: 30px; border-radius: 16px; }
+            .vendor-info h1 { font-size: 22px; }
+            .bio-card { padding: 18px 20px; border-radius: 15px; }
+            .product-content { padding: 12px; }
+            .product-name { font-size: 14px; min-height: 38px; margin-bottom: 6px; }
+            .product-button { padding: 10px 8px; font-size: 11px; }
+            .product-category { font-size: 8px; padding: 5px 7px; }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-inner">
+        <a href="index.html" class="logo">The <span>Whacky</span> Rack</a>
+        <div class="header-right">
+            <a href="index.html" class="nav-link">Shop</a>
+            <a href="side-rack.html" class="nav-link">Side Rack</a>
+            <a href="vendors.html" class="nav-link active">Vendors</a>
+            <a href="world.html" class="nav-link">World</a>
+            <a href="about.html" class="nav-link">About</a>
+        </div>
+    </div>
+</header>
+
+<div class="breadcrumb" id="breadcrumb">
+    <a href="vendors.html">← All vendors</a>
+</div>
+
+<main class="wrap" id="root">
+    <div class="loading">Loading vendor…</div>
+</main>
+
+<footer>
+    <div class="footer-title">The <span>Whacky</span> Rack</div>
+    <p>
+        We collect weird, wonderful, funny and completely unnecessary products
+        from around the internet. Some links on this site are affiliate links,
+        which means we may earn a commission if you make a purchase through them,
+        at no additional cost to you.
+    </p>
+    <div class="footer-links">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="cookies.html">Cookie Policy</a>
+        <a href="disclosure.html">Affiliate Disclosure</a>
+        <a href="grievance.html">Grievance Officer</a>
+    </div>
+    <div class="footer-disclosure">
+        Products and availability may change depending on Amazon.com policies.
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js"></script>
+<script src="consent.js"></script>
+<script src="analytics.js"></script>
+
+<script>
+(function () {
+    const sb = window.wr.sb;
+    const root = document.getElementById("root");
+
+    function esc(s) {
+        return String(s ?? "").replace(/[&<>"']/g, c => ({
+            "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+        }[c]));
+    }
+    function initials(name) {
+        const p = String(name || "?").replace(/[^A-Za-z0-9]/g, " ").trim().split(/\s+/);
+        return (p[0]?.[0] || "?").toUpperCase();
+    }
+    function flagFor(cc) {
+        if (!cc || cc.length !== 2) return "🌍";
+        const A = 0x1F1E6;
+        return String.fromCodePoint(A + cc.toUpperCase().charCodeAt(0) - 65,
+                                    A + cc.toUpperCase().charCodeAt(1) - 65);
+    }
+    function safeUrl(url) {
+        if (!url) return "#";
+        return /^https?:\/\//i.test(url) ? url : "#";
+    }
+
+    async function boot() {
+        const params = new URLSearchParams(location.search);
+        const id = params.get("id");
+
+        if (!id) {
+            root.innerHTML = `<div class="error-card">No vendor specified. <a href="vendors.html">Back to vendors →</a></div>`;
+            return;
+        }
+
+        // Load vendor row
+        const { data: vendor, error: vErr } = await sb.from("vendors")
+            .select("id, business_name, business_url, country, bio, logo_url, status")
+            .eq("id", id)
+            .maybeSingle();
+
+        if (vErr || !vendor) {
+            root.innerHTML = `<div class="error-card">This vendor doesn't exist. <a href="vendors.html">Back to vendors →</a></div>`;
+            return;
+        }
+
+        if (vendor.status !== "approved") {
+            root.innerHTML = `<div class="error-card">This vendor is not available. <a href="vendors.html">Back to vendors →</a></div>`;
+            return;
+        }
+
+        // Load their products
+        const { data: products, error: pErr } = await sb.rpc("list_vendor_products", { p_vendor_id: id });
+
+        if (pErr) {
+            console.error(pErr);
+        }
+
+        render(vendor, products || []);
+    }
+
+    function render(vendor, products) {
+        const logoInner = vendor.logo_url
+            ? `<img src="${esc(vendor.logo_url)}" alt="">`
+            : esc(initials(vendor.business_name));
+
+        const productCount = products.length;
+        const productWord = productCount === 1 ? "product" : "products";
+
+        const productsHtml = productCount === 0
+            ? `<div class="empty-products">
+                <div class="emoji">🧺</div>
+                No products listed yet. Check back soon.
+               </div>`
+            : `<div class="product-grid">
+                ${products.map(createCard).join("")}
+               </div>`;
+
+        root.innerHTML = `
+            <section class="vendor-hero">
+                <div class="vendor-logo-lg">${logoInner}</div>
+                <div class="vendor-info">
+                    <h1>${esc(vendor.business_name)}</h1>
+                    <p class="vendor-meta">
+                        ${flagFor(vendor.country)} ${esc(vendor.country)} ·
+                        <a href="${esc(safeUrl(vendor.business_url))}" target="_blank" rel="noopener noreferrer">Visit their store ↗</a>
+                    </p>
+                    <div class="vendor-actions">
+                        <a class="primary" href="${esc(safeUrl(vendor.business_url))}" target="_blank" rel="noopener noreferrer">Open store</a>
+                        <a class="ghost" href="side-rack.html">Browse the Side Rack</a>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bio-card">
+                <h2>About</h2>
+                <p>${esc(vendor.bio || "")}</p>
+            </section>
+
+            <section class="products-section">
+                <h2>Their listings <span class="count">${productCount} ${productWord}</span></h2>
+                ${productsHtml}
+            </section>
+        `;
+    }
+
+    function createCard(p) {
+        const priceNote = p.price_note
+            ? `<span class="note">${esc(p.price_note)}</span>` : "";
+        const shipNote = p.shipping_note
+            ? `<span class="note ship">${esc(p.shipping_note)}</span>` : "";
+        const link = esc(safeUrl(p.link));
+        const cat = esc(p.category_name || "");
+
+        return `
+            <article class="product-card">
+                <a class="product-image-wrap" href="${link}" target="_blank"
+                   rel="nofollow sponsored noopener" aria-label="View ${esc(p.name)}">
+                    <img class="product-image" src="${esc(p.image)}" alt="${esc(p.name)}"
+                         loading="lazy" decoding="async">
+                    <span class="product-category">${cat}</span>
+                </a>
+                <div class="product-content">
+                    <h2 class="product-name">${esc(p.name)}</h2>
+                    <div class="product-notes">${priceNote}${shipNote}</div>
+                    <a class="product-button" href="${link}" target="_blank"
+                       rel="nofollow sponsored noopener">Check it out →</a>
+                </div>
+            </article>
+        `;
+    }
+
+    boot();
+})();
+</script>
+
+</body>
+</html>

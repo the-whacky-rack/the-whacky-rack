@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Vendor Terms — The Side Rack</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <meta name="description" content="The terms vendors agree to when they list products on The Side Rack — The Whacky Rack's marketplace for independent makers.">
+
+    <style>
+        :root {
+            --bg: #f7f5ef;
+            --card: #ffffff;
+            --text: #202020;
+            --muted: #5a5a5a;
+            --accent: #ff5a36;
+            --accent-dark: #e84625;
+            --border: #e8e4dc;
+            --pill: #fff0eb;
+            --shadow: 0 8px 25px rgba(0, 0, 0, .06);
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        header {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-inner {
+            max-width: 1250px;
+            margin: auto;
+            padding: 16px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            white-space: nowrap;
+        }
+
+        .logo span { color: var(--accent); }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-link {
+            font-size: 13px;
+            font-weight: 700;
+            padding: 8px 14px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            background: #fff;
+            transition: .2s ease;
+            white-space: nowrap;
+        }
+
+        .nav-link:hover { border-color: #bbb; }
+
+        .affiliate-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 10px;
+            border-radius: 50px;
+            background: var(--pill);
+            color: var(--accent-dark);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .3px;
+            white-space: nowrap;
+        }
+
+        .hero {
+            max-width: 900px;
+            margin: auto;
+            padding: 65px 22px 25px;
+            text-align: center;
+        }
+
+        .hero-kicker {
+            display: inline-block;
+            padding: 7px 13px;
+            background: #222;
+            color: #fff;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: clamp(38px, 6vw, 62px);
+            line-height: 1;
+            letter-spacing: -3px;
+            font-weight: 950;
+        }
+
+        .hero h1 span { color: var(--accent); }
+
+        .hero-description {
+            max-width: 720px;
+            margin: 22px auto 0;
+            color: #555;
+            font-size: 16px;
+            line-height: 1.75;
+        }
+
+        .updated-pill {
+            display: inline-block;
+            margin-top: 22px;
+            padding: 6px 12px;
+            border-radius: 50px;
+            background: #fff;
+            border: 1px solid var(--border);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--muted);
+            letter-spacing: .3px;
+        }
+
+        .content-wrapper {
+            max-width: 900px;
+            margin: auto;
+            padding: 10px 22px 70px;
+        }
+
+        .notice-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--accent);
+            border-radius: 14px;
+            padding: 22px 24px;
+            margin: 30px 0 40px;
+            box-shadow: var(--shadow);
+        }
+
+        .notice-card h2 {
+            margin: 0 0 10px;
+            font-size: 17px;
+            letter-spacing: -.3px;
+        }
+
+        .notice-card p {
+            margin: 0;
+            color: #444;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .content-section {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 30px 34px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .content-section h2 {
+            margin: 0 0 14px;
+            font-size: 22px;
+            letter-spacing: -.5px;
+            line-height: 1.25;
+        }
+
+        .content-section h2 .num {
+            display: inline-block;
+            min-width: 28px;
+            height: 28px;
+            line-height: 28px;
+            text-align: center;
+            background: var(--pill);
+            color: var(--accent-dark);
+            border-radius: 50%;
+            font-size: 13px;
+            font-weight: 900;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        .content-section h3 {
+            margin: 22px 0 8px;
+            font-size: 15px;
+            letter-spacing: -.2px;
+        }
+
+        .content-section p {
+            margin: 0 0 14px;
+            color: #444;
+            font-size: 15px;
+            line-height: 1.75;
+        }
+
+        .content-section p:last-child { margin-bottom: 0; }
+
+        .content-section ul,
+        .content-section ol {
+            margin: 6px 0 16px;
+            padding-left: 22px;
+            color: #444;
+            font-size: 15px;
+            line-height: 1.75;
+        }
+
+        .content-section li { margin-bottom: 8px; }
+
+        .content-section strong { color: #222; }
+
+        .content-section a.inline-link {
+            color: var(--accent-dark);
+            font-weight: 700;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        .content-section a.inline-link:hover { color: #000; }
+
+        .content-section code {
+            background: #f1eee8;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #7a2b12;
+        }
+
+        .callout {
+            background: var(--pill);
+            border-radius: 12px;
+            padding: 16px 18px;
+            font-size: 14px;
+            color: #7a2b12;
+            line-height: 1.7;
+            margin: 18px 0;
+            border-left: 4px solid var(--accent);
+        }
+
+        .callout strong { color: #5a1e0c; }
+
+        .callout.danger {
+            background: #fef2f2;
+            color: #991b1b;
+            border-left-color: #dc2626;
+        }
+        .callout.danger strong { color: #7f1d1d; }
+
+        .contact-card {
+            background: #222;
+            color: #fff;
+            border-radius: 18px;
+            padding: 34px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .contact-card h2 {
+            margin: 0 0 10px;
+            font-size: 22px;
+            letter-spacing: -.5px;
+        }
+
+        .contact-card p {
+            color: #bbb;
+            font-size: 14px;
+            line-height: 1.7;
+            margin: 0 auto 18px;
+            max-width: 520px;
+        }
+
+        .contact-card a.email {
+            display: inline-block;
+            background: var(--accent);
+            color: #fff;
+            padding: 12px 22px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 800;
+            transition: .2s ease;
+        }
+
+        .contact-card a.email:hover { background: var(--accent-dark); }
+
+        footer {
+            background: #222;
+            color: #fff;
+            padding: 40px 22px;
+            text-align: center;
+        }
+
+        .footer-title {
+            font-size: 22px;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+
+        .footer-title span { color: var(--accent); }
+
+        footer p {
+            max-width: 650px;
+            margin: auto;
+            color: #bbb;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .footer-links {
+            margin-top: 22px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px 18px;
+            font-size: 12px;
+        }
+
+        .footer-links a {
+            color: #bbb;
+            font-weight: 700;
+            transition: .2s ease;
+        }
+
+        .footer-links a:hover { color: var(--accent); }
+
+        .footer-disclosure {
+            margin-top: 18px;
+            font-size: 11px;
+            color: #888;
+        }
+
+        @media (max-width: 700px) {
+            .header-inner { padding: 13px 15px; flex-wrap: wrap; }
+            .logo { font-size: 21px; }
+            .nav-link { font-size: 11px; padding: 7px 11px; }
+            .hero { padding: 45px 18px 20px; }
+            .hero h1 { font-size: 40px; letter-spacing: -2px; }
+            .hero-description { font-size: 14px; line-height: 1.65; }
+            .content-wrapper { padding: 5px 15px 55px; }
+            .content-section { padding: 22px 20px; border-radius: 15px; }
+            .content-section h2 { font-size: 18px; }
+            .content-section h2 .num { min-width: 24px; height: 24px; line-height: 24px; font-size: 11px; margin-right: 8px; }
+            .content-section p, .content-section ul, .content-section ol { font-size: 14px; }
+            .notice-card { padding: 18px 20px; }
+            .contact-card { padding: 26px 20px; }
+        }
+
+        @media (max-width: 380px) {
+            .hero h1 { font-size: 34px; }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-inner">
+        <a href="index.html" class="logo">The <span>Whacky</span> Rack</a>
+        <div class="header-right">
+            <a href="index.html" class="nav-link">Shop</a>
+            <a href="side-rack.html" class="nav-link">Side Rack</a>
+            <a href="vendors.html" class="nav-link">Vendors</a>
+            <a href="world.html" class="nav-link">World</a>
+            <a href="about.html" class="nav-link">About</a>
+        </div>
+    </div>
+</header>
+
+<section class="hero">
+    <div class="hero-kicker">For Side Rack vendors</div>
+    <h1>Vendor <span>Terms</span></h1>
+    <p class="hero-description">
+        These terms apply to every independent vendor who lists products on
+        The Side Rack, The Whacky Rack's marketplace for approved makers.
+        Read them carefully — by submitting an application, you agree to them.
+    </p>
+    <span class="updated-pill">Last updated: 2026</span>
+</section>
+
+<main class="content-wrapper">
+
+    <div class="notice-card">
+        <h2>Plain-English summary</h2>
+        <p>
+            Listing on The Side Rack is free. We don't take commission. You keep
+            100% of every sale. Your store stays your store — we simply link to it.
+            In return, we ask you to list honestly, describe products accurately,
+            fulfil orders promptly, handle refunds and complaints fairly, respect
+            your customers' data, and follow the laws of your country and the
+            countries you sell to. We review every product before it goes live.
+            We can remove listings or suspend vendors who break these rules.
+            You can withdraw at any time.
+        </p>
+    </div>
+
+    <div class="content-section">
+        <h2><span class="num">1</span>Acceptance of these terms</h2>
+        <p>
+            These Vendor Terms ("Vendor Terms") govern your listing and sale of
+            products through The Side Rack (the "Platform"), operated by The
+            Whacky Rack ("we", "us", "our"). They are incorporated into and form
+            part of our
+            <a class="inline-link" href="terms.html">Terms of Service</a>.
+            By submitting a vendor application or listing a product, you agree
+            to be bound by these Vendor Terms.
+        </p>
+        <p>
+            If you do not agree with any part of these Vendor Terms, do not apply
+            to become a vendor, and do not list any products.
+        </p>
+    </div>
+
+    <div class="content-section">
+        <h2><span class="num">2</span>Eligibility</h2>
+        <p>To be eligible to become a Side Rack vendor, you must:</p>
+        <ul>
+            <li>Be at least 18 years old and legally able to enter into contracts in your country.</li>
+            <li>Be a small business, an independent maker, or a sole trader — not a large corporation.</li>
+            <li>Be located in one of the countries currently supported by The Side Rack (see our <a class="inline-link" href="privacy.html">Privacy Policy</a> or ask us if you're unsure).</li>
+            <li>Have your own website or online store where customers can purchase your products. We do not host checkout, we link out to you.</li>
+            <li>Have a valid contact email address that you monitor regularly.</li>
+            <li>Comply with all laws applicable to your business, including consumer protection, tax, and product safety laws.</li>
+        </ul>
+    </div>
+
+    <div class="content-section">
+        <h2><span class="num">3</span>Application and approval</h2>
+
+        <h3>How to apply</h3>
+        <p>
+            You apply through <a class="inline-link" href="vendor-apply.html">our vendor application form</a>.
+            You must provide accurate information about your business, including
+            a business name, a working website URL, a contact email, your country,
+            a short bio, whether you are a small business, and a statement of why
+            you wish to be listed.
+        </p>
+
+        <h3>Admin review</h3>
+        <p>
+            Every application is reviewed by a human. We may approve, reject, or
+            ask for more information. We do not guarantee approval.
+        </p>
+
+        <h3>Re-application</h3>
+        <p>
+            If your application is rejected, you may re-apply a maximum of
+            <strong>5 times</strong>, with a minimum gap of <strong>7 days</strong>
+            between each attempt. After 5 rejections, we reserve the right to
+            permanently block your application.
+        </p>
+    </div>
+
+    <div class="content-section">
+        <h2><span class="num">4</span>What you may list</h2>
+        <p>You may list products that:</p>
+        <ul>
+            <li>You sell on your own website (the link must go to your own store).</li>
+            <li>Are accurately described, correctly categorised, and pictured as they will be delivered.</li>
+            <li>Fit the vibe of The Whacky Rack — unusual, handmade, quirky, or otherwise interesting.</li>
+            <li>Fall into one of the categories listed on The Side Rack.</li>
+        </ul>
+    </div>
+
+    <div class="content-section">
+        <h2><span class="num">5</span>What you may not list</h2>
+        <div class="callout danger">
+            <strong>Breaking these rules will result in removal of the listing,
+                suspension of your vendor account, and possible permanent ban.</strong>
+        </div>
+        <p>You may <strong>not</strong> list or link to any product that:</p>
+        <ul>
+            <li>Is illegal in your country, the countries you ship to, or the countries where the product is viewed.</li>
+            <li>Is counterfeit, replica, or in any way infringes another party's intellectual property.</li>
+            <li>Contains hate speech, discrimination, harassment, or threats.</li>
+            <li>Is sexually explicit, obscene, or pornographic.</li>
+            <li>Depicts or promotes violence, self-harm, or terrorism.</li>
+            <li>Is a weapon, ammunition, explosive, or controlled substance.</li>
+            <li>Is a pharmaceutical, medical device, or supplement making unsubstantiated health claims.</li>
+            <li>Is a tobacco, alcohol, vaping, or cannabis product where prohibited.</li>
+            <li>Is a lottery, gambling service, or financial product.</li>
+            <li>Is a live animal or a product made from an endangered species.</li>
+            <li>Infringes privacy rights — for example, personal data without consent.</li>
+            <li>Uses a URL shortener or Amazon affiliate link (we do not allow either).</li>
+            <li>Is part of a drop-shipping operation with no identifiable maker or brand.</li>
+        </ul>
+        <p>
+            This list is not exhaustive. We may remove any listing that we
+            reasonably believe harms other users, our Platform, or violates
+            applicable law, even if it is not explicitly on this list.
+        </p>
+    </div>
+
+    <div class="content-section">
+        <h2><span class="num">6</span>Your commitments as a vendor</h2>
+        <p>By listing on The Side Rack, you commit to the following:</p>
+
+        <h3>Accuracy</h3>
+        <ul>
+            <li>Every product listing will accurately describe the item, its materials, its condition, and its price.</li>
+            <li>You will not make false claims about origin, quality, safety, or efficacy.</li>
+            <li>You will update or remove listings when products become unavailable.</li>
+            <li>Your bio and business information will be truthful and kept up to date.</li>
+        </ul>
+
+        <h3>Fulfilment</h3>
+        <ul>
+            <li>You will dispatch orders within the timeframe you state on your own store.</li>
+            <li>You will ship to the countries you claim to ship to.</li>
+            <li>You will provide order confirmation, tracking where applicable, and delivery updates.</li>
+            <li>You will resolve delivery failures promptly — either by reshipping or refunding.</li>
+        </ul>
+
+        <h3>Refunds, returns, and complaints</h3>
+        <ul>
+            <li>You will honour your own published return and refund policy, and any statutory rights your customers have.</li>
+            <li>You will respond to customer enquiries within a reasonable time — we suggest 2 business days.</li>
+            <li>You will resolve complaints fairly. If you cannot, we may intervene.</li>
+        </ul>
+
+        <h3>Customer service</h3>
+        <ul>
+            <li>You will not harass, threaten, or abuse any customer, whether they contact you through The Side Rack, your store, or elsewhere.</li>
+            <li>You will not use information you learn about a customer to send them unsolicited marketing.</li>
+        </ul>
+
+        <h3>Data protection</h3>
+        <ul>
+            <li>You will comply with all data protection laws applicable to you when you handle customer data (GDPR, UK GDPR, DPDP, CCPA/CPRA, Australian Privacy Act, or others).</li>
+            <li>You will maintain your own privacy policy and honour the rights it grants.</li>
+            <li>You will not ask us for customer data — we do not share any with you.</li>
+            <li>You will not use the Platform to scrape or harvest data about visitors, users, or other vendors.</li>
+        </ul>
+
+        <h3>Platform integrity</h3>
+        <ul>
+            <li>You will not manipulate reviews, likes, clicks, or analytics on your own or anyone else's listings.</li>
+            <li>You will not create multiple vendor accounts to evade limits or bans.</li>
+            <li>You will not use bots or automated tools to interact with the Platform.</li>
+            <li>You will not attempt to gain unauthorised access to any part of the Platform.</li>
+        </ul>
+    </div>
+
+    <div class="content-section">
+        <h2><span class="num">7</span>Our commitments</h2>
+        <p>In return, we commit to:</p>
+        <ul>
+            <li>Review every application and every new product listing by hand.</li>
+            <li>Communicate decisions via the notification system in your vendor portal.</li>
+            <li>Give a clear reason if we reject an application or a product.</li>
+            <li>Not charge you any fee for listing or selling through The Side Rack.</li>
+            <li>Not take any commission on your sales.</li>
+            <li>Not alter your listing content without your knowledge, other than cosmetic formatting consistent with Platform layout.</li>
+            <li>Give you reasonable notice before removing a listing, except where immediate removal is required by law or to protect other users.</li>
+            <li>Preserve the confidentiality of your contact email and any information you did not intend to make public.</li>
+        </ul>
+    </div>
+
+    <div class="content-section">
+        <h2><span class="num">8</span>Product limit and edits</h2>
+
+        <h3>Default limit</h3>
+        <p>
+            Every vendor is limited to <strong>10 active listings</strong> by default.
+            This limit exists to keep the Platform curated and to prevent abuse.
+            If you have a legitimate reason to list more, contact us — we may
+            increase your limit on a case-by-case basis.
+        </p>
+
+        <h3>Editing live listings</h3>
+        <p>
+            You may edit any of your live listings at any time. However, to
+            protect customers and the Platform:
+        </p>
+        <ul>
+            <li><strong>Cosmetic changes</strong> (image, price note, shipping note) go live immediately.</li>
+            <li><strong>Substantive changes</strong> (product name, link URL, category) trigger re-review by an admin. The listing stays live while under review.</li>
+            <li>If the re-reviewed listing is rejected, it will be removed and you will be notified with a reason.</li>
+        </ul>
+    </div>
+
+    <div class="content-section">
+        <h2><span class="num">9</span>Suspension and termination</h2>
+
+        <h3>When we may suspend or terminate you</h3>
+        <p>We may suspend or terminate your vendor account at any time, with or without notice, for reasons including:</p>
+        <ul>
+            <li>Violation of these Vendor Terms or our <a class="inline-link" href="terms.html">Terms of Service</a>.</li>
+            <li>Repeated complaints from customers that we cannot resolve with you.</li>
+            <li>Fraudulent, misleading, or illegal activity.</li>
+            <li>Failure to respond to Platform communications for an extended period.</li>
+            <li>Request by a law enforcement or regulatory authority.</li>
+            <li>Technical or security reasons.</li>
+        </ul>
+
+        <h3>What happens when you are suspended</h3>
+        <ul>
+            <li>Your listings are hidden from The Side Rack immediately.</li>
+            <li>Existing listings remain in our database for audit purposes and may be reinstated if you are restored.</li>
+            <li>You may appeal by contacting our <a class="inline-link" href="grievance.html">Grievance Officer</a>.</li>
+        </ul>
+
+        <h3>Withdrawing voluntarily</h3>
+        <p>
+            You may stop being a vendor at any time by contacting us. We will
+            hide your listings and close your vendor account. Your products will
+            not appear on The Side Rack after withdrawal.
+        </p>
+    </div>
+
+    <div class="content-section">
+        <h2><span class="num">10</span>Intellectual property</h2>
+        <p>
+            You retain all rights to the product images, names, descriptions, and
+            logos you upload to The Side Rack. By listing, you grant us a
+            <strong>non-exclusive, royalty-free, worldwide licence</strong> to
+            display your content on The Side Rack and to use it in promotional
+            material about the Platform (such as a "featured vendor" post or a
+            social media highlight).
+        </p>
+        <p>
+            You confirm that you own or have the right to use all content you
+            upload, and that your content does not infringe any third party's
+            rights. You agree to indemnify us for any claim arising from content
+            you upload.
+        </p>
+        <p>
+            We may remove any content that we reasonably believe infringes
+            another party's rights, without prior notice.
+        </p>
+    </div>
+
+    <div class="content-section">
+        <h2><span class="num">11</span>No fees, no commission</h2>
+        <div class="callout">
+            <strong>Listing on The Side Rack is free.</strong> We do not charge
+            vendors any fee, commission, or payment for listing. You keep 100% of
+            every sale. Customers pay you directly, on your own store, using your
+            own payment method.
+        </div>
+        <p>
+            We reserve the right to introduce optional paid features in the
+            future, such as a featured placement or a promoted listing. If we do,
+            those features will always be optional, and these Vendor Terms will
+            be updated with at least 30 days' notice.
+        </p>
+    </div>
+
+    <div class="content-section">
+        <h2><span class="num">12</span>Liability</h2>
+        <p>
+            You are solely responsible for your products, your store, your
+            customers, and your compliance with applicable law. We provide the
+            Platform on an <strong>"as is"</strong> and <strong>"as available"</strong>
+            basis.
+        </p>
+        <p>
+            To the maximum extent permitted by law, we are not liable for any
+            indirect, incidental, special, consequential, or punitive damages
+            arising from your use of The Side Rack, including lost sales, lost
+            profits, or reputational harm.
+        </p>
+        <p>
+            You agree to indemnify and hold us harmless from any claim, loss, or
+            expense (including reasonable legal fees) arising from your breach of
+            these Vendor Terms, your products, or your dealings with customers.
+        </p>
+    </div>
+
+    <div class="content-section">
+        <h2><span class="num">13</span>Data protection and privacy</h2>
+        <p>
+            For data protection purposes:
+        </p>
+        <ul>
+            <li><strong>We</strong> are the controller of the vendor application data and vendor business information that you provide to us.</li>
+            <li><strong>You</strong> are the controller of any personal data you collect from customers who buy your products through your own store.</li>
+            <li>We do <strong>not</strong> share any customer data with you, and you do not receive any customer data from us.</li>
+            <li>We share only <strong>aggregate, non-identifying analytics</strong> with you — total clicks, unique clickers, top countries, likes, and Yap/Tape counts for your own listings.</li>
+        </ul>
+        <p>
+            See our <a class="inline-link" href="privacy.html">Privacy Policy</a>
+            for the full picture of what we collect and why.
+        </p>
+    </div>
+
+    <div class="content-section">
+        <h2><span class="num">14</span>Changes to these Vendor Terms</h2>
+        <p>
+            We may update these Vendor Terms from time to time. Material changes
+            will be communicated to you via the notification system in your vendor
+            portal, with at least <strong>14 days' notice</strong> before they take
+            effect. Continuing to list products after that notice constitutes
+            acceptance of the updated terms.
+        </p>
+        <p>
+            If you do not agree with the updated terms, you may withdraw your
+            listings and close your vendor account at any time.
+        </p>
+    </div>
+
+    <div class="content-section">
+        <h2><span class="num">15</span>Governing law</h2>
+        <p>
+            These Vendor Terms are governed by the laws of <strong>India</strong>,
+            without regard to its conflict of law provisions. Any dispute arising
+            from these Vendor Terms or your use of The Side Rack shall be subject
+            to the exclusive jurisdiction of the courts located in India.
+        </p>
+        <p>
+            Nothing in this section limits any statutory rights you may have
+            under the consumer protection laws of your own country or region.
+        </p>
+    </div>
+
+    <div class="content-section">
+        <h2><span class="num">16</span>Contact</h2>
+        <p>
+            For any question about these Vendor Terms, or to report a problem
+            with another vendor, contact us at:
+        </p>
+        <ul>
+            <li><strong>General:</strong> <a class="inline-link" href="mailto:the.whacky.rack@limbomail.com">the.whacky.rack@limbomail.com</a></li>
+            <li><strong>Grievance Officer:</strong> see <a class="inline-link" href="grievance.html">this page</a></li>
+        </ul>
+    </div>
+
+    <div class="contact-card">
+        <h2>Ready to list on The Side Rack?</h2>
+        <p>
+            If you've read these terms and they look fair, we'd love to see what
+            you make.
+        </p>
+        <a class="email" href="vendor-apply.html">Apply to become a vendor →</a>
+    </div>
+
+</main>
+
+<footer>
+    <div class="footer-title">The <span>Whacky</span> Rack</div>
+    <p>
+        We collect weird, wonderful, funny and completely unnecessary products
+        from around the internet. Some links on this site are affiliate links,
+        which means we may earn a commission if you make a purchase through them,
+        at no additional cost to you. The Side Rack vendors are independent
+        sellers — purchases happen on their own websites.
+    </p>
+    <div class="footer-links">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="cookies.html">Cookie Policy</a>
+        <a href="disclosure.html">Affiliate Disclosure</a>
+        <a href="grievance.html">Grievance Officer</a>
+        <a href="vendor-terms.html">Vendor Terms</a>
+    </div>
+    <div class="footer-disclosure">
+        Products and availability may change depending on Amazon.com policies.
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js"></script>
+<script src="consent.js"></script>
+
+</body>
+</html>

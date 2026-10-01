@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>The Side Rack — Handpicked makers and small vendors</title>
+
+    <meta name="description" content="The Side Rack — The Whacky Rack's marketplace for small makers and independent vendors. Free to browse, direct to maker.">
+
+    <style>
+        :root {
+            --bg: #f7f5ef;
+            --card: #ffffff;
+            --text: #202020;
+            --muted: #5a5a5a;
+            --accent: #ff5a36;
+            --accent-dark: #e84625;
+            --border: #e8e4dc;
+            --pill: #fff0eb;
+            --shadow: 0 8px 25px rgba(0, 0, 0, .06);
+            --green: #16a34a;
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        /* HEADER */
+        header {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-inner {
+            max-width: 1250px;
+            margin: auto;
+            padding: 16px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            white-space: nowrap;
+        }
+
+        .logo span { color: var(--accent); }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-link {
+            font-size: 13px;
+            font-weight: 700;
+            padding: 8px 14px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            background: #fff;
+            transition: .2s ease;
+            white-space: nowrap;
+        }
+
+        .nav-link:hover { border-color: #bbb; }
+        .nav-link.active { background: #222; color: #fff; border-color: #222; }
+
+        /* HERO */
+        .hero {
+            max-width: 1050px;
+            margin: auto;
+            padding: 65px 22px 35px;
+            text-align: center;
+        }
+
+        .hero-kicker {
+            display: inline-block;
+            padding: 7px 13px;
+            background: #222;
+            color: #fff;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: clamp(40px, 7vw, 72px);
+            line-height: .98;
+            letter-spacing: -3.5px;
+            font-weight: 950;
+        }
+
+        .hero h1 span { color: var(--accent); }
+
+        .hero-description {
+            max-width: 800px;
+            margin: 22px auto 0;
+            color: #555;
+            font-size: 17px;
+            line-height: 1.75;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 26px;
+        }
+
+        .hero-actions a {
+            font-size: 13px;
+            font-weight: 800;
+            padding: 12px 20px;
+            border-radius: 50px;
+            border: 1px solid transparent;
+            transition: .2s ease;
+        }
+
+        .hero-actions a.primary {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+        .hero-actions a.primary:hover {
+            background: var(--accent-dark);
+            border-color: var(--accent-dark);
+        }
+
+        .hero-actions a.ghost {
+            background: #fff;
+            color: #333;
+            border-color: var(--border);
+        }
+        .hero-actions a.ghost:hover { border-color: #bbb; }
+
+        /* CONTROLS */
+        .controls-wrapper {
+            max-width: 1250px;
+            margin: 10px auto 25px;
+            padding: 0 22px;
+        }
+
+        .controls {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 15px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            box-shadow: var(--shadow);
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-box input {
+            width: 100%;
+            height: 46px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0 15px;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            background: #fafafa;
+            color: var(--text);
+            transition: .2s ease;
+        }
+
+        .search-box input:focus {
+            border-color: var(--accent);
+            background: #fff;
+        }
+
+        select {
+            height: 46px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0 13px;
+            font-size: 14px;
+            font-family: inherit;
+            background: #fafafa;
+            cursor: pointer;
+            outline: none;
+            color: var(--text);
+        }
+
+        /* CATEGORY BAR */
+        .category-bar {
+            max-width: 1250px;
+            margin: 0 auto 30px;
+            padding: 0 22px;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .category-bar::-webkit-scrollbar { display: none; }
+
+        .category-btn {
+            border: 1px solid var(--border);
+            background: #fff;
+            padding: 9px 15px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 700;
+            white-space: nowrap;
+            cursor: pointer;
+            font-family: inherit;
+            color: var(--text);
+            transition: .2s ease;
+        }
+
+        .category-btn:hover { border-color: #bbb; }
+        .category-btn.active { background: #222; color: #fff; border-color: #222; }
+
+        /* PRODUCT AREA */
+        .products-wrapper {
+            max-width: 1250px;
+            margin: auto;
+            padding: 0 22px 70px;
+        }
+
+        .results-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            color: var(--muted);
+            font-size: 13px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        /* PRODUCT CARD */
+        .product-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, .09);
+        }
+
+        .product-image-wrap {
+            aspect-ratio: 1 / 1;
+            background: #f1eee8;
+            overflow: hidden;
+            position: relative;
+            display: block;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform .35s ease;
+        }
+
+        .product-card:hover .product-image { transform: scale(1.04); }
+
+        .product-category {
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            background: rgba(255, 255, 255, .94);
+            padding: 6px 9px;
+            border-radius: 50px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            color: #333;
+        }
+
+        .product-vendor-tag {
+            position: absolute;
+            right: 12px;
+            top: 12px;
+            background: rgba(22, 163, 74, .95);
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 50px;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .3px;
+            max-width: 60%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            transition: .2s ease;
+        }
+
+        .product-vendor-tag:hover { background: var(--green); }
+
+        .product-content {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .product-name {
+            font-size: 15px;
+            line-height: 1.35;
+            font-weight: 800;
+            margin: 0 0 8px;
+            min-height: 40px;
+        }
+
+        .product-notes {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+            min-height: 20px;
+        }
+
+        .product-notes .note {
+            font-size: 10px;
+            font-weight: 800;
+            background: var(--pill);
+            color: var(--accent-dark);
+            padding: 3px 8px;
+            border-radius: 50px;
+            letter-spacing: .3px;
+        }
+
+        .product-notes .note.ship {
+            background: #f1eee8;
+            color: #555;
+        }
+
+        .product-button {
+            margin-top: auto;
+            width: 100%;
+            display: block;
+            text-align: center;
+            background: var(--accent);
+            color: #fff;
+            padding: 12px 15px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 800;
+            transition: .2s ease;
+        }
+
+        .product-button:hover { background: var(--accent-dark); }
+
+        .product-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            border: 1px solid var(--border);
+            background: #fff;
+            color: #444;
+            padding: 7px 11px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: .2s ease;
+            line-height: 1;
+        }
+
+        .action-btn:hover {
+            border-color: #bbb;
+            background: #fafafa;
+        }
+
+        .action-icon { font-size: 13px; line-height: 1; }
+
+        .like-btn.liked {
+            background: var(--pill);
+            border-color: var(--accent);
+            color: var(--accent-dark);
+        }
+
+        .yap-btn {
+            color: var(--accent-dark);
+            border-color: var(--pill);
+            background: #fff;
+        }
+        .yap-btn:hover { background: var(--pill); border-color: var(--accent); }
+
+        .tape-btn {
+            color: #5a1e0c;
+            border-color: var(--pill);
+            background: #fff;
+        }
+        .tape-btn:hover { background: var(--pill); border-color: var(--accent); }
+
+        .share-wrap { margin-left: auto; }
+
+        /* LOAD MORE */
+        .load-more-wrap {
+            text-align: center;
+            padding-top: 35px;
+        }
+
+        .load-more {
+            border: 0;
+            background: #222;
+            color: #fff;
+            border-radius: 50px;
+            padding: 13px 25px;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            font-family: inherit;
+            transition: .2s ease;
+        }
+
+        .load-more:hover:not(:disabled) { background: #000; }
+        .load-more:disabled { opacity: .5; cursor: not-allowed; }
+        .load-more.hidden { display: none; }
+
+        /* EMPTY / LOADING */
+        .empty-state {
+            text-align: center;
+            padding: 70px 20px;
+            display: none;
+        }
+
+        .empty-state .emoji { font-size: 45px; margin-bottom: 12px; }
+        .empty-state h2 { margin: 0 0 8px; color: var(--text); font-size: 20px; }
+        .empty-state p { color: var(--muted); margin: 0; font-size: 14px; }
+
+        .loading {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        /* TOAST */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .toast {
+            padding: 12px 20px;
+            border-radius: 50px;
+            background: #222;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+            animation: toastIn .2s ease-out;
+        }
+
+        .toast.ok { background: var(--green); }
+        .toast.err { background: #dc2626; }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* FOOTER */
+        footer {
+            background: #222;
+            color: #fff;
+            padding: 40px 22px;
+            text-align: center;
+        }
+
+        .footer-title { font-size: 22px; font-weight: 900; margin-bottom: 10px; }
+        .footer-title span { color: var(--accent); }
+        footer p {
+            max-width: 650px;
+            margin: auto;
+            color: #bbb;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .footer-links {
+            margin-top: 22px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px 18px;
+            font-size: 12px;
+        }
+        .footer-links a { color: #bbb; font-weight: 700; transition: .2s ease; }
+        .footer-links a:hover { color: var(--accent); }
+
+        .footer-disclosure {
+            margin-top: 18px;
+            font-size: 11px;
+            color: #888;
+        }
+
+        /* TABLET / MOBILE */
+        @media (max-width: 1000px) {
+            .product-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        }
+
+        @media (max-width: 700px) {
+            .header-inner { padding: 13px 15px; flex-wrap: wrap; }
+            .logo { font-size: 21px; }
+            .nav-link { font-size: 11px; padding: 7px 11px; }
+            .hero { padding: 45px 18px 28px; }
+            .hero h1 { font-size: 46px; letter-spacing: -2.2px; }
+            .hero-description { font-size: 15px; line-height: 1.65; }
+            .controls-wrapper { padding: 0 15px; }
+            .controls { flex-direction: column; align-items: stretch; border-radius: 15px; }
+            .category-bar { padding: 0 15px; margin-bottom: 25px; }
+            .products-wrapper { padding: 0 15px 55px; }
+            .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+            .product-content { padding: 12px; }
+            .product-name { font-size: 14px; min-height: 38px; margin-bottom: 6px; }
+            .product-button { padding: 10px 8px; font-size: 11px; }
+            .product-category { font-size: 8px; padding: 5px 7px; }
+            .product-vendor-tag { font-size: 8px; padding: 5px 8px; }
+            .product-actions { gap: 6px; margin-top: 10px; padding-top: 10px; }
+            .action-btn { padding: 6px 9px; font-size: 11px; gap: 4px; }
+        }
+
+        @media (max-width: 380px) {
+            .product-grid { gap: 9px; }
+            .hero h1 { font-size: 40px; }
+        }
+
+        /* TAPE MODAL (mirrors main shop) */
+        .tape-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .5);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .tape-modal.open { display: flex; }
+
+        .tape-modal-inner {
+            background: #fff;
+            border-radius: 20px;
+            padding: 26px;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .25);
+            position: relative;
+            animation: modalIn .18s ease-out;
+        }
+
+        @keyframes modalIn {
+            from { opacity: 0; transform: translateY(10px) scale(.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .tape-modal-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            border: 0;
+            background: #f1eee8;
+            border-radius: 50%;
+            font-size: 20px;
+            line-height: 1;
+            cursor: pointer;
+            color: #555;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: inherit;
+        }
+        .tape-modal-close:hover { background: #e8e4dc; color: #222; }
+
+        .tape-modal h3 { margin: 0 0 4px; font-size: 20px; font-weight: 900; letter-spacing: -.3px; }
+        .tape-modal .tape-modal-sub { margin: 0 0 18px; font-size: 13px; color: var(--muted); }
+
+        .tape-modal-preview {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: #fafafa;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 14px;
+        }
+        .tape-modal-preview img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 10px;
+            background: #f1eee8;
+        }
+        .tape-modal-preview .pcat {
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--accent-dark);
+            letter-spacing: .4px;
+        }
+        .tape-modal-preview .pname {
+            font-size: 14px;
+            font-weight: 800;
+            line-height: 1.3;
+            margin-top: 2px;
+        }
+
+        .tape-modal label {
+            display: block;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            color: #555;
+            margin: 12px 0 6px;
+        }
+        .tape-modal label .optional { color: #aaa; font-weight: 600; text-transform: none; letter-spacing: 0; font-size: 11px; }
+
+        .tape-modal textarea {
+            width: 100%;
+            padding: 11px 13px;
+            font-family: inherit;
+            font-size: 14px;
+            background: #fafafa;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            outline: none;
+            resize: vertical;
+            min-height: 80px;
+            color: var(--text);
+        }
+        .tape-modal textarea:focus { border-color: var(--accent); background: #fff; }
+
+        .tape-char { font-size: 11px; color: var(--muted); text-align: right; margin-top: 4px; }
+
+        .tape-modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .tape-btn-ghost {
+            padding: 11px 20px;
+            border-radius: 50px;
+            font-family: inherit;
+            font-weight: 800;
+            font-size: 13px;
+            background: #fff;
+            color: #444;
+            border: 1px solid var(--border);
+            cursor: pointer;
+        }
+        .tape-btn-ghost:hover { border-color: #bbb; }
+
+        .tape-btn-primary {
+            padding: 11px 20px;
+            border-radius: 50px;
+            font-family: inherit;
+            font-weight: 800;
+            font-size: 13px;
+            background: var(--accent);
+            color: #fff;
+            border: 0;
+            cursor: pointer;
+        }
+        .tape-btn-primary:hover:not(:disabled) { background: var(--accent-dark); }
+        .tape-btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+
+        .tape-modal .tape-status {
+            margin-top: 12px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            display: none;
+        }
+        .tape-modal .tape-status.show { display: block; }
+        .tape-modal .tape-status.err {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+        .tape-modal .tape-status.ok {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        /* SHARE MODAL (mirrors main shop) */
+        .share-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .5);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .share-modal.open { display: flex; }
+
+        .share-modal-inner {
+            background: #fff;
+            border-radius: 20px;
+            padding: 26px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .25);
+            position: relative;
+            animation: modalIn .18s ease-out;
+        }
+
+        .share-modal-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            border: 0;
+            background: #f1eee8;
+            border-radius: 50%;
+            font-size: 20px;
+            line-height: 1;
+            cursor: pointer;
+            color: #555;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: inherit;
+        }
+        .share-modal-close:hover { background: #e8e4dc; color: #222; }
+
+        .share-modal-title { margin: 0 0 6px; font-size: 18px; font-weight: 900; letter-spacing: -.3px; }
+        .share-modal-product { margin: 0 0 20px; font-size: 13px; color: #666; line-height: 1.5; }
+
+        .share-modal-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .share-option {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #333;
+            cursor: pointer;
+            transition: .2s ease;
+            background: #fff;
+            font-family: inherit;
+            text-align: left;
+            width: 100%;
+        }
+        .share-option:hover { border-color: #bbb; background: #fafafa; }
+        .share-option.copied {
+            border-color: var(--accent);
+            background: var(--pill);
+            color: var(--accent-dark);
+        }
+
+        .share-option-icon { font-size: 16px; line-height: 1; flex-shrink: 0; }
+        .share-option-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    </style>
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+</head>
+
+<body>
+
+    <header>
+        <div class="header-inner">
+            <a href="index.html" class="logo">The <span>Whacky</span> Rack</a>
+            <div class="header-right">
+                <a href="index.html" class="nav-link">Shop</a>
+                <a href="side-rack.html" class="nav-link active">Side Rack</a>
+                <a href="vendors.html" class="nav-link">Vendors</a>
+                <a href="world.html" class="nav-link">World</a>
+                <a href="about.html" class="nav-link">About</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-kicker">The Side Rack</div>
+        <h1>Small makers, <span>weird goods</span></h1>
+        <p class="hero-description">
+            Hand-picked independent vendors from around the world. Free to browse,
+            no middleman — every click takes you straight to the maker's own store.
+            Yap about it, Tape it, share it. The weird goes both ways.
+        </p>
+        <div class="hero-actions">
+            <a class="primary" href="vendors.html">Browse vendors</a>
+            <a class="ghost" href="vendor-apply.html">Become a vendor</a>
+        </div>
+    </section>
+
+    <!-- CONTROLS -->
+    <div class="controls-wrapper">
+        <div class="controls">
+            <div class="search-box">
+                <input type="search" id="search-input" placeholder="Search products..." aria-label="Search products" autocomplete="off">
+            </div>
+            <select id="sort-select" aria-label="Sort products">
+                <option value="new">Newest first</option>
+                <option value="popular">Most liked</option>
+                <option value="az">Name: A–Z</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- CATEGORY FILTER -->
+    <div class="category-bar" id="category-bar">
+        <!-- Populated by JS -->
+    </div>
+
+    <!-- PRODUCTS -->
+    <main class="products-wrapper">
+        <div class="results-info">
+            <span id="result-count">Loading…</span>
+            <span>Direct-to-maker · Free to browse</span>
+        </div>
+
+        <div class="product-grid" id="product-grid">
+            <div class="loading">Loading products…</div>
+        </div>
+
+        <div class="empty-state" id="empty-state">
+            <div class="emoji">🧺</div>
+            <h2 id="empty-title">Nothing here yet</h2>
+            <p id="empty-sub">No products match your filters. Try clearing them.</p>
+        </div>
+
+        <div class="load-more-wrap">
+            <button class="load-more hidden" id="load-more-btn" type="button">Load more products</button>
+        </div>
+    </main>
+
+    <!-- SHARE MODAL -->
+    <div class="share-modal" id="share-modal" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="share-modal-inner">
+            <button class="share-modal-close" type="button" id="share-modal-close" aria-label="Close">×</button>
+            <h3 class="share-modal-title">Share this find</h3>
+            <p class="share-modal-product" id="share-product-name"></p>
+            <div class="share-modal-options" id="share-options"></div>
+        </div>
+    </div>
+
+    <!-- TAPE MODAL -->
+    <div class="tape-modal" id="tape-modal" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="tape-modal-inner">
+            <button class="tape-modal-close" type="button" id="tape-modal-close" aria-label="Close">×</button>
+            <h3>Tape it!</h3>
+            <p class="tape-modal-sub">Post this to your timeline. Add a caption if you want.</p>
+
+            <div class="tape-modal-preview" id="tape-modal-preview"></div>
+
+            <label for="tape-caption">Caption <span class="optional">(optional · 280 chars)</span></label>
+            <textarea id="tape-caption" maxlength="280" placeholder="Why this one? Or just post it blank."></textarea>
+            <div class="tape-char"><span id="tape-char-count">0</span> / 280</div>
+
+            <div class="tape-status" id="tape-status"></div>
+
+            <div class="tape-modal-actions">
+                <button class="tape-btn-ghost" id="tape-modal-cancel" type="button">Cancel</button>
+                <button class="tape-btn-primary" id="tape-modal-submit" type="button">Tape it!</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <footer>
+        <div class="footer-title">The <span>Whacky</span> Rack</div>
+        <p>
+            We collect weird, wonderful, funny and completely unnecessary products
+            from around the internet. Some links on this site are affiliate links,
+            which means we may earn a commission if you make a purchase through them,
+            at no additional cost to you. The Side Rack vendors are independent
+            sellers — purchases happen on their own websites.
+        </p>
+        <div class="footer-links">
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="cookies.html">Cookie Policy</a>
+            <a href="disclosure.html">Affiliate Disclosure</a>
+            <a href="grievance.html">Grievance Officer</a>
+        </div>
+        <div class="footer-disclosure">
+            Products and availability may change depending on Amazon.com policies.
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth.js"></script>
+    <script src="consent.js"></script>
+    <script src="analytics.js"></script>
+
+    <script>
+        (function () {
+            const sb = window.wr.sb;
+            const PAGE_SIZE = 24;
+
+            let session = null;
+            let me = null;
+
+            let currentCategoryId = null;
+            let currentSearch = "";
+            let currentSort = "new";
+            let searchDebounce = null;
+
+            let products = [];
+            let offset = 0;
+            let hasMore = false;
+            let categories = [];
+            let userLikes = new Set();
+            let likeCounts = {};
+
+            const els = {
+                grid:          document.getElementById("product-grid"),
+                empty:         document.getElementById("empty-state"),
+                emptyTitle:    document.getElementById("empty-title"),
+                emptySub:      document.getElementById("empty-sub"),
+                resultCount:   document.getElementById("result-count"),
+                categoryBar:   document.getElementById("category-bar"),
+                search:        document.getElementById("search-input"),
+                sortSelect:    document.getElementById("sort-select"),
+                loadMore:      document.getElementById("load-more-btn"),
+                toastBox:      document.getElementById("toast-container"),
+
+                shareModal:    document.getElementById("share-modal"),
+                shareModalClose: document.getElementById("share-modal-close"),
+                shareProductName: document.getElementById("share-product-name"),
+                shareOptions:  document.getElementById("share-options"),
+
+                tapeModal:     document.getElementById("tape-modal"),
+                tapeModalClose: document.getElementById("tape-modal-close"),
+                tapeModalCancel: document.getElementById("tape-modal-cancel"),
+                tapeModalSubmit: document.getElementById("tape-modal-submit"),
+                tapeModalPreview: document.getElementById("tape-modal-preview"),
+                tapeCaption:   document.getElementById("tape-caption"),
+                tapeCharCount: document.getElementById("tape-char-count"),
+                tapeStatus:    document.getElementById("tape-status")
+            };
+
+            /* Utils */
+            function esc(s) {
+                return String(s ?? "").replace(/[&<>"']/g, c => ({
+                    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+                }[c]));
+            }
+            function sanitizeSearch(s) {
+                return String(s || "")
+                    .replace(/[%,()]/g, " ")
+                    .replace(/\s+/g, " ")
+                    .trim()
+                    .slice(0, 100);
+            }
+            function toast(msg, kind = "ok") {
+                const el = document.createElement("div");
+                el.className = "toast " + kind;
+                el.textContent = msg;
+                els.toastBox.appendChild(el);
+                setTimeout(() => el.remove(), 2800);
+            }
+
+            /* Load session */
+            async function loadSession() {
+                const { data: { session: s } } = await sb.auth.getSession();
+                session = s;
+                if (session) {
+                    me = window.wr.getProfile() || null;
+                    if (!me) {
+                        const { data } = await sb.from("profiles")
+                            .select("id, username")
+                            .eq("id", session.user.id)
+                            .maybeSingle();
+                        me = data;
+                    }
+                }
+            }
+
+            /* Load categories */
+            async function loadCategories() {
+                const { data, error } = await sb.from("vendor_categories")
+                    .select("id, name, sort_order")
+                    .eq("is_active", true)
+                    .order("sort_order", { ascending: true })
+                    .order("name", { ascending: true });
+                if (error) {
+                    console.error("categories:", error);
+                    categories = [];
+                    return;
+                }
+                categories = data || [];
+                renderCategories();
+            }
+
+            function renderCategories() {
+                const allBtn = `<button class="category-btn${currentCategoryId === null ? " active" : ""}" data-cat-id="">All</button>`;
+                const catBtns = categories.map(c =>
+                    `<button class="category-btn${currentCategoryId === c.id ? " active" : ""}" data-cat-id="${c.id}">${esc(c.name)}</button>`
+                ).join("");
+                els.categoryBar.innerHTML = allBtn + catBtns;
+
+                els.categoryBar.querySelectorAll("[data-cat-id]").forEach(b => {
+                    b.addEventListener("click", () => {
+                        const raw = b.dataset.catId;
+                        currentCategoryId = raw === "" ? null : parseInt(raw, 10);
+                        loadProducts(true);
+                    });
+                });
+            }
+
+            /* Load user likes */
+            async function loadLikes() {
+                const clientId = localStorage.getItem("whackyrack_client_id");
+                if (!clientId) { userLikes = new Set(); return; }
+                const { data } = await sb.from("product_likes")
+                    .select("product_id")
+                    .eq("client_id", clientId);
+                userLikes = new Set((data || []).map(r => String(r.product_id)));
+            }
+
+            /* Load products */
+            async function loadProducts(reset = true) {
+                if (reset) {
+                    offset = 0;
+                    products = [];
+                    hasMore = false;
+                    els.grid.innerHTML = `<div class="loading">Loading products…</div>`;
+                    els.empty.style.display = "none";
+                    els.loadMore.classList.add("hidden");
+                }
+
+                const safeSearch = currentSearch ? sanitizeSearch(currentSearch) : null;
+
+                const { data, error } = await sb.rpc("list_side_rack_products", {
+                    p_category_id: currentCategoryId,
+                    p_search: safeSearch,
+                    p_sort: currentSort,
+                    p_limit: PAGE_SIZE,
+                    p_offset: offset
+                });
+
+                if (error) {
+                    console.error("load products:", error);
+                    els.grid.innerHTML = `<div class="loading">Couldn't load products. Try again.</div>`;
+                    return;
+                }
+
+                const rows = data || [];
+                products = reset ? rows : products.concat(rows);
+                offset += rows.length;
+                hasMore = rows.length === PAGE_SIZE;
+
+                // Like counts for the current page (client-side; small window)
+                if (rows.length > 0) {
+                    const ids = rows.map(p => p.id);
+                    const { data: likeRows } = await sb.from("product_likes")
+                        .select("product_id")
+                        .in("product_id", ids);
+                    likeCounts = {};
+                    (likeRows || []).forEach(r => {
+                        const k = r.product_id;
+                        likeCounts[k] = (likeCounts[k] || 0) + 1;
+                    });
+                }
+
+                if (hasMore) els.loadMore.classList.remove("hidden");
+                render();
+            }
+
+            /* Render grid */
+            function render() {
+                if (products.length === 0) {
+                    els.grid.innerHTML = "";
+                    els.empty.style.display = "block";
+                    if (currentSearch) {
+                        els.emptyTitle.textContent = `Nothing matches "${currentSearch}"`;
+                        els.emptySub.textContent = "Try another word or clear the filters.";
+                    } else {
+                        els.emptyTitle.textContent = "No products yet";
+                        els.emptySub.textContent = "Check back soon — vendors are adding listings all the time.";
+                    }
+                    els.resultCount.textContent = "0 products";
+                    return;
+                }
+
+                els.empty.style.display = "none";
+
+                const frag = document.createDocumentFragment();
+                products.forEach(p => frag.appendChild(createCard(p)));
+                els.grid.innerHTML = "";
+                els.grid.appendChild(frag);
+
+                els.resultCount.textContent = `${products.length} product${products.length === 1 ? "" : "s"}`;
+            }
+
+            function createCard(p) {
+                const card = document.createElement("article");
+                card.className = "product-card";
+                card.dataset.productId = p.id;
+
+                const liked = userLikes.has(String(p.id));
+                const count = likeCounts[p.id] || 0;
+                const heartIcon = liked ? "❤️" : "🤍";
+                const vendorLink = p.vendor_id ? `vendor-profile.html?id=${esc(p.vendor_id)}` : "#";
+                const vendorTag = p.vendor_business_name
+                    ? `<a class="product-vendor-tag" href="${vendorLink}" title="Visit vendor">${esc(p.vendor_business_name)}</a>`
+                    : "";
+
+                const priceNote = p.price_note
+                    ? `<span class="note">${esc(p.price_note)}</span>` : "";
+                const shipNote = p.shipping_note
+                    ? `<span class="note ship">${esc(p.shipping_note)}</span>` : "";
+
+                card.innerHTML = `
+                    <a class="product-image-wrap" href="${esc(p.link)}" target="_blank" rel="nofollow sponsored noopener"
+                       aria-label="View ${esc(p.name)}">
+                        <img class="product-image" src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" decoding="async">
+                        <span class="product-category">${esc(p.category_name || "")}</span>
+                        ${vendorTag}
+                    </a>
+
+                    <div class="product-content">
+                        <h2 class="product-name">${esc(p.name)}</h2>
+                        <div class="product-notes">${priceNote}${shipNote}</div>
+
+                        <a class="product-button" href="${esc(p.link)}" target="_blank"
+                           rel="nofollow sponsored noopener">Check it out →</a>
+
+                        <div class="product-actions">
+                            <button class="action-btn like-btn${liked ? " liked" : ""}" type="button"
+                                    data-action="like" data-product-id="${esc(p.id)}"
+                                    aria-label="Like this product">
+                                <span class="action-icon">${heartIcon}</span>
+                                <span class="like-count">${count}</span>
+                            </button>
+
+                            <a class="action-btn yap-btn"
+                               href="yap.html?product=${esc(p.id)}"
+                               aria-label="Yap about this product">
+                                <span class="action-icon">💬</span>
+                                <span>Yap it!</span>
+                            </a>
+
+                            <button class="action-btn tape-btn" type="button"
+                                    data-action="tape"
+                                    data-product-id="${esc(p.id)}"
+                                    data-product-name="${esc(p.name)}"
+                                    data-product-image="${esc(p.image)}"
+                                    data-product-category="${esc(p.category_name || "")}">
+                                <span class="action-icon">📼</span>
+                                <span>Tape it!</span>
+                            </button>
+
+                            <div class="share-wrap">
+                                <button class="action-btn share-btn" type="button"
+                                        data-action="share"
+                                        data-product-id="${esc(p.id)}"
+                                        data-product-name="${esc(p.name)}"
+                                        data-product-link="${esc(p.link)}"
+                                        data-product-image="${esc(p.image)}"
+                                        aria-label="Share this product">
+                                    <span class="action-icon">↗</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                return card;
+            }
+
+            /* Like handler (anonymous, matches main shop) */
+            function getClientId() {
+                const KEY = "whackyrack_client_id";
+                let id = localStorage.getItem(KEY);
+                if (!id) {
+                    id = (window.crypto && crypto.randomUUID) ?
+                        crypto.randomUUID() :
+                        ("client-" + Date.now() + "-" + Math.random().toString(36).slice(2));
+                    localStorage.setItem(KEY, id);
+                }
+                return id;
+            }
+
+            async function handleLike(productId, btn) {
+                const sid = String(productId);
+                const isLiked = userLikes.has(sid);
+                const iconEl = btn.querySelector(".action-icon");
+                const countEl = btn.querySelector(".like-count");
+                const currentCount = parseInt(countEl.textContent, 10) || 0;
+
+                if (isLiked) {
+                    userLikes.delete(sid);
+                    btn.classList.remove("liked");
+                    iconEl.textContent = "🤍";
+                    countEl.textContent = Math.max(0, currentCount - 1);
+                    const { error } = await sb.from("product_likes").delete()
+                        .eq("product_id", productId)
+                        .eq("client_id", getClientId());
+                    if (error) {
+                        userLikes.add(sid);
+                        btn.classList.add("liked");
+                        iconEl.textContent = "❤️";
+                        countEl.textContent = currentCount;
+                        console.error(error);
+                    }
+                } else {
+                    userLikes.add(sid);
+                    btn.classList.add("liked");
+                    iconEl.textContent = "❤️";
+                    countEl.textContent = currentCount + 1;
+                    const { error } = await sb.from("product_likes").insert({
+                        product_id: productId,
+                        client_id: getClientId()
+                    });
+                    if (error && error.code !== "23505") {
+                        userLikes.delete(sid);
+                        btn.classList.remove("liked");
+                        iconEl.textContent = "🤍";
+                        countEl.textContent = currentCount;
+                        console.error(error);
+                    }
+                }
+            }
+
+            /* Share modal */
+            function openShareModal(product) {
+                els.shareProductName.textContent = product.name;
+
+                const url = product.link;
+                const text = `Check out "${product.name}" on The Side Rack 🛒`;
+                const image = product.image || "";
+
+                els.shareOptions.innerHTML = "";
+
+                const platforms = [
+                    { key: "twitter",   label: "Twitter / X", icon: "𝕏",
+                      href: `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}` },
+                    { key: "facebook",  label: "Facebook",    icon: "f",
+                      href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}` },
+                    { key: "pinterest", label: "Pinterest",   icon: "P",
+                      href: `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(url)}&media=${encodeURIComponent(image)}&description=${encodeURIComponent(text)}` },
+                    { key: "reddit",    label: "Reddit",      icon: "👽",
+                      href: `https://www.reddit.com/submit?url=${encodeURIComponent(url)}&title=${encodeURIComponent(text)}` },
+                    { key: "whatsapp",  label: "WhatsApp",    icon: "💬",
+                      href: `https://wa.me/?text=${encodeURIComponent(text + " " + url)}` },
+                    { key: "copy",      label: "Copy link",   icon: "🔗", href: null }
+                ];
+
+                platforms.forEach(platform => {
+                    const el = document.createElement(platform.href ? "a" : "button");
+                    el.className = "share-option";
+                    if (platform.href) {
+                        el.href = platform.href;
+                        el.target = "_blank";
+                        el.rel = "noopener noreferrer";
+                    } else {
+                        el.type = "button";
+                    }
+                    el.innerHTML = `
+                        <span class="share-option-icon">${platform.icon}</span>
+                        <span class="share-option-label">${platform.label}</span>
+                    `;
+
+                    if (platform.key === "copy") {
+                        el.addEventListener("click", async () => {
+                            const labelEl = el.querySelector(".share-option-label");
+                            const iconEl = el.querySelector(".share-option-icon");
+                            let copied = false;
+                            try { await navigator.clipboard.writeText(url); copied = true; }
+                            catch (err) {
+                                const ta = document.createElement("textarea");
+                                ta.value = url;
+                                ta.setAttribute("readonly", "");
+                                ta.style.position = "absolute";
+                                ta.style.left = "-9999px";
+                                document.body.appendChild(ta);
+                                ta.select();
+                                try { copied = document.execCommand("copy"); } catch (e) {}
+                                document.body.removeChild(ta);
+                            }
+                            if (copied) {
+                                el.classList.add("copied");
+                                labelEl.textContent = "Copied!";
+                                iconEl.textContent = "✓";
+                                setTimeout(() => {
+                                    el.classList.remove("copied");
+                                    labelEl.textContent = "Copy link";
+                                    iconEl.textContent = "🔗";
+                                }, 1800);
+                            }
+                        });
+                    } else {
+                        el.addEventListener("click", () => setTimeout(closeShareModal, 150));
+                    }
+                    els.shareOptions.appendChild(el);
+                });
+
+                els.shareModal.classList.add("open");
+                els.shareModal.setAttribute("aria-hidden", "false");
+            }
+
+            function closeShareModal() {
+                els.shareModal.classList.remove("open");
+                els.shareModal.setAttribute("aria-hidden", "true");
+            }
+
+            els.shareModalClose.addEventListener("click", closeShareModal);
+            els.shareModal.addEventListener("click", (e) => {
+                if (e.target === els.shareModal) closeShareModal();
+            });
+
+            /* Tape modal */
+            let currentTapeProduct = null;
+
+            function openTapeModal(product) {
+                currentTapeProduct = product;
+                els.tapeModalPreview.innerHTML = `
+                    <img src="${esc(product.image)}" alt="">
+                    <div>
+                        <div class="pcat">${esc(product.category)}</div>
+                        <div class="pname">${esc(product.name)}</div>
+                    </div>
+                `;
+                els.tapeCaption.value = "";
+                els.tapeCharCount.textContent = "0";
+                els.tapeStatus.className = "tape-status";
+                els.tapeStatus.textContent = "";
+                els.tapeModalSubmit.disabled = false;
+                els.tapeModalSubmit.textContent = "Tape it!";
+                els.tapeModal.classList.add("open");
+                els.tapeModal.setAttribute("aria-hidden", "false");
+                setTimeout(() => els.tapeCaption.focus(), 100);
+            }
+
+            function closeTapeModal() {
+                els.tapeModal.classList.remove("open");
+                els.tapeModal.setAttribute("aria-hidden", "true");
+                currentTapeProduct = null;
+            }
+
+            els.tapeCaption.addEventListener("input", () => {
+                els.tapeCharCount.textContent = String(els.tapeCaption.value.length);
+            });
+
+            els.tapeModalClose.addEventListener("click", closeTapeModal);
+            els.tapeModalCancel.addEventListener("click", closeTapeModal);
+            els.tapeModal.addEventListener("click", (e) => {
+                if (e.target === els.tapeModal) closeTapeModal();
+            });
+
+            els.tapeModalSubmit.addEventListener("click", async () => {
+                if (!currentTapeProduct) return;
+                els.tapeModalSubmit.disabled = true;
+                els.tapeModalSubmit.textContent = "Taping…";
+                els.tapeStatus.className = "tape-status";
+
+                try {
+                    const cap = els.tapeCaption.value.trim();
+                    const { error } = await sb.rpc("create_tape", {
+                        p_product_id: currentTapeProduct.id,
+                        p_caption: cap || null
+                    });
+                    if (error) throw error;
+
+                    els.tapeStatus.className = "tape-status show ok";
+                    els.tapeStatus.textContent = "Taped! Redirecting…";
+                    setTimeout(() => { window.location.href = "tape.html"; }, 500);
+                } catch (err) {
+                    console.error(err);
+                    els.tapeStatus.className = "tape-status show err";
+                    els.tapeStatus.textContent = err.message || "Could not Tape it.";
+                    els.tapeModalSubmit.disabled = false;
+                    els.tapeModalSubmit.textContent = "Tape it!";
+                }
+            });
+
+            /* Search */
+            if (els.search) {
+                els.search.addEventListener("input", () => {
+                    clearTimeout(searchDebounce);
+                    searchDebounce = setTimeout(() => {
+                        currentSearch = els.search.value.trim();
+                        loadProducts(true);
+                    }, 300);
+                });
+            }
+
+            /* Sort */
+            if (els.sortSelect) {
+                els.sortSelect.addEventListener("change", () => {
+                    currentSort = els.sortSelect.value;
+                    loadProducts(true);
+                });
+            }
+
+            /* Load more */
+            els.loadMore.addEventListener("click", async () => {
+                els.loadMore.disabled = true;
+                els.loadMore.textContent = "Loading…";
+                await loadProducts(false);
+                els.loadMore.disabled = false;
+                els.loadMore.textContent = "Load more products";
+            });
+
+            /* Delegated clicks */
+            document.addEventListener("click", async (e) => {
+                const btn = e.target.closest("[data-action]");
+                if (!btn) return;
+                const action = btn.dataset.action;
+
+                if (action === "like") {
+                    e.preventDefault();
+                    await handleLike(parseInt(btn.dataset.productId, 10), btn);
+                    return;
+                }
+                if (action === "tape") {
+                    e.preventDefault();
+                    if (!session) {
+                        window.location.href = "login.html";
+                        return;
+                    }
+                    openTapeModal({
+                        id: parseInt(btn.dataset.productId, 10),
+                        name: btn.dataset.productName,
+                        image: btn.dataset.productImage,
+                        category: btn.dataset.productCategory
+                    });
+                    return;
+                }
+                if (action === "share") {
+                    e.preventDefault();
+                    openShareModal({
+                        id: parseInt(btn.dataset.productId, 10),
+                        name: btn.dataset.productName,
+                        link: btn.dataset.productLink,
+                        image: btn.dataset.productImage
+                    });
+                    return;
+                }
+            });
+
+            /* ESC to close modals */
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "Escape") {
+                    if (els.shareModal.classList.contains("open")) closeShareModal();
+                    if (els.tapeModal.classList.contains("open")) closeTapeModal();
+                }
+            });
+
+            /* Boot */
+            async function boot() {
+                await loadSession();
+                await Promise.all([loadCategories(), loadLikes()]);
+                await loadProducts(true);
+            }
+
+            boot();
+        })();
+    </script>
+</body>
+
+</html>

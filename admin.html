@@ -1,315 +1,1100 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Moderation — The Whacky Rack</title>
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
-<style>
-  :root {
-    --bg:#f7f5ef; --card:#fff; --text:#202020; --muted:#5a5a5a;
-    --accent:#ff5a36; --accent-dark:#e84625;
-    --border:#e8e4dc; --pill:#fff0eb;
-    --shadow:0 8px 25px rgba(0,0,0,.06);
-    --green:#16a34a; --red:#dc2626; --amber:#d97706;
-  }
-  * { box-sizing:border-box; }
-  body { margin:0; font-family:Arial,Helvetica,sans-serif; background:var(--bg); color:var(--text); }
-  a { color:inherit; text-decoration:none; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moderation — The Whacky Rack</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <style>
+        :root {
+            --bg: #f7f5ef;
+            --card: #fff;
+            --text: #202020;
+            --muted: #5a5a5a;
+            --accent: #ff5a36;
+            --accent-dark: #e84625;
+            --border: #e8e4dc;
+            --pill: #fff0eb;
+            --shadow: 0 8px 25px rgba(0, 0, 0, .06);
+            --green: #16a34a;
+            --red: #dc2626;
+            --amber: #d97706;
+        }
 
-  header { background:#fff; border-bottom:1px solid var(--border); position:sticky; top:0; z-index:1000; }
-  .header-inner { max-width:1400px; margin:auto; padding:16px 22px; display:flex; align-items:center; justify-content:space-between; gap:20px; }
-  .logo { font-size:25px; font-weight:900; letter-spacing:-1px; white-space:nowrap; }
-  .logo span { color:var(--accent); }
-  .header-right { display:flex; align-items:center; gap:12px; }
-  .nav-link { font-size:13px; font-weight:700; padding:8px 14px; border-radius:50px; border:1px solid var(--border); background:#fff; transition:.2s ease; white-space:nowrap; }
-  .nav-link:hover { border-color:#bbb; }
-  .nav-link.active { background:#222; color:#fff; border-color:#222; }
+        * {
+            box-sizing: border-box;
+        }
 
-  .wrap { max-width:1400px; margin:auto; padding:28px 22px 70px; }
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
 
-  .page-head { margin-bottom:22px; }
-  .page-head .kicker { font-size:11px; font-weight:800; letter-spacing:.6px; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
-  .page-head h1 { margin:0 0 4px; font-size:32px; letter-spacing:-1px; font-weight:950; }
-  .page-head h1 span { color:var(--accent); }
-  .page-head p { margin:0; color:var(--muted); font-size:14px; }
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
 
-  .tabs { display:flex; gap:8px; margin-bottom:18px; flex-wrap:wrap; }
-  .tab-btn {
-    border:1px solid var(--border); background:#fff; padding:11px 18px;
-    border-radius:50px; font-family:inherit; font-weight:800; font-size:13px;
-    cursor:pointer; color:var(--muted); transition:.2s ease;
-  }
-  .tab-btn:hover { border-color:#bbb; color:var(--text); }
-  .tab-btn.active { background:#222; color:#fff; border-color:#222; }
-  .tab-btn .count { display:inline-block; background:var(--pill); color:var(--accent-dark); padding:1px 8px; border-radius:20px; font-size:11px; font-weight:900; margin-left:6px; }
-  .tab-btn.active .count { background:rgba(255,255,255,.2); color:#fff; }
+        header {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
 
-  .card { background:var(--card); border:1px solid var(--border); border-radius:18px; box-shadow:var(--shadow); overflow:hidden; margin-bottom:16px; }
+        .header-inner {
+            max-width: 1400px;
+            margin: auto;
+            padding: 16px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
 
-  .rep-row { padding:18px 22px; border-bottom:1px solid var(--border); }
-  .rep-row:last-child { border-bottom:0; }
-  .rep-head { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:10px; }
-  .rep-type { font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:.5px; padding:4px 10px; border-radius:50px; background:#222; color:#fff; }
-  .rep-type.yap { background:#ff5a36; }
-  .rep-type.yap_comment { background:#ffa88d; }
-  .rep-type.tape { background:#7c3aed; }
-  .rep-type.tape_comment { background:#a78bfa; }
-  .rep-type.profile { background:#0284c7; }
-  .rep-time { font-size:11px; color:var(--muted); margin-left:auto; }
-  .rep-preview { font-size:13px; line-height:1.6; color:#333; background:#fafafa; border:1px solid var(--border); border-radius:10px; padding:10px 12px; margin-bottom:10px; white-space:pre-wrap; word-wrap:break-word; max-height:120px; overflow-y:auto; }
-  .rep-preview em { color:var(--muted); font-style:italic; }
-  .rep-meta { font-size:12px; color:var(--muted); line-height:1.6; margin-bottom:10px; }
-  .rep-meta strong { color:#555; font-weight:800; }
-  .rep-reason { font-size:13px; color:#333; line-height:1.55; padding:10px 12px; background:#fff5f0; border-left:3px solid var(--accent); border-radius:6px; margin-bottom:12px; }
-  .rep-actions { display:flex; gap:8px; flex-wrap:wrap; }
+        .logo {
+            font-size: 25px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            white-space: nowrap;
+        }
 
-  .rep-btn { border:1px solid var(--border); background:#fff; padding:8px 16px; border-radius:50px; font-family:inherit; font-weight:800; font-size:12px; cursor:pointer; color:#444; transition:.2s ease; }
-  .rep-btn:hover:not(:disabled) { border-color:#bbb; }
-  .rep-btn.resolve { background:var(--green); border-color:var(--green); color:#fff; }
-  .rep-btn.resolve:hover:not(:disabled) { background:#15803d; border-color:#15803d; }
-  .rep-btn.remove { background:var(--red); border-color:var(--red); color:#fff; }
-  .rep-btn.remove:hover:not(:disabled) { background:#b91c1c; border-color:#b91c1c; }
-  .rep-btn.approve { background:var(--green); border-color:var(--green); color:#fff; }
-  .rep-btn.approve:hover:not(:disabled) { background:#15803d; border-color:#15803d; }
-  .rep-btn.reject { background:var(--red); border-color:var(--red); color:#fff; }
-  .rep-btn.reject:hover:not(:disabled) { background:#b91c1c; border-color:#b91c1c; }
-  .rep-btn.warn { background:var(--amber); border-color:var(--amber); color:#fff; }
-  .rep-btn.warn:hover:not(:disabled) { background:#b45309; border-color:#b45309; }
-  .rep-btn:disabled { opacity:.55; cursor:not-allowed; }
+        .logo span {
+            color: var(--accent);
+        }
 
-  .empty { text-align:center; padding:60px 20px; color:var(--muted); font-size:14px; }
-  .empty .emoji { font-size:42px; margin-bottom:10px; }
-  .empty strong { color:var(--text); display:block; font-size:17px; margin-bottom:6px; }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-  .loading { text-align:center; padding:50px 20px; color:var(--muted); font-size:14px; }
-  .err-card { background:#fef2f2; border:1px solid #fecaca; color:#991b1b; padding:20px 24px; border-radius:16px; font-size:14px; line-height:1.7; }
-  .err-card h2 { margin:0 0 8px; font-size:20px; }
-  .err-card a { color:#7f1d1d; font-weight:800; text-decoration:underline; }
+        .nav-link {
+            font-size: 13px;
+            font-weight: 700;
+            padding: 8px 14px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            background: #fff;
+            transition: .2s ease;
+            white-space: nowrap;
+        }
 
-  .log-row { display:grid; grid-template-columns: 140px 1fr 200px; gap:14px; padding:12px 20px; border-bottom:1px solid var(--border); align-items:center; font-size:12px; }
-  .log-row:last-child { border-bottom:0; }
-  .log-row .who { font-weight:800; color:var(--accent-dark); }
-  .log-row .what { color:#333; }
-  .log-row .when { color:var(--muted); text-align:right; }
+        .nav-link:hover {
+            border-color: #bbb;
+        }
 
-  /* Vendor rows */
-  .vendor-row { padding:18px 22px; border-bottom:1px solid var(--border); cursor:pointer; transition:.15s ease; }
-  .vendor-row:last-child { border-bottom:0; }
-  .vendor-row:hover { background:#fafafa; }
-  .vendor-head { display:flex; gap:12px; align-items:flex-start; margin-bottom:8px; flex-wrap:wrap; }
-  .vendor-logo { width:48px; height:48px; border-radius:12px; object-fit:cover; background:#f1eee8; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:24px; }
-  .vendor-info { flex:1; min-width:200px; }
-  .vendor-name { font-weight:900; font-size:16px; margin:0 0 2px; }
-  .vendor-meta { font-size:12px; color:var(--muted); line-height:1.5; }
-  .vendor-meta a { color:var(--accent-dark); font-weight:700; text-decoration:underline; }
-  .status-pill { font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:.5px; padding:4px 10px; border-radius:50px; }
-  .status-pill.pending   { background:#fef3c7; color:#92400e; }
-  .status-pill.approved  { background:#dcfce7; color:#166534; }
-  .status-pill.suspended { background:#fee2e2; color:#991b1b; }
-  .status-pill.rejected  { background:#f1eee8; color:#666; }
-  .status-pill.anon      { background:#f1eee8; color:#666; }
-  .vendor-stats { display:flex; gap:14px; flex-wrap:wrap; margin-top:8px; font-size:12px; color:var(--muted); }
-  .vendor-stats .num { font-weight:800; color:#333; }
-  .vendor-actions { display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; }
-  .vendor-actions .rep-btn { padding:6px 12px; font-size:11px; }
+        .nav-link.active {
+            background: #222;
+            color: #fff;
+            border-color: #222;
+        }
 
-  /* Product rows */
-  .product-row { padding:16px 22px; border-bottom:1px solid var(--border); display:flex; gap:14px; align-items:flex-start; }
-  .product-row:last-child { border-bottom:0; }
-  .product-row img { width:64px; height:64px; border-radius:10px; object-fit:cover; background:#f1eee8; flex-shrink:0; }
-  .product-body { flex:1; min-width:0; }
-  .product-name { font-weight:900; font-size:15px; margin:0 0 4px; }
-  .product-meta { font-size:12px; color:var(--muted); line-height:1.5; margin-bottom:6px; }
-  .product-meta .vendor { color:var(--accent-dark); font-weight:800; }
-  .product-meta .link { color:#666; word-break:break-all; }
+        .wrap {
+            max-width: 1400px;
+            margin: auto;
+            padding: 28px 22px 70px;
+        }
 
-  /* Category rows */
-  .cat-row { padding:14px 22px; border-bottom:1px solid var(--border); display:flex; gap:14px; align-items:center; flex-wrap:wrap; }
-  .cat-row:last-child { border-bottom:0; }
-  .cat-name { font-weight:800; font-size:15px; flex:1; min-width:160px; }
-  .cat-slug { font-family:ui-monospace,monospace; font-size:11px; color:#666; }
-  .cat-sort { font-size:12px; color:var(--muted); }
-  .cat-actions { display:flex; gap:6px; flex-wrap:wrap; }
+        .page-head {
+            margin-bottom: 22px;
+        }
 
-  .cat-form { padding:20px 22px; background:#fafafa; border-bottom:1px solid var(--border); display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end; }
-  .cat-form label { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.4px; color:var(--muted); display:block; margin-bottom:4px; }
-  .cat-form input { padding:10px 12px; border:1px solid var(--border); border-radius:10px; font-family:inherit; font-size:13px; background:#fff; outline:none; }
-  .cat-form input:focus { border-color:var(--accent); }
-  .cat-form .field { display:flex; flex-direction:column; }
-  .cat-form .field.grow { flex:1; min-width:180px; }
+        .page-head .kicker {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .6px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
 
-  /* Modal */
-  .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:100000; align-items:center; justify-content:center; padding:20px; }
-  .modal.open { display:flex; }
-  .modal-inner { background:#fff; border-radius:20px; padding:28px; max-width:640px; width:100%; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,.25); position:relative; animation:modalIn .18s ease-out; }
-  @keyframes modalIn { from { opacity:0; transform:translateY(10px) scale(.98); } to { opacity:1; transform:translateY(0) scale(1); } }
-  .modal-close { position:absolute; top:12px; right:12px; width:34px; height:34px; border:0; background:#f1eee8; border-radius:50%; font-size:20px; line-height:1; cursor:pointer; color:#555; display:flex; align-items:center; justify-content:center; font-family:inherit; }
-  .modal-close:hover { background:#e8e4dc; color:#222; }
-  .modal h3 { margin:0 0 8px; font-size:22px; letter-spacing:-.3px; font-weight:900; }
-  .modal h4 { margin:18px 0 6px; font-size:13px; text-transform:uppercase; letter-spacing:.4px; color:var(--muted); }
-  .modal p { margin:0 0 10px; font-size:14px; line-height:1.65; color:#333; }
-  .modal .modal-sub { font-size:13px; color:var(--muted); margin:0 0 16px; }
-  .modal-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:20px; flex-wrap:wrap; }
+        .page-head h1 {
+            margin: 0 0 4px;
+            font-size: 32px;
+            letter-spacing: -1px;
+            font-weight: 950;
+        }
 
-  .toast-container { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); z-index:99999; display:flex; flex-direction:column; gap:8px; align-items:center; }
-  .toast { padding:12px 20px; border-radius:50px; background:#222; color:#fff; font-size:13px; font-weight:600; box-shadow:0 10px 30px rgba(0,0,0,.25); animation:toastIn .2s ease-out; }
-  .toast.ok { background:var(--green); }
-  .toast.err { background:var(--red); }
-  @keyframes toastIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+        .page-head h1 span {
+            color: var(--accent);
+        }
 
-  @media (max-width:700px) {
-    .header-inner { padding:13px 15px; flex-wrap:wrap; }
-    .logo { font-size:21px; }
-    .nav-link { font-size:11px; padding:7px 11px; }
-    .wrap { padding:18px 15px 55px; }
-    .page-head h1 { font-size:24px; }
-    .rep-row { padding:14px 16px; }
-    .vendor-row { padding:14px 16px; }
-    .product-row { padding:14px 16px; }
-    .cat-row { padding:12px 16px; }
-    .log-row { grid-template-columns:1fr; gap:4px; padding:12px 16px; }
-    .log-row .when { text-align:left; }
-  }
-</style>
+        .page-head p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            border: 1px solid var(--border);
+            background: #fff;
+            padding: 11px 18px;
+            border-radius: 50px;
+            font-family: inherit;
+            font-weight: 800;
+            font-size: 13px;
+            cursor: pointer;
+            color: var(--muted);
+            transition: .2s ease;
+        }
+
+        .tab-btn:hover {
+            border-color: #bbb;
+            color: var(--text);
+        }
+
+        .tab-btn.active {
+            background: #222;
+            color: #fff;
+            border-color: #222;
+        }
+
+        .tab-btn .count {
+            display: inline-block;
+            background: var(--pill);
+            color: var(--accent-dark);
+            padding: 1px 8px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 900;
+            margin-left: 6px;
+        }
+
+        .tab-btn.active .count {
+            background: rgba(255, 255, 255, .2);
+            color: #fff;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .rep-row {
+            padding: 18px 22px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .rep-row:last-child {
+            border-bottom: 0;
+        }
+
+        .rep-head {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .rep-type {
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            padding: 4px 10px;
+            border-radius: 50px;
+            background: #222;
+            color: #fff;
+        }
+
+        .rep-type.yap {
+            background: #ff5a36;
+        }
+
+        .rep-type.yap_comment {
+            background: #ffa88d;
+        }
+
+        .rep-type.tape {
+            background: #7c3aed;
+        }
+
+        .rep-type.tape_comment {
+            background: #a78bfa;
+        }
+
+        .rep-type.profile {
+            background: #0284c7;
+        }
+
+        .rep-time {
+            font-size: 11px;
+            color: var(--muted);
+            margin-left: auto;
+        }
+
+        .rep-preview {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #333;
+            background: #fafafa;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 12px;
+            margin-bottom: 10px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+
+        .rep-preview em {
+            color: var(--muted);
+            font-style: italic;
+        }
+
+        .rep-meta {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .rep-meta strong {
+            color: #555;
+            font-weight: 800;
+        }
+
+        .rep-reason {
+            font-size: 13px;
+            color: #333;
+            line-height: 1.55;
+            padding: 10px 12px;
+            background: #fff5f0;
+            border-left: 3px solid var(--accent);
+            border-radius: 6px;
+            margin-bottom: 12px;
+        }
+
+        .rep-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .rep-btn {
+            border: 1px solid var(--border);
+            background: #fff;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-family: inherit;
+            font-weight: 800;
+            font-size: 12px;
+            cursor: pointer;
+            color: #444;
+            transition: .2s ease;
+        }
+
+        .rep-btn:hover:not(:disabled) {
+            border-color: #bbb;
+        }
+
+        .rep-btn.resolve {
+            background: var(--green);
+            border-color: var(--green);
+            color: #fff;
+        }
+
+        .rep-btn.resolve:hover:not(:disabled) {
+            background: #15803d;
+            border-color: #15803d;
+        }
+
+        .rep-btn.remove {
+            background: var(--red);
+            border-color: var(--red);
+            color: #fff;
+        }
+
+        .rep-btn.remove:hover:not(:disabled) {
+            background: #b91c1c;
+            border-color: #b91c1c;
+        }
+
+        .rep-btn.approve {
+            background: var(--green);
+            border-color: var(--green);
+            color: #fff;
+        }
+
+        .rep-btn.approve:hover:not(:disabled) {
+            background: #15803d;
+            border-color: #15803d;
+        }
+
+        .rep-btn.reject {
+            background: var(--red);
+            border-color: var(--red);
+            color: #fff;
+        }
+
+        .rep-btn.reject:hover:not(:disabled) {
+            background: #b91c1c;
+            border-color: #b91c1c;
+        }
+
+        .rep-btn.warn {
+            background: var(--amber);
+            border-color: var(--amber);
+            color: #fff;
+        }
+
+        .rep-btn.warn:hover:not(:disabled) {
+            background: #b45309;
+            border-color: #b45309;
+        }
+
+        .rep-btn:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .empty .emoji {
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+        .empty strong {
+            color: var(--text);
+            display: block;
+            font-size: 17px;
+            margin-bottom: 6px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .err-card {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            padding: 20px 24px;
+            border-radius: 16px;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .err-card h2 {
+            margin: 0 0 8px;
+            font-size: 20px;
+        }
+
+        .err-card a {
+            color: #7f1d1d;
+            font-weight: 800;
+            text-decoration: underline;
+        }
+
+        .log-row {
+            display: grid;
+            grid-template-columns: 140px 1fr 200px;
+            gap: 14px;
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border);
+            align-items: center;
+            font-size: 12px;
+        }
+
+        .log-row:last-child {
+            border-bottom: 0;
+        }
+
+        .log-row .who {
+            font-weight: 800;
+            color: var(--accent-dark);
+        }
+
+        .log-row .what {
+            color: #333;
+        }
+
+        .log-row .when {
+            color: var(--muted);
+            text-align: right;
+        }
+
+        /* Vendor rows */
+        .vendor-row {
+            padding: 18px 22px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: .15s ease;
+        }
+
+        .vendor-row:last-child {
+            border-bottom: 0;
+        }
+
+        .vendor-row:hover {
+            background: #fafafa;
+        }
+
+        .vendor-head {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .vendor-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            object-fit: cover;
+            background: #f1eee8;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .vendor-info {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .vendor-name {
+            font-weight: 900;
+            font-size: 16px;
+            margin: 0 0 2px;
+        }
+
+        .vendor-meta {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .vendor-meta a {
+            color: var(--accent-dark);
+            font-weight: 700;
+            text-decoration: underline;
+        }
+
+        .status-pill {
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            padding: 4px 10px;
+            border-radius: 50px;
+        }
+
+        .status-pill.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-pill.approved {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-pill.suspended {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-pill.rejected {
+            background: #f1eee8;
+            color: #666;
+        }
+
+        .status-pill.anon {
+            background: #f1eee8;
+            color: #666;
+        }
+
+        .vendor-stats {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .vendor-stats .num {
+            font-weight: 800;
+            color: #333;
+        }
+
+        .vendor-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .vendor-actions .rep-btn {
+            padding: 6px 12px;
+            font-size: 11px;
+        }
+
+        /* Product rows */
+        .product-row {
+            padding: 16px 22px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+        }
+
+        .product-row:last-child {
+            border-bottom: 0;
+        }
+
+        .product-row img {
+            width: 64px;
+            height: 64px;
+            border-radius: 10px;
+            object-fit: cover;
+            background: #f1eee8;
+            flex-shrink: 0;
+        }
+
+        .product-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .product-name {
+            font-weight: 900;
+            font-size: 15px;
+            margin: 0 0 4px;
+        }
+
+        .product-meta {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.5;
+            margin-bottom: 6px;
+        }
+
+        .product-meta .vendor {
+            color: var(--accent-dark);
+            font-weight: 800;
+        }
+
+        .product-meta .link {
+            color: #666;
+            word-break: break-all;
+        }
+
+        /* Category rows */
+        .cat-row {
+            padding: 14px 22px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .cat-row:last-child {
+            border-bottom: 0;
+        }
+
+        .cat-name {
+            font-weight: 800;
+            font-size: 15px;
+            flex: 1;
+            min-width: 160px;
+        }
+
+        .cat-slug {
+            font-family: ui-monospace, monospace;
+            font-size: 11px;
+            color: #666;
+        }
+
+        .cat-sort {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .cat-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .cat-form {
+            padding: 20px 22px;
+            background: #fafafa;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+
+        .cat-form label {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            color: var(--muted);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .cat-form input {
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 13px;
+            background: #fff;
+            outline: none;
+        }
+
+        .cat-form input:focus {
+            border-color: var(--accent);
+        }
+
+        .cat-form .field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cat-form .field.grow {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .5);
+            z-index: 100000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.open {
+            display: flex;
+        }
+
+        .modal-inner {
+            background: #fff;
+            border-radius: 20px;
+            padding: 28px;
+            max-width: 640px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .25);
+            position: relative;
+            animation: modalIn .18s ease-out;
+        }
+
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px) scale(.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 34px;
+            height: 34px;
+            border: 0;
+            background: #f1eee8;
+            border-radius: 50%;
+            font-size: 20px;
+            line-height: 1;
+            cursor: pointer;
+            color: #555;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: inherit;
+        }
+
+        .modal-close:hover {
+            background: #e8e4dc;
+            color: #222;
+        }
+
+        .modal h3 {
+            margin: 0 0 8px;
+            font-size: 22px;
+            letter-spacing: -.3px;
+            font-weight: 900;
+        }
+
+        .modal h4 {
+            margin: 18px 0 6px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            color: var(--muted);
+        }
+
+        .modal p {
+            margin: 0 0 10px;
+            font-size: 14px;
+            line-height: 1.65;
+            color: #333;
+        }
+
+        .modal .modal-sub {
+            font-size: 13px;
+            color: var(--muted);
+            margin: 0 0 16px;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .toast {
+            padding: 12px 20px;
+            border-radius: 50px;
+            background: #222;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+            animation: toastIn .2s ease-out;
+        }
+
+        .toast.ok {
+            background: var(--green);
+        }
+
+        .toast.err {
+            background: var(--red);
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width:700px) {
+            .header-inner {
+                padding: 13px 15px;
+                flex-wrap: wrap;
+            }
+
+            .logo {
+                font-size: 21px;
+            }
+
+            .nav-link {
+                font-size: 11px;
+                padding: 7px 11px;
+            }
+
+            .wrap {
+                padding: 18px 15px 55px;
+            }
+
+            .page-head h1 {
+                font-size: 24px;
+            }
+
+            .rep-row {
+                padding: 14px 16px;
+            }
+
+            .vendor-row {
+                padding: 14px 16px;
+            }
+
+            .product-row {
+                padding: 14px 16px;
+            }
+
+            .cat-row {
+                padding: 12px 16px;
+            }
+
+            .log-row {
+                grid-template-columns: 1fr;
+                gap: 4px;
+                padding: 12px 16px;
+            }
+
+            .log-row .when {
+                text-align: left;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<header>
-  <div class="header-inner">
-    <a href="index.html" class="logo">The <span>Whacky</span> Rack</a>
-    <div class="header-right">
-      <a href="index.html" class="nav-link">Shop</a>
-      <a href="admin.html" class="nav-link active">Admin</a>
-      <a href="analytics.html" class="nav-link">Analytics</a>
+    <header>
+        <div class="header-inner">
+            <a href="index.html" class="logo">The <span>Whacky</span> Rack</a>
+            <div class="header-right">
+                <a href="index.html" class="nav-link">Shop</a>
+                <a href="admin.html" class="nav-link active">Admin</a>
+                <a href="analytics.html" class="nav-link">Analytics</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="wrap" id="root">
+        <div class="loading">Checking access…</div>
+    </main>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Vendor detail modal -->
+    <div class="modal" id="vendor-modal" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="modal-inner" id="vendor-modal-body"></div>
     </div>
-  </div>
-</header>
 
-<main class="wrap" id="root">
-  <div class="loading">Checking access…</div>
-</main>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth.js"></script>
+    <script>
+        (function() {
+            const sb = window.wr.sb;
+            const root = document.getElementById("root");
+            const toastBox = document.getElementById("toast-container");
+            const vendorModal = document.getElementById("vendor-modal");
+            const vendorModalBody = document.getElementById("vendor-modal-body");
 
-<div class="toast-container" id="toast-container"></div>
+            let me = null;
+            let tab = "vendors"; // "reports" | "vendors" | "products" | "categories" | "log"
+            let reports = [];
+            let logs = [];
+            let vendors = [];
+            let vendorFilter = "pending"; // "pending" | "approved" | "suspended" | "rejected" | "all"
+            let vendorProducts = [];
+            let productFilter = "pending";
+            let categories = [];
 
-<!-- Vendor detail modal -->
-<div class="modal" id="vendor-modal" role="dialog" aria-modal="true" aria-hidden="true">
-  <div class="modal-inner" id="vendor-modal-body"></div>
-</div>
+            /* ---------- Utils ---------- */
+            function esc(s) {
+                return String(s ?? "").replace(/[&<>"']/g, c => ({
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    '"': "&quot;",
+                    "'": "&#39;"
+                } [c]));
+            }
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="auth.js"></script>
-<script>
-(function () {
-  const sb = window.wr.sb;
-  const root = document.getElementById("root");
-  const toastBox = document.getElementById("toast-container");
-  const vendorModal = document.getElementById("vendor-modal");
-  const vendorModalBody = document.getElementById("vendor-modal-body");
+            function timeAgo(iso) {
+                if (!iso) return "—";
+                const d = new Date(iso);
+                const s = Math.floor((Date.now() - d.getTime()) / 1000);
+                if (s < 60) return "just now";
+                if (s < 3600) return Math.floor(s / 60) + "m ago";
+                if (s < 86400) return Math.floor(s / 3600) + "h ago";
+                if (s < 604800) return Math.floor(s / 86400) + "d ago";
+                return d.toLocaleDateString();
+            }
 
-  let me = null;
-  let tab = "vendors";           // "reports" | "vendors" | "products" | "categories" | "log"
-  let reports = [];
-  let logs = [];
-  let vendors = [];
-  let vendorFilter = "pending";   // "pending" | "approved" | "suspended" | "rejected" | "all"
-  let vendorProducts = [];
-  let productFilter = "pending";
-  let categories = [];
+            function fmtDate(iso) {
+                if (!iso) return "—";
+                return new Date(iso).toLocaleString(undefined, {
+                    year: "numeric",
+                    month: "short",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit"
+                });
+            }
 
-  /* ---------- Utils ---------- */
-  function esc(s) {
-    return String(s ?? "").replace(/[&<>"']/g, c => ({
-      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-    }[c]));
-  }
-  function timeAgo(iso) {
-    if (!iso) return "—";
-    const d = new Date(iso);
-    const s = Math.floor((Date.now() - d.getTime()) / 1000);
-    if (s < 60) return "just now";
-    if (s < 3600) return Math.floor(s/60) + "m ago";
-    if (s < 86400) return Math.floor(s/3600) + "h ago";
-    if (s < 604800) return Math.floor(s/86400) + "d ago";
-    return d.toLocaleDateString();
-  }
-  function fmtDate(iso) {
-    if (!iso) return "—";
-    return new Date(iso).toLocaleString(undefined, {
-      year:"numeric", month:"short", day:"2-digit",
-      hour:"2-digit", minute:"2-digit"
-    });
-  }
-  function toast(msg, kind = "ok") {
-    const el = document.createElement("div");
-    el.className = "toast " + kind;
-    el.textContent = msg;
-    toastBox.appendChild(el);
-    setTimeout(() => el.remove(), 2800);
-  }
-  function labelTarget(t) {
-    return ({ yap:"Yap", yap_comment:"Yap comment", tape:"Tape", tape_comment:"Tape comment", profile:"Profile" })[t] || t;
-  }
-  function flagFor(cc) {
-    if (!cc || cc.length !== 2) return "";
-    const A = 0x1F1E6;
-    return String.fromCodePoint(A + cc.toUpperCase().charCodeAt(0) - 65,
-                                A + cc.toUpperCase().charCodeAt(1) - 65);
-  }
+            function toast(msg, kind = "ok") {
+                const el = document.createElement("div");
+                el.className = "toast " + kind;
+                el.textContent = msg;
+                toastBox.appendChild(el);
+                setTimeout(() => el.remove(), 2800);
+            }
 
-  /* ---------- Loaders ---------- */
-  async function loadReports() {
-    const { data, error } = await sb.rpc("get_pending_reports", { p_limit: 100 });
-    if (error) { console.error(error); reports = []; return; }
-    reports = data || [];
-  }
-  async function loadLogs() {
-    const { data, error } = await sb.from("moderation_log")
-      .select(`
+            function labelTarget(t) {
+                return ({
+                    yap: "Yap",
+                    yap_comment: "Yap comment",
+                    tape: "Tape",
+                    tape_comment: "Tape comment",
+                    profile: "Profile"
+                })[t] || t;
+            }
+
+            function flagFor(cc) {
+                if (!cc || cc.length !== 2) return "";
+                const A = 0x1F1E6;
+                return String.fromCodePoint(A + cc.toUpperCase().charCodeAt(0) - 65,
+                    A + cc.toUpperCase().charCodeAt(1) - 65);
+            }
+
+            /* ---------- Loaders ---------- */
+            async function loadReports() {
+                const {
+                    data,
+                    error
+                } = await sb.rpc("get_pending_reports", {
+                    p_limit: 100
+                });
+                if (error) {
+                    console.error(error);
+                    reports = [];
+                    return;
+                }
+                reports = data || [];
+            }
+            async function loadLogs() {
+                const {
+                    data,
+                    error
+                } = await sb.from("moderation_log")
+                    .select(`
         id, action, target_type, target_id, note, created_at,
         moderator:profiles!moderation_log_moderator_id_fkey(username)
       `)
-      .order("created_at", { ascending: false })
-      .limit(100);
-    if (error) { console.error(error); logs = []; return; }
-    logs = data || [];
-  }
-  async function loadVendors() {
-    const args = vendorFilter === "all" ? { p_status: null } : { p_status: vendorFilter };
-    const { data, error } = await sb.rpc("admin_list_vendors", args);
-    if (error) { console.error(error); vendors = []; return; }
-    vendors = data || [];
-  }
-  async function loadVendorProducts() {
-    const args = productFilter === "all" ? { p_status: null } : { p_status: productFilter };
-    const { data, error } = await sb.rpc("admin_list_vendor_products", args);
-    if (error) { console.error(error); vendorProducts = []; return; }
-    vendorProducts = data || [];
-  }
-  async function loadCategories() {
-    const { data, error } = await sb.from("vendor_categories")
-      .select("id, name, slug, is_active, sort_order, created_at")
-      .order("sort_order", { ascending: true })
-      .order("name", { ascending: true });
-    if (error) { console.error(error); categories = []; return; }
-    categories = data || [];
-  }
+                    .order("created_at", {
+                        ascending: false
+                    })
+                    .limit(100);
+                if (error) {
+                    console.error(error);
+                    logs = [];
+                    return;
+                }
+                logs = data || [];
+            }
+            async function loadVendors() {
+                const args = vendorFilter === "all" ? {
+                    p_status: null
+                } : {
+                    p_status: vendorFilter
+                };
+                const {
+                    data,
+                    error
+                } = await sb.rpc("admin_list_vendors", args);
+                if (error) {
+                    console.error(error);
+                    vendors = [];
+                    return;
+                }
+                vendors = data || [];
+            }
+            async function loadVendorProducts() {
+                const args = productFilter === "all" ? {
+                    p_status: null
+                } : {
+                    p_status: productFilter
+                };
+                const {
+                    data,
+                    error
+                } = await sb.rpc("admin_list_vendor_products", args);
+                if (error) {
+                    console.error(error);
+                    vendorProducts = [];
+                    return;
+                }
+                vendorProducts = data || [];
+            }
+            async function loadCategories() {
+                const {
+                    data,
+                    error
+                } = await sb.from("vendor_categories")
+                    .select("id, name, slug, is_active, sort_order, created_at")
+                    .order("sort_order", {
+                        ascending: true
+                    })
+                    .order("name", {
+                        ascending: true
+                    });
+                if (error) {
+                    console.error(error);
+                    categories = [];
+                    return;
+                }
+                categories = data || [];
+            }
 
-  async function loadAll() {
-    await Promise.all([
-      loadReports(),
-      loadVendors(),
-      loadVendorProducts(),
-      loadCategories()
-    ]);
-  }
+            async function loadAll() {
+                await Promise.all([
+                    loadReports(),
+                    loadVendors(),
+                    loadVendorProducts(),
+                    loadCategories()
+                ]);
+            }
 
-  /* ---------- Render dispatcher ---------- */
-  function render() {
-    const pendingVendors = vendors.filter(v => v.status === "pending").length;
-    const pendingProducts = vendorProducts.filter(p => p.status === "pending").length;
+            /* ---------- Render dispatcher ---------- */
+            function render() {
+                const pendingVendors = vendors.filter(v => v.status === "pending").length;
+                const pendingProducts = vendorProducts.filter(p => p.status === "pending").length;
 
-    root.innerHTML = `
+                root.innerHTML = `
       <div class="page-head">
         <div class="kicker">Signed in as ${esc(me.username)}</div>
         <h1>Moderation <span>panel</span></h1>
@@ -337,24 +1122,24 @@
       <div id="tab-content"></div>
     `;
 
-    const content = document.getElementById("tab-content");
-    if (tab === "reports") content.innerHTML = renderReports();
-    else if (tab === "vendors") content.innerHTML = renderVendors();
-    else if (tab === "products") content.innerHTML = renderVendorProducts();
-    else if (tab === "categories") content.innerHTML = renderCategories();
-    else content.innerHTML = renderLogs();
-  }
+                const content = document.getElementById("tab-content");
+                if (tab === "reports") content.innerHTML = renderReports();
+                else if (tab === "vendors") content.innerHTML = renderVendors();
+                else if (tab === "products") content.innerHTML = renderVendorProducts();
+                else if (tab === "categories") content.innerHTML = renderCategories();
+                else content.innerHTML = renderLogs();
+            }
 
-  /* ---------- Reports ---------- */
-  function renderReports() {
-    if (reports.length === 0) {
-      return `<div class="card"><div class="empty">
+            /* ---------- Reports ---------- */
+            function renderReports() {
+                if (reports.length === 0) {
+                    return `<div class="card"><div class="empty">
         <div class="emoji">🍃</div>
         <strong>No pending reports</strong>
         All quiet on the Rack. Nice.
       </div></div>`;
-    }
-    return `<div class="card">
+                }
+                return `<div class="card">
       ${reports.map(r => `
         <div class="rep-row">
           <div class="rep-head">
@@ -381,18 +1166,18 @@
         </div>
       `).join("")}
     </div>`;
-  }
+            }
 
-  /* ---------- Vendors ---------- */
-  function renderVendors() {
-    const filters = [
-      ["pending","Pending"],
-      ["approved","Approved"],
-      ["suspended","Suspended"],
-      ["rejected","Rejected"],
-      ["all","All"]
-    ];
-    const filterBar = `
+            /* ---------- Vendors ---------- */
+            function renderVendors() {
+                const filters = [
+                    ["pending", "Pending"],
+                    ["approved", "Approved"],
+                    ["suspended", "Suspended"],
+                    ["rejected", "Rejected"],
+                    ["all", "All"]
+                ];
+                const filterBar = `
       <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
         ${filters.map(([val,label]) => `
           <button class="tab-btn ${vendorFilter===val?"active":""}" style="padding:8px 14px; font-size:12px;"
@@ -401,15 +1186,15 @@
       </div>
     `;
 
-    if (vendors.length === 0) {
-      return filterBar + `<div class="card"><div class="empty">
+                if (vendors.length === 0) {
+                    return filterBar + `<div class="card"><div class="empty">
         <div class="emoji">🏪</div>
         <strong>No ${esc(vendorFilter)} vendors</strong>
         Nothing to review right now.
       </div></div>`;
-    }
+                }
 
-    return filterBar + `<div class="card">
+                return filterBar + `<div class="card">
       ${vendors.map(v => {
         const logoHtml = v.logo_url
           ? `<img class="vendor-logo" src="${esc(v.logo_url)}" alt="">`
@@ -419,15 +1204,17 @@
         if (v.status === "pending") {
           actions.push(`<button class="rep-btn approve" data-action="approve-vendor" data-vendor-id="${esc(v.vendor_id)}">Approve</button>`);
           actions.push(`<button class="rep-btn reject" data-action="reject-vendor" data-vendor-id="${esc(v.vendor_id)}">Reject</button>`);
-        } else if (v.status === "approved") {
-          actions.push(`<button class="rep-btn warn" data-action="suspend-vendor" data-vendor-id="${esc(v.vendor_id)}">Suspend</button>`);
-          actions.push(`<button class="rep-btn" data-action="set-limit" data-vendor-id="${esc(v.vendor_id)}" data-current="${v.product_limit}">Set limit (${v.product_limit})</button>`);
-        } else if (v.status === "suspended") {
-          actions.push(`<button class="rep-btn approve" data-action="restore-vendor" data-vendor-id="${esc(v.vendor_id)}">Restore</button>`);
-        }
-        actions.push(`<button class="rep-btn" data-action="view-vendor" data-vendor-id="${esc(v.vendor_id)}">View details</button>`);
+        } } else if (v.status === "approved") {
+  actions.push(` < button class = "rep-btn warn"
+                data - action = "suspend-vendor"
+                data - vendor - id = "${esc(v.vendor_id)}" > Suspend < /button>`);
+                actions.push(`<button class="rep-btn" data-action="set-limit" data-vendor-id="${esc(v.vendor_id)}" data-current="${v.product_limit}">Set limit (${v.product_limit})</button>`);
+                const featured = v.is_featured === true;
+                actions.push(`<button class="rep-btn ${featured ? "resolve" : ""}" data-action="toggle-feature-vendor" data-vendor-id="${esc(v.vendor_id)}" data-featured="${featured ? "1" : "0"}">${featured ? "★ Featured" : "☆ Feature"}</button>`);
+            }
+            actions.push(`<button class="rep-btn" data-action="view-vendor" data-vendor-id="${esc(v.vendor_id)}">View details</button>`);
 
-        return `
+            return `
           <div class="vendor-row" data-vendor-id="${esc(v.vendor_id)}">
             <div class="vendor-head">
               ${logoHtml}
@@ -454,19 +1241,20 @@
             <div class="vendor-actions">${actions.join("")}</div>
           </div>
         `;
-      }).join("")}
-    </div>`;
-  }
+        }).join("")
+        } <
+        /div>`;
+        }
 
-  /* ---------- Vendor products ---------- */
-  function renderVendorProducts() {
-    const filters = [
-      ["pending","Pending"],
-      ["approved","Approved"],
-      ["rejected","Rejected"],
-      ["all","All"]
-    ];
-    const filterBar = `
+        /* ---------- Vendor products ---------- */
+        function renderVendorProducts() {
+            const filters = [
+                ["pending", "Pending"],
+                ["approved", "Approved"],
+                ["rejected", "Rejected"],
+                ["all", "All"]
+            ];
+            const filterBar = `
       <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
         ${filters.map(([val,label]) => `
           <button class="tab-btn ${productFilter===val?"active":""}" style="padding:8px 14px; font-size:12px;"
@@ -475,24 +1263,30 @@
       </div>
     `;
 
-    if (vendorProducts.length === 0) {
-      return filterBar + `<div class="card"><div class="empty">
+            if (vendorProducts.length === 0) {
+                return filterBar + `<div class="card"><div class="empty">
         <div class="emoji">📦</div>
         <strong>No ${esc(productFilter)} vendor products</strong>
         Nothing to review right now.
       </div></div>`;
-    }
+            }
 
-    return filterBar + `<div class="card">
+            return filterBar + `<div class="card">
       ${vendorProducts.map(p => {
         const actions = [];
-        if (p.status === "pending") {
-          actions.push(`<button class="rep-btn approve" data-action="approve-product" data-product-id="${esc(p.product_id)}">Approve</button>`);
-          actions.push(`<button class="rep-btn reject" data-action="reject-product" data-product-id="${esc(p.product_id)}">Reject</button>`);
-        } else if (p.status === "rejected") {
-          actions.push(`<button class="rep-btn approve" data-action="approve-product" data-product-id="${esc(p.product_id)}">Re-approve</button>`);
+if (p.status === "pending") {
+  actions.push(`<button class="rep-btn approve" data-action="approve-product" data-product-id="${esc(p.product_id)}">Approve</button>`);
+  actions.push(`<button class="rep-btn reject" data-action="reject-product" data-product-id="${esc(p.product_id)}">Reject</button>`);
+} else if (p.status === "rejected") {
+  actions.push(` < button class = "rep-btn approve"
+            data - action = "approve-product"
+            data - product - id = "${esc(p.product_id)}" > Re - approve < /button>`);
         }
         actions.push(`<a class="rep-btn" href="${esc(p.product_link)}" target="_blank" rel="noopener">Open link</a>`);
+        if (p.status === "approved") {
+            const featured = p.is_featured === true;
+            actions.push(`<button class="rep-btn ${featured ? "resolve" : ""}" data-action="toggle-feature-product" data-product-id="${esc(p.product_id)}" data-featured="${featured ? "1" : "0"}">${featured ? "★ Featured" : "☆ Feature"}</button>`);
+        }
 
         return `
           <div class="product-row">
@@ -518,13 +1312,14 @@
             </div>
           </div>
         `;
-      }).join("")}
-    </div>`;
-  }
+        }).join("")
+        } <
+        /div>`;
+        }
 
-  /* ---------- Categories ---------- */
-  function renderCategories() {
-    const addForm = `
+        /* ---------- Categories ---------- */
+        function renderCategories() {
+            const addForm = `
       <div class="card">
         <div class="cat-form">
           <div class="field grow">
@@ -540,15 +1335,15 @@
       </div>
     `;
 
-    if (categories.length === 0) {
-      return addForm + `<div class="card"><div class="empty">
+            if (categories.length === 0) {
+                return addForm + `<div class="card"><div class="empty">
         <div class="emoji">🏷️</div>
         <strong>No categories</strong>
         Add the first one above.
       </div></div>`;
-    }
+            }
 
-    return addForm + `<div class="card">
+            return addForm + `<div class="card">
       ${categories.map(c => `
         <div class="cat-row" data-cat-id="${c.id}">
           <div class="cat-name">
@@ -568,18 +1363,18 @@
         </div>
       `).join("")}
     </div>`;
-  }
+        }
 
-  /* ---------- Logs ---------- */
-  function renderLogs() {
-    if (logs.length === 0) {
-      return `<div class="card"><div class="empty">
+        /* ---------- Logs ---------- */
+        function renderLogs() {
+            if (logs.length === 0) {
+                return `<div class="card"><div class="empty">
         <div class="emoji">📜</div>
         <strong>No moderation actions yet</strong>
         Once you resolve or dismiss reports, they'll appear here.
       </div></div>`;
-    }
-    return `<div class="card">
+            }
+            return `<div class="card">
       ${logs.map(l => `
         <div class="log-row">
           <div class="who">${esc(l.moderator?.username || "unknown")}</div>
@@ -592,29 +1387,29 @@
         </div>
       `).join("")}
     </div>`;
-  }
+        }
 
-  /* ---------- Vendor detail modal ---------- */
-  function openVendorModal(vendorId) {
-    const v = vendors.find(x => x.vendor_id === vendorId);
-    if (!v) return;
+        /* ---------- Vendor detail modal ---------- */
+        function openVendorModal(vendorId) {
+            const v = vendors.find(x => x.vendor_id === vendorId);
+            if (!v) return;
 
-    const logoHtml = v.logo_url
-      ? `<img src="${esc(v.logo_url)}" alt="" style="width:64px; height:64px; border-radius:14px; object-fit:cover; background:#f1eee8;">`
-      : `<div style="width:64px; height:64px; border-radius:14px; background:#f1eee8; display:flex; align-items:center; justify-content:center; font-size:32px;">🏪</div>`;
+            const logoHtml = v.logo_url ?
+                `<img src="${esc(v.logo_url)}" alt="" style="width:64px; height:64px; border-radius:14px; object-fit:cover; background:#f1eee8;">` :
+                `<div style="width:64px; height:64px; border-radius:14px; background:#f1eee8; display:flex; align-items:center; justify-content:center; font-size:32px;">🏪</div>`;
 
-    const actions = [];
-    if (v.status === "pending") {
-      actions.push(`<button class="rep-btn approve" data-action="approve-vendor" data-vendor-id="${esc(v.vendor_id)}">Approve</button>`);
-      actions.push(`<button class="rep-btn reject" data-action="reject-vendor" data-vendor-id="${esc(v.vendor_id)}">Reject</button>`);
-    } else if (v.status === "approved") {
-      actions.push(`<button class="rep-btn warn" data-action="suspend-vendor" data-vendor-id="${esc(v.vendor_id)}">Suspend</button>`);
-      actions.push(`<button class="rep-btn" data-action="set-limit" data-vendor-id="${esc(v.vendor_id)}" data-current="${v.product_limit}">Set product limit (currently ${v.product_limit})</button>`);
-    } else if (v.status === "suspended") {
-      actions.push(`<button class="rep-btn approve" data-action="restore-vendor" data-vendor-id="${esc(v.vendor_id)}">Restore</button>`);
-    }
+            const actions = [];
+            if (v.status === "pending") {
+                actions.push(`<button class="rep-btn approve" data-action="approve-vendor" data-vendor-id="${esc(v.vendor_id)}">Approve</button>`);
+                actions.push(`<button class="rep-btn reject" data-action="reject-vendor" data-vendor-id="${esc(v.vendor_id)}">Reject</button>`);
+            } else if (v.status === "approved") {
+                actions.push(`<button class="rep-btn warn" data-action="suspend-vendor" data-vendor-id="${esc(v.vendor_id)}">Suspend</button>`);
+                actions.push(`<button class="rep-btn" data-action="set-limit" data-vendor-id="${esc(v.vendor_id)}" data-current="${v.product_limit}">Set product limit (currently ${v.product_limit})</button>`);
+            } else if (v.status === "suspended") {
+                actions.push(`<button class="rep-btn approve" data-action="restore-vendor" data-vendor-id="${esc(v.vendor_id)}">Restore</button>`);
+            }
 
-    vendorModalBody.innerHTML = `
+            vendorModalBody.innerHTML = `
       <button class="modal-close" type="button" id="vendor-modal-close" aria-label="Close">×</button>
       <div style="display:flex; gap:14px; align-items:center; margin-bottom:14px;">
         ${logoHtml}
@@ -656,296 +1451,439 @@
       <div class="modal-actions">${actions.join("")}</div>
     `;
 
-    vendorModal.classList.add("open");
-    vendorModal.setAttribute("aria-hidden", "false");
-  }
-  function closeVendorModal() {
-    vendorModal.classList.remove("open");
-    vendorModal.setAttribute("aria-hidden", "true");
-  }
-
-  /* ---------- Actions ---------- */
-  async function handleVendorAction(action, vendorId, extra) {
-    try {
-      if (action === "approve-vendor") {
-        const { error } = await sb.rpc("admin_approve_vendor", { p_vendor_id: vendorId });
-        if (error) throw error;
-        toast("Vendor approved.", "ok");
-      } else if (action === "reject-vendor") {
-        const reason = prompt("Reason for rejection (min 5 chars):", "");
-        if (reason === null) return;
-        if (reason.trim().length < 5) { toast("Reason too short.", "err"); return; }
-        const { error } = await sb.rpc("admin_reject_vendor", { p_vendor_id: vendorId, p_reason: reason.trim() });
-        if (error) throw error;
-        toast("Vendor rejected.", "ok");
-      } else if (action === "suspend-vendor") {
-        const reason = prompt("Reason for suspension (optional):", "");
-        if (reason === null) return;
-        const { error } = await sb.rpc("admin_suspend_vendor", { p_vendor_id: vendorId, p_reason: reason.trim() });
-        if (error) throw error;
-        toast("Vendor suspended.", "ok");
-      } else if (action === "restore-vendor") {
-        const { error } = await sb.rpc("admin_restore_vendor", { p_vendor_id: vendorId });
-        if (error) throw error;
-        toast("Vendor restored.", "ok");
-      } else if (action === "set-limit") {
-        const v = vendors.find(x => x.vendor_id === vendorId);
-        const current = v ? v.product_limit : 10;
-        const value = prompt(`Set product limit for this vendor (currently ${current}):`, String(current));
-        if (value === null) return;
-        const n = parseInt(value, 10);
-        if (!n || n < 1 || n > 500) { toast("Limit must be 1–500.", "err"); return; }
-        const { error } = await sb.rpc("admin_set_vendor_limit", { p_vendor_id: vendorId, p_limit: n });
-        if (error) throw error;
-        toast("Limit updated to " + n + ".", "ok");
-      }
-      closeVendorModal();
-      await loadVendors();
-      render();
-    } catch (e) {
-      console.error(e);
-      toast(e.message || "Action failed.", "err");
-    }
-  }
-
-  async function handleProductAction(action, productId) {
-    try {
-      if (action === "approve-product") {
-        const { error } = await sb.rpc("admin_approve_vendor_product", { p_product_id: productId });
-        if (error) throw error;
-        toast("Product approved.", "ok");
-      } else if (action === "reject-product") {
-        const reason = prompt("Reason for rejection (min 5 chars):", "");
-        if (reason === null) return;
-        if (reason.trim().length < 5) { toast("Reason too short.", "err"); return; }
-        const { error } = await sb.rpc("admin_reject_vendor_product", { p_product_id: productId, p_reason: reason.trim() });
-        if (error) throw error;
-        toast("Product rejected.", "ok");
-      }
-      await loadVendorProducts();
-      render();
-    } catch (e) {
-      console.error(e);
-      toast(e.message || "Action failed.", "err");
-    }
-  }
-
-  async function handleCategoryAction(action, catId) {
-    try {
-      if (action === "edit-cat") {
-        const c = categories.find(x => x.id === catId);
-        if (!c) return;
-        const name = prompt("Category name:", c.name);
-        if (name === null) return;
-        const trimmed = name.trim();
-        if (trimmed.length < 2) { toast("Name too short.", "err"); return; }
-        const sortStr = prompt("Sort order (lower = earlier):", String(c.sort_order));
-        if (sortStr === null) return;
-        const sort = parseInt(sortStr, 10);
-        if (Number.isNaN(sort)) { toast("Invalid sort order.", "err"); return; }
-        const { error } = await sb.from("vendor_categories")
-          .update({ name: trimmed, sort_order: sort })
-          .eq("id", catId);
-        if (error) throw error;
-        toast("Category updated.", "ok");
-      } else if (action === "activate-cat") {
-        const { error } = await sb.from("vendor_categories").update({ is_active: true }).eq("id", catId);
-        if (error) throw error;
-        toast("Category activated.", "ok");
-      } else if (action === "deactivate-cat") {
-        const { error } = await sb.from("vendor_categories").update({ is_active: false }).eq("id", catId);
-        if (error) throw error;
-        toast("Category deactivated.", "ok");
-      } else if (action === "delete-cat") {
-        if (!confirm("Delete this category permanently? Products using it will have their category cleared.")) return;
-        const { error } = await sb.from("vendor_categories").delete().eq("id", catId);
-        if (error) {
-          if (error.code === "23503") {
-            toast("Category is used by products — deactivate it instead.", "err");
-          } else {
-            throw error;
-          }
-          return;
+            vendorModal.classList.add("open");
+            vendorModal.setAttribute("aria-hidden", "false");
         }
-        toast("Category deleted.", "ok");
-      }
-      await loadCategories();
-      render();
-    } catch (e) {
-      console.error(e);
-      toast(e.message || "Action failed.", "err");
-    }
-  }
 
-  async function addCategory() {
-    const nameEl = document.getElementById("cat-new-name");
-    const sortEl = document.getElementById("cat-new-sort");
-    if (!nameEl) return;
-    const name = nameEl.value.trim();
-    const sort = parseInt(sortEl.value, 10) || 100;
-    if (name.length < 2) { toast("Category name too short.", "err"); return; }
-    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
-    if (!slug) { toast("Category name must contain letters or numbers.", "err"); return; }
-
-    try {
-      const { error } = await sb.from("vendor_categories").insert({
-        name, slug, sort_order: sort, is_active: true
-      });
-      if (error) throw error;
-      toast("Category added.", "ok");
-      await loadCategories();
-      render();
-    } catch (e) {
-      console.error(e);
-      toast(e.message || "Add failed.", "err");
-    }
-  }
-
-  /* ---------- Delegated clicks ---------- */
-  document.addEventListener("click", async (e) => {
-    /* Tab switch */
-    const tabBtn = e.target.closest(".tab-btn[data-tab]");
-    if (tabBtn) {
-      tab = tabBtn.dataset.tab;
-      if (tab === "log") await loadLogs();
-      render();
-      return;
-    }
-
-    /* Vendor filter */
-    const vf = e.target.closest("[data-vendor-filter]");
-    if (vf) {
-      vendorFilter = vf.dataset.vendorFilter;
-      await loadVendors();
-      render();
-      return;
-    }
-    /* Product filter */
-    const pf = e.target.closest("[data-product-filter]");
-    if (pf) {
-      productFilter = pf.dataset.productFilter;
-      await loadVendorProducts();
-      render();
-      return;
-    }
-
-    /* Category add */
-    if (e.target.id === "cat-add-btn") { await addCategory(); return; }
-
-    /* Modal close */
-    if (e.target.id === "vendor-modal-close" || e.target === vendorModal) {
-      closeVendorModal();
-      return;
-    }
-
-    /* Actions */
-    const btn = e.target.closest("[data-action]");
-    if (!btn) return;
-    const action = btn.dataset.action;
-
-    /* Report actions */
-    if (action === "dismiss" || action === "resolve") {
-      const note = prompt(action === "dismiss" ? "Optional note:" : "Optional note:", "");
-      if (note === null) return;
-      btn.disabled = true;
-      try {
-        const { error } = await sb.rpc("resolve_report", {
-          p_report_id: btn.dataset.reportId,
-          p_action: action === "dismiss" ? "dismissed" : "resolved",
-          p_note: note || null
-        });
-        if (error) throw error;
-        toast(action === "dismiss" ? "Dismissed." : "Resolved.", "ok");
-        await loadReports();
-        render();
-      } catch (err) { console.error(err); toast(err.message || "Failed.", "err"); btn.disabled = false; }
-      return;
-    }
-    if (action === "remove") {
-      if (!confirm("Soft-delete this content?")) return;
-      btn.disabled = true;
-      try {
-        const { error: rmErr } = await sb.rpc("admin_remove_content", {
-          p_target_type: btn.dataset.targetType,
-          p_target_id: btn.dataset.targetId
-        });
-        if (rmErr) throw rmErr;
-        const reportRow = reports.find(r =>
-          r.target_id === btn.dataset.targetId && r.target_type === btn.dataset.targetType);
-        if (reportRow) {
-          await sb.rpc("resolve_report", {
-            p_report_id: reportRow.report_id,
-            p_action: "resolved",
-            p_note: "Content removed by moderator."
-          });
+        function closeVendorModal() {
+            vendorModal.classList.remove("open");
+            vendorModal.setAttribute("aria-hidden", "true");
         }
-        toast("Removed and report resolved.", "ok");
-        await loadReports();
-        render();
-      } catch (err) { console.error(err); toast(err.message || "Failed.", "err"); btn.disabled = false; }
-      return;
-    }
 
-    /* Vendor actions */
-    if (action === "view-vendor") { openVendorModal(btn.dataset.vendorId); return; }
-    if (["approve-vendor","reject-vendor","suspend-vendor","restore-vendor","set-limit"].includes(action)) {
-      btn.disabled = true;
-      await handleVendorAction(action, btn.dataset.vendorId);
-      return;
-    }
+        /* ---------- Actions ---------- */
+        async function handleVendorAction(action, vendorId, extra) {
+            try {
+                if (action === "approve-vendor") {
+                    const {
+                        error
+                    } = await sb.rpc("admin_approve_vendor", {
+                        p_vendor_id: vendorId
+                    });
+                    if (error) throw error;
+                    toast("Vendor approved.", "ok");
+                } else if (action === "reject-vendor") {
+                    const reason = prompt("Reason for rejection (min 5 chars):", "");
+                    if (reason === null) return;
+                    if (reason.trim().length < 5) {
+                        toast("Reason too short.", "err");
+                        return;
+                    }
+                    const {
+                        error
+                    } = await sb.rpc("admin_reject_vendor", {
+                        p_vendor_id: vendorId,
+                        p_reason: reason.trim()
+                    });
+                    if (error) throw error;
+                    toast("Vendor rejected.", "ok");
+                } else if (action === "suspend-vendor") {
+                    const reason = prompt("Reason for suspension (optional):", "");
+                    if (reason === null) return;
+                    const {
+                        error
+                    } = await sb.rpc("admin_suspend_vendor", {
+                        p_vendor_id: vendorId,
+                        p_reason: reason.trim()
+                    });
+                    if (error) throw error;
+                    toast("Vendor suspended.", "ok");
+                } else if (action === "restore-vendor") {
+                    const {
+                        error
+                    } = await sb.rpc("admin_restore_vendor", {
+                        p_vendor_id: vendorId
+                    });
+                    if (error) throw error;
+                    toast("Vendor restored.", "ok");
+                } else if (action === "set-limit") {
+                    const v = vendors.find(x => x.vendor_id === vendorId);
+                    const current = v ? v.product_limit : 10;
+                    const value = prompt(`Set product limit for this vendor (currently ${current}):`, String(current));
+                    if (value === null) return;
+                    const n = parseInt(value, 10);
+                    if (!n || n < 1 || n > 500) {
+                        toast("Limit must be 1–500.", "err");
+                        return;
+                    }
+                    const {
+                        error
+                    } = await sb.rpc("admin_set_vendor_limit", {
+                        p_vendor_id: vendorId,
+                        p_limit: n
+                    });
+                    if (error) throw error;
+                    toast("Limit updated to " + n + ".", "ok");
+                }
+                closeVendorModal();
+                await loadVendors();
+                render();
+            } catch (e) {
+                console.error(e);
+                toast(e.message || "Action failed.", "err");
+            }
+        }
 
-    /* Vendor product actions */
-    if (action === "approve-product" || action === "reject-product") {
-      btn.disabled = true;
-      await handleProductAction(action, btn.dataset.productId);
-      return;
-    }
+        async function handleProductAction(action, productId) {
+            try {
+                if (action === "approve-product") {
+                    const {
+                        error
+                    } = await sb.rpc("admin_approve_vendor_product", {
+                        p_product_id: productId
+                    });
+                    if (error) throw error;
+                    toast("Product approved.", "ok");
+                } else if (action === "reject-product") {
+                    const reason = prompt("Reason for rejection (min 5 chars):", "");
+                    if (reason === null) return;
+                    if (reason.trim().length < 5) {
+                        toast("Reason too short.", "err");
+                        return;
+                    }
+                    const {
+                        error
+                    } = await sb.rpc("admin_reject_vendor_product", {
+                        p_product_id: productId,
+                        p_reason: reason.trim()
+                    });
+                    if (error) throw error;
+                    toast("Product rejected.", "ok");
+                }
+                await loadVendorProducts();
+                render();
+            } catch (e) {
+                console.error(e);
+                toast(e.message || "Action failed.", "err");
+            }
+        }
 
-    /* Category actions */
-    if (["edit-cat","activate-cat","deactivate-cat","delete-cat"].includes(action)) {
-      btn.disabled = true;
-      await handleCategoryAction(action, parseInt(btn.dataset.catId, 10));
-      return;
-    }
-  });
+        async function handleCategoryAction(action, catId) {
+            try {
+                if (action === "edit-cat") {
+                    const c = categories.find(x => x.id === catId);
+                    if (!c) return;
+                    const name = prompt("Category name:", c.name);
+                    if (name === null) return;
+                    const trimmed = name.trim();
+                    if (trimmed.length < 2) {
+                        toast("Name too short.", "err");
+                        return;
+                    }
+                    const sortStr = prompt("Sort order (lower = earlier):", String(c.sort_order));
+                    if (sortStr === null) return;
+                    const sort = parseInt(sortStr, 10);
+                    if (Number.isNaN(sort)) {
+                        toast("Invalid sort order.", "err");
+                        return;
+                    }
+                    const {
+                        error
+                    } = await sb.from("vendor_categories")
+                        .update({
+                            name: trimmed,
+                            sort_order: sort
+                        })
+                        .eq("id", catId);
+                    if (error) throw error;
+                    toast("Category updated.", "ok");
+                } else if (action === "activate-cat") {
+                    const {
+                        error
+                    } = await sb.from("vendor_categories").update({
+                        is_active: true
+                    }).eq("id", catId);
+                    if (error) throw error;
+                    toast("Category activated.", "ok");
+                } else if (action === "deactivate-cat") {
+                    const {
+                        error
+                    } = await sb.from("vendor_categories").update({
+                        is_active: false
+                    }).eq("id", catId);
+                    if (error) throw error;
+                    toast("Category deactivated.", "ok");
+                } else if (action === "delete-cat") {
+                    if (!confirm("Delete this category permanently? Products using it will have their category cleared.")) return;
+                    const {
+                        error
+                    } = await sb.from("vendor_categories").delete().eq("id", catId);
+                    if (error) {
+                        if (error.code === "23503") {
+                            toast("Category is used by products — deactivate it instead.", "err");
+                        } else {
+                            throw error;
+                        }
+                        return;
+                    }
+                    toast("Category deleted.", "ok");
+                }
+                await loadCategories();
+                render();
+            } catch (e) {
+                console.error(e);
+                toast(e.message || "Action failed.", "err");
+            }
+        }
 
-  /* ESC closes modal */
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && vendorModal.classList.contains("open")) closeVendorModal();
-  });
+        async function addCategory() {
+            const nameEl = document.getElementById("cat-new-name");
+            const sortEl = document.getElementById("cat-new-sort");
+            if (!nameEl) return;
+            const name = nameEl.value.trim();
+            const sort = parseInt(sortEl.value, 10) || 100;
+            if (name.length < 2) {
+                toast("Category name too short.", "err");
+                return;
+            }
+            const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+            if (!slug) {
+                toast("Category name must contain letters or numbers.", "err");
+                return;
+            }
 
-  /* ---------- Boot ---------- */
-  async function boot() {
-    const { data: { session } } = await sb.auth.getSession();
-    if (!session) {
-      root.innerHTML = `<div class="err-card">
+            try {
+                const {
+                    error
+                } = await sb.from("vendor_categories").insert({
+                    name,
+                    slug,
+                    sort_order: sort,
+                    is_active: true
+                });
+                if (error) throw error;
+                toast("Category added.", "ok");
+                await loadCategories();
+                render();
+            } catch (e) {
+                console.error(e);
+                toast(e.message || "Add failed.", "err");
+            }
+        }
+
+        /* ---------- Delegated clicks ---------- */
+        document.addEventListener("click", async (e) => {
+            /* Tab switch */
+            const tabBtn = e.target.closest(".tab-btn[data-tab]");
+            if (tabBtn) {
+                tab = tabBtn.dataset.tab;
+                if (tab === "log") await loadLogs();
+                render();
+                return;
+            }
+
+            /* Vendor filter */
+            const vf = e.target.closest("[data-vendor-filter]");
+            if (vf) {
+                vendorFilter = vf.dataset.vendorFilter;
+                await loadVendors();
+                render();
+                return;
+            }
+            /* Product filter */
+            const pf = e.target.closest("[data-product-filter]");
+            if (pf) {
+                productFilter = pf.dataset.productFilter;
+                await loadVendorProducts();
+                render();
+                return;
+            }
+
+            /* Category add */
+            if (e.target.id === "cat-add-btn") {
+                await addCategory();
+                return;
+            }
+
+            /* Modal close */
+            if (e.target.id === "vendor-modal-close" || e.target === vendorModal) {
+                closeVendorModal();
+                return;
+            }
+
+            /* Actions */
+            const btn = e.target.closest("[data-action]");
+            if (!btn) return;
+            const action = btn.dataset.action;
+
+            /* Report actions */
+            if (action === "dismiss" || action === "resolve") {
+                const note = prompt(action === "dismiss" ? "Optional note:" : "Optional note:", "");
+                if (note === null) return;
+                btn.disabled = true;
+                try {
+                    const {
+                        error
+                    } = await sb.rpc("resolve_report", {
+                        p_report_id: btn.dataset.reportId,
+                        p_action: action === "dismiss" ? "dismissed" : "resolved",
+                        p_note: note || null
+                    });
+                    if (error) throw error;
+                    toast(action === "dismiss" ? "Dismissed." : "Resolved.", "ok");
+                    await loadReports();
+                    render();
+                } catch (err) {
+                    console.error(err);
+                    toast(err.message || "Failed.", "err");
+                    btn.disabled = false;
+                }
+                return;
+            }
+            if (action === "remove") {
+                if (!confirm("Soft-delete this content?")) return;
+                btn.disabled = true;
+                try {
+                    const {
+                        error: rmErr
+                    } = await sb.rpc("admin_remove_content", {
+                        p_target_type: btn.dataset.targetType,
+                        p_target_id: btn.dataset.targetId
+                    });
+                    if (rmErr) throw rmErr;
+                    const reportRow = reports.find(r =>
+                        r.target_id === btn.dataset.targetId && r.target_type === btn.dataset.targetType);
+                    if (reportRow) {
+                        await sb.rpc("resolve_report", {
+                            p_report_id: reportRow.report_id,
+                            p_action: "resolved",
+                            p_note: "Content removed by moderator."
+                        });
+                    }
+                    toast("Removed and report resolved.", "ok");
+                    await loadReports();
+                    render();
+                } catch (err) {
+                    console.error(err);
+                    toast(err.message || "Failed.", "err");
+                    btn.disabled = false;
+                }
+                return;
+            }
+
+            /* Vendor actions */
+            if (action === "view-vendor") {
+                openVendorModal(btn.dataset.vendorId);
+                return;
+            }
+            if (["approve-vendor", "reject-vendor", "suspend-vendor", "restore-vendor", "set-limit"].includes(action)) {
+                btn.disabled = true;
+                await handleVendorAction(action, btn.dataset.vendorId);
+                return;
+            }
+            if (action === "toggle-feature-vendor") {
+                btn.disabled = true;
+                const featured = btn.dataset.featured === "1";
+                try {
+                    const {
+                        error
+                    } = await sb.rpc("admin_set_vendor_featured", {
+                        p_vendor_id: btn.dataset.vendorId,
+                        p_is_featured: !featured,
+                        p_order: 0
+                    });
+                    if (error) throw error;
+                    toast(featured ? "Vendor unfeatured." : "Vendor featured.", "ok");
+                    await loadVendors();
+                    render();
+                } catch (err) {
+                    console.error(err);
+                    toast(err.message || "Failed.", "err");
+                    btn.disabled = false;
+                }
+                return;
+            }
+
+            /* Vendor product actions */
+            if (action === "approve-product" || action === "reject-product") {
+                btn.disabled = true;
+                await handleProductAction(action, btn.dataset.productId);
+                return;
+            }
+            if (action === "toggle-feature-product") {
+                btn.disabled = true;
+                const featured = btn.dataset.featured === "1";
+                try {
+                    const {
+                        error
+                    } = await sb.rpc("admin_set_product_featured", {
+                        p_product_id: parseInt(btn.dataset.productId, 10),
+                        p_is_featured: !featured,
+                        p_order: 0
+                    });
+                    if (error) throw error;
+                    toast(featured ? "Product unfeatured." : "Product featured.", "ok");
+                    await loadVendorProducts();
+                    render();
+                } catch (err) {
+                    console.error(err);
+                    toast(err.message || "Failed.", "err");
+                    btn.disabled = false;
+                }
+                return;
+            }
+
+            /* Category actions */
+            if (["edit-cat", "activate-cat", "deactivate-cat", "delete-cat"].includes(action)) {
+                btn.disabled = true;
+                await handleCategoryAction(action, parseInt(btn.dataset.catId, 10));
+                return;
+            }
+        });
+
+        /* ESC closes modal */
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && vendorModal.classList.contains("open")) closeVendorModal();
+        });
+
+        /* ---------- Boot ---------- */
+        async function boot() {
+            const {
+                data: {
+                    session
+                }
+            } = await sb.auth.getSession();
+            if (!session) {
+                root.innerHTML = `<div class="err-card">
         <h2>Sign in required</h2>
         <p>You must be signed in as an admin to view this page.</p>
         <p><a href="login.html">Sign in →</a></p>
       </div>`;
-      return;
-    }
-    const { data: profile } = await sb.from("profiles")
-      .select("id, username, is_admin")
-      .eq("id", session.user.id)
-      .maybeSingle();
-    me = profile;
+                return;
+            }
+            const {
+                data: profile
+            } = await sb.from("profiles")
+                .select("id, username, is_admin")
+                .eq("id", session.user.id)
+                .maybeSingle();
+            me = profile;
 
-    if (!me || !me.is_admin) {
-      root.innerHTML = `<div class="err-card">
+            if (!me || !me.is_admin) {
+                root.innerHTML = `<div class="err-card">
         <h2>Admins only</h2>
         <p>This page is only for moderators.</p>
         <p><a href="index.html">← Back home</a></p>
       </div>`;
-      return;
-    }
+                return;
+            }
 
-    await loadAll();
-    render();
-  }
+            await loadAll();
+            render();
+        }
 
-  boot();
-})();
-</script>
+        boot();
+        })();
+    </script>
 </body>
+
 </html>

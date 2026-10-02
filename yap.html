@@ -449,6 +449,20 @@
             opacity: .5;
         }
 
+        .vendor-pill {
+            display: inline-flex;
+            align-items: center;
+            background: #dcfce7;
+            color: #166534;
+            padding: 2px 8px;
+            border-radius: 50px;
+            font-size: 9px;
+            font-weight: 900;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+            margin-left: 2px;
+        }
+
         .yap-product-link {
             font-size: 11px;
             font-weight: 700;
@@ -1152,7 +1166,7 @@
     <script src="consent.js"></script>
     <script src="report.js"></script>
     <script>
-        (function () {
+        (function() {
             const sb = window.wr.sb;
 
             const PAGE_SIZE = 20;
@@ -1172,25 +1186,25 @@
             let productsCache = null;
 
             const els = {
-                yapsList:      document.getElementById("yaps-list"),
-                resultCount:   document.getElementById("result-count"),
-                emptyState:    document.getElementById("empty-state"),
+                yapsList: document.getElementById("yaps-list"),
+                resultCount: document.getElementById("result-count"),
+                emptyState: document.getElementById("empty-state"),
                 productBanner: document.getElementById("product-banner"),
-                newYapBtn:     document.getElementById("new-yap-btn"),
+                newYapBtn: document.getElementById("new-yap-btn"),
                 emptyStartBtn: document.getElementById("empty-start-btn"),
-                sortTabs:      document.querySelectorAll(".sort-tab"),
-                modal:         document.getElementById("new-yap-modal"),
-                modalClose:    document.getElementById("modal-close"),
-                modalCancel:   document.getElementById("modal-cancel"),
-                modalProduct:  document.getElementById("modal-product"),
-                modalPreview:  document.getElementById("modal-product-preview"),
-                modalTitle:    document.getElementById("modal-title"),
-                modalBody:     document.getElementById("modal-body"),
-                modalSubmit:   document.getElementById("modal-submit"),
-                modalStatus:   document.getElementById("modal-status"),
-                bodyCount:     document.getElementById("body-count"),
-                toastBox:      document.getElementById("toast-container"),
-                loadMoreBtn:   document.getElementById("load-more-btn")
+                sortTabs: document.querySelectorAll(".sort-tab"),
+                modal: document.getElementById("new-yap-modal"),
+                modalClose: document.getElementById("modal-close"),
+                modalCancel: document.getElementById("modal-cancel"),
+                modalProduct: document.getElementById("modal-product"),
+                modalPreview: document.getElementById("modal-product-preview"),
+                modalTitle: document.getElementById("modal-title"),
+                modalBody: document.getElementById("modal-body"),
+                modalSubmit: document.getElementById("modal-submit"),
+                modalStatus: document.getElementById("modal-status"),
+                bodyCount: document.getElementById("body-count"),
+                toastBox: document.getElementById("toast-container"),
+                loadMoreBtn: document.getElementById("load-more-btn")
             };
 
             function esc(s) {
@@ -1231,12 +1245,18 @@
             }
 
             async function loadSession() {
-                const { data: { session: s } } = await sb.auth.getSession();
+                const {
+                    data: {
+                        session: s
+                    }
+                } = await sb.auth.getSession();
                 session = s;
                 if (session) {
                     me = window.wr.getProfile() || null;
                     if (!me) {
-                        const { data } = await sb.from("profiles")
+                        const {
+                            data
+                        } = await sb.from("profiles")
                             .select("id, username")
                             .eq("id", session.user.id)
                             .maybeSingle();
@@ -1255,7 +1275,9 @@
                     return;
                 }
 
-                const { data } = await sb.from("products")
+                const {
+                    data
+                } = await sb.from("products")
                     .select("id, name, image, category, link")
                     .eq("id", filterProductId)
                     .maybeSingle();
@@ -1293,7 +1315,7 @@
                         id, product_id, title, body, upvotes, downvotes, net_votes,
                         comment_count, is_deleted, edited_at, created_at,
                         author:profiles!yaps_author_id_fkey(id, username, avatar_url),
-                        product:products!yaps_product_id_fkey(id, name, image, category)
+                        product:products!yaps_product_id_fkey(id, name, image, category, vendor_id)
                     `)
                     .eq("is_deleted", false);
 
@@ -1309,15 +1331,24 @@
                 }
 
                 if (currentSort === "top") {
-                    query = query.order("net_votes", { ascending: false });
+                    query = query.order("net_votes", {
+                        ascending: false
+                    });
                 } else {
-                    query = query.order("created_at", { ascending: false });
+                    query = query.order("created_at", {
+                        ascending: false
+                    });
                 }
-                query = query.order("created_at", { ascending: false });
+                query = query.order("created_at", {
+                    ascending: false
+                });
 
                 query = query.range(offset, offset + PAGE_SIZE - 1);
 
-                const { data, error } = await query;
+                const {
+                    data,
+                    error
+                } = await query;
                 if (error) {
                     console.error(error);
                     els.yapsList.innerHTML = `<div class="loading">Couldn't load Yaps. Try again.</div>`;
@@ -1334,14 +1365,20 @@
                 if (session && yaps.length > 0) {
                     const ids = yaps.map(y => y.id);
 
-                    const { data: voteRows } = await sb.from("yap_votes")
+                    const {
+                        data: voteRows
+                    } = await sb.from("yap_votes")
                         .select("yap_id, vote")
                         .eq("user_id", session.user.id)
                         .in("yap_id", ids);
                     myVotes = {};
-                    (voteRows || []).forEach(v => { myVotes[v.yap_id] = v.vote; });
+                    (voteRows || []).forEach(v => {
+                        myVotes[v.yap_id] = v.vote;
+                    });
 
-                    const { data: bmRows } = await sb.from("yap_bookmarks")
+                    const {
+                        data: bmRows
+                    } = await sb.from("yap_bookmarks")
                         .select("yap_id")
                         .eq("user_id", session.user.id);
                     myBookmarks = new Set((bmRows || []).map(r => r.yap_id));
@@ -1430,7 +1467,8 @@
                         <p class="yap-body">${esc(bodyPreview)}</p>
 
                         <div class="yap-meta">
-                            <a class="yap-author" href="profile.html?id=${esc(author.id)}">${esc(author.username || "unknown")}</a>
+                                                        <a class="yap-author" href="profile.html?id=${esc(author.id)}">${esc(author.username || "unknown")}</a>
+                            ${(product && product.vendor_id && product.vendor_id === author.id) ? `<span class="vendor-pill">VENDOR</span>` : ""}
                             <span class="yap-dot">·</span>
                             <span>${esc(timeAgo(y.created_at))}</span>
                             ${y.edited_at ? `<span class="yap-dot">·</span><span class="yap-edited">edited</span>` : ""}
@@ -1479,18 +1517,24 @@
                 card.querySelectorAll(".vote-btn").forEach(b => b.disabled = true);
 
                 try {
-                    const { error } = await sb.rpc("vote_yap", {
+                    const {
+                        error
+                    } = await sb.rpc("vote_yap", {
                         p_yap_id: yapId,
                         p_vote: direction
                     });
                     if (error) throw error;
 
-                    const { data } = await sb.from("yaps")
+                    const {
+                        data
+                    } = await sb.from("yaps")
                         .select("id, upvotes, downvotes, net_votes")
                         .eq("id", yapId)
                         .maybeSingle();
 
-                    const { data: voteRow } = await sb.from("yap_votes")
+                    const {
+                        data: voteRow
+                    } = await sb.from("yap_votes")
                         .select("vote")
                         .eq("user_id", session.user.id)
                         .eq("yap_id", yapId)
@@ -1532,17 +1576,26 @@
                 }
                 if (action === "bookmark") {
                     e.preventDefault();
-                    if (!session) { toast("Sign in to save Yaps.", "err"); return; }
+                    if (!session) {
+                        toast("Sign in to save Yaps.", "err");
+                        return;
+                    }
                     const isSaved = myBookmarks.has(yapId);
-                    if (isSaved) myBookmarks.delete(yapId); else myBookmarks.add(yapId);
+                    if (isSaved) myBookmarks.delete(yapId);
+                    else myBookmarks.add(yapId);
                     render();
                     try {
-                        const { error } = await sb.rpc("toggle_bookmark", { p_yap_id: yapId });
+                        const {
+                            error
+                        } = await sb.rpc("toggle_bookmark", {
+                            p_yap_id: yapId
+                        });
                         if (error) throw error;
                         toast(isSaved ? "Removed from saved." : "Saved.", "ok");
                     } catch (err) {
                         console.error(err);
-                        if (isSaved) myBookmarks.add(yapId); else myBookmarks.delete(yapId);
+                        if (isSaved) myBookmarks.add(yapId);
+                        else myBookmarks.delete(yapId);
                         render();
                         toast(err.message || "Bookmark failed.", "err");
                     }
@@ -1563,7 +1616,12 @@
             async function handleDelete(yapId) {
                 if (!confirm("Delete this Yap? If it has comments, it'll show as [deleted] instead.")) return;
                 try {
-                    const { data, error } = await sb.rpc("delete_yap", { p_yap_id: yapId });
+                    const {
+                        data,
+                        error
+                    } = await sb.rpc("delete_yap", {
+                        p_yap_id: yapId
+                    });
                     if (error) throw error;
                     const mode = data?.mode || "hard";
                     toast(mode === "soft" ? "Yap marked as deleted." : "Yap deleted.", "ok");
@@ -1605,7 +1663,10 @@
 
             async function loadProductsForModal() {
                 if (productsCache) return productsCache;
-                const { data, error } = await sb.from("products")
+                const {
+                    data,
+                    error
+                } = await sb.from("products")
                     .select("id, name, image, category")
                     .order("name");
                 if (error) {
@@ -1636,7 +1697,9 @@
             async function openNewModal() {
                 if (!session) {
                     toast("Sign in to post a Yap.", "err");
-                    setTimeout(() => { window.location.href = "login.html"; }, 900);
+                    setTimeout(() => {
+                        window.location.href = "login.html";
+                    }, 900);
                     return;
                 }
 
@@ -1699,7 +1762,10 @@
                 els.modalStatus.className = "status";
 
                 try {
-                    const { data, error } = await sb.rpc("create_yap", {
+                    const {
+                        data,
+                        error
+                    } = await sb.rpc("create_yap", {
                         p_product_id: pid,
                         p_title: title,
                         p_body: body
@@ -1745,7 +1811,9 @@
                     els.modalSubmit.disabled = true;
                     els.modalSubmit.textContent = "Saving…";
                     try {
-                        const { error } = await sb.rpc("update_yap", {
+                        const {
+                            error
+                        } = await sb.rpc("update_yap", {
                             p_yap_id: yapId,
                             p_title: title,
                             p_body: body

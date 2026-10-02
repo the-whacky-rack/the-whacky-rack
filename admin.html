@@ -107,6 +107,7 @@
   .status-pill.approved { background:#dcfce7; color:#166534; }
   .status-pill.suspended { background:#fee2e2; color:#991b1b; }
   .status-pill.rejected { background:#f1eee8; color:#666; }
+  .verified-pill { background:#dbeafe; color:#1e40af; font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:.5px; padding:4px 10px; border-radius:50px; }
   .vendor-stats { display:flex; gap:14px; flex-wrap:wrap; margin-top:8px; font-size:12px; color:var(--muted); }
   .vendor-stats .num { font-weight:800; color:#333; }
   .vendor-actions { display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; }
@@ -406,6 +407,8 @@
         actions.push(`<button class="rep-btn" data-action="set-limit" data-vendor-id="${esc(v.vendor_id)}" data-current="${v.product_limit}">Set limit (${v.product_limit})</button>`);
         const featured = v.is_featured === true;
         actions.push(`<button class="rep-btn ${featured ? "resolve" : ""}" data-action="toggle-feature-vendor" data-vendor-id="${esc(v.vendor_id)}" data-featured="${featured ? "1" : "0"}">${featured ? "★ Featured" : "☆ Feature"}</button>`);
+        const verified = v.is_verified === true;
+        actions.push(`<button class="rep-btn ${verified ? "resolve" : ""}" data-action="toggle-verify-vendor" data-vendor-id="${esc(v.vendor_id)}" data-verified="${verified ? "1" : "0"}">${verified ? "✓ Verified" : "○ Verify"}</button>`);
       } else if (v.status === "suspended") {
         actions.push(`<button class="rep-btn approve" data-action="restore-vendor" data-vendor-id="${esc(v.vendor_id)}">Restore</button>`);
       }
@@ -422,6 +425,7 @@
               </div>
             </div>
             <span class="status-pill ${esc(v.status)}">${esc(v.status)}</span>
+            ${v.is_verified ? `<span class="verified-pill">✓ Verified</span>` : ""}
           </div>
           <div class="vendor-stats">
             <span><span class="num">${v.product_count}</span> / ${v.product_limit} products</span>
@@ -595,6 +599,8 @@
     } else if (v.status === "approved") {
       actions.push(`<button class="rep-btn warn" data-action="suspend-vendor" data-vendor-id="${esc(v.vendor_id)}">Suspend</button>`);
       actions.push(`<button class="rep-btn" data-action="set-limit" data-vendor-id="${esc(v.vendor_id)}" data-current="${v.product_limit}">Set product limit (currently ${v.product_limit})</button>`);
+      const verified = v.is_verified === true;
+      actions.push(`<button class="rep-btn ${verified ? "resolve" : ""}" data-action="toggle-verify-vendor" data-vendor-id="${esc(v.vendor_id)}" data-verified="${verified ? "1" : "0"}">${verified ? "✓ Verified (unverify)" : "○ Mark as Verified"}</button>`);
     } else if (v.status === "suspended") {
       actions.push(`<button class="rep-btn approve" data-action="restore-vendor" data-vendor-id="${esc(v.vendor_id)}">Restore</button>`);
     }
@@ -607,6 +613,7 @@
           <h3 style="margin:0;">${esc(v.business_name)}</h3>
           <div class="modal-sub" style="margin:4px 0 0;">
             <span class="status-pill ${esc(v.status)}">${esc(v.status)}</span>
+            ${v.is_verified ? `<span class="verified-pill" style="margin-left:6px;">✓ Verified</span>` : ""}
             &nbsp;· ${esc(v.country)}
           </div>
         </div>
@@ -635,6 +642,7 @@
         ${v.approved_at ? `Approved: ${esc(fmtDate(v.approved_at))}<br>` : ""}
         ${v.rejected_at ? `Rejected: ${esc(fmtDate(v.rejected_at))}<br>` : ""}
         ${v.suspended_at ? `Suspended: ${esc(fmtDate(v.suspended_at))}<br>` : ""}
+        ${v.is_verified ? `Verified: <strong>Yes</strong>${v.verified_at ? ` (${esc(fmtDate(v.verified_at))})` : ""}<br>` : ""}
         ${v.rejection_reason ? `<br>Last reason: <em>${esc(v.rejection_reason)}</em>` : ""}
       </p>
 
@@ -886,6 +894,26 @@
         });
         if (error) throw error;
         toast(featured ? "Vendor unfeatured." : "Vendor featured.", "ok");
+        await loadVendors();
+        render();
+      } catch (err) {
+        console.error(err);
+        toast(err.message || "Failed.", "err");
+        btn.disabled = false;
+      }
+      return;
+    }
+    if (action === "toggle-verify-vendor") {
+      btn.disabled = true;
+      const verified = btn.dataset.verified === "1";
+      try {
+        const { error } = await sb.rpc("admin_set_vendor_verified", {
+          p_vendor_id: btn.dataset.vendorId,
+          p_is_verified: !verified
+        });
+        if (error) throw error;
+        toast(verified ? "Vendor verification removed." : "Vendor verified.", "ok");
+        closeVendorModal();
         await loadVendors();
         render();
       } catch (err) {

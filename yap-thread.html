@@ -291,6 +291,20 @@
             opacity: .5;
         }
 
+        .vendor-pill {
+            display: inline-flex;
+            align-items: center;
+            background: #dcfce7;
+            color: #166534;
+            padding: 2px 8px;
+            border-radius: 50px;
+            font-size: 9px;
+            font-weight: 900;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+            margin-left: 2px;
+        }
+
         .yap-edited {
             font-style: italic;
         }
@@ -1009,7 +1023,7 @@
             <a href="terms.html">Terms of Service</a>
             <a href="cookies.html">Cookie Policy</a>
             <a href="disclosure.html">Affiliate Disclosure</a>
-                  <a href="grievance.html">Grievance Officer</a>
+            <a href="grievance.html">Grievance Officer</a>
         </div>
         <div class="footer-disclosure">
             Products and availability may change depending on Amazon.com policies.
@@ -1114,7 +1128,7 @@
                         id, product_id, title, body, upvotes, downvotes, net_votes,
                         comment_count, is_deleted, edited_at, created_at,
                         author:profiles!yaps_author_id_fkey(id, username),
-                        product:products!yaps_product_id_fkey(id, name, image, category)
+                        product:products!yaps_product_id_fkey(id, name, image, category, vendor_id)
                     `)
                     .eq("id", yapId)
                     .maybeSingle();
@@ -1294,7 +1308,8 @@
                         </div>
 
                         <div class="yap-meta">
-                            <a class="yap-author" href="profile.html?id=${esc(author.id)}">${esc(author.username || "unknown")}</a>
+                                                        <a class="yap-author" href="profile.html?id=${esc(author.id)}">${esc(author.username || "unknown")}</a>
+                            ${(product && product.vendor_id && product.vendor_id === author.id) ? `<span class="vendor-pill">VENDOR</span>` : ""}
                             <span class="yap-dot">·</span>
                             <span>${esc(timeAgo(yap.created_at))}</span>
                             ${yap.edited_at ? `<span class="yap-dot">·</span><span class="yap-edited">edited ${esc(timeAgo(yap.edited_at))}</span>` : ""}

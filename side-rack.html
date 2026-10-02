@@ -370,6 +370,14 @@
             background: var(--green);
         }
 
+        .product-vendor-tag.verified {
+            background: rgba(30, 64, 175, .95);
+        }
+
+        .product-vendor-tag.verified:hover {
+            background: #1e40af;
+        }
+
         .product-content {
             padding: 16px;
             display: flex;
@@ -610,6 +618,21 @@
         .fv-country {
             font-size: 11px;
             color: var(--muted);
+        }
+
+        .fv-verified {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 1px 6px;
+            border-radius: 50px;
+            font-size: 8px;
+            font-weight: 900;
+            letter-spacing: .4px;
+            text-transform: uppercase;
+            margin-left: 4px;
         }
 
         .fv-bio {
@@ -1756,9 +1779,9 @@
                 const count = likeCounts[p.id] || 0;
                 const heartIcon = liked ? "❤️" : "🤍";
                 const vendorLink = p.vendor_id ? `vendor-profile.html?id=${esc(p.vendor_id)}` : "#";
-                const vendorTag = p.vendor_business_name ?
-                    `<a class="product-vendor-tag" href="${vendorLink}" title="Visit vendor">${esc(p.vendor_business_name)}</a>` :
-                    "";
+                                const vendorTag = p.vendor_business_name
+                    ? `<a class="product-vendor-tag${p.vendor_is_verified ? " verified" : ""}" href="${vendorLink}" title="Visit vendor">${p.vendor_is_verified ? "✓ " : ""}${esc(p.vendor_business_name)}</a>`
+                    : "";
 
                 const priceNote = p.price_note ?
                     `<span class="note">${esc(p.price_note)}</span>` : "";
@@ -2187,7 +2210,7 @@
                             <div class="fv-head">
                                 <div class="fv-logo">${logoInner}</div>
                                 <div style="min-width:0;">
-                                    <h3 class="fv-name">${esc(v.business_name)}</h3>
+                                                                        <h3 class="fv-name">${esc(v.business_name)}${v.is_verified ? `<span class="fv-verified">✓</span>` : ""}</h3>
                                     <div class="fv-country">${flagFor(v.country)} ${esc(v.country)}</div>
                                 </div>
                             </div>

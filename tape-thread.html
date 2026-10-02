@@ -172,6 +172,20 @@
             font-size: 12px;
         }
 
+        .vendor-pill {
+            display: inline-flex;
+            align-items: center;
+            background: #dcfce7;
+            color: #166534;
+            padding: 2px 8px;
+            border-radius: 50px;
+            font-size: 9px;
+            font-weight: 900;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+            margin-left: 2px;
+        }
+
         .tape-time {
             font-size: 12px;
             color: var(--muted);
@@ -997,7 +1011,7 @@
             <a href="terms.html">Terms of Service</a>
             <a href="cookies.html">Cookie Policy</a>
             <a href="disclosure.html">Affiliate Disclosure</a>
-                  <a href="grievance.html">Grievance Officer</a>
+            <a href="grievance.html">Grievance Officer</a>
         </div>
         <div class="footer-disclosure">
             Products and availability may change depending on Amazon.com policies.
@@ -1108,7 +1122,7 @@
                         id, user_id, product_id, caption, reaction_count, comment_count,
                         is_deleted, created_at,
                         author:profiles!tapes_user_id_fkey(id, username),
-                        product:products!tapes_product_id_fkey(id, name, image, category, link)
+                        product:products!tapes_product_id_fkey(id, name, image, category, link, vendor_id)
                     `)
                     .eq("id", tapeId)
                     .maybeSingle();
@@ -1275,6 +1289,7 @@
                     <div class="tape-head">
                         <a class="tape-avatar" href="profile.html?id=${esc(author.id || "")}" aria-hidden="true">${esc(initials(author.username))}</a>
                         <a class="tape-author-name" href="profile.html?id=${esc(author.id || "")}">${esc(author.username || "unknown")}</a>
+                        ${(product && product.vendor_id && product.vendor_id === author.id) ? `<span class="vendor-pill">VENDOR</span>` : ""}
                         <span class="tape-dot">·</span>
                         <span class="tape-time">${esc(timeAgo(tape.created_at))}</span>
                                                                     <div class="tape-actions">
@@ -1444,16 +1459,31 @@
                 if (!btn) return;
                 const action = btn.dataset.action;
 
-                                if (action === "react")            { e.preventDefault(); await handleReact(btn.dataset.reaction); return; }
-                if (action === "delete-tape")      { e.preventDefault(); await deleteTape(); return; }
+                if (action === "react") {
+                    e.preventDefault();
+                    await handleReact(btn.dataset.reaction);
+                    return;
+                }
+                if (action === "delete-tape") {
+                    e.preventDefault();
+                    await deleteTape();
+                    return;
+                }
                 if (action === "bookmark-tape") {
                     e.preventDefault();
-                    if (!session) { toast("Sign in to save Tapes.", "err"); return; }
+                    if (!session) {
+                        toast("Sign in to save Tapes.", "err");
+                        return;
+                    }
                     const wasSaved = isBookmarked;
                     isBookmarked = !wasSaved;
                     render();
                     try {
-                        const { error } = await sb.rpc("toggle_tape_bookmark", { p_tape_id: tapeId });
+                        const {
+                            error
+                        } = await sb.rpc("toggle_tape_bookmark", {
+                            p_tape_id: tapeId
+                        });
                         if (error) throw error;
                         toast(wasSaved ? "Removed from saved." : "Saved.", "ok");
                     } catch (err) {

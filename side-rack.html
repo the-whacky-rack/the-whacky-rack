@@ -23,8 +23,13 @@
             --green: #16a34a;
         }
 
-        * { box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
 
         body {
             margin: 0;
@@ -33,7 +38,10 @@
             color: var(--text);
         }
 
-        a { color: inherit; text-decoration: none; }
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
 
         /* HEADER */
         header {
@@ -61,7 +69,9 @@
             white-space: nowrap;
         }
 
-        .logo span { color: var(--accent); }
+        .logo span {
+            color: var(--accent);
+        }
 
         .header-right {
             display: flex;
@@ -80,8 +90,15 @@
             white-space: nowrap;
         }
 
-        .nav-link:hover { border-color: #bbb; }
-        .nav-link.active { background: #222; color: #fff; border-color: #222; }
+        .nav-link:hover {
+            border-color: #bbb;
+        }
+
+        .nav-link.active {
+            background: #222;
+            color: #fff;
+            border-color: #222;
+        }
 
         /* HERO */
         .hero {
@@ -112,7 +129,9 @@
             font-weight: 950;
         }
 
-        .hero h1 span { color: var(--accent); }
+        .hero h1 span {
+            color: var(--accent);
+        }
 
         .hero-description {
             max-width: 800px;
@@ -144,6 +163,7 @@
             color: #fff;
             border-color: var(--accent);
         }
+
         .hero-actions a.primary:hover {
             background: var(--accent-dark);
             border-color: var(--accent-dark);
@@ -154,7 +174,10 @@
             color: #333;
             border-color: var(--border);
         }
-        .hero-actions a.ghost:hover { border-color: #bbb; }
+
+        .hero-actions a.ghost:hover {
+            border-color: #bbb;
+        }
 
         /* CONTROLS */
         .controls-wrapper {
@@ -223,7 +246,9 @@
             scrollbar-width: none;
         }
 
-        .category-bar::-webkit-scrollbar { display: none; }
+        .category-bar::-webkit-scrollbar {
+            display: none;
+        }
 
         .category-btn {
             border: 1px solid var(--border);
@@ -239,8 +264,15 @@
             transition: .2s ease;
         }
 
-        .category-btn:hover { border-color: #bbb; }
-        .category-btn.active { background: #222; color: #fff; border-color: #222; }
+        .category-btn:hover {
+            border-color: #bbb;
+        }
+
+        .category-btn.active {
+            background: #222;
+            color: #fff;
+            border-color: #222;
+        }
 
         /* PRODUCT AREA */
         .products-wrapper {
@@ -298,7 +330,9 @@
             transition: transform .35s ease;
         }
 
-        .product-card:hover .product-image { transform: scale(1.04); }
+        .product-card:hover .product-image {
+            transform: scale(1.04);
+        }
 
         .product-category {
             position: absolute;
@@ -332,7 +366,9 @@
             transition: .2s ease;
         }
 
-        .product-vendor-tag:hover { background: var(--green); }
+        .product-vendor-tag:hover {
+            background: var(--green);
+        }
 
         .product-content {
             padding: 16px;
@@ -386,7 +422,9 @@
             transition: .2s ease;
         }
 
-        .product-button:hover { background: var(--accent-dark); }
+        .product-button:hover {
+            background: var(--accent-dark);
+        }
 
         .product-actions {
             display: flex;
@@ -419,7 +457,10 @@
             background: #fafafa;
         }
 
-        .action-icon { font-size: 13px; line-height: 1; }
+        .action-icon {
+            font-size: 13px;
+            line-height: 1;
+        }
 
         .like-btn.liked {
             background: var(--pill);
@@ -432,16 +473,294 @@
             border-color: var(--pill);
             background: #fff;
         }
-        .yap-btn:hover { background: var(--pill); border-color: var(--accent); }
+
+        .yap-btn:hover {
+            background: var(--pill);
+            border-color: var(--accent);
+        }
 
         .tape-btn {
             color: #5a1e0c;
             border-color: var(--pill);
             background: #fff;
         }
-        .tape-btn:hover { background: var(--pill); border-color: var(--accent); }
 
-        .share-wrap { margin-left: auto; }
+        .tape-btn:hover {
+            background: var(--pill);
+            border-color: var(--accent);
+        }
+
+        .share-wrap {
+            margin-left: auto;
+        }
+
+        /* FEATURED CAROUSELS */
+        .featured-section {
+            margin-bottom: 32px;
+        }
+
+        .featured-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+
+        .featured-header h2 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: -.4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .featured-header h2 .star {
+            color: var(--accent);
+            font-size: 18px;
+        }
+
+        .featured-header .hint {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .carousel {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: thin;
+            padding-bottom: 8px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .carousel::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .carousel::-webkit-scrollbar-thumb {
+            background: #e8e4dc;
+            border-radius: 3px;
+        }
+
+        .carousel::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        /* Featured vendor card */
+        .fv-card {
+            flex: 0 0 260px;
+            scroll-snap-align: start;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            text-decoration: none;
+            color: inherit;
+            transition: .2s ease;
+        }
+
+        .fv-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, .08);
+        }
+
+        .fv-head {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .fv-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: var(--pill);
+            color: var(--accent-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 20px;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .fv-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .fv-name {
+            margin: 0 0 3px;
+            font-size: 15px;
+            font-weight: 900;
+            line-height: 1.25;
+            letter-spacing: -.2px;
+        }
+
+        .fv-country {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .fv-bio {
+            font-size: 13px;
+            line-height: 1.55;
+            color: #555;
+            margin: 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .fv-foot {
+            margin-top: auto;
+            padding-top: 12px;
+            border-top: 1px dashed var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+        }
+
+        .fv-foot .count {
+            background: var(--pill);
+            color: var(--accent-dark);
+            padding: 3px 9px;
+            border-radius: 50px;
+            font-weight: 800;
+        }
+
+        .fv-foot .visit {
+            color: var(--accent-dark);
+            font-weight: 800;
+        }
+
+        /* Featured product card in carousel */
+        .fp-card {
+            flex: 0 0 220px;
+            scroll-snap-align: start;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: .2s ease;
+        }
+
+        .fp-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, .08);
+        }
+
+        .fp-img-wrap {
+            aspect-ratio: 1 / 1;
+            background: #f1eee8;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .fp-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform .35s ease;
+        }
+
+        .fp-card:hover .fp-img {
+            transform: scale(1.04);
+        }
+
+        .fp-cat {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            background: rgba(255, 255, 255, .94);
+            padding: 5px 8px;
+            border-radius: 50px;
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            color: #333;
+        }
+
+        .fp-body {
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            gap: 6px;
+        }
+
+        .fp-name {
+            font-size: 13px;
+            font-weight: 800;
+            line-height: 1.35;
+            margin: 0;
+            min-height: 36px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .fp-vendor {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--green);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .fp-vendor:hover {
+            text-decoration: underline;
+        }
+
+        .fp-btn {
+            margin-top: auto;
+            display: block;
+            text-align: center;
+            background: var(--accent);
+            color: #fff;
+            padding: 8px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .fp-btn:hover {
+            background: var(--accent-dark);
+        }
+
+        @media (max-width: 700px) {
+            .fv-card {
+                flex-basis: 220px;
+                padding: 14px;
+            }
+
+            .fp-card {
+                flex-basis: 170px;
+            }
+
+            .featured-header h2 {
+                font-size: 17px;
+            }
+        }
+
 
         /* LOAD MORE */
         .load-more-wrap {
@@ -462,9 +781,18 @@
             transition: .2s ease;
         }
 
-        .load-more:hover:not(:disabled) { background: #000; }
-        .load-more:disabled { opacity: .5; cursor: not-allowed; }
-        .load-more.hidden { display: none; }
+        .load-more:hover:not(:disabled) {
+            background: #000;
+        }
+
+        .load-more:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        .load-more.hidden {
+            display: none;
+        }
 
         /* EMPTY / LOADING */
         .empty-state {
@@ -473,9 +801,22 @@
             display: none;
         }
 
-        .empty-state .emoji { font-size: 45px; margin-bottom: 12px; }
-        .empty-state h2 { margin: 0 0 8px; color: var(--text); font-size: 20px; }
-        .empty-state p { color: var(--muted); margin: 0; font-size: 14px; }
+        .empty-state .emoji {
+            font-size: 45px;
+            margin-bottom: 12px;
+        }
+
+        .empty-state h2 {
+            margin: 0 0 8px;
+            color: var(--text);
+            font-size: 20px;
+        }
+
+        .empty-state p {
+            color: var(--muted);
+            margin: 0;
+            font-size: 14px;
+        }
 
         .loading {
             text-align: center;
@@ -508,12 +849,24 @@
             animation: toastIn .2s ease-out;
         }
 
-        .toast.ok { background: var(--green); }
-        .toast.err { background: #dc2626; }
+        .toast.ok {
+            background: var(--green);
+        }
+
+        .toast.err {
+            background: #dc2626;
+        }
 
         @keyframes toastIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* FOOTER */
@@ -524,8 +877,16 @@
             text-align: center;
         }
 
-        .footer-title { font-size: 22px; font-weight: 900; margin-bottom: 10px; }
-        .footer-title span { color: var(--accent); }
+        .footer-title {
+            font-size: 22px;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+
+        .footer-title span {
+            color: var(--accent);
+        }
+
         footer p {
             max-width: 650px;
             margin: auto;
@@ -542,8 +903,16 @@
             gap: 8px 18px;
             font-size: 12px;
         }
-        .footer-links a { color: #bbb; font-weight: 700; transition: .2s ease; }
-        .footer-links a:hover { color: var(--accent); }
+
+        .footer-links a {
+            color: #bbb;
+            font-weight: 700;
+            transition: .2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
 
         .footer-disclosure {
             margin-top: 18px;
@@ -553,33 +922,110 @@
 
         /* TABLET / MOBILE */
         @media (max-width: 1000px) {
-            .product-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .product-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
         }
 
         @media (max-width: 700px) {
-            .header-inner { padding: 13px 15px; flex-wrap: wrap; }
-            .logo { font-size: 21px; }
-            .nav-link { font-size: 11px; padding: 7px 11px; }
-            .hero { padding: 45px 18px 28px; }
-            .hero h1 { font-size: 46px; letter-spacing: -2.2px; }
-            .hero-description { font-size: 15px; line-height: 1.65; }
-            .controls-wrapper { padding: 0 15px; }
-            .controls { flex-direction: column; align-items: stretch; border-radius: 15px; }
-            .category-bar { padding: 0 15px; margin-bottom: 25px; }
-            .products-wrapper { padding: 0 15px 55px; }
-            .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-            .product-content { padding: 12px; }
-            .product-name { font-size: 14px; min-height: 38px; margin-bottom: 6px; }
-            .product-button { padding: 10px 8px; font-size: 11px; }
-            .product-category { font-size: 8px; padding: 5px 7px; }
-            .product-vendor-tag { font-size: 8px; padding: 5px 8px; }
-            .product-actions { gap: 6px; margin-top: 10px; padding-top: 10px; }
-            .action-btn { padding: 6px 9px; font-size: 11px; gap: 4px; }
+            .header-inner {
+                padding: 13px 15px;
+                flex-wrap: wrap;
+            }
+
+            .logo {
+                font-size: 21px;
+            }
+
+            .nav-link {
+                font-size: 11px;
+                padding: 7px 11px;
+            }
+
+            .hero {
+                padding: 45px 18px 28px;
+            }
+
+            .hero h1 {
+                font-size: 46px;
+                letter-spacing: -2.2px;
+            }
+
+            .hero-description {
+                font-size: 15px;
+                line-height: 1.65;
+            }
+
+            .controls-wrapper {
+                padding: 0 15px;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+                border-radius: 15px;
+            }
+
+            .category-bar {
+                padding: 0 15px;
+                margin-bottom: 25px;
+            }
+
+            .products-wrapper {
+                padding: 0 15px 55px;
+            }
+
+            .product-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 12px;
+            }
+
+            .product-content {
+                padding: 12px;
+            }
+
+            .product-name {
+                font-size: 14px;
+                min-height: 38px;
+                margin-bottom: 6px;
+            }
+
+            .product-button {
+                padding: 10px 8px;
+                font-size: 11px;
+            }
+
+            .product-category {
+                font-size: 8px;
+                padding: 5px 7px;
+            }
+
+            .product-vendor-tag {
+                font-size: 8px;
+                padding: 5px 8px;
+            }
+
+            .product-actions {
+                gap: 6px;
+                margin-top: 10px;
+                padding-top: 10px;
+            }
+
+            .action-btn {
+                padding: 6px 9px;
+                font-size: 11px;
+                gap: 4px;
+            }
         }
 
         @media (max-width: 380px) {
-            .product-grid { gap: 9px; }
-            .hero h1 { font-size: 40px; }
+            .product-grid {
+                gap: 9px;
+            }
+
+            .hero h1 {
+                font-size: 40px;
+            }
         }
 
         /* TAPE MODAL (mirrors main shop) */
@@ -593,7 +1039,10 @@
             justify-content: center;
             padding: 20px;
         }
-        .tape-modal.open { display: flex; }
+
+        .tape-modal.open {
+            display: flex;
+        }
 
         .tape-modal-inner {
             background: #fff;
@@ -607,8 +1056,15 @@
         }
 
         @keyframes modalIn {
-            from { opacity: 0; transform: translateY(10px) scale(.98); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+            from {
+                opacity: 0;
+                transform: translateY(10px) scale(.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
         .tape-modal-close {
@@ -629,10 +1085,24 @@
             justify-content: center;
             font-family: inherit;
         }
-        .tape-modal-close:hover { background: #e8e4dc; color: #222; }
 
-        .tape-modal h3 { margin: 0 0 4px; font-size: 20px; font-weight: 900; letter-spacing: -.3px; }
-        .tape-modal .tape-modal-sub { margin: 0 0 18px; font-size: 13px; color: var(--muted); }
+        .tape-modal-close:hover {
+            background: #e8e4dc;
+            color: #222;
+        }
+
+        .tape-modal h3 {
+            margin: 0 0 4px;
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: -.3px;
+        }
+
+        .tape-modal .tape-modal-sub {
+            margin: 0 0 18px;
+            font-size: 13px;
+            color: var(--muted);
+        }
 
         .tape-modal-preview {
             display: flex;
@@ -644,6 +1114,7 @@
             border-radius: 12px;
             margin-bottom: 14px;
         }
+
         .tape-modal-preview img {
             width: 60px;
             height: 60px;
@@ -651,6 +1122,7 @@
             border-radius: 10px;
             background: #f1eee8;
         }
+
         .tape-modal-preview .pcat {
             font-size: 10px;
             font-weight: 800;
@@ -658,6 +1130,7 @@
             color: var(--accent-dark);
             letter-spacing: .4px;
         }
+
         .tape-modal-preview .pname {
             font-size: 14px;
             font-weight: 800;
@@ -674,7 +1147,14 @@
             color: #555;
             margin: 12px 0 6px;
         }
-        .tape-modal label .optional { color: #aaa; font-weight: 600; text-transform: none; letter-spacing: 0; font-size: 11px; }
+
+        .tape-modal label .optional {
+            color: #aaa;
+            font-weight: 600;
+            text-transform: none;
+            letter-spacing: 0;
+            font-size: 11px;
+        }
 
         .tape-modal textarea {
             width: 100%;
@@ -689,9 +1169,18 @@
             min-height: 80px;
             color: var(--text);
         }
-        .tape-modal textarea:focus { border-color: var(--accent); background: #fff; }
 
-        .tape-char { font-size: 11px; color: var(--muted); text-align: right; margin-top: 4px; }
+        .tape-modal textarea:focus {
+            border-color: var(--accent);
+            background: #fff;
+        }
+
+        .tape-char {
+            font-size: 11px;
+            color: var(--muted);
+            text-align: right;
+            margin-top: 4px;
+        }
 
         .tape-modal-actions {
             display: flex;
@@ -711,7 +1200,10 @@
             border: 1px solid var(--border);
             cursor: pointer;
         }
-        .tape-btn-ghost:hover { border-color: #bbb; }
+
+        .tape-btn-ghost:hover {
+            border-color: #bbb;
+        }
 
         .tape-btn-primary {
             padding: 11px 20px;
@@ -724,8 +1216,15 @@
             border: 0;
             cursor: pointer;
         }
-        .tape-btn-primary:hover:not(:disabled) { background: var(--accent-dark); }
-        .tape-btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+
+        .tape-btn-primary:hover:not(:disabled) {
+            background: var(--accent-dark);
+        }
+
+        .tape-btn-primary:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
 
         .tape-modal .tape-status {
             margin-top: 12px;
@@ -734,12 +1233,17 @@
             font-size: 12px;
             display: none;
         }
-        .tape-modal .tape-status.show { display: block; }
+
+        .tape-modal .tape-status.show {
+            display: block;
+        }
+
         .tape-modal .tape-status.err {
             background: #fef2f2;
             color: #991b1b;
             border: 1px solid #fecaca;
         }
+
         .tape-modal .tape-status.ok {
             background: #f0fdf4;
             color: #166534;
@@ -757,7 +1261,10 @@
             justify-content: center;
             padding: 20px;
         }
-        .share-modal.open { display: flex; }
+
+        .share-modal.open {
+            display: flex;
+        }
 
         .share-modal-inner {
             background: #fff;
@@ -788,10 +1295,25 @@
             justify-content: center;
             font-family: inherit;
         }
-        .share-modal-close:hover { background: #e8e4dc; color: #222; }
 
-        .share-modal-title { margin: 0 0 6px; font-size: 18px; font-weight: 900; letter-spacing: -.3px; }
-        .share-modal-product { margin: 0 0 20px; font-size: 13px; color: #666; line-height: 1.5; }
+        .share-modal-close:hover {
+            background: #e8e4dc;
+            color: #222;
+        }
+
+        .share-modal-title {
+            margin: 0 0 6px;
+            font-size: 18px;
+            font-weight: 900;
+            letter-spacing: -.3px;
+        }
+
+        .share-modal-product {
+            margin: 0 0 20px;
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+        }
 
         .share-modal-options {
             display: grid;
@@ -816,15 +1338,30 @@
             text-align: left;
             width: 100%;
         }
-        .share-option:hover { border-color: #bbb; background: #fafafa; }
+
+        .share-option:hover {
+            border-color: #bbb;
+            background: #fafafa;
+        }
+
         .share-option.copied {
             border-color: var(--accent);
             background: var(--pill);
             color: var(--accent-dark);
         }
 
-        .share-option-icon { font-size: 16px; line-height: 1; flex-shrink: 0; }
-        .share-option-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .share-option-icon {
+            font-size: 16px;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .share-option-label {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
     </style>
 
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -878,6 +1415,24 @@
     <div class="category-bar" id="category-bar">
         <!-- Populated by JS -->
     </div>
+    <!-- FEATURED VENDORS -->
+    <section class="featured-section" id="featured-vendors-section" hidden>
+        <div class="featured-header">
+            <h2><span class="star">★</span> Featured vendors</h2>
+            <span class="hint">Hand-picked makers</span>
+        </div>
+        <div class="carousel" id="featured-vendors-carousel"></div>
+    </section>
+
+    <!-- FEATURED PRODUCTS -->
+    <section class="featured-section" id="featured-products-section" hidden>
+        <div class="featured-header">
+            <h2><span class="star">★</span> Featured products</h2>
+            <span class="hint">Editor's picks</span>
+        </div>
+        <div class="carousel" id="featured-products-carousel"></div>
+    </section>
+
 
     <!-- PRODUCTS -->
     <main class="products-wrapper">
@@ -950,7 +1505,7 @@
             <a href="cookies.html">Cookie Policy</a>
             <a href="disclosure.html">Affiliate Disclosure</a>
             <a href="grievance.html">Grievance Officer</a>
-                        <a href="vendor-terms.html">Vendor Terms</a>
+            <a href="vendor-terms.html">Vendor Terms</a>
         </div>
         <div class="footer-disclosure">
             Products and availability may change depending on Amazon.com policies.
@@ -963,7 +1518,7 @@
     <script src="analytics.js"></script>
 
     <script>
-        (function () {
+        (function() {
             const sb = window.wr.sb;
             const PAGE_SIZE = 24;
 
@@ -983,38 +1538,43 @@
             let likeCounts = {};
 
             const els = {
-                grid:          document.getElementById("product-grid"),
-                empty:         document.getElementById("empty-state"),
-                emptyTitle:    document.getElementById("empty-title"),
-                emptySub:      document.getElementById("empty-sub"),
-                resultCount:   document.getElementById("result-count"),
-                categoryBar:   document.getElementById("category-bar"),
-                search:        document.getElementById("search-input"),
-                sortSelect:    document.getElementById("sort-select"),
-                loadMore:      document.getElementById("load-more-btn"),
-                toastBox:      document.getElementById("toast-container"),
+                grid: document.getElementById("product-grid"),
+                empty: document.getElementById("empty-state"),
+                emptyTitle: document.getElementById("empty-title"),
+                emptySub: document.getElementById("empty-sub"),
+                resultCount: document.getElementById("result-count"),
+                categoryBar: document.getElementById("category-bar"),
+                search: document.getElementById("search-input"),
+                sortSelect: document.getElementById("sort-select"),
+                loadMore: document.getElementById("load-more-btn"),
+                toastBox: document.getElementById("toast-container"),
 
-                shareModal:    document.getElementById("share-modal"),
+                shareModal: document.getElementById("share-modal"),
                 shareModalClose: document.getElementById("share-modal-close"),
                 shareProductName: document.getElementById("share-product-name"),
-                shareOptions:  document.getElementById("share-options"),
+                shareOptions: document.getElementById("share-options"),
 
-                tapeModal:     document.getElementById("tape-modal"),
+                tapeModal: document.getElementById("tape-modal"),
                 tapeModalClose: document.getElementById("tape-modal-close"),
                 tapeModalCancel: document.getElementById("tape-modal-cancel"),
                 tapeModalSubmit: document.getElementById("tape-modal-submit"),
                 tapeModalPreview: document.getElementById("tape-modal-preview"),
-                tapeCaption:   document.getElementById("tape-caption"),
+                tapeCaption: document.getElementById("tape-caption"),
                 tapeCharCount: document.getElementById("tape-char-count"),
-                tapeStatus:    document.getElementById("tape-status")
+                tapeStatus: document.getElementById("tape-status")
             };
 
             /* Utils */
             function esc(s) {
                 return String(s ?? "").replace(/[&<>"']/g, c => ({
-                    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-                }[c]));
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    '"': "&quot;",
+                    "'": "&#39;"
+                } [c]));
             }
+
             function sanitizeSearch(s) {
                 return String(s || "")
                     .replace(/[%,()]/g, " ")
@@ -1022,6 +1582,7 @@
                     .trim()
                     .slice(0, 100);
             }
+
             function toast(msg, kind = "ok") {
                 const el = document.createElement("div");
                 el.className = "toast " + kind;
@@ -1032,12 +1593,18 @@
 
             /* Load session */
             async function loadSession() {
-                const { data: { session: s } } = await sb.auth.getSession();
+                const {
+                    data: {
+                        session: s
+                    }
+                } = await sb.auth.getSession();
                 session = s;
                 if (session) {
                     me = window.wr.getProfile() || null;
                     if (!me) {
-                        const { data } = await sb.from("profiles")
+                        const {
+                            data
+                        } = await sb.from("profiles")
                             .select("id, username")
                             .eq("id", session.user.id)
                             .maybeSingle();
@@ -1048,11 +1615,18 @@
 
             /* Load categories */
             async function loadCategories() {
-                const { data, error } = await sb.from("vendor_categories")
+                const {
+                    data,
+                    error
+                } = await sb.from("vendor_categories")
                     .select("id, name, sort_order")
                     .eq("is_active", true)
-                    .order("sort_order", { ascending: true })
-                    .order("name", { ascending: true });
+                    .order("sort_order", {
+                        ascending: true
+                    })
+                    .order("name", {
+                        ascending: true
+                    });
                 if (error) {
                     console.error("categories:", error);
                     categories = [];
@@ -1081,8 +1655,13 @@
             /* Load user likes */
             async function loadLikes() {
                 const clientId = localStorage.getItem("whackyrack_client_id");
-                if (!clientId) { userLikes = new Set(); return; }
-                const { data } = await sb.from("product_likes")
+                if (!clientId) {
+                    userLikes = new Set();
+                    return;
+                }
+                const {
+                    data
+                } = await sb.from("product_likes")
                     .select("product_id")
                     .eq("client_id", clientId);
                 userLikes = new Set((data || []).map(r => String(r.product_id)));
@@ -1101,7 +1680,10 @@
 
                 const safeSearch = currentSearch ? sanitizeSearch(currentSearch) : null;
 
-                const { data, error } = await sb.rpc("list_side_rack_products", {
+                const {
+                    data,
+                    error
+                } = await sb.rpc("list_side_rack_products", {
                     p_category_id: currentCategoryId,
                     p_search: safeSearch,
                     p_sort: currentSort,
@@ -1123,7 +1705,9 @@
                 // Like counts for the current page (client-side; small window)
                 if (rows.length > 0) {
                     const ids = rows.map(p => p.id);
-                    const { data: likeRows } = await sb.from("product_likes")
+                    const {
+                        data: likeRows
+                    } = await sb.from("product_likes")
                         .select("product_id")
                         .in("product_id", ids);
                     likeCounts = {};
@@ -1172,14 +1756,14 @@
                 const count = likeCounts[p.id] || 0;
                 const heartIcon = liked ? "❤️" : "🤍";
                 const vendorLink = p.vendor_id ? `vendor-profile.html?id=${esc(p.vendor_id)}` : "#";
-                const vendorTag = p.vendor_business_name
-                    ? `<a class="product-vendor-tag" href="${vendorLink}" title="Visit vendor">${esc(p.vendor_business_name)}</a>`
-                    : "";
+                const vendorTag = p.vendor_business_name ?
+                    `<a class="product-vendor-tag" href="${vendorLink}" title="Visit vendor">${esc(p.vendor_business_name)}</a>` :
+                    "";
 
-                const priceNote = p.price_note
-                    ? `<span class="note">${esc(p.price_note)}</span>` : "";
-                const shipNote = p.shipping_note
-                    ? `<span class="note ship">${esc(p.shipping_note)}</span>` : "";
+                const priceNote = p.price_note ?
+                    `<span class="note">${esc(p.price_note)}</span>` : "";
+                const shipNote = p.shipping_note ?
+                    `<span class="note ship">${esc(p.shipping_note)}</span>` : "";
 
                 card.innerHTML = `
                     <a class="product-image-wrap" href="${esc(p.link)}" target="_blank" rel="nofollow sponsored noopener"
@@ -1264,7 +1848,9 @@
                     btn.classList.remove("liked");
                     iconEl.textContent = "🤍";
                     countEl.textContent = Math.max(0, currentCount - 1);
-                    const { error } = await sb.from("product_likes").delete()
+                    const {
+                        error
+                    } = await sb.from("product_likes").delete()
                         .eq("product_id", productId)
                         .eq("client_id", getClientId());
                     if (error) {
@@ -1279,7 +1865,9 @@
                     btn.classList.add("liked");
                     iconEl.textContent = "❤️";
                     countEl.textContent = currentCount + 1;
-                    const { error } = await sb.from("product_likes").insert({
+                    const {
+                        error
+                    } = await sb.from("product_likes").insert({
                         product_id: productId,
                         client_id: getClientId()
                     });
@@ -1303,18 +1891,42 @@
 
                 els.shareOptions.innerHTML = "";
 
-                const platforms = [
-                    { key: "twitter",   label: "Twitter / X", icon: "𝕏",
-                      href: `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}` },
-                    { key: "facebook",  label: "Facebook",    icon: "f",
-                      href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}` },
-                    { key: "pinterest", label: "Pinterest",   icon: "P",
-                      href: `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(url)}&media=${encodeURIComponent(image)}&description=${encodeURIComponent(text)}` },
-                    { key: "reddit",    label: "Reddit",      icon: "👽",
-                      href: `https://www.reddit.com/submit?url=${encodeURIComponent(url)}&title=${encodeURIComponent(text)}` },
-                    { key: "whatsapp",  label: "WhatsApp",    icon: "💬",
-                      href: `https://wa.me/?text=${encodeURIComponent(text + " " + url)}` },
-                    { key: "copy",      label: "Copy link",   icon: "🔗", href: null }
+                const platforms = [{
+                        key: "twitter",
+                        label: "Twitter / X",
+                        icon: "𝕏",
+                        href: `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`
+                    },
+                    {
+                        key: "facebook",
+                        label: "Facebook",
+                        icon: "f",
+                        href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`
+                    },
+                    {
+                        key: "pinterest",
+                        label: "Pinterest",
+                        icon: "P",
+                        href: `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(url)}&media=${encodeURIComponent(image)}&description=${encodeURIComponent(text)}`
+                    },
+                    {
+                        key: "reddit",
+                        label: "Reddit",
+                        icon: "👽",
+                        href: `https://www.reddit.com/submit?url=${encodeURIComponent(url)}&title=${encodeURIComponent(text)}`
+                    },
+                    {
+                        key: "whatsapp",
+                        label: "WhatsApp",
+                        icon: "💬",
+                        href: `https://wa.me/?text=${encodeURIComponent(text + " " + url)}`
+                    },
+                    {
+                        key: "copy",
+                        label: "Copy link",
+                        icon: "🔗",
+                        href: null
+                    }
                 ];
 
                 platforms.forEach(platform => {
@@ -1337,8 +1949,10 @@
                             const labelEl = el.querySelector(".share-option-label");
                             const iconEl = el.querySelector(".share-option-icon");
                             let copied = false;
-                            try { await navigator.clipboard.writeText(url); copied = true; }
-                            catch (err) {
+                            try {
+                                await navigator.clipboard.writeText(url);
+                                copied = true;
+                            } catch (err) {
                                 const ta = document.createElement("textarea");
                                 ta.value = url;
                                 ta.setAttribute("readonly", "");
@@ -1346,7 +1960,9 @@
                                 ta.style.left = "-9999px";
                                 document.body.appendChild(ta);
                                 ta.select();
-                                try { copied = document.execCommand("copy"); } catch (e) {}
+                                try {
+                                    copied = document.execCommand("copy");
+                                } catch (e) {}
                                 document.body.removeChild(ta);
                             }
                             if (copied) {
@@ -1427,7 +2043,9 @@
 
                 try {
                     const cap = els.tapeCaption.value.trim();
-                    const { error } = await sb.rpc("create_tape", {
+                    const {
+                        error
+                    } = await sb.rpc("create_tape", {
                         p_product_id: currentTapeProduct.id,
                         p_caption: cap || null
                     });
@@ -1435,7 +2053,9 @@
 
                     els.tapeStatus.className = "tape-status show ok";
                     els.tapeStatus.textContent = "Taped! Redirecting…";
-                    setTimeout(() => { window.location.href = "tape.html"; }, 500);
+                    setTimeout(() => {
+                        window.location.href = "tape.html";
+                    }, 500);
                 } catch (err) {
                     console.error(err);
                     els.tapeStatus.className = "tape-status show err";
@@ -1518,10 +2138,129 @@
                 }
             });
 
+            /* ---------- Featured loaders ---------- */
+            async function loadFeaturedVendors() {
+                const {
+                    data,
+                    error
+                } = await sb.rpc("list_featured_vendors", {
+                    p_limit: 8
+                });
+                if (error) {
+                    console.error("featured vendors:", error);
+                    return [];
+                }
+                return data || [];
+            }
+
+            async function loadFeaturedProducts() {
+                const {
+                    data,
+                    error
+                } = await sb.rpc("list_featured_products", {
+                    p_limit: 10
+                });
+                if (error) {
+                    console.error("featured products:", error);
+                    return [];
+                }
+                return data || [];
+            }
+
+            function renderFeaturedVendors(list) {
+                const section = document.getElementById("featured-vendors-section");
+                const carousel = document.getElementById("featured-vendors-carousel");
+                if (!section || !carousel) return;
+
+                if (!list.length) {
+                    section.hidden = true;
+                    return;
+                }
+
+                carousel.innerHTML = list.map(v => {
+                    const logoInner = v.logo_url ?
+                        `<img src="${esc(v.logo_url)}" alt="" loading="lazy">` :
+                        esc(initials(v.business_name));
+                    const productWord = v.product_count === 1 ? "product" : "products";
+                    return `
+                        <a class="fv-card" href="vendor-profile.html?id=${esc(v.id)}">
+                            <div class="fv-head">
+                                <div class="fv-logo">${logoInner}</div>
+                                <div style="min-width:0;">
+                                    <h3 class="fv-name">${esc(v.business_name)}</h3>
+                                    <div class="fv-country">${flagFor(v.country)} ${esc(v.country)}</div>
+                                </div>
+                            </div>
+                            ${v.bio ? `<p class="fv-bio">${esc(v.bio)}</p>` : ""}
+                            <div class="fv-foot">
+                                <span class="count">${v.product_count} ${productWord}</span>
+                                <span class="visit">Visit →</span>
+                            </div>
+                        </a>
+                    `;
+                }).join("");
+
+                section.hidden = false;
+            }
+
+            function renderFeaturedProducts(list) {
+                const section = document.getElementById("featured-products-section");
+                const carousel = document.getElementById("featured-products-carousel");
+                if (!section || !carousel) return;
+
+                if (!list.length) {
+                    section.hidden = true;
+                    return;
+                }
+
+                carousel.innerHTML = list.map(p => {
+                    const productLink = esc(p.link);
+                    return `
+                        <article class="fp-card">
+                            <a class="fp-img-wrap" href="${productLink}" target="_blank"
+                               rel="nofollow sponsored noopener" aria-label="View ${esc(p.name)}">
+                                <img class="fp-img" src="${esc(p.image)}" alt="${esc(p.name)}"
+                                     loading="lazy" decoding="async">
+                                <span class="fp-cat">${esc(p.category_name || "")}</span>
+                            </a>
+                            <div class="fp-body">
+                                <h3 class="fp-name">${esc(p.name)}</h3>
+                                <a class="fp-vendor" href="vendor-profile.html?id=${esc(p.vendor_id)}">
+                                    ${esc(p.vendor_business_name || "")}
+                                </a>
+                                <a class="fp-btn" href="${productLink}" target="_blank"
+                                   rel="nofollow sponsored noopener">Check it out →</a>
+                            </div>
+                        </article>
+                    `;
+                }).join("");
+
+                section.hidden = false;
+            }
+
+            function initials(name) {
+                const p = String(name || "?").replace(/[^A-Za-z0-9]/g, " ").trim().split(/\s+/);
+                return (p[0]?.[0] || "?").toUpperCase();
+            }
+
+            function flagFor(cc) {
+                if (!cc || cc.length !== 2) return "🌍";
+                const A = 0x1F1E6;
+                return String.fromCodePoint(
+                    A + cc.toUpperCase().charCodeAt(0) - 65,
+                    A + cc.toUpperCase().charCodeAt(1) - 65
+                );
+            }
+
             /* Boot */
             async function boot() {
                 await loadSession();
-                await Promise.all([loadCategories(), loadLikes()]);
+                await Promise.all([
+                    loadCategories(),
+                    loadLikes(),
+                    loadFeaturedVendors().then(renderFeaturedVendors),
+                    loadFeaturedProducts().then(renderFeaturedProducts)
+                ]);
                 await loadProducts(true);
             }
 

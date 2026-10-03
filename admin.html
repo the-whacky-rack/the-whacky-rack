@@ -108,6 +108,7 @@
   .status-pill.suspended { background:#fee2e2; color:#991b1b; }
   .status-pill.rejected { background:#f1eee8; color:#666; }
   .verified-pill { background:#dbeafe; color:#1e40af; font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:.5px; padding:4px 10px; border-radius:50px; }
+  .country-pill { background:#ede9fe; color:#5b21b6; font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:.5px; padding:4px 10px; border-radius:50px; }
   .vendor-stats { display:flex; gap:14px; flex-wrap:wrap; margin-top:8px; font-size:12px; color:var(--muted); }
   .vendor-stats .num { font-weight:800; color:#333; }
   .vendor-actions { display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; }
@@ -136,6 +137,21 @@
   .cat-form .field { display:flex; flex-direction:column; }
   .cat-form .field.grow { flex:1; min-width:180px; }
 
+  .shop-toolbar {
+    display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+    padding:16px 22px; background:#fafafa;
+    border-bottom:1px solid var(--border);
+  }
+  .shop-toolbar .grow { flex:1; min-width:200px; }
+  .shop-toolbar input[type=search],
+  .shop-toolbar select {
+    padding:10px 12px; border:1px solid var(--border); border-radius:10px;
+    font-family:inherit; font-size:13px; background:#fff; outline:none;
+  }
+  .shop-toolbar input[type=search]:focus,
+  .shop-toolbar select:focus { border-color:var(--accent); }
+  .shop-toolbar input[type=search] { width:100%; }
+
   .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:100000; align-items:center; justify-content:center; padding:20px; }
   .modal.open { display:flex; }
   .modal-inner { background:#fff; border-radius:20px; padding:28px; max-width:640px; width:100%; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,.25); position:relative; animation:modalIn .18s ease-out; }
@@ -146,13 +162,43 @@
   .modal h4 { margin:18px 0 6px; font-size:13px; text-transform:uppercase; letter-spacing:.4px; color:var(--muted); }
   .modal p { margin:0 0 10px; font-size:14px; line-height:1.65; color:#333; }
   .modal .modal-sub { font-size:13px; color:var(--muted); margin:0 0 16px; }
+  .modal label { display:block; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.4px; color:#555; margin:14px 0 6px; }
+  .modal label .optional { color:#aaa; font-weight:600; text-transform:none; letter-spacing:0; font-size:11px; }
+  .modal input[type=text],
+  .modal input[type=url],
+  .modal input[type=number],
+  .modal select,
+  .modal textarea {
+    width:100%; padding:11px 13px; font-family:inherit; font-size:14px;
+    background:#fafafa; border:1px solid var(--border); border-radius:12px;
+    outline:none; color:var(--text); transition:.2s ease;
+  }
+  .modal input:focus, .modal select:focus, .modal textarea:focus { border-color:var(--accent); background:#fff; }
+  .modal textarea { resize:vertical; min-height:80px; line-height:1.5; }
+  .modal .field-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  @media (max-width:600px) { .modal .field-grid { grid-template-columns:1fr; } }
+  .modal .check-row { display:flex; align-items:flex-start; gap:8px; margin-top:14px; }
+  .modal .check-row input { margin-top:3px; }
+  .modal .check-row label { margin:0; text-transform:none; letter-spacing:0; font-weight:600; font-size:13px; color:#333; }
+
   .modal-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:20px; flex-wrap:wrap; }
+
+  .modal .status { margin-top:14px; padding:11px 14px; border-radius:10px; font-size:13px; display:none; line-height:1.5; }
+  .modal .status.show { display:block; }
+  .modal .status.err { background:#fef2f2; color:#991b1b; border:1px solid #fecaca; }
+  .modal .status.ok { background:#f0fdf4; color:#166534; border:1px solid #bbf7d0; }
 
   .toast-container { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); z-index:99999; display:flex; flex-direction:column; gap:8px; align-items:center; }
   .toast { padding:12px 20px; border-radius:50px; background:#222; color:#fff; font-size:13px; font-weight:600; box-shadow:0 10px 30px rgba(0,0,0,.25); animation:toastIn .2s ease-out; }
   .toast.ok { background:var(--green); }
   .toast.err { background:var(--red); }
   @keyframes toastIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+  .csv-hint {
+    background:#f0f9ff; border-left:4px solid #0284c7; border-radius:8px;
+    padding:12px 14px; font-size:12px; color:#075985; line-height:1.6;
+    margin-bottom:12px; font-family:ui-monospace,monospace; white-space:pre-wrap;
+  }
 
   @media (max-width:700px) {
     .header-inner { padding:13px 15px; flex-wrap:wrap; }
@@ -166,6 +212,7 @@
     .cat-row { padding:12px 16px; }
     .log-row { grid-template-columns:1fr; gap:4px; padding:12px 16px; }
     .log-row .when { text-align:left; }
+    .shop-toolbar { padding:12px 16px; }
   }
 </style>
 </head>
@@ -188,8 +235,19 @@
 
 <div class="toast-container" id="toast-container"></div>
 
+<!-- Vendor details modal -->
 <div class="modal" id="vendor-modal" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="modal-inner" id="vendor-modal-body"></div>
+</div>
+
+<!-- Shop product add/edit modal -->
+<div class="modal" id="shop-product-modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal-inner" id="shop-product-modal-body"></div>
+</div>
+
+<!-- Bulk import modal -->
+<div class="modal" id="bulk-import-modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal-inner" id="bulk-import-modal-body"></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -201,6 +259,10 @@
   const toastBox = document.getElementById("toast-container");
   const vendorModal = document.getElementById("vendor-modal");
   const vendorModalBody = document.getElementById("vendor-modal-body");
+  const shopProductModal = document.getElementById("shop-product-modal");
+  const shopProductModalBody = document.getElementById("shop-product-modal-body");
+  const bulkImportModal = document.getElementById("bulk-import-modal");
+  const bulkImportModalBody = document.getElementById("bulk-import-modal-body");
 
   let me = null;
   let tab = "vendors";
@@ -211,6 +273,10 @@
   let vendorProducts = [];
   let productFilter = "pending";
   let categories = [];
+  let shopProducts = [];
+  let shopFilterCountry = "";
+  let shopFilterSearch = "";
+  let countries = [];
 
   function esc(s) {
     return String(s ?? "").replace(/[&<>"']/g, c => ({
@@ -281,13 +347,31 @@
     if (error) { console.error(error); categories = []; return; }
     categories = data || [];
   }
+  async function loadCountries() {
+    const { data, error } = await sb.from("countries")
+      .select("code, name, is_active")
+      .eq("is_active", true)
+      .order("sort_order", { ascending: true });
+    if (error) { console.error(error); countries = []; return; }
+    countries = data || [];
+  }
+  async function loadShopProducts() {
+    const args = {
+      p_country: shopFilterCountry || null,
+      p_search:  shopFilterSearch || null
+    };
+    const { data, error } = await sb.rpc("admin_list_shop_products", args);
+    if (error) { console.error(error); shopProducts = []; return; }
+    shopProducts = data || [];
+  }
 
   async function loadAll() {
     await Promise.all([
       loadReports(),
       loadVendors(),
       loadVendorProducts(),
-      loadCategories()
+      loadCategories(),
+      loadCountries()
     ]);
   }
 
@@ -299,7 +383,7 @@
       <div class="page-head">
         <div class="kicker">Signed in as ${esc(me.username)}</div>
         <h1>Moderation <span>panel</span></h1>
-        <p>Reports, vendor applications, vendor products, and categories.</p>
+        <p>Reports, vendors, shop products, vendor products, and categories.</p>
       </div>
 
       <div class="tabs">
@@ -308,6 +392,9 @@
         </button>
         <button class="tab-btn ${tab==="vendors"?"active":""}" data-tab="vendors">
           🏪 Vendors<span class="count">${pendingVendors}</span>
+        </button>
+        <button class="tab-btn ${tab==="shop"?"active":""}" data-tab="shop">
+          🛒 Shop Products<span class="count">${shopProducts.length}</span>
         </button>
         <button class="tab-btn ${tab==="products"?"active":""}" data-tab="products">
           📦 Vendor products<span class="count">${pendingProducts}</span>
@@ -326,6 +413,7 @@
     const content = document.getElementById("tab-content");
     if (tab === "reports") content.innerHTML = renderReports();
     else if (tab === "vendors") content.innerHTML = renderVendors();
+    else if (tab === "shop") content.innerHTML = renderShopProducts();
     else if (tab === "products") content.innerHTML = renderVendorProducts();
     else if (tab === "categories") content.innerHTML = renderCategories();
     else content.innerHTML = renderLogs();
@@ -445,6 +533,70 @@
     }).join("");
 
     return filterBar + `<div class="card">${rowsHtml}</div>`;
+  }
+
+  function renderShopProducts() {
+    const countryOptions = countries.map(c =>
+      `<option value="${c.code}"${c.code === shopFilterCountry ? " selected" : ""}>${esc(c.name)} (${c.code})</option>`
+    ).join("");
+
+    const toolbar = `
+      <div class="shop-toolbar">
+        <div class="grow">
+          <input type="search" id="shop-search" placeholder="Search by name…" value="${esc(shopFilterSearch)}">
+        </div>
+        <select id="shop-country-filter">
+          <option value="">All countries</option>
+          ${countryOptions}
+        </select>
+        <button class="rep-btn" id="shop-refresh-btn" type="button">Refresh</button>
+        <button class="rep-btn approve" id="shop-add-btn" type="button">+ Add product</button>
+        <button class="rep-btn warn" id="shop-bulk-btn" type="button">⬆ Bulk import</button>
+      </div>
+    `;
+
+    if (shopProducts.length === 0) {
+      return toolbar + `<div class="card"><div class="empty">
+        <div class="emoji">🛒</div>
+        <strong>No shop products match the filter</strong>
+        Adjust the search/country, or add the first product.
+      </div></div>`;
+    }
+
+    const rowsHtml = shopProducts.map(p => {
+      const flag = p.target_country || "US";
+      const featured = p.is_featured === true;
+      return `
+        <div class="product-row">
+          <img src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy">
+          <div class="product-body">
+            <h3 class="product-name">${esc(p.name)}</h3>
+            <div class="product-meta">
+              <span class="country-pill">${esc(flag)}</span>
+              · ${esc(p.category || "—")}
+              ${p.price_note ? ` · ${esc(p.price_note)}` : ""}
+              ${p.shipping_note ? ` · ${esc(p.shipping_note)}` : ""}
+              · ♥ ${p.like_count || 0}
+            </div>
+            <div class="product-meta">
+              <span class="link">${esc(p.link)}</span>
+            </div>
+            <div class="product-meta">
+              ID ${p.id}
+              · Updated ${esc(timeAgo(p.updated_at))}
+              ${featured ? ` · <strong>★ Featured (order ${p.featured_order})</strong>` : ""}
+            </div>
+            <div class="vendor-actions" style="margin-top:8px;">
+              <button class="rep-btn" data-action="edit-shop-product" data-product-id="${p.id}">Edit</button>
+              <a class="rep-btn" href="${esc(p.link)}" target="_blank" rel="noopener">Open link</a>
+              <button class="rep-btn remove" data-action="delete-shop-product" data-product-id="${p.id}" data-product-name="${esc(p.name)}">Delete</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    return toolbar + `<div class="card">${rowsHtml}</div>`;
   }
 
   function renderVendorProducts() {
@@ -584,6 +736,8 @@
     </div>`;
   }
 
+  /* ---------------- Vendor modal ---------------- */
+
   function openVendorModal(vendorId) {
     const v = vendors.find(x => x.vendor_id === vendorId);
     if (!v) return;
@@ -656,6 +810,259 @@
     vendorModal.classList.remove("open");
     vendorModal.setAttribute("aria-hidden", "true");
   }
+
+  /* ---------------- Shop product modal ---------------- */
+
+  function openShopProductModal(mode, product) {
+    const isEdit = mode === "edit";
+    const countryOptions = countries.map(c =>
+      `<option value="${c.code}"${product && product.target_country === c.code ? " selected" : ""}>${esc(c.name)} (${c.code})</option>`
+    ).join("");
+
+    shopProductModalBody.innerHTML = `
+      <button class="modal-close" type="button" id="shop-modal-close" aria-label="Close">×</button>
+      <h3>${isEdit ? "Edit shop product" : "Add shop product"}</h3>
+      <p class="modal-sub">${isEdit ? "Update product details." : "New product appears immediately on the shop for the target country."}</p>
+
+      <form id="shop-product-form" novalidate>
+        <label for="sp-name">Name</label>
+        <input id="sp-name" type="text" maxlength="120" required value="${product ? esc(product.name) : ""}">
+
+        <label for="sp-image">Image URL</label>
+        <input id="sp-image" type="url" maxlength="400" placeholder="https://..." required value="${product ? esc(product.image) : ""}">
+
+        <label for="sp-link">Product link (Amazon)</label>
+        <input id="sp-link" type="url" maxlength="400" placeholder="https://amazon..." required value="${product ? esc(product.link) : ""}">
+        <div style="font-size:11px; color:#888; margin-top:4px;">Must start with https://</div>
+
+        <div class="field-grid">
+          <div>
+            <label for="sp-category">Category</label>
+            <input id="sp-category" type="text" maxlength="60" required value="${product ? esc(product.category) : ""}">
+          </div>
+          <div>
+            <label for="sp-country">Target country</label>
+            <select id="sp-country" required>
+              <option value="">— Choose —</option>
+              ${countryOptions}
+            </select>
+          </div>
+        </div>
+
+        <div class="field-grid">
+          <div>
+            <label for="sp-price">Price note <span class="optional">(optional)</span></label>
+            <input id="sp-price" type="text" maxlength="60" placeholder="e.g. $19" value="${product && product.price_note ? esc(product.price_note) : ""}">
+          </div>
+          <div>
+            <label for="sp-shipping">Shipping note <span class="optional">(optional)</span></label>
+            <input id="sp-shipping" type="text" maxlength="60" placeholder="e.g. Ships worldwide" value="${product && product.shipping_note ? esc(product.shipping_note) : ""}">
+          </div>
+        </div>
+
+        <div class="field-grid">
+          <div>
+            <label for="sp-order">Featured order <span class="optional">(lower = earlier)</span></label>
+            <input id="sp-order" type="number" min="0" max="9999" value="${product ? (product.featured_order || 0) : 0}">
+          </div>
+        </div>
+
+        <div class="check-row">
+          <input id="sp-featured" type="checkbox"${product && product.is_featured ? " checked" : ""}>
+          <label for="sp-featured">Feature on the front of the shop</label>
+        </div>
+
+        <div class="status" id="sp-status"></div>
+
+        <div class="modal-actions">
+          <button class="rep-btn" type="button" id="shop-modal-cancel">Cancel</button>
+          <button class="rep-btn approve" type="submit" id="shop-modal-submit">${isEdit ? "Save changes" : "Add product"}</button>
+        </div>
+      </form>
+    `;
+
+    shopProductModal.classList.add("open");
+    shopProductModal.setAttribute("aria-hidden", "false");
+
+    const form = document.getElementById("shop-product-form");
+    const statusEl = document.getElementById("sp-status");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      statusEl.className = "status";
+
+      const submitBtn = document.getElementById("shop-modal-submit");
+      submitBtn.disabled = true;
+      const oldText = submitBtn.textContent;
+      submitBtn.textContent = "Saving…";
+
+      const payload = {
+        p_name:           document.getElementById("sp-name").value.trim(),
+        p_image:          document.getElementById("sp-image").value.trim(),
+        p_link:           document.getElementById("sp-link").value.trim(),
+        p_category:       document.getElementById("sp-category").value.trim(),
+        p_target_country: document.getElementById("sp-country").value,
+        p_price_note:     document.getElementById("sp-price").value.trim() || null,
+        p_shipping_note:  document.getElementById("sp-shipping").value.trim() || null,
+        p_is_featured:    document.getElementById("sp-featured").checked,
+        p_featured_order: parseInt(document.getElementById("sp-order").value, 10) || 0
+      };
+
+      try {
+        let error;
+        if (isEdit) {
+          payload.p_product_id = product.id;
+          ({ error } = await sb.rpc("admin_update_shop_product", payload));
+        } else {
+          ({ error } = await sb.rpc("admin_add_shop_product", payload));
+        }
+        if (error) throw error;
+
+        toast(isEdit ? "Product updated." : "Product added.", "ok");
+        closeShopProductModal();
+        await loadShopProducts();
+        render();
+      } catch (err) {
+        console.error(err);
+        statusEl.className = "status show err";
+        statusEl.textContent = err.message || "Could not save.";
+        submitBtn.disabled = false;
+        submitBtn.textContent = oldText;
+      }
+    });
+  }
+  function closeShopProductModal() {
+    shopProductModal.classList.remove("open");
+    shopProductModal.setAttribute("aria-hidden", "true");
+  }
+
+  /* ---------------- Bulk import modal ---------------- */
+
+  function openBulkImportModal() {
+    bulkImportModalBody.innerHTML = `
+      <button class="modal-close" type="button" id="bulk-modal-close" aria-label="Close">×</button>
+      <h3>Bulk import products</h3>
+      <p class="modal-sub">Paste CSV data below. The first line must be the header row.</p>
+
+      <div class="csv-hint">name,image,link,category,target_country,price_note,shipping_note
+Cool Mug,https://...,https://amazon...,Mugs,GB,$12,Ships UK
+Weird Lamp,https://...,https://amazon...,Lamps,US,,</div>
+
+      <label for="bulk-csv">CSV data</label>
+      <textarea id="bulk-csv" rows="12" placeholder="Paste CSV here…" style="font-family:ui-monospace,monospace; font-size:12px;"></textarea>
+
+      <div class="status" id="bulk-status"></div>
+
+      <div class="modal-actions">
+        <button class="rep-btn" type="button" id="bulk-modal-cancel">Cancel</button>
+        <button class="rep-btn approve" type="button" id="bulk-modal-submit">Import</button>
+      </div>
+    `;
+
+    bulkImportModal.classList.add("open");
+    bulkImportModal.setAttribute("aria-hidden", "false");
+
+    document.getElementById("bulk-modal-submit").addEventListener("click", async () => {
+      const statusEl = document.getElementById("bulk-status");
+      const submitBtn = document.getElementById("bulk-modal-submit");
+      statusEl.className = "status";
+
+      const raw = document.getElementById("bulk-csv").value;
+      const parsed = parseCSV(raw);
+      if (parsed.error) {
+        statusEl.className = "status show err";
+        statusEl.textContent = parsed.error;
+        return;
+      }
+      if (parsed.rows.length === 0) {
+        statusEl.className = "status show err";
+        statusEl.textContent = "No data rows found.";
+        return;
+      }
+
+      submitBtn.disabled = true;
+      const oldText = submitBtn.textContent;
+      submitBtn.textContent = "Importing…";
+
+      try {
+        const { data, error } = await sb.rpc("admin_bulk_import_shop_products", {
+          p_rows: parsed.rows
+        });
+        if (error) throw error;
+
+        const result = (data && data[0]) || { inserted: 0, failed: 0, errors: [] };
+        let msg = `Inserted ${result.inserted}. Failed ${result.failed}.`;
+        if (result.errors && result.errors.length) {
+          msg += "\n\nErrors:\n" + result.errors.slice(0, 10).join("\n");
+        }
+        statusEl.className = "status show " + (result.failed > 0 ? "err" : "ok");
+        statusEl.style.whiteSpace = "pre-wrap";
+        statusEl.textContent = msg;
+
+        await loadShopProducts();
+        setTimeout(() => {
+          closeBulkImportModal();
+          render();
+        }, 2000);
+      } catch (err) {
+        console.error(err);
+        statusEl.className = "status show err";
+        statusEl.textContent = err.message || "Import failed.";
+        submitBtn.disabled = false;
+        submitBtn.textContent = oldText;
+      }
+    });
+  }
+  function closeBulkImportModal() {
+    bulkImportModal.classList.remove("open");
+    bulkImportModal.setAttribute("aria-hidden", "true");
+  }
+
+  function parseCSV(text) {
+    if (!text || !text.trim()) return { rows: [], error: "No data pasted." };
+    const lines = text.replace(/\r/g, "").split("\n").filter(l => l.trim().length > 0);
+    if (lines.length < 2) return { rows: [], error: "Need a header row + at least one data row." };
+
+    const header = splitCSVLine(lines[0]).map(h => h.trim().toLowerCase());
+    const required = ["name","image","link","category","target_country"];
+    for (const r of required) {
+      if (!header.includes(r)) return { rows: [], error: `Missing required column: ${r}` };
+    }
+
+    const rows = [];
+    for (let i = 1; i < lines.length; i++) {
+      const cols = splitCSVLine(lines[i]);
+      const row = {};
+      header.forEach((h, idx) => {
+        row[h] = (cols[idx] || "").trim();
+      });
+      // Skip fully-empty rows
+      if (!row.name && !row.link) continue;
+      rows.push(row);
+    }
+    return { rows, error: null };
+  }
+
+  function splitCSVLine(line) {
+    const out = [];
+    let cur = "";
+    let inQ = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') {
+        if (inQ && line[i+1] === '"') { cur += '"'; i++; }
+        else inQ = !inQ;
+      } else if (ch === ',' && !inQ) {
+        out.push(cur); cur = "";
+      } else {
+        cur += ch;
+      }
+    }
+    out.push(cur);
+    return out;
+  }
+
+  /* ---------------- Actions ---------------- */
 
   async function handleVendorAction(action, vendorId) {
     try {
@@ -769,6 +1176,20 @@
     }
   }
 
+  async function handleShopProductDelete(productId, productName) {
+    if (!confirm(`Delete "${productName}" permanently? This cannot be undone.`)) return;
+    try {
+      const { error } = await sb.rpc("admin_delete_shop_product", { p_product_id: productId });
+      if (error) throw error;
+      toast("Product deleted.", "ok");
+      await loadShopProducts();
+      render();
+    } catch (e) {
+      console.error(e);
+      toast(e.message || "Delete failed.", "err");
+    }
+  }
+
   async function addCategory() {
     const nameEl = document.getElementById("cat-new-name");
     const sortEl = document.getElementById("cat-new-sort");
@@ -792,11 +1213,14 @@
     }
   }
 
+  /* ---------------- Click handling ---------------- */
+
   document.addEventListener("click", async (e) => {
     const tabBtn = e.target.closest(".tab-btn[data-tab]");
     if (tabBtn) {
       tab = tabBtn.dataset.tab;
       if (tab === "log") await loadLogs();
+      if (tab === "shop") await loadShopProducts();
       render();
       return;
     }
@@ -820,6 +1244,23 @@
 
     if (e.target.id === "vendor-modal-close" || e.target === vendorModal) {
       closeVendorModal();
+      return;
+    }
+    if (e.target.id === "shop-modal-close" || e.target.id === "shop-modal-cancel" || e.target === shopProductModal) {
+      closeShopProductModal();
+      return;
+    }
+    if (e.target.id === "bulk-modal-close" || e.target.id === "bulk-modal-cancel" || e.target === bulkImportModal) {
+      closeBulkImportModal();
+      return;
+    }
+
+    // Shop tab controls
+    if (e.target.id === "shop-add-btn") { openShopProductModal("add", null); return; }
+    if (e.target.id === "shop-bulk-btn") { openBulkImportModal(); return; }
+    if (e.target.id === "shop-refresh-btn") {
+      await loadShopProducts();
+      render();
       return;
     }
 
@@ -877,10 +1318,30 @@
       return;
     }
 
+    // Shop product actions
+    if (action === "edit-shop-product") {
+      const p = shopProducts.find(x => x.id === parseInt(btn.dataset.productId, 10));
+      if (p) openShopProductModal("edit", p);
+      return;
+    }
+    if (action === "delete-shop-product") {
+      btn.disabled = true;
+      try {
+        await handleShopProductDelete(parseInt(btn.dataset.productId, 10), btn.dataset.productName);
+      } finally {
+        if (document.body.contains(btn)) btn.disabled = false;
+      }
+      return;
+    }
+
     if (action === "view-vendor") { openVendorModal(btn.dataset.vendorId); return; }
     if (["approve-vendor","reject-vendor","suspend-vendor","restore-vendor","set-limit"].includes(action)) {
       btn.disabled = true;
-      await handleVendorAction(action, btn.dataset.vendorId);
+      try {
+        await handleVendorAction(action, btn.dataset.vendorId);
+      } finally {
+        if (document.body.contains(btn)) btn.disabled = false;
+      }
       return;
     }
     if (action === "toggle-feature-vendor") {
@@ -926,7 +1387,11 @@
 
     if (action === "approve-product" || action === "reject-product") {
       btn.disabled = true;
-      await handleProductAction(action, btn.dataset.productId);
+      try {
+        await handleProductAction(action, btn.dataset.productId);
+      } finally {
+        if (document.body.contains(btn)) btn.disabled = false;
+      }
       return;
     }
     if (action === "toggle-feature-product") {
@@ -952,14 +1417,43 @@
 
     if (["edit-cat","activate-cat","deactivate-cat","delete-cat"].includes(action)) {
       btn.disabled = true;
-      await handleCategoryAction(action, parseInt(btn.dataset.catId, 10));
+      try {
+        await handleCategoryAction(action, parseInt(btn.dataset.catId, 10));
+      } finally {
+        if (document.body.contains(btn)) btn.disabled = false;
+      }
       return;
     }
   });
 
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && vendorModal.classList.contains("open")) closeVendorModal();
+  /* Debounced shop search + country filter */
+  document.addEventListener("input", (e) => {
+    if (e.target.id === "shop-search") {
+      clearTimeout(window.__shopSearchTimer);
+      window.__shopSearchTimer = setTimeout(async () => {
+        shopFilterSearch = e.target.value.trim();
+        await loadShopProducts();
+        render();
+      }, 350);
+    }
   });
+  document.addEventListener("change", async (e) => {
+    if (e.target.id === "shop-country-filter") {
+      shopFilterCountry = e.target.value;
+      await loadShopProducts();
+      render();
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      if (vendorModal.classList.contains("open")) closeVendorModal();
+      if (shopProductModal.classList.contains("open")) closeShopProductModal();
+      if (bulkImportModal.classList.contains("open")) closeBulkImportModal();
+    }
+  });
+
+  /* ---------------- Boot ---------------- */
 
   async function boot() {
     const { data: { session } } = await sb.auth.getSession();

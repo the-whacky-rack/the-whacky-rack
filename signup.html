@@ -427,8 +427,8 @@
                     <option value="Prefer not to say">Prefer not to say</option>
                 </select>
 
-                <label for="age" class="optional">Age</label>
-                <input id="age" type="number" min="18" max="120" inputmode="numeric">
+                <label for="age">Age</label>
+                <input id="age" type="number" min="18" max="120" inputmode="numeric" required>
 
                 <label for="bio">Bio</label>
                 <textarea id="bio" minlength="20" maxlength="2000" placeholder="At least 20 characters. What kind of weird are you?" required></textarea>
@@ -544,7 +544,7 @@
                 validate();
             });
 
-            [emailEl, countryEl, adultEl].forEach(el =>
+            [emailEl, countryEl, adultEl, ageEl].forEach(el =>
                 el.addEventListener("input", validate)
             );
 
@@ -555,7 +555,9 @@
                 const bioOk = bioEl.value.trim().length >= 20 && bioWords <= 200;
                 const adultOk = adultEl.checked;
                 const userOk = !!currentUsername;
-                submitBtn.disabled = !(emailOk && pwOk && bioOk && adultOk && userOk && captchaToken);
+                const ageVal = parseInt(ageEl.value, 10);
+                const ageOk = Number.isFinite(ageVal) && ageVal >= 18 && ageVal <= 120;
+                submitBtn.disabled = !(emailOk && pwOk && bioOk && adultOk && userOk && ageOk && captchaToken);
             }
 
             /* ---------- Turnstile ---------- */
@@ -605,7 +607,11 @@
                    Nothing is sent to Supabase unless all checks pass.
                    ------------------------------------------------------------ */
                 const ageVal = ageEl.value ? parseInt(ageEl.value, 10) : null;
-                if (ageVal !== null && (ageVal < 18 || ageVal > 120)) {
+                if (ageVal === null || !Number.isFinite(ageVal)) {
+                    status("Age is required.", "err");
+                    return;
+                }
+                if (ageVal < 18 || ageVal > 120) {
                     status("Age must be between 18 and 120.", "err");
                     return;
                 }

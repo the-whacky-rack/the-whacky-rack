@@ -37,7 +37,7 @@ display: flex; flex-direction: column; gap: 12px;
 }
 .wr-consent p { margin: 0; }
 .wr-consent a { color: #e84625; font-weight: 700; }
-.wr-consent-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.wr-consent-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 .wr-consent button {
 font-family: inherit; font-weight: 800; font-size: 13px;
 padding: 10px 18px; border-radius: 50px; cursor: pointer;
@@ -56,13 +56,17 @@ const el = document.createElement("div");
 el.className = "wr-consent";
 el.innerHTML = `
 <p>
-  We use a few third-party services that may set cookies — Cloudflare Turnstile
-  (bot protection), Amazon (affiliate links), and social platforms (only when
-  you click share). We also record anonymous analytics (page views and product
-  link clicks, including IP and country) in our own database to understand
-  which products interest visitors. See our
+  We use a few third-party services that may set cookies &mdash;
+  <strong>Cloudflare Turnstile</strong> (bot protection on signup and login),
+  <strong>Amazon</strong> (when you click an affiliate link), and
+  <strong>social platforms</strong> (only when you click share). With your
+  consent, we also record anonymous analytics (page views and product link
+  clicks, including IP and country) in our own database to understand which
+  products interest visitors. See our
   <a href="cookies.html">Cookie Policy</a> and
-  <a href="privacy.html">Privacy Policy</a>.
+  <a href="privacy.html">Privacy Policy</a>. We do not sell your personal
+  information &mdash; see our
+  <a href="privacy.html#do-not-sell">Do Not Sell or Share notice</a>.
 </p>
 <div class="wr-consent-actions">
     <button class="accept" type="button">Accept all</button>

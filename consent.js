@@ -1,4 +1,4 @@
-/* The Whacky Rack — cookie consent banner (EU/UK) */
+/* The Whacky Rack — cookie consent banner */
 (function () {
 const KEY = "wr_cookie_consent_v1";
 
@@ -12,8 +12,14 @@ if (forceShow) {
 try { localStorage.removeItem(KEY); } catch (e) {}
 }
 
-const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
-const isEUUK = /Europe\//.test(tz) || /London|Dublin|Lisbon/.test(tz) || forceShow;
+// Respect Global Privacy Control (universal opt-out).
+// If the browser signals GPC and we have no stored choice, record "essential only".
+try {
+  if (!stored && navigator.globalPrivacyControl === true && !forceShow) {
+    localStorage.setItem(KEY, JSON.stringify({ essential: true, all: false }));
+    return;
+  }
+} catch (e) {}
 
 const style = document.createElement("style");
 style.textContent = `
@@ -83,6 +89,4 @@ save({ essential: true, all: false });
 el.querySelector(".settings").addEventListener("click", function () {
 window.location.href = "cookies.html";
 });
-
-if (!isEUUK) save({ essential: true, all: true });
 })();

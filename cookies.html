@@ -516,7 +516,7 @@
     <section class="hero">
         <div class="hero-kicker">The smallest possible footprint</div>
         <h1>Cookie <span>Policy</span></h1>
-               <p class="hero-description">
+        <p class="hero-description">
             We keep cookies to an absolute minimum. We set no first-party cookies and
             run no advertising trackers. We do use your browser's <strong>localStorage</strong>
             to hold your sign-in session, remember which products you've liked, and store
@@ -575,21 +575,26 @@
                 from third parties, and does not run any form of cross-site tracking.
             </div>
             <p>
-                We do use your browser's <strong>localStorage</strong> for three purposes:
+                We do use your browser's <strong>localStorage</strong> and
+                <strong>sessionStorage</strong> for the following purposes:
             </p>
             <ul>
-                <li><strong>Session token</strong> — after you sign in, Supabase Auth stores a token in localStorage so you stay signed in across page loads. Signing out clears it.</li>
-                <li><strong>Anonymous like identifier</strong> — on the product pages, the like button works without an account. We store a random UUID in localStorage so we can remember which products you've liked on this device, and send the UUID with each like so the count stays accurate.</li>
-                <li><strong>Anonymous analytics ID</strong> — a random session ID stored in localStorage, used only to distinguish repeat visitors from new ones in the Shop analytics. It is not linked to your account.</li>
+                <li><strong>Session token</strong> — after you sign in, Supabase Auth stores a token in localStorage so you stay signed in across page loads. Signing out clears it. Key: <code>sb-*-auth-token</code>.</li>
+                <li><strong>Anonymous like identifier</strong> — on the product pages, the like button works without an account. We store a random UUID in localStorage so we can remember which products you've liked on this device, and send the UUID with each like so the count stays accurate. Keys: <code>whackyrack_client_id</code>, <code>whackyrack_user_likes</code>.</li>
+                <li><strong>Anonymous analytics ID</strong> — a random session ID stored in localStorage, used only to distinguish repeat visitors from new ones in the Shop analytics. It is not linked to your account. Key: <code>wr_analytics_session_id</code>.</li>
+                <li><strong>Page-view debounce marker</strong> — a timestamp in sessionStorage used to avoid recording the same page twice within a minute. Cleared when you close the tab. Key prefix: <code>wr_analytics_last_pv:</code>.</li>
+                <li><strong>Consent record</strong> — stores your cookie consent choice (Accept all / Reject non-essential). Key: <code>wr_cookie_consent_v1</code>.</li>
+                <li><strong>Analytics debug flag</strong> — only present if you've ever added <code>?debugAnalytics=1</code> to a URL. Stores a flag to keep console logging on. Key: <code>wr_analytics_debug</code>. Normal visitors never set this.</li>
             </ul>
             <p>
                 Unlike cookies, localStorage data is never sent automatically to any
                 server, and it is not used for cross-site tracking, advertising, or profiling.
             </p>
             <p>
-                There is no cookie consent banner for EU/UK visitors because we do not set
-                non-essential cookies ourselves. Our own analytics only runs after you
-                click "Accept all" in the cookie banner.
+                Because we do not set any non-essential first-party cookies, our own
+                analytics is the only thing that requires your consent. The consent
+                banner appears to every visitor who has not yet made a choice, and no
+                analytics is recorded until you choose "Accept all".
             </p>
         </div>
 
@@ -613,7 +618,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                                        <tr>
+                    <tr>
                         <td><strong>The Whacky Rack Analytics</strong></td>
                         <td>When you visit the Shop page or any Side Rack page after accepting all cookies</td>
                         <td>Records anonymous page views and product link clicks (IP, country, timezone, screen size, user agent) to help us and Side Rack vendors understand which products interest visitors. For vendor products, an internal vendor identifier is attached so the vendor sees only aggregated statistics for their own listings — never IP addresses, session identifiers, or user identities. Stored in our Supabase database, never shared with other third parties.</td>
@@ -698,7 +703,7 @@
         </div>
 
         <div class="content-section">
-            <h2><span class="num">6</span>Do Not Track signals</h2>
+            <h2><span class="num">6</span>Do Not Track and Global Privacy Control</h2>
             <p>
                 Some browsers send a "Do Not Track" (DNT) signal. Because we do not track
                 users across sites and do not run third-party advertising analytics, there
@@ -706,6 +711,16 @@
                 your cookie consent choice — if you reject non-essential cookies, no
                 analytics are recorded. Cloudflare's, Amazon's, and the social platforms'
                 handling of DNT signals is governed by their own policies.
+            </p>
+            <p>
+                Some browsers also send a <strong>Global Privacy Control</strong> (GPC)
+                signal, which is treated as a universal opt-out under laws such as the
+                California Consumer Privacy Act. If your browser signals GPC and you
+                have not previously made a cookie consent choice on this site, we record
+                "Reject non-essential" on your behalf and do not set any non-essential
+                cookies or record any analytics for your visit. You can override this
+                at any time by clearing your browser's site data and choosing "Accept
+                all" on the consent banner.
             </p>
         </div>
 

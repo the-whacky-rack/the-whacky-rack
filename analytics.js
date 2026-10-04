@@ -1,14 +1,17 @@
-/* The Whacky Rack — analytics tracking v2
-   v2 changes:
-   - Click inserts use fetch with keepalive:true (survives page navigation on mobile)
-   - Debug mode via ?debugAnalytics=1 (persists in localStorage until ?debugAnalytics=0)
-   - Logs every step to browser console when debug is on
-   - Captures user_id + is_anonymous for signed-in / anonymous clicker split */
+/* The Whacky Rack — analytics tracking v3
+   v3 changes:
+   - Always uses fetch with keepalive:true (mobile clicks survive navigation)
+   - Constants hardcoded (same anon key already served by auth.js)
+   - No more fallback to SDK insert */
 (function () {
   var CONSENT_KEY     = "wr_cookie_consent_v1";
   var SESSION_KEY     = "wr_analytics_session_id";
   var PV_DEBOUNCE_KEY = "wr_analytics_last_pv";
   var DEBUG_KEY       = "wr_analytics_debug";
+
+  // Same values as auth.js — the anon key is public and safe to expose.
+  var SUPABASE_URL = "https://rmqoayzrplotejgnnvov.supabase.co";
+  var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJtcW9heXpycGxvdGVqZ25udm92Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1NDIzNDAsImV4cCI6MjEwNTExODM0MH0.MyIJizHgA-b3L8t9-qYB_1ac5K0_yk7DrFWKnqIOEN8";
 
   var EXCLUDED_PATHS = [/\/analytics\.html?$/i, /\/admin\.html?$/i];
 
@@ -78,32 +81,9 @@
       }
     } catch (e) {}
 
-    try {
-      var keys = Object.keys(localStorage);
-      for (var i = 0; i < keys.length; i++) {
-        var k = keys[i];
-        if (k.indexOf("sb-") === 0 && k.indexOf("-auth-token") !== -1) {
-          var parsed = JSON.parse(localStorage.getItem(k) || "{}");
-          if (parsed && parsed.user && parsed.user.id) {
-            _cachedUserId = parsed.user.id;
-            _cachedUserIdResolved = true;
-            return _cachedUserId;
-          }
-        }
-      }
-    } catch (e) {}
-
     _cachedUserId = null;
     _cachedUserIdResolved = true;
     return null;
-  }
-
-  /* ---------------- Wait for window.wr.sb ---------------- */
-  function waitForSb(cb, tries) {
-    tries = tries || 0;
-    if (window.wr && window.wr.sb) return cb(window.wr.sb);
-    if (tries > 100) { log("sb never became available — giving up"); return; }
-    setTimeout(function () { waitForSb(cb, tries + 1); }, 50);
   }
 
   /* ---------------- Base payload ---------------- */
@@ -121,8 +101,37 @@
     };
   }
 
+  /* ---------------- Insert helper (always keepalive) ---------------- */
+  function insertKeepalive(table, payload) {
+    var url = SUPABASE_URL.replace(/\/+$/, "") + "/rest/v1/" + table;
+    log("keepalive POST →", url, payload);
+
+    try {
+      return fetch(url, {
+        method: "POST",
+        headers: {
+          "apikey": SUPABASE_ANON_KEY,
+          "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+          "Content-Type": "application/json",
+          "Prefer": "return=minimal"
+        },
+        body: JSON.stringify(payload),
+        keepalive: true
+      })
+      .then(function (res) {
+        log("keepalive HTTP status:", res.status);
+        if (!res.ok) {
+          return res.text().then(function (t) { log("keepalive error body:", t); });
+        }
+      })
+      .catch(function (e) { log("keepalive fetch THREW:", e); });
+    } catch (e) {
+      log("keepalive setup THREW:", e);
+    }
+  }
+
   /* ---------------- Page view ---------------- */
-  function trackPageView(sb) {
+  function trackPageView() {
     for (var i = 0; i < EXCLUDED_PATHS.length; i++) {
       if (EXCLUDED_PATHS[i].test(location.pathname)) { log("excluded path — skip"); return; }
     }
@@ -140,65 +149,26 @@
     payload.user_agent  = navigator.userAgent;
 
     log("page view payload:", payload);
-    sb.from("analytics_page_views").insert(payload)
-      .then(function (r) {
-        if (r.error) log("page view ERROR:", r.error);
-        else log("page view OK");
-      })
-      .catch(function (e) { log("page view THREW:", e); });
+    insertKeepalive("analytics_page_views", payload);
   }
 
-  /* ---------------- Click insert (keepalive) ---------------- */
-  function insertClickKeepalive(sb, payload) {
-    var baseUrl = sb.supabaseUrl || "";
-    var anonKey = sb.supabaseKey || "";
-
-    if (!baseUrl || !anonKey) {
-      log("no supabase url/key on client — falling back to SDK");
-      return sb.from("analytics_link_clicks").insert(payload)
-        .then(function (r) { log("fallback insert result", r); })
-        .catch(function (e) { log("fallback insert threw", e); });
-    }
-
-    var url = baseUrl.replace(/\/+$/, "") + "/rest/v1/analytics_link_clicks";
-    log("keepalive POST →", url, payload);
-
-    return fetch(url, {
-      method: "POST",
-      headers: {
-        "apikey": anonKey,
-        "Authorization": "Bearer " + anonKey,
-        "Content-Type": "application/json",
-        "Prefer": "return=minimal"
-      },
-      body: JSON.stringify(payload),
-      keepalive: true
-    })
-    .then(function (res) {
-      log("keepalive HTTP status:", res.status);
-      if (!res.ok) {
-        return res.text().then(function (t) { log("keepalive error body:", t); });
-      }
-    })
-    .catch(function (e) { log("keepalive fetch THREW:", e); });
-  }
-
-  function trackLinkClick(sb, data) {
+  /* ---------------- Click tracking ---------------- */
+  function trackLinkClick(data) {
     var payload = basePayload();
     payload.product_id   = data.product_id || null;
     payload.product_name = data.product_name || null;
     payload.link_url     = data.link_url;
     payload.link_label   = data.link_label || null;
     payload.link_type    = data.link_type || "product";
-         payload.screen_size  = window.innerWidth + "x" + window.innerHeight;
+    payload.screen_size  = window.innerWidth + "x" + window.innerHeight;
     payload.user_agent   = navigator.userAgent;
 
     log("click payload:", payload);
-    insertClickKeepalive(sb, payload);
+    insertKeepalive("analytics_link_clicks", payload);
   }
 
   /* ---------------- Click detection ---------------- */
-  function attachClickTracking(sb) {
+  function attachClickTracking() {
     log("click tracker attached");
     document.addEventListener("click", function (e) {
       var link = e.target.closest("a[href]");
@@ -242,7 +212,7 @@
 
       log("click tracked:", { type: linkType, product: productName, href: href });
 
-      trackLinkClick(sb, {
+      trackLinkClick({
         product_id:   productId,
         product_name: productName,
         link_url:     href,
@@ -258,11 +228,8 @@
     if (started) return;
     started = true;
     log("starting tracking…");
-    waitForSb(function (sb) {
-      log("sb ready");
-      trackPageView(sb);
-      attachClickTracking(sb);
-    });
+    trackPageView();
+    attachClickTracking();
   }
 
   function init() {

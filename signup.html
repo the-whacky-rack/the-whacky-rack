@@ -409,7 +409,7 @@
                 </div>
 
                 <label for="country" class="optional">Country</label>
-                <input id="country" type="text" placeholder="Detecting…" autocomplete="country-name" maxlength="60">
+                <input id="country" type="text" placeholder="Enter your country" autocomplete="country-name" maxlength="60">
 
                 <label>Username</label>
                 <div class="username-box">
@@ -491,18 +491,8 @@
             let turnstileWidgetId = null;
             let currentUsername = null;
 
-            /* ---------- Country auto-detect ---------- */
-            (async () => {
-                try {
-                    const r = await fetch("https://ipapi.co/json/");
-                    const d = await r.json();
-                    if (d && d.country_name) countryEl.value = d.country_name;
-                    else if (d && d.country_code) countryEl.value = d.country_code;
-                    else countryEl.placeholder = "Enter your country";
-                } catch {
-                    countryEl.placeholder = "Enter your country";
-                }
-            })();
+            /* ---------- Country placeholder ---------- */
+            countryEl.placeholder = "Enter your country";
 
             /* ---------- Username via RPC ---------- */
             async function rollUsername() {
@@ -610,6 +600,24 @@
                     return;
                 }
 
+                /* ------------------------------------------------------------
+                   Client-side validation runs BEFORE any network call.
+                   Nothing is sent to Supabase unless all checks pass.
+                   ------------------------------------------------------------ */
+                const ageVal = ageEl.value ? parseInt(ageEl.value, 10) : null;
+                if (ageVal !== null && (ageVal < 18 || ageVal > 120)) {
+                    status("Age must be between 18 and 120.", "err");
+                    return;
+                }
+                if (bioEl.value.trim().length < 20) {
+                    status("Bio must be at least 20 characters.", "err");
+                    return;
+                }
+                if (countryEl.value && countryEl.value.trim().length > 60) {
+                    status("Country name is too long (max 60 characters).", "err");
+                    return;
+                }
+
                 submitBtn.disabled = true;
                 submitBtn.textContent = "Creating…";
 
@@ -627,33 +635,12 @@
                             username: currentUsername,
                             country: countryEl.value.trim() || null,
                             gender: genderEl.value || null,
-                            age: ageEl.value ? parseInt(ageEl.value, 10) : null,
+                            age: ageVal,
                             bio: bioEl.value.trim(),
                             timezone
                         }
                     }
                 });
-
-                // Friendly client-side validation before sending to the server
-                const ageVal = ageEl.value ? parseInt(ageEl.value, 10) : null;
-                if (ageVal !== null && (ageVal < 13 || ageVal > 120)) {
-                    status("Age must be between 13 and 120.", "err");
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = "Create account";
-                    return;
-                }
-                if (bioEl.value.trim().length < 20) {
-                    status("Bio must be at least 20 characters.", "err");
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = "Create account";
-                    return;
-                }
-                if (countryEl.value && countryEl.value.trim().length > 60) {
-                    status("Country name is too long (max 60 characters).", "err");
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = "Create account";
-                    return;
-                }
 
                 if (error) {
                     console.error(error);

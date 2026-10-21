@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A letter — The Whacky Rack</title>
+<title>The Letter Globe — The Whacky Rack</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -51,11 +51,31 @@
     color: #fff;
   }
   .brand span { color: var(--accent); }
+  .top-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .top-compose-btn {
+    background: var(--accent);
+    color: #fff;
+    border: 1px solid var(--accent);
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .2s ease;
+    white-space: nowrap;
+  }
+  .top-compose-btn:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
   .back-link {
     color: #fff;
     opacity: .6;
     font-size: 13px;
     transition: .15s ease;
+    white-space: nowrap;
   }
   .back-link:hover { opacity: 1; }
 
@@ -277,7 +297,7 @@
     cursor: not-allowed;
   }
 
-  /* ---------- Info panels (loading / empty / sign-in) ---------- */
+  /* ---------- Info panels ---------- */
   .panel-msg {
     text-align: center;
     padding: 40px 20px;
@@ -303,7 +323,7 @@
     line-height: 1;
   }
 
-  /* ---------- Modal ---------- */
+  /* ---------- Modals (shared) ---------- */
   .modal {
     display: none;
     position: fixed;
@@ -313,6 +333,7 @@
     align-items: center;
     justify-content: center;
     padding: 20px;
+    overflow-y: auto;
   }
   .modal.open { display: flex; }
   .modal-inner {
@@ -321,7 +342,7 @@
     padding: 30px 28px 26px;
     max-width: 520px;
     width: 100%;
-    max-height: 90vh;
+    max-height: 92vh;
     overflow-y: auto;
     position: relative;
     box-shadow: 0 20px 60px rgba(0,0,0,.5);
@@ -346,22 +367,6 @@
     line-height: 1.65;
     margin: 0 0 16px;
   }
-  .modal-inner textarea {
-    width: 100%;
-    min-height: 140px;
-    padding: 14px;
-    font-family: "Caveat", cursive;
-    font-size: 20px;
-    line-height: 1.55;
-    background: #fff;
-    border: 1px solid #d8cfba;
-    border-radius: 12px;
-    outline: none;
-    resize: vertical;
-    color: var(--ink);
-    box-sizing: border-box;
-  }
-  .modal-inner textarea:focus { border-color: var(--accent); }
   .modal-actions {
     display: flex;
     gap: 10px;
@@ -393,6 +398,146 @@
   .modal-status.show { display: block; }
   .modal-status.ok { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
   .modal-status.err { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+
+  /* ---------- Compose modal specifics ---------- */
+  .compose-inner {
+    max-width: 560px;
+    padding: 0;
+    overflow: hidden;
+    background: transparent;
+    box-shadow: none;
+  }
+  .compose-paper {
+    background: var(--paper);
+    background-image: repeating-linear-gradient(0deg, rgba(0,0,0,.015) 0 1px, transparent 1px 24px);
+    border-radius: 16px;
+    padding: 32px 30px 26px;
+    box-shadow: 0 40px 80px -20px rgba(0,0,0,.7), 0 0 0 1px rgba(0,0,0,.2);
+    position: relative;
+  }
+  .compose-paper .compose-heading {
+    font-family: "Caveat", cursive;
+    font-size: 28px;
+    color: var(--ink);
+    margin: 0 0 14px;
+    font-weight: 600;
+  }
+  .compose-textarea {
+    width: 100%;
+    min-height: 180px;
+    padding: 0;
+    font-family: "Caveat", cursive;
+    font-size: 21px;
+    line-height: 1.55;
+    color: #3a3448;
+    background: transparent;
+    border: 0;
+    outline: none;
+    resize: vertical;
+    box-sizing: border-box;
+  }
+  .compose-textarea::placeholder { color: #b8af9a; }
+  .compose-count {
+    text-align: right;
+    font-size: 11px;
+    color: #9a8f7c;
+    margin-top: 6px;
+  }
+  .compose-divider {
+    height: 1px;
+    background: rgba(0,0,0,.12);
+    margin: 20px 0 18px;
+  }
+  .compose-section-label {
+    font-size: 10px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: #9a8f7c;
+    margin-bottom: 10px;
+  }
+  .compose-modes {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .compose-mode {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid #d8cfba;
+    background: #fff;
+    cursor: pointer;
+    transition: .15s ease;
+    font-family: "Courier Prime", monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: #555;
+  }
+  .compose-mode:hover { border-color: #b8a98a; }
+  .compose-mode.active {
+    background: #fff5f0;
+    border-color: var(--accent);
+    color: var(--accent-dark);
+  }
+  .compose-mode input { display: none; }
+  .compose-mode .mode-icon { font-size: 16px; line-height: 1; }
+  .compose-mode .mode-text { flex: 1; }
+
+  .compose-from {
+    font-family: "Caveat", cursive;
+    font-size: 19px;
+    color: var(--ink);
+    margin: 0 0 4px;
+  }
+  .compose-from-detail {
+    font-family: "Courier Prime", monospace;
+    font-size: 11px;
+    color: #9a8f7c;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+
+  .compose-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 8px;
+  }
+  .compose-actions .btn {
+    padding: 12px 22px;
+    font-size: 13px;
+  }
+  .compose-actions .btn-ghost {
+    background: transparent;
+    color: #666;
+    border: 1px solid #d8cfba;
+  }
+  .compose-actions .btn-ghost:hover {
+    background: #fff;
+    border-color: #b8a98a;
+    color: #333;
+  }
+
+  /* ---------- Reply modal textarea (kept for existing reply modal) ---------- */
+  .modal-inner textarea {
+    width: 100%;
+    min-height: 140px;
+    padding: 14px;
+    font-family: "Caveat", cursive;
+    font-size: 20px;
+    line-height: 1.55;
+    background: #fff;
+    border: 1px solid #d8cfba;
+    border-radius: 12px;
+    outline: none;
+    resize: vertical;
+    color: var(--ink);
+    box-sizing: border-box;
+  }
+  .modal-inner textarea:focus { border-color: var(--accent); }
   .char-count {
     text-align: right;
     font-size: 11px;
@@ -432,11 +577,10 @@
   @media (max-width: 680px) {
     .top-bar { padding: 12px 15px; }
     .brand { font-size: 16px; }
+    .top-compose-btn { font-size: 11px; padding: 7px 12px; }
     .back-link { font-size: 12px; }
     .stage { padding: 70px 15px 30px; }
-    .postcard {
-      grid-template-columns: 1fr;
-    }
+    .postcard { grid-template-columns: 1fr; }
     .divider { display: none; }
     .left { padding: 26px 22px 20px; }
     .left .salut { font-size: 24px; }
@@ -452,6 +596,13 @@
     .modal-inner h2 { font-size: 26px; }
     .modal-inner h3 { font-size: 22px; }
     .modal-inner textarea { font-size: 18px; }
+    .compose-paper { padding: 24px 20px 20px; }
+    .compose-paper .compose-heading { font-size: 24px; }
+    .compose-textarea { font-size: 19px; min-height: 160px; }
+    .compose-modes { flex-direction: column; }
+    .compose-mode { font-size: 11px; padding: 10px 12px; }
+    .compose-actions { flex-direction: column-reverse; }
+    .compose-actions .btn { width: 100%; }
   }
 </style>
 </head>
@@ -459,7 +610,10 @@
 
 <div class="top-bar">
   <a href="index.html" class="brand">The <span>Whacky</span> Rack</a>
-  <a href="index.html" class="back-link" id="back-link">← Back to the globe</a>
+  <div class="top-actions">
+    <button class="top-compose-btn" id="top-compose-btn" type="button">✉ Compose</button>
+    <a href="index.html" class="back-link">← Back</a>
+  </div>
 </div>
 
 <main class="stage" id="stage">
@@ -502,6 +656,43 @@
   </div>
 </div>
 
+<!-- Compose modal -->
+<div class="modal" id="compose-modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal-inner compose-inner">
+    <div class="compose-paper">
+      <div class="compose-heading">Dear Stranger,</div>
+      <textarea id="compose-text" class="compose-textarea" maxlength="600" placeholder="Write what's on your mind. This letter will travel across the world, to someone you'll never meet — unless they write back."></textarea>
+      <div class="compose-count"><span id="compose-count">0</span> / 600</div>
+
+      <div class="compose-divider"></div>
+
+      <div class="compose-section-label">How should this travel?</div>
+      <div class="compose-modes">
+        <label class="compose-mode active" data-mode="static">
+          <input type="radio" name="compose-mode" value="static" checked>
+          <span class="mode-icon">✉</span>
+          <span class="mode-text">As a letter</span>
+        </label>
+        <label class="compose-mode" data-mode="bottle">
+          <input type="radio" name="compose-mode" value="bottle">
+          <span class="mode-icon">🍾</span>
+          <span class="mode-text">As a bottle</span>
+        </label>
+      </div>
+
+      <p class="compose-from" id="compose-from">From: …</p>
+      <p class="compose-from-detail" id="compose-from-detail">Letters appear at your country. Bottles drift across the ocean for about 6 hours.</p>
+
+      <div class="modal-status" id="compose-status"></div>
+
+      <div class="compose-actions">
+        <button class="btn btn-ghost" id="compose-cancel" type="button">Cancel</button>
+        <button class="btn btn-primary" id="compose-send" type="button" disabled>Send letter →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="toast-container" id="toast-container"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -511,19 +702,30 @@
   const sb = window.wr.sb;
   const ADULT_KEY = 'wr_letters_18plus_v1';
 
-  const stageEl      = document.getElementById('stage');
-  const adultModal   = document.getElementById('adult-modal');
-  const replyModal   = document.getElementById('reply-modal');
-  const replyText    = document.getElementById('reply-text');
-  const replyCount   = document.getElementById('reply-count');
-  const replySend    = document.getElementById('reply-send');
-  const replyStatus  = document.getElementById('reply-status');
-  const toastBox     = document.getElementById('toast-container');
-  const backLink     = document.getElementById('back-link');
+  // Elements
+  const stageEl       = document.getElementById('stage');
+  const adultModal    = document.getElementById('adult-modal');
+  const replyModal    = document.getElementById('reply-modal');
+  const replyText     = document.getElementById('reply-text');
+  const replyCountEl  = document.getElementById('reply-count');
+  const replySend     = document.getElementById('reply-send');
+  const replyStatus   = document.getElementById('reply-status');
+  const composeModal  = document.getElementById('compose-modal');
+  const composeText   = document.getElementById('compose-text');
+  const composeCountEl= document.getElementById('compose-count');
+  const composeSend   = document.getElementById('compose-send');
+  const composeStatus = document.getElementById('compose-status');
+  const composeFrom   = document.getElementById('compose-from');
+  const composeFromDetail = document.getElementById('compose-from-detail');
+  const composeCancel = document.getElementById('compose-cancel');
+  const topComposeBtn = document.getElementById('top-compose-btn');
+  const toastBox      = document.getElementById('toast-container');
 
+  // State
   let currentLetter  = null;
   let existingConvId = null;
   let session        = null;
+  let composeMode    = 'static';
 
   /* ---------- Helpers ---------- */
   function esc(s) {
@@ -560,10 +762,7 @@
   /* ---------- Data ---------- */
   async function loadLetter(id) {
     const { data, error } = await sb.rpc('read_letter', { p_letter_id: id });
-    if (error) {
-      console.error('read_letter:', error);
-      return { error };
-    }
+    if (error) return { error };
     return { letter: (data && data[0]) || null };
   }
 
@@ -593,13 +792,16 @@
     stageEl.innerHTML = `
       <div class="panel-msg">
         <div class="emoji">📜</div>
-        <h2>No letter selected</h2>
-        <p>Browse the globe to find a letter that calls to you.</p>
+        <h2>Nothing here yet</h2>
+        <p>Browse the globe to find a letter that calls to you — or write one of your own.</p>
         <div class="actions">
-          <a class="btn btn-primary" href="index.html">Back to the globe</a>
+          <button class="btn btn-primary" id="compose-cta" type="button">✉ Write a letter</button>
+          <a class="btn btn-ghost" href="index.html">Back to home</a>
         </div>
       </div>
     `;
+    const cta = document.getElementById('compose-cta');
+    if (cta) cta.addEventListener('click', openComposeModal);
   }
 
   function renderNotFound() {
@@ -609,50 +811,45 @@
         <h2>This letter has flown away</h2>
         <p>It may have expired, been hidden, or drifted out of the world. Try another.</p>
         <div class="actions">
-          <a class="btn btn-primary" href="index.html">Back to the globe</a>
+          <button class="btn btn-primary" id="compose-cta" type="button">✉ Write a letter</button>
+          <a class="btn btn-ghost" href="index.html">Back to home</a>
         </div>
       </div>
     `;
+    const cta = document.getElementById('compose-cta');
+    if (cta) cta.addEventListener('click', openComposeModal);
   }
 
   /* ---------- Postcard renderer ---------- */
   function renderPostcard(letter, convId) {
-    const isBeached    = letter.delivery_mode === 'bottle' && letter.bottle_state === 'beached';
-    const originFlag   = flagFor(letter.origin_country);
-    const originName   = letter.origin_country;
-    const targetFlag   = flagFor(letter.target_country);
-    const targetName   = letter.target_country;
+    const isBeached  = letter.delivery_mode === 'bottle' && letter.bottle_state === 'beached';
+    const originFlag = flagFor(letter.origin_country);
+    const targetFlag = flagFor(letter.target_country);
 
-    // Paragraphs
     const paragraphs = String(letter.body || '')
       .split(/\n{2,}/)
       .map(p => `<p>${esc(p)}</p>`)
       .join('');
 
-    // Beached banner (bottles only)
     const beachedHtml = isBeached ? `
       <div class="beached-banner">
-        🍾 <strong>Washed ashore</strong> in ${targetFlag} ${esc(targetName || 'a distant country')} after drifting across the sea.
+        🍾 <strong>Washed ashore</strong> in ${targetFlag} ${esc(letter.target_country || 'a distant country')} after drifting across the sea.
       </div>
     ` : '';
 
-    // To: field
     let toHtml;
     if (convId) {
-      toHtml = `<div class="line">${originFlag} A correspondent in ${esc(originName)}</div>`;
+      toHtml = `<div class="line">${originFlag} A correspondent in ${esc(letter.origin_country)}</div>`;
     } else {
       toHtml = `<div class="line empty">&nbsp;</div>`;
     }
 
-    // Actions
     let actionsHtml;
     if (letter.is_mine) {
-      actionsHtml = `
-        <a class="btn btn-ghost" href="index.html">← Back to the globe</a>
-      `;
+      actionsHtml = `<a class="btn btn-ghost" href="index.html">← Back to home</a>`;
     } else if (convId) {
       actionsHtml = `
-        <a class="btn btn-primary" href="index.html">Open conversation → (coming next)</a>
+        <a class="btn btn-primary" href="letters-conversation.html?id=${esc(convId)}">Open conversation →</a>
         <a class="btn btn-ghost" href="index.html">Back</a>
       `;
     } else {
@@ -662,7 +859,6 @@
       `;
     }
 
-    // Your-own-letter note
     const ownNote = letter.is_mine ? `
       <div style="text-align:center; margin-top:14px; font-size:12px; opacity:.55; font-style:italic;">
         This is your own letter. Others will find it on the globe.
@@ -677,7 +873,7 @@
             <div class="left">
               <p class="salut">Dear Stranger,</p>
               ${paragraphs}
-              <p class="sign">— ${originFlag} ${esc(originName)}</p>
+              <p class="sign">— ${originFlag} ${esc(letter.origin_country)}</p>
             </div>
             <div class="divider"></div>
             <div class="right">
@@ -703,7 +899,6 @@
       </div>
     `;
 
-    // Wire reply button
     const replyBtn = document.getElementById('reply-btn');
     if (replyBtn) replyBtn.addEventListener('click', openReplyModal);
   }
@@ -711,7 +906,7 @@
   /* ---------- Reply modal ---------- */
   function openReplyModal() {
     replyText.value = '';
-    replyCount.textContent = '0';
+    replyCountEl.textContent = '0';
     replySend.disabled = true;
     replySend.textContent = 'Send reply';
     replyStatus.className = 'modal-status';
@@ -727,17 +922,13 @@
   }
 
   replyText.addEventListener('input', () => {
-    const len = replyText.value.length;
-    replyCount.textContent = String(len);
+    replyCountEl.textContent = String(replyText.value.length);
     replySend.disabled = replyText.value.trim().length < 1;
   });
 
   document.getElementById('reply-cancel').addEventListener('click', closeReplyModal);
   replyModal.addEventListener('click', (e) => {
     if (e.target === replyModal) closeReplyModal();
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && replyModal.classList.contains('open')) closeReplyModal();
   });
 
   replySend.addEventListener('click', async () => {
@@ -750,20 +941,24 @@
     replyStatus.className = 'modal-status';
 
     try {
-      const { error } = await sb.rpc('reply_to_letter', {
+      const { data, error } = await sb.rpc('reply_to_letter', {
         p_letter_id: currentLetter.id,
         p_body:      body
       });
       if (error) throw error;
 
       replyStatus.className = 'modal-status show ok';
-      replyStatus.textContent = 'Your reply is on its way. The sender will see it when they next visit the globe.';
-
+      replyStatus.textContent = 'Your reply is on its way. Opening the conversation…';
       toast('Reply sent.', 'ok');
+
+      const convId = data;  // reply_to_letter returns conversation_id
       setTimeout(() => {
-        closeReplyModal();
-        window.location.href = 'index.html';
-      }, 1800);
+        if (convId) {
+          window.location.href = `letters-conversation.html?id=${convId}`;
+        } else {
+          window.location.href = 'index.html';
+        }
+      }, 1200);
     } catch (err) {
       console.error(err);
       replyStatus.className = 'modal-status show err';
@@ -773,13 +968,135 @@
     }
   });
 
+  /* ---------- Compose modal ---------- */
+  async function openComposeModal() {
+    if (!session) {
+      window.location.href = 'login.html';
+      return;
+    }
+
+    // Reset state
+    composeText.value = '';
+    composeCountEl.textContent = '0';
+    composeSend.disabled = true;
+    composeSend.textContent = 'Send letter →';
+    composeStatus.className = 'modal-status';
+    composeStatus.textContent = '';
+    setComposeMode('static');
+
+    // Try to pre-fill "From: XX"
+    try {
+      const { data } = await sb.from('profiles')
+        .select('country, timezone')
+        .eq('id', session.user.id)
+        .maybeSingle();
+      const prof = data || {};
+      let cc = (prof.country || '').toUpperCase();
+      if (!/^[A-Z]{2}$/.test(cc)) cc = null;
+      composeFrom.textContent = cc ? `From: ${flagFor(cc)} ${cc}` : 'From: your country';
+    } catch (e) {
+      composeFrom.textContent = 'From: your country';
+    }
+
+    composeModal.classList.add('open');
+    composeModal.setAttribute('aria-hidden', 'false');
+    setTimeout(() => composeText.focus(), 100);
+  }
+
+  function closeComposeModal() {
+    composeModal.classList.remove('open');
+    composeModal.setAttribute('aria-hidden', 'true');
+    // If we opened via ?compose=1, strip the param so refresh doesn't reopen
+    const url = new URL(location.href);
+    if (url.searchParams.get('compose') === '1') {
+      url.searchParams.delete('compose');
+      history.replaceState({}, '', url.pathname + (url.search || ''));
+    }
+  }
+
+  function setComposeMode(mode) {
+    composeMode = mode;
+    document.querySelectorAll('.compose-mode').forEach(el => {
+      el.classList.toggle('active', el.dataset.mode === mode);
+    });
+    const radio = document.querySelector(`.compose-mode[data-mode="${mode}"] input`);
+    if (radio) radio.checked = true;
+
+    if (mode === 'bottle') {
+      composeFromDetail.textContent = 'Bottles drift across the ocean for about 6 hours, then wash ashore in another country.';
+      composeSend.textContent = '🍾 Send as bottle →';
+    } else {
+      composeFromDetail.textContent = 'Letters appear at your country. Someone will find it when they browse the globe.';
+      composeSend.textContent = 'Send letter →';
+    }
+  }
+
+  composeText.addEventListener('input', () => {
+    composeCountEl.textContent = String(composeText.value.length);
+    composeSend.disabled = composeText.value.trim().length < 1;
+  });
+
+  document.querySelectorAll('.compose-mode').forEach(el => {
+    el.addEventListener('click', () => setComposeMode(el.dataset.mode));
+  });
+
+  composeCancel.addEventListener('click', closeComposeModal);
+  composeModal.addEventListener('click', (e) => {
+    if (e.target === composeModal) closeComposeModal();
+  });
+
+  composeSend.addEventListener('click', async () => {
+    const body = composeText.value.trim();
+    if (!body) return;
+
+    composeSend.disabled = true;
+    composeSend.textContent = 'Sending…';
+    composeStatus.className = 'modal-status';
+
+    try {
+      const { data, error } = await sb.rpc('send_letter', {
+        p_body: body,
+        p_mode: composeMode
+      });
+      if (error) throw error;
+
+      const newId = (data && data[0] && data[0].id) || null;
+      composeStatus.className = 'modal-status show ok';
+      composeStatus.textContent = composeMode === 'bottle'
+        ? '🍾 Your bottle is on the water. Opening it…'
+        : '✉ Your letter is flying. Opening it…';
+
+      setTimeout(() => {
+        if (newId) {
+          window.location.href = `letters.html?id=${newId}`;
+        } else {
+          window.location.href = 'letters.html';
+        }
+      }, 800);
+    } catch (err) {
+      console.error(err);
+      composeStatus.className = 'modal-status show err';
+      composeStatus.textContent = err.message || 'Could not send letter.';
+      composeSend.disabled = false;
+      setComposeMode(composeMode); // restores button text
+    }
+  });
+
+  /* ---------- ESC to close any open modal ---------- */
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    if (replyModal.classList.contains('open')) closeReplyModal();
+    if (composeModal.classList.contains('open')) closeComposeModal();
+  });
+
+  /* ---------- Top Compose button ---------- */
+  topComposeBtn.addEventListener('click', openComposeModal);
+
   /* ---------- Boot ---------- */
   async function boot() {
-    // Session
     const { data: { session: s } } = await sb.auth.getSession();
     session = s;
 
-    // 18+ gate
     if (!hasAdultConsent()) {
       adultModal.classList.add('open');
       adultModal.setAttribute('aria-hidden', 'false');
@@ -791,7 +1108,6 @@
       });
       return;
     }
-
     proceed();
   }
 
@@ -803,6 +1119,14 @@
 
     const params   = new URLSearchParams(location.search);
     const letterId = params.get('id');
+    const wantsCompose = params.get('compose') === '1';
+
+    if (wantsCompose) {
+      renderNoId();               // neutral background behind modal
+      await openComposeModal();
+      return;
+    }
+
     if (!letterId) {
       renderNoId();
       return;

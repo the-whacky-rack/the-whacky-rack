@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A letter — The Whacky Rack</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #d33a3a;
+    --blue: #26478f;
+    --r: 5px;
+    --paper: #fbf6e8;
+    --ink: #2b2536;
+    --accent: #ff5a36;
+    --accent-dark: #e84625;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Courier Prime", monospace;
+    background: radial-gradient(circle at 50% 10%, #55606d 0%, #2a323c 55%, #141920 100%);
+    background-attachment: fixed;
+    color: #fff;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* ---------- Top bar ---------- */
+  .top-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    padding: 16px 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    background: linear-gradient(to bottom, rgba(20,25,32,.7), transparent);
+  }
+  .brand {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: -.5px;
+    color: #fff;
+  }
+  .brand span { color: var(--accent); }
+  .back-link {
+    color: #fff;
+    opacity: .6;
+    font-size: 13px;
+    transition: .15s ease;
+  }
+  .back-link:hover { opacity: 1; }
+
+  /* ---------- Stage ---------- */
+  .stage {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 80px 20px 40px;
+    position: relative;
+  }
+  .stage-inner {
+    width: 100%;
+    max-width: 760px;
+  }
+
+  /* ---------- Beached banner ---------- */
+  .beached-banner {
+    margin-bottom: 18px;
+    background: rgba(211,58,58,.18);
+    border: 1px solid rgba(211,58,58,.5);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: #ffdddd;
+    text-align: center;
+    font-style: italic;
+    line-height: 1.6;
+  }
+  .beached-banner strong { color: #fff; font-style: normal; }
+
+  /* ---------- Airmail frame ---------- */
+  .frame {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    transform: rotate(-.6deg);
+    background: repeating-linear-gradient(45deg,
+      var(--red) 0 12px, #fff 12px 24px,
+      var(--blue) 24px 36px, #fff 36px 48px);
+    box-shadow: 0 40px 70px -25px rgba(0,0,0,.85), 0 0 0 1px rgba(0,0,0,.3);
+  }
+
+  /* ---------- Postcard ---------- */
+  .postcard {
+    display: grid;
+    grid-template-columns: 1fr 2px 1fr;
+    min-height: 400px;
+    border-radius: 2px;
+    overflow: hidden;
+    background: var(--paper);
+    background-image: repeating-linear-gradient(0deg, rgba(0,0,0,.015) 0 1px, transparent 1px 24px);
+  }
+  .divider {
+    background: linear-gradient(rgba(0,0,0,.18), rgba(0,0,0,.12));
+    margin: 16px 0;
+  }
+
+  /* ---------- Left half ---------- */
+  .left {
+    padding: 34px 30px 30px;
+    min-width: 0;
+  }
+  .left .salut {
+    font-family: "Caveat", cursive;
+    font-size: 28px;
+    margin: 0 0 12px;
+    color: var(--ink);
+  }
+  .left p {
+    font-family: "Caveat", cursive;
+    font-size: 21px;
+    line-height: 1.55;
+    margin: 0 0 12px;
+    color: #3a3448;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  .left .sign {
+    font-family: "Caveat", cursive;
+    font-size: 24px;
+    text-align: right;
+    margin-top: 18px;
+    color: var(--ink);
+  }
+
+  /* ---------- Right half ---------- */
+  .right {
+    position: relative;
+    padding: 22px 24px 24px;
+    min-width: 0;
+  }
+
+  .stamp {
+    position: absolute;
+    top: 18px;
+    right: 20px;
+    width: 80px;
+    height: 96px;
+    padding: 6px;
+    background: #fff;
+    transform: rotate(4deg);
+    filter: drop-shadow(0 3px 4px rgba(0,0,0,.28));
+    -webkit-mask:
+      radial-gradient(circle var(--r) at 50% 0,    #0000 97%, #000) top    / calc(2*var(--r)) var(--r) repeat-x,
+      radial-gradient(circle var(--r) at 50% 100%, #0000 97%, #000) bottom / calc(2*var(--r)) var(--r) repeat-x,
+      radial-gradient(circle var(--r) at 0 50%,    #0000 97%, #000) left   / var(--r) calc(2*var(--r)) repeat-y,
+      radial-gradient(circle var(--r) at 100% 50%, #0000 97%, #000) right  / var(--r) calc(2*var(--r)) repeat-y,
+      linear-gradient(#000,#000) center / calc(100% - 2*var(--r)) calc(100% - 2*var(--r)) no-repeat;
+    mask:
+      radial-gradient(circle var(--r) at 50% 0,    #0000 97%, #000) top    / calc(2*var(--r)) var(--r) repeat-x,
+      radial-gradient(circle var(--r) at 50% 100%, #0000 97%, #000) bottom / calc(2*var(--r)) var(--r) repeat-x,
+      radial-gradient(circle var(--r) at 0 50%,    #0000 97%, #000) left   / var(--r) calc(2*var(--r)) repeat-y,
+      radial-gradient(circle var(--r) at 100% 50%, #0000 97%, #000) right  / var(--r) calc(2*var(--r)) repeat-y,
+      linear-gradient(#000,#000) center / calc(100% - 2*var(--r)) calc(100% - 2*var(--r)) no-repeat;
+  }
+  .stamp-in {
+    height: 100%;
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: 2px;
+    border: 1px solid rgba(38,71,143,.45);
+    text-align: center;
+    color: var(--blue);
+    background: linear-gradient(160deg, #f7f3e8, #e6ddc7);
+  }
+  .stamp-in .c { font-size: 5.5px; letter-spacing: .14em; }
+  .stamp-in .v { font-family: "Caveat", cursive; font-size: 26px; line-height: .9; color: #b3342f; }
+  .stamp-in .s { font-size: 6px; letter-spacing: .16em; }
+
+  .postmark {
+    position: absolute;
+    top: 58px;
+    right: 100px;
+    width: 92px;
+    height: 92px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    transform: rotate(-15deg);
+    border: 2px solid rgba(38,71,143,.45);
+    color: rgba(38,71,143,.7);
+    font-size: 8px;
+    letter-spacing: .1em;
+    line-height: 1.6;
+  }
+  .postmark::before {
+    content: "";
+    position: absolute;
+    inset: 6px;
+    border: 1px dashed rgba(38,71,143,.35);
+    border-radius: 50%;
+  }
+
+  .addr { margin-top: 130px; }
+  .addr .line {
+    font-family: "Caveat", cursive;
+    font-size: 23px;
+    color: #2f2a3d;
+    padding: 12px 6px 3px;
+    border-bottom: 1px solid rgba(0,0,0,.22);
+    word-wrap: break-word;
+    line-height: 1.4;
+  }
+  .addr .line.empty { color: #b8af9a; opacity: .55; }
+  .addr .label {
+    font-size: 8px;
+    letter-spacing: .26em;
+    text-transform: uppercase;
+    color: #9a8f7c;
+    margin-bottom: 2px;
+  }
+
+  /* ---------- Actions ---------- */
+  .actions {
+    margin-top: 26px;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 14px 26px;
+    border-radius: 50px;
+    font-family: "Courier Prime", monospace;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: .2s ease;
+    border: 1px solid transparent;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: var(--accent-dark);
+    border-color: var(--accent-dark);
+  }
+  .btn-ghost {
+    background: rgba(255,255,255,.1);
+    color: #fff;
+    border-color: rgba(255,255,255,.25);
+  }
+  .btn-ghost:hover {
+    background: rgba(255,255,255,.2);
+    border-color: rgba(255,255,255,.4);
+  }
+  .btn:disabled {
+    opacity: .55;
+    cursor: not-allowed;
+  }
+
+  /* ---------- Info panels (loading / empty / sign-in) ---------- */
+  .panel-msg {
+    text-align: center;
+    padding: 40px 20px;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+  .panel-msg h2 {
+    font-family: "Caveat", cursive;
+    font-size: 32px;
+    margin: 0 0 10px;
+    color: #fff;
+    font-weight: 600;
+  }
+  .panel-msg p {
+    font-size: 14px;
+    color: rgba(255,255,255,.65);
+    line-height: 1.7;
+    margin: 0 0 22px;
+  }
+  .panel-msg .emoji {
+    font-size: 48px;
+    margin-bottom: 14px;
+    line-height: 1;
+  }
+
+  /* ---------- Modal ---------- */
+  .modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.75);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal.open { display: flex; }
+  .modal-inner {
+    background: var(--paper);
+    border-radius: 16px;
+    padding: 30px 28px 26px;
+    max-width: 520px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,.5);
+    animation: modalIn .18s ease-out;
+  }
+  @keyframes modalIn {
+    from { opacity: 0; transform: translateY(10px) scale(.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .modal-inner h2,
+  .modal-inner h3 {
+    font-family: "Caveat", cursive;
+    color: var(--ink);
+    margin: 0 0 8px;
+    font-weight: 600;
+  }
+  .modal-inner h2 { font-size: 30px; }
+  .modal-inner h3 { font-size: 26px; }
+  .modal-inner p {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.65;
+    margin: 0 0 16px;
+  }
+  .modal-inner textarea {
+    width: 100%;
+    min-height: 140px;
+    padding: 14px;
+    font-family: "Caveat", cursive;
+    font-size: 20px;
+    line-height: 1.55;
+    background: #fff;
+    border: 1px solid #d8cfba;
+    border-radius: 12px;
+    outline: none;
+    resize: vertical;
+    color: var(--ink);
+    box-sizing: border-box;
+  }
+  .modal-inner textarea:focus { border-color: var(--accent); }
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 18px;
+    flex-wrap: wrap;
+  }
+  .modal-actions .btn {
+    padding: 12px 22px;
+    font-size: 13px;
+  }
+  .modal-actions .btn-ghost {
+    background: #fff;
+    color: #333;
+    border: 1px solid #e8e4dc;
+  }
+  .modal-actions .btn-ghost:hover {
+    background: #fafafa;
+    border-color: #bbb;
+  }
+  .modal-status {
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    display: none;
+    line-height: 1.55;
+  }
+  .modal-status.show { display: block; }
+  .modal-status.ok { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+  .modal-status.err { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+  .char-count {
+    text-align: right;
+    font-size: 11px;
+    color: #888;
+    margin-top: 6px;
+  }
+
+  /* ---------- Toast ---------- */
+  .toast-container {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+  }
+  .toast {
+    padding: 12px 20px;
+    border-radius: 50px;
+    background: #16a34a;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: 0 10px 30px rgba(0,0,0,.4);
+    animation: toastIn .2s ease-out;
+  }
+  .toast.err { background: #dc2626; }
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ---------- Mobile ---------- */
+  @media (max-width: 680px) {
+    .top-bar { padding: 12px 15px; }
+    .brand { font-size: 16px; }
+    .back-link { font-size: 12px; }
+    .stage { padding: 70px 15px 30px; }
+    .postcard {
+      grid-template-columns: 1fr;
+    }
+    .divider { display: none; }
+    .left { padding: 26px 22px 20px; }
+    .left .salut { font-size: 24px; }
+    .left p { font-size: 19px; }
+    .left .sign { font-size: 22px; }
+    .right { padding: 20px 20px 24px; min-height: 200px; }
+    .addr { margin-top: 140px; }
+    .stamp { width: 64px; height: 78px; }
+    .stamp-in .v { font-size: 22px; }
+    .postmark { width: 72px; height: 72px; top: 46px; right: 82px; font-size: 6.5px; }
+    .actions .btn { flex: 1; padding: 13px 18px; }
+    .modal-inner { padding: 24px 20px 20px; }
+    .modal-inner h2 { font-size: 26px; }
+    .modal-inner h3 { font-size: 22px; }
+    .modal-inner textarea { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="index.html" class="brand">The <span>Whacky</span> Rack</a>
+  <a href="index.html" class="back-link" id="back-link">← Back to the globe</a>
+</div>
+
+<main class="stage" id="stage">
+  <div class="panel-msg">
+    <div class="emoji">✉</div>
+    <p>Finding the letter…</p>
+  </div>
+</main>
+
+<!-- 18+ gate modal -->
+<div class="modal" id="adult-modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal-inner" style="text-align:center;">
+    <h2>Before you read</h2>
+    <p>
+      Letters on The Letter Globe are written by adults, for adults. Some may
+      contain mature themes. Please confirm you are 18 or older to continue.
+    </p>
+    <div class="modal-actions" style="justify-content:center;">
+      <a class="btn btn-ghost" href="index.html">Leave</a>
+      <button class="btn btn-primary" id="adult-yes" type="button">I'm 18 or older</button>
+    </div>
+  </div>
+</div>
+
+<!-- Reply modal -->
+<div class="modal" id="reply-modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal-inner">
+    <h3>Write back</h3>
+    <p>
+      Your reply starts a private conversation. The sender will see only your
+      country, never your name.
+    </p>
+    <textarea id="reply-text" maxlength="600" placeholder="Dear stranger…"></textarea>
+    <div class="char-count"><span id="reply-count">0</span> / 600</div>
+    <div class="modal-status" id="reply-status"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="reply-cancel" type="button">Cancel</button>
+      <button class="btn btn-primary" id="reply-send" type="button" disabled>Send reply</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js"></script>
+<script>
+(function () {
+  const sb = window.wr.sb;
+  const ADULT_KEY = 'wr_letters_18plus_v1';
+
+  const stageEl      = document.getElementById('stage');
+  const adultModal   = document.getElementById('adult-modal');
+  const replyModal   = document.getElementById('reply-modal');
+  const replyText    = document.getElementById('reply-text');
+  const replyCount   = document.getElementById('reply-count');
+  const replySend    = document.getElementById('reply-send');
+  const replyStatus  = document.getElementById('reply-status');
+  const toastBox     = document.getElementById('toast-container');
+  const backLink     = document.getElementById('back-link');
+
+  let currentLetter  = null;
+  let existingConvId = null;
+  let session        = null;
+
+  /* ---------- Helpers ---------- */
+  function esc(s) {
+    return String(s ?? '').replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+
+  function flagFor(cc) {
+    if (!cc || cc.length !== 2) return '🌍';
+    const A = 0x1F1E6;
+    return String.fromCodePoint(
+      A + cc.toUpperCase().charCodeAt(0) - 65,
+      A + cc.toUpperCase().charCodeAt(1) - 65
+    );
+  }
+
+  function toast(msg, kind = 'ok') {
+    const el = document.createElement('div');
+    el.className = 'toast' + (kind === 'err' ? ' err' : '');
+    el.textContent = msg;
+    toastBox.appendChild(el);
+    setTimeout(() => el.remove(), 2800);
+  }
+
+  /* ---------- 18+ gate ---------- */
+  function hasAdultConsent() {
+    try { return localStorage.getItem(ADULT_KEY) === 'yes'; } catch (e) { return false; }
+  }
+  function setAdultConsent() {
+    try { localStorage.setItem(ADULT_KEY, 'yes'); } catch (e) {}
+  }
+
+  /* ---------- Data ---------- */
+  async function loadLetter(id) {
+    const { data, error } = await sb.rpc('read_letter', { p_letter_id: id });
+    if (error) {
+      console.error('read_letter:', error);
+      return { error };
+    }
+    return { letter: (data && data[0]) || null };
+  }
+
+  async function checkExistingConversation(letterId) {
+    const { data, error } = await sb.rpc('get_my_conversations');
+    if (error || !data) return null;
+    const conv = data.find(c => c.letter_id === letterId);
+    return conv ? conv.id : null;
+  }
+
+  /* ---------- Stage messages ---------- */
+  function renderSignIn() {
+    stageEl.innerHTML = `
+      <div class="panel-msg">
+        <div class="emoji">🔒</div>
+        <h2>The globe is for members</h2>
+        <p>The Letter Globe is a slow, private space. Sign in to read what the world has written.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="login.html">Sign in</a>
+          <a class="btn btn-ghost" href="signup.html">Join</a>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderNoId() {
+    stageEl.innerHTML = `
+      <div class="panel-msg">
+        <div class="emoji">📜</div>
+        <h2>No letter selected</h2>
+        <p>Browse the globe to find a letter that calls to you.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="index.html">Back to the globe</a>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderNotFound() {
+    stageEl.innerHTML = `
+      <div class="panel-msg">
+        <div class="emoji">🍃</div>
+        <h2>This letter has flown away</h2>
+        <p>It may have expired, been hidden, or drifted out of the world. Try another.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="index.html">Back to the globe</a>
+        </div>
+      </div>
+    `;
+  }
+
+  /* ---------- Postcard renderer ---------- */
+  function renderPostcard(letter, convId) {
+    const isBeached    = letter.delivery_mode === 'bottle' && letter.bottle_state === 'beached';
+    const originFlag   = flagFor(letter.origin_country);
+    const originName   = letter.origin_country;
+    const targetFlag   = flagFor(letter.target_country);
+    const targetName   = letter.target_country;
+
+    // Paragraphs
+    const paragraphs = String(letter.body || '')
+      .split(/\n{2,}/)
+      .map(p => `<p>${esc(p)}</p>`)
+      .join('');
+
+    // Beached banner (bottles only)
+    const beachedHtml = isBeached ? `
+      <div class="beached-banner">
+        🍾 <strong>Washed ashore</strong> in ${targetFlag} ${esc(targetName || 'a distant country')} after drifting across the sea.
+      </div>
+    ` : '';
+
+    // To: field
+    let toHtml;
+    if (convId) {
+      toHtml = `<div class="line">${originFlag} A correspondent in ${esc(originName)}</div>`;
+    } else {
+      toHtml = `<div class="line empty">&nbsp;</div>`;
+    }
+
+    // Actions
+    let actionsHtml;
+    if (letter.is_mine) {
+      actionsHtml = `
+        <a class="btn btn-ghost" href="index.html">← Back to the globe</a>
+      `;
+    } else if (convId) {
+      actionsHtml = `
+        <a class="btn btn-primary" href="index.html">Open conversation → (coming next)</a>
+        <a class="btn btn-ghost" href="index.html">Back</a>
+      `;
+    } else {
+      actionsHtml = `
+        <button class="btn btn-primary" id="reply-btn" type="button">Reply</button>
+        <a class="btn btn-ghost" href="index.html">Skip</a>
+      `;
+    }
+
+    // Your-own-letter note
+    const ownNote = letter.is_mine ? `
+      <div style="text-align:center; margin-top:14px; font-size:12px; opacity:.55; font-style:italic;">
+        This is your own letter. Others will find it on the globe.
+      </div>
+    ` : '';
+
+    stageEl.innerHTML = `
+      <div class="stage-inner">
+        ${beachedHtml}
+        <div class="frame">
+          <div class="postcard">
+            <div class="left">
+              <p class="salut">Dear Stranger,</p>
+              ${paragraphs}
+              <p class="sign">— ${originFlag} ${esc(originName)}</p>
+            </div>
+            <div class="divider"></div>
+            <div class="right">
+              <div class="stamp">
+                <div class="stamp-in">
+                  <span class="c">THE WHACKY RACK</span>
+                  <span class="v">✉</span>
+                  <span class="s">LETTER GLOBE</span>
+                </div>
+              </div>
+              <div class="postmark">
+                <span>EARTH<br>VIA GLOBE<br>IN TRANSIT</span>
+              </div>
+              <div class="addr">
+                <div class="label">To</div>
+                ${toHtml}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="actions">${actionsHtml}</div>
+        ${ownNote}
+      </div>
+    `;
+
+    // Wire reply button
+    const replyBtn = document.getElementById('reply-btn');
+    if (replyBtn) replyBtn.addEventListener('click', openReplyModal);
+  }
+
+  /* ---------- Reply modal ---------- */
+  function openReplyModal() {
+    replyText.value = '';
+    replyCount.textContent = '0';
+    replySend.disabled = true;
+    replySend.textContent = 'Send reply';
+    replyStatus.className = 'modal-status';
+    replyStatus.textContent = '';
+    replyModal.classList.add('open');
+    replyModal.setAttribute('aria-hidden', 'false');
+    setTimeout(() => replyText.focus(), 100);
+  }
+
+  function closeReplyModal() {
+    replyModal.classList.remove('open');
+    replyModal.setAttribute('aria-hidden', 'true');
+  }
+
+  replyText.addEventListener('input', () => {
+    const len = replyText.value.length;
+    replyCount.textContent = String(len);
+    replySend.disabled = replyText.value.trim().length < 1;
+  });
+
+  document.getElementById('reply-cancel').addEventListener('click', closeReplyModal);
+  replyModal.addEventListener('click', (e) => {
+    if (e.target === replyModal) closeReplyModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && replyModal.classList.contains('open')) closeReplyModal();
+  });
+
+  replySend.addEventListener('click', async () => {
+    if (!currentLetter) return;
+    const body = replyText.value.trim();
+    if (!body) return;
+
+    replySend.disabled = true;
+    replySend.textContent = 'Sending…';
+    replyStatus.className = 'modal-status';
+
+    try {
+      const { error } = await sb.rpc('reply_to_letter', {
+        p_letter_id: currentLetter.id,
+        p_body:      body
+      });
+      if (error) throw error;
+
+      replyStatus.className = 'modal-status show ok';
+      replyStatus.textContent = 'Your reply is on its way. The sender will see it when they next visit the globe.';
+
+      toast('Reply sent.', 'ok');
+      setTimeout(() => {
+        closeReplyModal();
+        window.location.href = 'index.html';
+      }, 1800);
+    } catch (err) {
+      console.error(err);
+      replyStatus.className = 'modal-status show err';
+      replyStatus.textContent = err.message || 'Could not send reply.';
+      replySend.disabled = false;
+      replySend.textContent = 'Send reply';
+    }
+  });
+
+  /* ---------- Boot ---------- */
+  async function boot() {
+    // Session
+    const { data: { session: s } } = await sb.auth.getSession();
+    session = s;
+
+    // 18+ gate
+    if (!hasAdultConsent()) {
+      adultModal.classList.add('open');
+      adultModal.setAttribute('aria-hidden', 'false');
+      document.getElementById('adult-yes').addEventListener('click', () => {
+        setAdultConsent();
+        adultModal.classList.remove('open');
+        adultModal.setAttribute('aria-hidden', 'true');
+        proceed();
+      });
+      return;
+    }
+
+    proceed();
+  }
+
+  async function proceed() {
+    if (!session) {
+      renderSignIn();
+      return;
+    }
+
+    const params   = new URLSearchParams(location.search);
+    const letterId = params.get('id');
+    if (!letterId) {
+      renderNoId();
+      return;
+    }
+
+    const [loadRes, convId] = await Promise.all([
+      loadLetter(letterId),
+      checkExistingConversation(letterId)
+    ]);
+
+    if (loadRes.error || !loadRes.letter) {
+      renderNotFound();
+      return;
+    }
+
+    currentLetter  = loadRes.letter;
+    existingConvId = convId;
+
+    renderPostcard(currentLetter, existingConvId);
+  }
+
+  boot();
+})();
+</script>
+</body>
+</html>

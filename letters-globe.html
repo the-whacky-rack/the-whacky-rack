@@ -17,78 +17,37 @@
     --paper: #fbf6e8;
     --ink: #2b2536;
   }
-
   * { box-sizing: border-box; }
-
   html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    overflow: hidden;
+    margin: 0; padding: 0; height: 100%; overflow: hidden;
     font-family: "Courier Prime", monospace;
-    background: var(--bg);
-    color: #fff;
+    background: var(--bg); color: #fff;
   }
-
   a { color: inherit; text-decoration: none; }
   button { font-family: inherit; }
-
   .top-bar {
-    position: fixed;
-    top: 0; left: 0; right: 0;
+    position: fixed; top: 0; left: 0; right: 0;
     padding: 14px 22px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: flex; justify-content: space-between; align-items: center;
     z-index: 100;
     background: linear-gradient(to bottom, rgba(20,25,32,.9), rgba(20,25,32,0));
     pointer-events: none;
   }
   .top-bar > * { pointer-events: auto; }
-  .brand {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 18px;
-    font-weight: 900;
-    letter-spacing: -.5px;
-    color: #fff;
-  }
+  .brand { font-family: Arial, Helvetica, sans-serif; font-size: 18px; font-weight: 900; letter-spacing: -.5px; color: #fff; }
   .brand span { color: var(--accent); }
-  .top-actions {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
+  .top-actions { display: flex; align-items: center; gap: 10px; }
   .top-compose-btn {
-    background: var(--accent);
-    color: #fff;
-    border: 1px solid var(--accent);
-    padding: 9px 18px;
-    border-radius: 50px;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: .2s ease;
-    white-space: nowrap;
+    background: var(--accent); color: #fff; border: 1px solid var(--accent);
+    padding: 9px 18px; border-radius: 50px; font-size: 13px; font-weight: 700;
+    cursor: pointer; transition: .2s ease; white-space: nowrap;
   }
   .top-compose-btn:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
-  .top-back {
-    color: #fff;
-    opacity: .65;
-    font-size: 13px;
-    padding: 8px 12px;
-    white-space: nowrap;
-    transition: .15s ease;
-  }
+  .top-back { color: #fff; opacity: .65; font-size: 13px; padding: 8px 12px; white-space: nowrap; transition: .15s ease; }
   .top-back:hover { opacity: 1; }
-
   .filter-bar {
-    position: fixed;
-    top: 64px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 6px;
-    z-index: 100;
+    position: fixed; top: 64px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 6px; z-index: 100;
     padding: 6px;
     background: rgba(255,255,255,.08);
     border: 1px solid rgba(255,255,255,.15);
@@ -97,323 +56,134 @@
     -webkit-backdrop-filter: blur(8px);
   }
   .filter-btn {
-    background: transparent;
-    border: 0;
-    color: rgba(255,255,255,.6);
-    padding: 8px 16px;
-    border-radius: 50px;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: .15s ease;
-    white-space: nowrap;
+    background: transparent; border: 0; color: rgba(255,255,255,.6);
+    padding: 8px 16px; border-radius: 50px; font-size: 12px; font-weight: 700;
+    cursor: pointer; transition: .15s ease; white-space: nowrap;
   }
   .filter-btn:hover { color: #fff; }
-  .filter-btn.active {
-    background: #fff;
-    color: var(--ink);
-  }
-
-  #globeViz {
-    position: fixed;
-    inset: 0;
-    z-index: 1;
-  }
-
+  .filter-btn.active { background: #fff; color: var(--ink); }
+  #globeViz { position: fixed; inset: 0; z-index: 1; }
   .globe-footer {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 100;
-    font-size: 12px;
-    color: rgba(255,255,255,.5);
-    text-align: center;
-    font-style: italic;
-    pointer-events: none;
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    z-index: 100; font-size: 12px; color: rgba(255,255,255,.5);
+    text-align: center; font-style: italic; pointer-events: none;
     padding: 8px 20px;
-    background: rgba(20,25,32,.7);
-    border-radius: 50px;
+    background: rgba(20,25,32,.7); border-radius: 50px;
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
   }
   .globe-footer strong { color: #fff; font-style: normal; font-weight: 700; }
-
   .loading-screen {
-    position: fixed;
-    inset: 0;
-    z-index: 200;
-    background: var(--bg);
-    display: grid;
-    place-items: center;
-    gap: 20px;
-    text-align: center;
-    padding: 20px;
+    position: fixed; inset: 0; z-index: 200; background: var(--bg);
+    display: grid; place-items: center; gap: 20px; text-align: center; padding: 20px;
   }
   .loading-screen[hidden] { display: none; }
   .spinner {
-    width: 44px;
-    height: 44px;
+    width: 44px; height: 44px;
     border: 3px solid rgba(255,255,255,.15);
     border-top-color: var(--accent);
     border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 0 auto;
+    animation: spin 1s linear infinite; margin: 0 auto;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .loading-screen p {
-    margin: 0;
-    font-family: "Caveat", cursive;
-    font-size: 24px;
-    color: rgba(255,255,255,.6);
-  }
-  .loading-screen .loading-sub {
-    font-family: "Courier Prime", monospace;
-    font-size: 11px;
-    color: rgba(255,255,255,.35);
-    margin-top: 6px;
-  }
-
+  .loading-screen p { margin: 0; font-family: "Caveat", cursive; font-size: 24px; color: rgba(255,255,255,.6); }
+  .loading-screen .loading-sub { font-family: "Courier Prime", monospace; font-size: 11px; color: rgba(255,255,255,.35); margin-top: 6px; }
   .sign-in-gate, .empty-globe, .error-screen {
-    position: fixed;
-    inset: 0;
-    z-index: 150;
-    background: var(--bg);
-    display: grid;
-    place-items: center;
-    padding: 20px;
-    text-align: center;
+    position: fixed; inset: 0; z-index: 150; background: var(--bg);
+    display: grid; place-items: center; padding: 20px; text-align: center;
   }
   .sign-in-gate[hidden], .empty-globe[hidden], .error-screen[hidden] { display: none; }
-  .gate-inner {
-    max-width: 480px;
-  }
-  .gate-inner .emoji {
-    font-size: 56px;
-    margin-bottom: 14px;
-    line-height: 1;
-  }
-  .gate-inner h1 {
-    font-family: "Caveat", cursive;
-    font-size: 40px;
-    margin: 0 0 12px;
-    color: #fff;
-    font-weight: 600;
-  }
-  .gate-inner p {
-    font-size: 14px;
-    color: rgba(255,255,255,.65);
-    line-height: 1.7;
-    margin: 0 0 24px;
-  }
-  .gate-actions {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
+  .gate-inner { max-width: 480px; }
+  .gate-inner .emoji { font-size: 56px; margin-bottom: 14px; line-height: 1; }
+  .gate-inner h1 { font-family: "Caveat", cursive; font-size: 40px; margin: 0 0 12px; color: #fff; font-weight: 600; }
+  .gate-inner p { font-size: 14px; color: rgba(255,255,255,.65); line-height: 1.7; margin: 0 0 24px; }
+  .gate-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
   .gate-actions .btn {
-    padding: 13px 24px;
-    border-radius: 50px;
-    font-size: 13px;
-    font-weight: 800;
-    text-decoration: none;
-    display: inline-block;
-    transition: .2s ease;
-    cursor: pointer;
+    padding: 13px 24px; border-radius: 50px; font-size: 13px; font-weight: 800;
+    text-decoration: none; display: inline-block; transition: .2s ease; cursor: pointer;
   }
-  .gate-actions .btn-primary {
-    background: var(--accent);
-    color: #fff;
-    border: 1px solid var(--accent);
-  }
+  .gate-actions .btn-primary { background: var(--accent); color: #fff; border: 1px solid var(--accent); }
   .gate-actions .btn-primary:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
-  .gate-actions .btn-ghost {
-    background: transparent;
-    color: #fff;
-    border: 1px solid rgba(255,255,255,.25);
-  }
+  .gate-actions .btn-ghost { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.25); }
   .gate-actions .btn-ghost:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.4); }
-
   .mobile-list {
-    position: fixed;
-    inset: 100px 0 0 0;
-    overflow-y: auto;
-    padding: 12px 16px 100px;
-    z-index: 50;
-    background: var(--bg);
+    position: fixed; inset: 100px 0 0 0; overflow-y: auto;
+    padding: 12px 16px 100px; z-index: 50; background: var(--bg);
   }
   .mobile-list[hidden] { display: none; }
-
   .ml-card {
-    display: block;
-    background: var(--paper);
-    border-radius: 14px;
-    padding: 16px 18px;
-    margin-bottom: 12px;
-    color: var(--ink);
-    text-decoration: none;
-    transition: .15s ease;
+    display: block; background: var(--paper); border-radius: 14px;
+    padding: 16px 18px; margin-bottom: 12px; color: var(--ink);
+    text-decoration: none; transition: .15s ease;
     border: 1px solid transparent;
   }
   .ml-card:hover { border-color: var(--accent); }
   .ml-card:active { transform: scale(.985); }
-  .ml-card.is-mine {
-    background: #f3ecff;
-    border-color: #d8c8f0;
-  }
-  .ml-head {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 8px;
-    font-size: 12px;
-    color: #666;
-  }
+  .ml-card.is-mine { background: #f3ecff; border-color: #d8c8f0; }
+  .ml-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 12px; color: #666; }
   .ml-mode {
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    padding: 4px 8px;
-    border-radius: 50px;
-    background: #fff5f0;
-    color: var(--accent-dark);
+    font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+    padding: 4px 8px; border-radius: 50px;
+    background: #fff5f0; color: var(--accent-dark);
   }
-  .ml-mode.bottle {
-    background: #e0f2fe;
-    color: #0369a1;
-  }
-  .ml-mode.mine {
-    background: #f3ecff;
-    color: #7c3aed;
-  }
+  .ml-mode.bottle { background: #e0f2fe; color: #0369a1; }
+  .ml-mode.mine { background: #f3ecff; color: #7c3aed; }
   .ml-flag { font-size: 20px; line-height: 1; }
   .ml-from { font-size: 12px; color: #666; flex: 1; }
   .ml-when { font-size: 11px; color: #999; }
   .ml-body {
-    font-family: "Caveat", cursive;
-    font-size: 17px;
-    line-height: 1.5;
+    font-family: "Caveat", cursive; font-size: 17px; line-height: 1.5;
     color: #2f2a3d;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 14px;
+    display: flex; align-items: center; justify-content: space-between; gap: 14px;
   }
-  .ml-read {
-    color: var(--accent-dark);
-    font-family: "Courier Prime", monospace;
-    font-size: 12px;
-    font-weight: 700;
-    white-space: nowrap;
-  }
+  .ml-read { color: var(--accent-dark); font-family: "Courier Prime", monospace; font-size: 12px; font-weight: 700; white-space: nowrap; }
   .ml-card.is-mine .ml-read { color: #7c3aed; }
-  .ml-empty {
-    text-align: center;
-    padding: 40px 20px;
-    color: rgba(255,255,255,.5);
-    font-size: 14px;
-  }
+  .ml-empty { text-align: center; padding: 40px 20px; color: rgba(255,255,255,.5); font-size: 14px; }
   .ml-empty .emoji { font-size: 40px; margin-bottom: 10px; }
   .ml-empty strong { display: block; color: #fff; font-size: 16px; margin-bottom: 8px; font-family: "Caveat", cursive; font-weight: 600; }
   .ml-empty p { margin: 0; }
   .ml-empty .btn {
-    margin-top: 20px;
-    padding: 12px 22px;
-    background: var(--accent);
-    color: #fff;
-    border: 1px solid var(--accent);
-    border-radius: 50px;
-    font-weight: 800;
-    font-size: 13px;
-    cursor: pointer;
+    margin-top: 20px; padding: 12px 22px;
+    background: var(--accent); color: #fff; border: 1px solid var(--accent);
+    border-radius: 50px; font-weight: 800; font-size: 13px; cursor: pointer;
   }
   .ml-empty .btn:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
-
   .modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.75);
-    z-index: 300;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,.75); z-index: 300;
+    align-items: center; justify-content: center; padding: 20px;
   }
   .modal.open { display: flex; }
   .modal-inner {
-    background: var(--paper);
-    border-radius: 16px;
-    padding: 30px 28px 26px;
-    max-width: 480px;
-    width: 100%;
-    color: var(--ink);
-    text-align: center;
+    background: var(--paper); border-radius: 16px;
+    padding: 30px 28px 26px; max-width: 480px; width: 100%;
+    color: var(--ink); text-align: center;
     box-shadow: 0 20px 60px rgba(0,0,0,.5);
     animation: modalIn .18s ease-out;
   }
-  @keyframes modalIn {
-    from { opacity: 0; transform: translateY(10px) scale(.98); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-  }
-  .modal-inner h2 {
-    font-family: "Caveat", cursive;
-    font-size: 30px;
-    margin: 0 0 10px;
-    font-weight: 600;
-  }
-  .modal-inner p {
-    font-size: 14px;
-    color: #666;
-    line-height: 1.65;
-    margin: 0 0 20px;
-  }
-  .modal-actions {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-  }
+  @keyframes modalIn { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  .modal-inner h2 { font-family: "Caveat", cursive; font-size: 30px; margin: 0 0 10px; font-weight: 600; }
+  .modal-inner p { font-size: 14px; color: #666; line-height: 1.65; margin: 0 0 20px; }
+  .modal-actions { display: flex; gap: 10px; justify-content: center; }
   .modal-actions .btn {
-    padding: 12px 22px;
-    border-radius: 50px;
-    font-size: 13px;
-    font-weight: 800;
-    border: 1px solid transparent;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
+    padding: 12px 22px; border-radius: 50px; font-size: 13px; font-weight: 800;
+    border: 1px solid transparent; cursor: pointer; text-decoration: none; display: inline-block;
   }
-  .modal-actions .btn-primary {
-    background: var(--accent);
-    color: #fff;
-    border-color: var(--accent);
-  }
+  .modal-actions .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
   .modal-actions .btn-primary:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
-  .modal-actions .btn-ghost {
-    background: #fff;
-    color: #333;
-    border-color: #e8e4dc;
-  }
+  .modal-actions .btn-ghost { background: #fff; color: #333; border-color: #e8e4dc; }
   .modal-actions .btn-ghost:hover { border-color: #bbb; }
-
   @media (max-width: 900px) {
     #globeViz { display: none; }
     .globe-footer { display: none; }
-    .filter-bar {
-      top: 62px;
-      padding: 5px;
-    }
+    .filter-bar { top: 62px; padding: 5px; }
     .filter-btn { padding: 7px 13px; font-size: 11px; }
     .top-bar { padding: 12px 15px; }
     .brand { font-size: 16px; }
     .top-compose-btn { font-size: 11px; padding: 7px 13px; }
     .top-back { font-size: 11px; padding: 6px 10px; }
   }
-
-  @media (min-width: 901px) {
-    .mobile-list { display: none !important; }
-  }
+  @media (min-width: 901px) { .mobile-list { display: none !important; } }
 </style>
 </head>
 <body>
@@ -486,10 +256,7 @@
 <div class="modal" id="adult-modal" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="modal-inner">
     <h2>Before you browse</h2>
-    <p>
-      Letters on The Letter Globe are written by adults, for adults. Some may
-      contain mature themes. Please confirm you are 18 or older to continue.
-    </p>
+    <p>Letters on The Letter Globe are written by adults, for adults. Some may contain mature themes. Please confirm you are 18 or older to continue.</p>
     <div class="modal-actions">
       <a class="btn btn-ghost" href="index.html">Leave</a>
       <button class="btn btn-primary" id="adult-yes" type="button">I'm 18 or older</button>
@@ -506,7 +273,6 @@
 
   const sb = window.wr ? window.wr.sb : null;
   if (!sb) {
-    console.error('[globe] window.wr.sb missing — auth.js failed to load');
     document.getElementById('error-text').textContent = 'Auth library failed to load. Please refresh.';
     document.getElementById('error-screen').hidden = false;
     document.getElementById('loading-screen').hidden = true;
@@ -621,50 +387,87 @@
     });
   }
 
+  /* ---------- Compute HTML marker data ---------- */
+  function toHtmlData(letters) {
+    return letters.map(l => ({
+      id: l.id,
+      lat: Number(l.display_lat),
+      lng: Number(l.display_lng),
+      isBottle: l.delivery_mode === 'bottle',
+      isMine: l.is_mine === true
+    }));
+  }
+
+  /* ---------- Build a clickable HTML marker ---------- */
+  function makeMarker(d) {
+    const color = d.isMine ? '180,150,220' : (d.isBottle ? '80,200,255' : '255,100,50');
+    const size  = d.isMine ? 22 : (d.isBottle ? 28 : 24);
+
+    const el = document.createElement('div');
+    el.style.width  = size + 'px';
+    el.style.height = size + 'px';
+    el.style.marginLeft = (-size / 2) + 'px';
+    el.style.marginTop  = (-size / 2) + 'px';
+    el.style.borderRadius = '50%';
+    el.style.background   = `rgba(${color}, 0.15)`;
+    el.style.border       = `1.5px solid rgba(${color}, 0.7)`;
+    el.style.cursor       = 'pointer';
+    el.style.boxSizing    = 'border-box';
+    el.style.transition   = 'transform .15s ease, background .15s ease, border-color .15s ease';
+    el.title = d.isMine ? 'Your letter — click to open' : (d.isBottle ? 'A bottle — click to open' : 'A letter — click to open');
+
+    el.addEventListener('mouseenter', () => {
+      el.style.transform = 'scale(1.5)';
+      el.style.background = `rgba(${color}, 0.55)`;
+      el.style.borderColor = `rgba(${color}, 1)`;
+    });
+    el.addEventListener('mouseleave', () => {
+      el.style.transform = 'scale(1)';
+      el.style.background = `rgba(${color}, 0.15)`;
+      el.style.borderColor = `rgba(${color}, 0.7)`;
+    });
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      window.location.href = `letters.html?id=${d.id}`;
+    });
+
+    return el;
+  }
+
   /* ---------- Robust globe build ---------- */
   function buildGlobe() {
     if (globe) return globe;
 
     if (typeof Globe === 'undefined') {
-      throw new Error('Globe library did not load. The globe.gl CDN may be blocked or unavailable.');
+      throw new Error('Globe library did not load. The globe.gl CDN may be blocked.');
     }
 
     console.log('[globe] creating Globe instance');
     const g = new Globe(globeViz);
     g.backgroundColor('#141920');
 
-    // Tile engine (newer) or static image (older)
+    // Tile engine or static image
     let tileModeUsed = 'none';
     try {
       if (typeof g.globeTileEngineUrl === 'function') {
-        g.globeTileEngineUrl((x, y, l) =>
-          `https://tile.openstreetmap.org/${l}/${x}/${y}.png`
-        );
+        g.globeTileEngineUrl((x, y, l) => `https://tile.openstreetmap.org/${l}/${x}/${y}.png`);
         tileModeUsed = 'tileEngine';
       } else if (typeof g.globeImageUrl === 'function') {
         g.globeImageUrl('https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-night.jpg');
         tileModeUsed = 'staticImage';
       }
     } catch (e) {
-      console.warn('[globe] tile setup failed, falling back to static image:', e);
-      try {
-        if (typeof g.globeImageUrl === 'function') {
-          g.globeImageUrl('https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-night.jpg');
-          tileModeUsed = 'staticImage';
-        }
-      } catch (e2) {
-        console.warn('[globe] static image fallback also failed:', e2);
-      }
+      console.warn('[globe] tile setup failed:', e);
     }
     console.log('[globe] tile mode:', tileModeUsed);
 
-    // Rings — each method guarded individually. NO chained ringLabel.
+    // Rings (visual pulsation)
     try {
       g.ringsData([]);
+      if (typeof g.ringResolution === 'function') g.ringResolution(128);
       if (typeof g.ringColor === 'function') {
         g.ringColor((r) => {
           if (r.__isMine) {
-            // Your own letters — muted purple, subtle
             return t => `rgba(180, 150, 220, ${Math.sqrt(Math.max(0, 1 - t)) * 0.75})`;
           }
           if (r.__isBottle) {
@@ -677,12 +480,26 @@
       if (typeof g.ringPropagationSpeed === 'function') g.ringPropagationSpeed('propagationSpeed');
       if (typeof g.ringRepeatPeriod === 'function') g.ringRepeatPeriod('repeatPeriod');
       if (typeof g.onRingClick === 'function') {
-        g.onRingClick((r) => {
-          window.location.href = `letters.html?id=${r.id}`;
-        });
+        g.onRingClick((r) => { window.location.href = `letters.html?id=${r.id}`; });
       }
     } catch (e) {
       console.warn('[globe] ring setup partial failure:', e);
+    }
+
+    // HTML markers (clickable + hover)
+    try {
+      if (typeof g.htmlElementsData === 'function') {
+        g.htmlElementsData([])
+          .htmlLat('lat')
+          .htmlLng('lng')
+          .htmlAltitude(0.015)
+          .htmlElement((d) => makeMarker(d));
+        console.log('[globe] htmlElements layer ready');
+      } else {
+        console.warn('[globe] htmlElementsData not available — relying on ring click only');
+      }
+    } catch (e) {
+      console.warn('[globe] htmlElements setup failed:', e);
     }
 
     // Controls
@@ -690,9 +507,7 @@
       const ctrl = g.controls();
       ctrl.autoRotate = true;
       ctrl.autoRotateSpeed = 0.35;
-      ctrl.addEventListener('start', () => {
-        ctrl.autoRotate = false;
-      });
+      ctrl.addEventListener('start', () => { ctrl.autoRotate = false; });
     } catch (e) {
       console.warn('[globe] controls setup failed:', e);
     }
@@ -702,29 +517,24 @@
       let initLat = 20, initLng = 0;
       try {
         const { data: prof } = await sb.from('profiles')
-          .select('country')
-          .eq('id', session.user.id)
-          .maybeSingle();
+          .select('country').eq('id', session.user.id).maybeSingle();
         const cc = (prof && prof.country || '').toUpperCase();
         if (cc.length === 2) {
           const { data: c } = await sb.from('countries')
-            .select('lat, lng')
-            .eq('code', cc)
-            .maybeSingle();
+            .select('lat, lng').eq('code', cc).maybeSingle();
           if (c && c.lat != null) { initLat = Number(c.lat); initLng = Number(c.lng); }
         }
-      } catch (e) { /* silent */ }
-
+      } catch (e) {}
       try {
         g.pointOfView({ lat: initLat, lng: initLng, altitude: 2.2 }, 1200);
-      } catch (e) { /* silent */ }
+      } catch (e) {}
     })();
 
     globe = g;
     return g;
   }
 
-  /* ---------- Fallback to card list ---------- */
+  /* ---------- Fallback ---------- */
   function fallbackToList(reason) {
     console.warn('[globe] falling back to card list:', reason);
     globeFailed = true;
@@ -736,7 +546,7 @@
     applyFilter();
   }
 
-  /* ---------- Apply filter + render ---------- */
+  /* ---------- Apply filter ---------- */
   function applyFilter() {
     let filtered = allLetters;
     if (currentFilter === 'static') {
@@ -754,6 +564,9 @@
         const g = buildGlobe();
         if (typeof g.ringsData === 'function') {
           g.ringsData(toRings(filtered));
+        }
+        if (typeof g.htmlElementsData === 'function') {
+          g.htmlElementsData(toHtmlData(filtered));
         }
       } catch (e) {
         console.error('[globe] applyFilter build failed:', e);
@@ -775,10 +588,7 @@
     const letters = visible.filter(l => l.delivery_mode === 'static' && !l.is_mine).length;
     const bottles = visible.filter(l => l.delivery_mode === 'bottle' && !l.is_mine).length;
 
-    if (visible.length === 0) {
-      globeFooter.hidden = true;
-      return;
-    }
+    if (visible.length === 0) { globeFooter.hidden = true; return; }
 
     globeFooter.hidden = false;
     const parts = [];
@@ -789,7 +599,7 @@
     globeFooter.innerHTML = `The globe holds ${parts.join(' · ')}`;
   }
 
-  /* ---------- Mobile card list ---------- */
+  /* ---------- Mobile list ---------- */
   function renderMobileList(letters) {
     if (letters.length === 0) {
       mobileList.innerHTML = `
@@ -842,33 +652,22 @@
     }).join('');
   }
 
-  /* ---------- Filter pill ---------- */
+  /* ---------- Filters ---------- */
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       currentFilter = btn.dataset.filter;
-      document.querySelectorAll('.filter-btn').forEach(b => {
-        b.classList.toggle('active', b === btn);
-      });
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b === btn));
       applyFilter();
     });
   });
 
-  /* ---------- Compose button ---------- */
-  composeBtn.addEventListener('click', () => {
-    window.location.href = 'letters.html?compose=1';
-  });
+  composeBtn.addEventListener('click', () => { window.location.href = 'letters.html?compose=1'; });
 
-  /* ---------- Fallback button on error screen ---------- */
   fallbackBtn.addEventListener('click', async () => {
-    try {
-      allLetters = await fetchLetters();
-    } catch (e) {
-      allLetters = [];
-    }
+    try { allLetters = await fetchLetters(); } catch (e) { allLetters = []; }
     fallbackToList('user requested');
   });
 
-  /* ---------- Refresh ---------- */
   async function refresh() {
     try {
       allLetters = await fetchLetters();
@@ -906,13 +705,8 @@
     loadingText.textContent = 'Checking access…';
 
     let s = null;
-    try {
-      const r = await sb.auth.getSession();
-      s = r.data.session;
-    } catch (e) {
-      showFatal('Could not check sign-in status.');
-      return;
-    }
+    try { const r = await sb.auth.getSession(); s = r.data.session; }
+    catch (e) { showFatal('Could not check sign-in status.'); return; }
     session = s;
 
     if (!session) {
@@ -924,7 +718,6 @@
 
     filterBar.style.display = 'flex';
 
-    // Show globe on desktop, list on mobile
     if (isMobile) {
       loadingScreen.hidden = true;
       mobileList.hidden = false;
@@ -932,39 +725,25 @@
       loadingText.textContent = 'Finding the globe…';
       loadingSub.textContent = 'If this takes more than 10 seconds, click Show as a list.';
 
-      // Build globe in try/catch — this is what was silently failing before
       try {
         const g = buildGlobe();
         if (g && typeof g.onGlobeReady === 'function') {
           try {
-            g.onGlobeReady(() => {
-              console.log('[globe] onGlobeReady fired');
-              hideLoading();
-            });
-          } catch (e) {
-            console.warn('[globe] onGlobeReady not available:', e);
-          }
+            g.onGlobeReady(() => { console.log('[globe] onGlobeReady fired'); hideLoading(); });
+          } catch (e) {}
         }
       } catch (e) {
-        console.error('[globe] build failed:', e);
-        // Don't leave the user stuck — show error, let them fall back
         showFatal('Could not initialize the globe: ' + e.message);
         return;
       }
 
-      // Reliable fallback: hide loading screen after 2.5s regardless
-      setTimeout(() => {
-        console.log('[globe] timeout fallback fired, hiding loading screen');
-        hideLoading();
-      }, 2500);
+      setTimeout(() => { hideLoading(); }, 2500);
     }
 
     loadingText.textContent = 'Looking for letters…';
 
-    try {
-      allLetters = await fetchLetters();
-    } catch (e) {
-      console.error('[globe] fetch failed:', e);
+    try { allLetters = await fetchLetters(); }
+    catch (e) {
       hideLoading();
       showFatal('Could not load letters: ' + (e.message || 'unknown error'));
       return;

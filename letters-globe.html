@@ -25,6 +25,13 @@
   }
   a { color: inherit; text-decoration: none; }
   button { font-family: inherit; }
+
+  /* ---------- Breathing animation for globe dots ---------- */
+  @keyframes globeDotBreath {
+    0%, 100% { transform: scale(1);    opacity: 0.85; }
+    50%      { transform: scale(1.55); opacity: 0.45; }
+  }
+
   .top-bar {
     position: fixed; top: 0; left: 0; right: 0;
     padding: 14px 22px;
@@ -45,6 +52,7 @@
   .top-compose-btn:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
   .top-back { color: #fff; opacity: .65; font-size: 13px; padding: 8px 12px; white-space: nowrap; transition: .15s ease; }
   .top-back:hover { opacity: 1; }
+
   .filter-bar {
     position: fixed; top: 64px; left: 50%; transform: translateX(-50%);
     display: flex; gap: 6px; z-index: 100;
@@ -62,7 +70,9 @@
   }
   .filter-btn:hover { color: #fff; }
   .filter-btn.active { background: #fff; color: var(--ink); }
+
   #globeViz { position: fixed; inset: 0; z-index: 1; }
+
   .globe-footer {
     position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
     z-index: 100; font-size: 12px; color: rgba(255,255,255,.5);
@@ -73,6 +83,7 @@
     -webkit-backdrop-filter: blur(6px);
   }
   .globe-footer strong { color: #fff; font-style: normal; font-weight: 700; }
+
   .loading-screen {
     position: fixed; inset: 0; z-index: 200; background: var(--bg);
     display: grid; place-items: center; gap: 20px; text-align: center; padding: 20px;
@@ -88,6 +99,7 @@
   @keyframes spin { to { transform: rotate(360deg); } }
   .loading-screen p { margin: 0; font-family: "Caveat", cursive; font-size: 24px; color: rgba(255,255,255,.6); }
   .loading-screen .loading-sub { font-family: "Courier Prime", monospace; font-size: 11px; color: rgba(255,255,255,.35); margin-top: 6px; }
+
   .sign-in-gate, .empty-globe, .error-screen {
     position: fixed; inset: 0; z-index: 150; background: var(--bg);
     display: grid; place-items: center; padding: 20px; text-align: center;
@@ -106,6 +118,7 @@
   .gate-actions .btn-primary:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
   .gate-actions .btn-ghost { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.25); }
   .gate-actions .btn-ghost:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.4); }
+
   .mobile-list {
     position: fixed; inset: 100px 0 0 0; overflow-y: auto;
     padding: 12px 16px 100px; z-index: 50; background: var(--bg);
@@ -148,6 +161,7 @@
     border-radius: 50px; font-weight: 800; font-size: 13px; cursor: pointer;
   }
   .ml-empty .btn:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
+
   .modal {
     display: none; position: fixed; inset: 0;
     background: rgba(0,0,0,.75); z-index: 300;
@@ -173,6 +187,7 @@
   .modal-actions .btn-primary:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
   .modal-actions .btn-ghost { background: #fff; color: #333; border-color: #e8e4dc; }
   .modal-actions .btn-ghost:hover { border-color: #bbb; }
+
   @media (max-width: 900px) {
     #globeViz { display: none; }
     .globe-footer { display: none; }
@@ -365,76 +380,104 @@
     return data || [];
   }
 
-  /* ---------- Compute ring data ---------- */
-  function toRings(letters) {
-    return letters.map(l => {
-      const isBottle = l.delivery_mode === 'bottle';
-      const isMine   = l.is_mine === true;
-      return {
-        id: l.id,
-        lat: Number(l.display_lat),
-        lng: Number(l.display_lng),
-        mode: l.delivery_mode,
-        bottle_state: l.bottle_state,
-        origin_country: l.origin_country,
-        maxR: isMine ? 2.2 : (isBottle ? 3.5 : 2.6),
-        propagationSpeed: isBottle ? 1.3 : 2.2,
-        repeatPeriod: isBottle ? 2600 : 1800,
-        __isBottle: isBottle,
-        __isBeached: l.bottle_state === 'beached',
-        __isMine: isMine
-      };
-    });
-  }
-
-  /* ---------- Compute HTML marker data ---------- */
+  /* ---------- Build HTML data for markers ---------- */
   function toHtmlData(letters) {
     return letters.map(l => ({
       id: l.id,
       lat: Number(l.display_lat),
       lng: Number(l.display_lng),
       isBottle: l.delivery_mode === 'bottle',
-      isMine: l.is_mine === true
+      isMine: l.is_mine === true,
+      origin_country: l.origin_country,
+      bottle_state: l.bottle_state
     }));
   }
 
-  /* ---------- Build a clickable HTML marker ---------- */
-  function makeMarker(d) {
-    const color = d.isMine ? '180,150,220' : (d.isBottle ? '80,200,255' : '255,100,50');
-    const size  = d.isMine ? 22 : (d.isBottle ? 28 : 24);
+  /* ---------- The breathing dot ---------- */
+  function makeDot(d) {
+    // Color palette per letter type
+    let color;
+    if (d.isMine)          color = '180, 150, 220'; // purple
+    else if (d.isBottle)   color = '80, 200, 255';  // cyan
+    else                   color = '255, 110, 50';  // orange
 
-    const el = document.createElement('div');
-    el.style.width  = size + 'px';
-    el.style.height = size + 'px';
-    el.style.marginLeft = (-size / 2) + 'px';
-    el.style.marginTop  = (-size / 2) + 'px';
-    el.style.borderRadius = '50%';
-    el.style.background   = `rgba(${color}, 0.15)`;
-    el.style.border       = `1.5px solid rgba(${color}, 0.7)`;
-    el.style.cursor       = 'pointer';
-    el.style.boxSizing    = 'border-box';
-    el.style.transition   = 'transform .15s ease, background .15s ease, border-color .15s ease';
-    el.title = d.isMine ? 'Your letter — click to open' : (d.isBottle ? 'A bottle — click to open' : 'A letter — click to open');
+    const sizeCore = d.isMine ? 8  : 10;            // visible dot size (px)
+    const sizeGlow = d.isMine ? 26 : 34;            // glow ring diameter
+    const sizeHit  = 42;                            // click target diameter
 
-    el.addEventListener('mouseenter', () => {
-      el.style.transform = 'scale(1.5)';
-      el.style.background = `rgba(${color}, 0.55)`;
-      el.style.borderColor = `rgba(${color}, 1)`;
-    });
-    el.addEventListener('mouseleave', () => {
-      el.style.transform = 'scale(1)';
-      el.style.background = `rgba(${color}, 0.15)`;
-      el.style.borderColor = `rgba(${color}, 0.7)`;
-    });
-    el.addEventListener('click', (e) => {
+    // Wrapper — 0x0, globe.gl positions this at the coordinate
+    const wrapper = document.createElement('div');
+    wrapper.style.width = '0';
+    wrapper.style.height = '0';
+
+    // Invisible click target (larger, reliable to hit)
+    const hit = document.createElement('div');
+    hit.style.position = 'absolute';
+    hit.style.left = (-sizeHit / 2) + 'px';
+    hit.style.top  = (-sizeHit / 2) + 'px';
+    hit.style.width  = sizeHit + 'px';
+    hit.style.height = sizeHit + 'px';
+    hit.style.borderRadius = '50%';
+    hit.style.cursor = 'pointer';
+    hit.style.background = 'transparent';
+    hit.title = d.isMine
+      ? 'Your letter — click to open'
+      : (d.isBottle
+          ? (d.bottle_state === 'beached' ? 'A bottle washed ashore — click to open' : 'A bottle adrift — click to open')
+          : 'A letter — click to open');
+    hit.addEventListener('click', (e) => {
       e.stopPropagation();
+      e.preventDefault();
       window.location.href = `letters.html?id=${d.id}`;
     });
 
-    return el;
+    // Breathing glow (decorative, does not capture clicks)
+    const glow = document.createElement('div');
+    glow.style.position = 'absolute';
+    glow.style.left = (-sizeGlow / 2) + 'px';
+    glow.style.top  = (-sizeGlow / 2) + 'px';
+    glow.style.width  = sizeGlow + 'px';
+    glow.style.height = sizeGlow + 'px';
+    glow.style.borderRadius = '50%';
+    glow.style.background = `radial-gradient(circle, rgba(${color},0.85) 0%, rgba(${color},0.35) 45%, rgba(${color},0) 75%)`;
+    glow.style.pointerEvents = 'none';
+    glow.style.animation = 'globeDotBreath 2.6s ease-in-out infinite';
+    glow.style.transformOrigin = 'center';
+    if (d.isMine) glow.style.animationDuration = '3.4s';
+
+    // Solid core (static, always visible)
+    const core = document.createElement('div');
+    core.style.position = 'absolute';
+    core.style.left = (-sizeCore / 2) + 'px';
+    core.style.top  = (-sizeCore / 2) + 'px';
+    core.style.width  = sizeCore + 'px';
+    core.style.height = sizeCore + 'px';
+    core.style.borderRadius = '50%';
+    core.style.background = `rgb(${color})`;
+    core.style.boxShadow = `0 0 6px 1.5px rgba(${color},0.9)`;
+    core.style.border = '1px solid rgba(255,255,255,0.55)';
+    core.style.pointerEvents = 'none';
+
+    // Hover effect on the hit area (highlight glow)
+    hit.addEventListener('mouseenter', () => {
+      glow.style.opacity = '1';
+      glow.style.transform = 'scale(1.3)';
+      core.style.boxShadow = `0 0 14px 4px rgba(${color},1)`;
+    });
+    hit.addEventListener('mouseleave', () => {
+      glow.style.opacity = '';
+      glow.style.transform = '';
+      core.style.boxShadow = `0 0 6px 1.5px rgba(${color},0.9)`;
+    });
+
+    wrapper.appendChild(glow);
+    wrapper.appendChild(core);
+    wrapper.appendChild(hit);
+
+    return wrapper;
   }
 
-  /* ---------- Robust globe build ---------- */
+  /* ---------- Build globe ---------- */
   function buildGlobe() {
     if (globe) return globe;
 
@@ -446,11 +489,13 @@
     const g = new Globe(globeViz);
     g.backgroundColor('#141920');
 
-    // Tile engine or static image
+    // Tile engine or static earth image
     let tileModeUsed = 'none';
     try {
       if (typeof g.globeTileEngineUrl === 'function') {
-        g.globeTileEngineUrl((x, y, l) => `https://tile.openstreetmap.org/${l}/${x}/${y}.png`);
+        g.globeTileEngineUrl((x, y, l) =>
+          `https://tile.openstreetmap.org/${l}/${x}/${y}.png`
+        );
         tileModeUsed = 'tileEngine';
       } else if (typeof g.globeImageUrl === 'function') {
         g.globeImageUrl('https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-night.jpg');
@@ -461,48 +506,24 @@
     }
     console.log('[globe] tile mode:', tileModeUsed);
 
-    // Rings (visual pulsation)
-    try {
-      g.ringsData([]);
-      if (typeof g.ringResolution === 'function') g.ringResolution(128);
-      if (typeof g.ringColor === 'function') {
-        g.ringColor((r) => {
-          if (r.__isMine) {
-            return t => `rgba(180, 150, 220, ${Math.sqrt(Math.max(0, 1 - t)) * 0.75})`;
-          }
-          if (r.__isBottle) {
-            return t => `rgba(80, 200, 255, ${Math.sqrt(Math.max(0, 1 - t))})`;
-          }
-          return t => `rgba(255, 100, 50, ${Math.sqrt(Math.max(0, 1 - t))})`;
-        });
-      }
-      if (typeof g.ringMaxRadius === 'function') g.ringMaxRadius('maxR');
-      if (typeof g.ringPropagationSpeed === 'function') g.ringPropagationSpeed('propagationSpeed');
-      if (typeof g.ringRepeatPeriod === 'function') g.ringRepeatPeriod('repeatPeriod');
-      if (typeof g.onRingClick === 'function') {
-        g.onRingClick((r) => { window.location.href = `letters.html?id=${r.id}`; });
-      }
-    } catch (e) {
-      console.warn('[globe] ring setup partial failure:', e);
-    }
-
-    // HTML markers (clickable + hover)
+    // Breathing dots (HTML markers) — this is now the only visual
     try {
       if (typeof g.htmlElementsData === 'function') {
-        g.htmlElementsData([])
-          .htmlLat('lat')
-          .htmlLng('lng')
-          .htmlAltitude(0.015)
-          .htmlElement((d) => makeMarker(d));
-        console.log('[globe] htmlElements layer ready');
+        g.htmlElementsData([]);
+        if (typeof g.htmlLat === 'function')      g.htmlLat('lat');
+        if (typeof g.htmlLng === 'function')      g.htmlLng('lng');
+        if (typeof g.htmlAltitude === 'function') g.htmlAltitude(0.008);
+        if (typeof g.htmlElement === 'function')  g.htmlElement((d) => makeDot(d));
+        console.log('[globe] breathing dots layer ready');
       } else {
-        console.warn('[globe] htmlElementsData not available — relying on ring click only');
+        throw new Error('htmlElementsData not available in this globe.gl version');
       }
     } catch (e) {
-      console.warn('[globe] htmlElements setup failed:', e);
+      console.warn('[globe] dots setup failed:', e);
+      throw e;
     }
 
-    // Controls
+    // Controls (auto-rotate, stopped on interaction)
     try {
       const ctrl = g.controls();
       ctrl.autoRotate = true;
@@ -512,7 +533,7 @@
       console.warn('[globe] controls setup failed:', e);
     }
 
-    // Initial POV
+    // Initial POV — center on user's country
     (async () => {
       let initLat = 20, initLng = 0;
       try {
@@ -525,6 +546,7 @@
           if (c && c.lat != null) { initLat = Number(c.lat); initLng = Number(c.lng); }
         }
       } catch (e) {}
+
       try {
         g.pointOfView({ lat: initLat, lng: initLng, altitude: 2.2 }, 1200);
       } catch (e) {}
@@ -534,7 +556,7 @@
     return g;
   }
 
-  /* ---------- Fallback ---------- */
+  /* ---------- Fallback to card list ---------- */
   function fallbackToList(reason) {
     console.warn('[globe] falling back to card list:', reason);
     globeFailed = true;
@@ -562,9 +584,6 @@
     } else {
       try {
         const g = buildGlobe();
-        if (typeof g.ringsData === 'function') {
-          g.ringsData(toRings(filtered));
-        }
         if (typeof g.htmlElementsData === 'function') {
           g.htmlElementsData(toHtmlData(filtered));
         }
@@ -733,6 +752,7 @@
           } catch (e) {}
         }
       } catch (e) {
+        console.error('[globe] build failed:', e);
         showFatal('Could not initialize the globe: ' + e.message);
         return;
       }

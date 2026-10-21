@@ -33,7 +33,6 @@
   a { color: inherit; text-decoration: none; }
   button { font-family: inherit; }
 
-  /* ---------- Top bar ---------- */
   .top-bar {
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -82,7 +81,6 @@
   }
   .top-back:hover { opacity: 1; }
 
-  /* ---------- Filter bar ---------- */
   .filter-bar {
     position: fixed;
     top: 64px;
@@ -116,14 +114,12 @@
     color: var(--ink);
   }
 
-  /* ---------- Globe container ---------- */
   #globeViz {
     position: fixed;
     inset: 0;
     z-index: 1;
   }
 
-  /* ---------- Footer stats ---------- */
   .globe-footer {
     position: fixed;
     bottom: 20px;
@@ -143,7 +139,6 @@
   }
   .globe-footer strong { color: #fff; font-style: normal; font-weight: 700; }
 
-  /* ---------- Loading ---------- */
   .loading-screen {
     position: fixed;
     inset: 0;
@@ -172,8 +167,13 @@
     font-size: 24px;
     color: rgba(255,255,255,.6);
   }
+  .loading-screen .loading-sub {
+    font-family: "Courier Prime", monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,.35);
+    margin-top: 6px;
+  }
 
-  /* ---------- Sign-in gate ---------- */
   .sign-in-gate, .empty-globe, .error-screen {
     position: fixed;
     inset: 0;
@@ -220,6 +220,7 @@
     text-decoration: none;
     display: inline-block;
     transition: .2s ease;
+    cursor: pointer;
   }
   .gate-actions .btn-primary {
     background: var(--accent);
@@ -234,7 +235,6 @@
   }
   .gate-actions .btn-ghost:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.4); }
 
-  /* ---------- Mobile card list ---------- */
   .mobile-list {
     position: fixed;
     inset: 100px 0 0 0;
@@ -322,7 +322,6 @@
   }
   .ml-empty .btn:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
 
-  /* ---------- 18+ modal ---------- */
   .modal {
     display: none;
     position: fixed;
@@ -389,7 +388,6 @@
   }
   .modal-actions .btn-ghost:hover { border-color: #bbb; }
 
-  /* ---------- Mobile ---------- */
   @media (max-width: 900px) {
     #globeViz { display: none; }
     .globe-footer { display: none; }
@@ -419,7 +417,7 @@
   </div>
 </div>
 
-<div class="filter-bar" id="filter-bar">
+<div class="filter-bar" id="filter-bar" style="display: none;">
   <button class="filter-btn active" data-filter="all" type="button">🌍 All</button>
   <button class="filter-btn" data-filter="static" type="button">✉ Letters</button>
   <button class="filter-btn" data-filter="bottle" type="button">🍾 Bottles</button>
@@ -434,7 +432,8 @@
 <div class="loading-screen" id="loading-screen">
   <div>
     <div class="spinner"></div>
-    <p>Finding the globe…</p>
+    <p id="loading-text">Finding the globe…</p>
+    <p class="loading-sub" id="loading-sub">If this takes more than 10 seconds, something went wrong.</p>
   </div>
 </div>
 
@@ -466,9 +465,10 @@
   <div class="gate-inner">
     <div class="emoji">⚡</div>
     <h1>Something went wrong</h1>
-    <p id="error-text">Could not load the globe. Please try again.</p>
+    <p id="error-text">Could not load the globe.</p>
     <div class="gate-actions">
       <button class="btn btn-primary" onclick="location.reload()">Retry</button>
+      <button class="btn btn-ghost" id="fallback-to-list">Show as a list</button>
       <a class="btn btn-ghost" href="index.html">Back to home</a>
     </div>
   </div>
@@ -492,12 +492,24 @@
 <script src="auth.js"></script>
 <script>
 (function () {
-  const sb = window.wr.sb;
+  console.log('[globe] boot starting');
+  console.log('[globe] Globe available:', typeof Globe);
+
+  const sb = window.wr ? window.wr.sb : null;
+  if (!sb) {
+    console.error('[globe] window.wr.sb missing — auth.js failed to load');
+    document.getElementById('error-text').textContent = 'Auth library failed to load. Please refresh.';
+    document.getElementById('error-screen').hidden = false;
+    document.getElementById('loading-screen').hidden = true;
+    return;
+  }
+
   const ADULT_KEY = 'wr_letters_18plus_v1';
   const MOBILE_BREAKPOINT = 900;
 
-  /* ---------- Elements ---------- */
   const loadingScreen = document.getElementById('loading-screen');
+  const loadingText   = document.getElementById('loading-text');
+  const loadingSub    = document.getElementById('loading-sub');
   const signInGate    = document.getElementById('sign-in-gate');
   const emptyGlobe    = document.getElementById('empty-globe');
   const errorScreen   = document.getElementById('error-screen');
@@ -508,14 +520,15 @@
   const globeFooter   = document.getElementById('globe-footer');
   const composeBtn    = document.getElementById('compose-btn');
   const globeViz      = document.getElementById('globeViz');
+  const fallbackBtn   = document.getElementById('fallback-to-list');
 
-  /* ---------- State ---------- */
   let session     = null;
   let globe       = null;
   let allLetters  = [];
   let currentFilter = 'all';
   let refreshTimer  = null;
   let isMobile      = window.innerWidth < MOBILE_BREAKPOINT;
+  let globeFailed   = false;
 
   /* ---------- Helpers ---------- */
   function flagFor(cc) {
@@ -547,9 +560,15 @@
   }
 
   function showFatal(message) {
+    console.error('[globe] fatal:', message);
     hideAll();
     errorText.textContent = message || 'Could not load the globe.';
     errorScreen.hidden = false;
+    filterBar.style.display = 'flex';
+  }
+
+  function hideLoading() {
+    loadingScreen.hidden = true;
   }
 
   /* ---------- 18+ gate ---------- */
@@ -575,8 +594,6 @@
   function toRings(letters) {
     return letters.map(l => {
       const isBottle = l.delivery_mode === 'bottle';
-      const isBeached = l.bottle_state === 'beached';
-
       return {
         id: l.id,
         lat: Number(l.display_lat),
@@ -587,56 +604,85 @@
         maxR: isBottle ? 3.5 : 2.6,
         propagationSpeed: isBottle ? 1.3 : 2.2,
         repeatPeriod: isBottle ? 2600 : 1800,
-        // Styling baked in for filter + click handler
         __isBottle: isBottle,
-        __isBeached: isBeached
+        __isBeached: l.bottle_state === 'beached'
       };
     });
   }
 
-  /* ---------- Build the globe (desktop) ---------- */
+  /* ---------- Robust globe build ---------- */
   function buildGlobe() {
     if (globe) return globe;
 
-    globe = new Globe(globeViz)
-      .backgroundColor('#141920')
-      .globeTileEngineUrl((x, y, l) =>
-        `https://tile.openstreetmap.org/${l}/${x}/${y}.png`
-      )
-      .ringsData([])
-      .ringColor((r) => {
-        // Return a color function; called per-frame with t (0→1)
-        if (r.__isBottle) {
-          return t => `rgba(80, 200, 255, ${Math.sqrt(1 - t)})`;
-        }
-        return t => `rgba(255, 100, 50, ${Math.sqrt(1 - t)})`;
-      })
-      .ringMaxRadius('maxR')
-      .ringPropagationSpeed('propagationSpeed')
-      .ringRepeatPeriod('repeatPeriod')
-      .ringLabel((r) => {
-        if (r.__isBottle) {
-          const state = r.bottle_state === 'beached' ? 'Washed ashore' : 'Drifting at sea';
-          return `🍾 ${state}`;
-        }
-        return `✉ Letter from ${flagFor(r.origin_country)} ${r.origin_country}`;
-      })
-      .onRingClick((r) => {
-        window.location.href = `letters.html?id=${r.id}`;
-      });
-
-    // Slow auto-rotation when idle
-    try {
-      globe.controls().autoRotate = true;
-      globe.controls().autoRotateSpeed = 0.35;
-      globe.controls().addEventListener('start', () => {
-        globe.controls().autoRotate = false;
-      });
-    } catch (e) {
-      // Non-critical
+    if (typeof Globe === 'undefined') {
+      throw new Error('Globe library did not load. The globe.gl CDN may be blocked or unavailable.');
     }
 
-    // Initial POV — center on user's country if possible
+    console.log('[globe] creating Globe instance');
+    const g = new Globe(globeViz);
+    g.backgroundColor('#141920');
+
+    // Tile engine (newer) or static image (older)
+    let tileModeUsed = 'none';
+    try {
+      if (typeof g.globeTileEngineUrl === 'function') {
+        g.globeTileEngineUrl((x, y, l) =>
+          `https://tile.openstreetmap.org/${l}/${x}/${y}.png`
+        );
+        tileModeUsed = 'tileEngine';
+      } else if (typeof g.globeImageUrl === 'function') {
+        g.globeImageUrl('https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-night.jpg');
+        tileModeUsed = 'staticImage';
+      }
+    } catch (e) {
+      console.warn('[globe] tile setup failed, falling back to static image:', e);
+      try {
+        if (typeof g.globeImageUrl === 'function') {
+          g.globeImageUrl('https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-night.jpg');
+          tileModeUsed = 'staticImage';
+        }
+      } catch (e2) {
+        console.warn('[globe] static image fallback also failed:', e2);
+      }
+    }
+    console.log('[globe] tile mode:', tileModeUsed);
+
+    // Rings — each method guarded individually in case version is old
+    try {
+      g.ringsData([]);
+      if (typeof g.ringColor === 'function') {
+        g.ringColor((r) => {
+          if (r.__isBottle) {
+            return t => `rgba(80, 200, 255, ${Math.sqrt(Math.max(0, 1 - t))})`;
+          }
+          return t => `rgba(255, 100, 50, ${Math.sqrt(Math.max(0, 1 - t))})`;
+        });
+      }
+      if (typeof g.ringMaxRadius === 'function') g.ringMaxRadius('maxR');
+      if (typeof g.ringPropagationSpeed === 'function') g.ringPropagationSpeed('propagationSpeed');
+      if (typeof g.ringRepeatPeriod === 'function') g.ringRepeatPeriod('repeatPeriod');
+      if (typeof g.onRingClick === 'function') {
+        g.onRingClick((r) => {
+          window.location.href = `letters.html?id=${r.id}`;
+        });
+      }
+    } catch (e) {
+      console.warn('[globe] ring setup partial failure:', e);
+    }
+
+    // Controls
+    try {
+      const ctrl = g.controls();
+      ctrl.autoRotate = true;
+      ctrl.autoRotateSpeed = 0.35;
+      ctrl.addEventListener('start', () => {
+        ctrl.autoRotate = false;
+      });
+    } catch (e) {
+      console.warn('[globe] controls setup failed:', e);
+    }
+
+    // Initial POV
     (async () => {
       let initLat = 20, initLng = 0;
       try {
@@ -644,20 +690,38 @@
           .select('country')
           .eq('id', session.user.id)
           .maybeSingle();
-        const cc = (prof?.country || '').toUpperCase();
+        const cc = (prof && prof.country || '').toUpperCase();
         if (cc.length === 2) {
           const { data: c } = await sb.from('countries')
             .select('lat, lng')
             .eq('code', cc)
             .maybeSingle();
-          if (c && c.lat) { initLat = c.lat; initLng = c.lng; }
+          if (c && c.lat != null) { initLat = Number(c.lat); initLng = Number(c.lng); }
         }
-      } catch (e) { /* fall through */ }
+      } catch (e) { /* silent */ }
 
-      globe.pointOfView({ lat: initLat, lng: initLng, altitude: 2.2 }, 1200);
+      try {
+        g.pointOfView({ lat: initLat, lng: initLng, altitude: 2.2 }, 1200);
+      } catch (e) { /* silent */ }
     })();
 
-    return globe;
+    globe = g;
+    return g;
+  }
+
+  /* ---------- Fallback to card list ---------- */
+  function fallbackToList(reason) {
+    console.warn('[globe] falling back to card list:', reason);
+    globeFailed = true;
+    isMobile = true;
+    try { globeViz.style.display = 'none'; } catch (e) {}
+    mobileList.hidden = false;
+    filterBar.style.display = 'flex';
+    hideLoading();
+    hideAll();
+    filterBar.style.display = 'flex';
+    mobileList.hidden = false;
+    applyFilter();
   }
 
   /* ---------- Apply filter + render ---------- */
@@ -671,21 +735,32 @@
 
     updateFooter(filtered);
 
-    if (isMobile) {
+    if (isMobile || globeFailed) {
       renderMobileList(filtered);
     } else {
-      const rings = toRings(filtered);
-      buildGlobe().ringsData(rings);
+      try {
+        const g = buildGlobe();
+        if (typeof g.ringsData === 'function') {
+          g.ringsData(toRings(filtered));
+        }
+      } catch (e) {
+        console.error('[globe] applyFilter build failed:', e);
+        fallbackToList(e.message);
+        return;
+      }
     }
 
-    if (allLetters.length === 0) {
+    if (allLetters.length === 0 && !globeFailed) {
       emptyGlobe.hidden = false;
+    } else if (allLetters.length === 0 && globeFailed) {
+      // In fallback mode, mobile-list already shows an empty message
+      emptyGlobe.hidden = true;
     } else {
       emptyGlobe.hidden = true;
     }
   }
 
-  /* ---------- Footer stats ---------- */
+  /* ---------- Footer ---------- */
   function updateFooter(visible) {
     const letters = visible.filter(l => l.delivery_mode === 'static').length;
     const bottles = visible.filter(l => l.delivery_mode === 'bottle').length;
@@ -716,7 +791,6 @@
       return;
     }
 
-    // Sort by created_at desc
     const sorted = [...letters].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
     mobileList.innerHTML = sorted.map(l => {
@@ -745,7 +819,7 @@
     }).join('');
   }
 
-  /* ---------- Filter pill wiring ---------- */
+  /* ---------- Filter pill ---------- */
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       currentFilter = btn.dataset.filter;
@@ -761,13 +835,23 @@
     window.location.href = 'letters.html?compose=1';
   });
 
-  /* ---------- Refresh loop ---------- */
+  /* ---------- Fallback button on error screen ---------- */
+  fallbackBtn.addEventListener('click', async () => {
+    try {
+      allLetters = await fetchLetters();
+    } catch (e) {
+      allLetters = [];
+    }
+    fallbackToList('user requested');
+  });
+
+  /* ---------- Refresh ---------- */
   async function refresh() {
     try {
       allLetters = await fetchLetters();
       applyFilter();
     } catch (e) {
-      console.error('refresh:', e);
+      console.warn('[globe] refresh failed:', e);
     }
   }
 
@@ -781,7 +865,6 @@
 
   /* ---------- Boot ---------- */
   async function boot() {
-    // 18+ gate first
     if (!hasAdultConsent()) {
       adultModal.classList.add('open');
       adultModal.setAttribute('aria-hidden', 'false');
@@ -797,8 +880,16 @@
   }
 
   async function proceed() {
-    // Check auth
-    const { data: { session: s } } = await sb.auth.getSession();
+    loadingText.textContent = 'Checking access…';
+
+    let s = null;
+    try {
+      const r = await sb.auth.getSession();
+      s = r.data.session;
+    } catch (e) {
+      showFatal('Could not check sign-in status.');
+      return;
+    }
     session = s;
 
     if (!session) {
@@ -808,40 +899,64 @@
       return;
     }
 
-    // Show filter bar
     filterBar.style.display = 'flex';
 
-    // Branch: mobile vs desktop
+    // Show globe on desktop, list on mobile
     if (isMobile) {
       loadingScreen.hidden = true;
       mobileList.hidden = false;
     } else {
-      // Build globe first (this may take a moment for tile download)
-      buildGlobe().onGlobeReady(() => {
-        loadingScreen.hidden = true;
-      });
-      // Safety fallback if onGlobeReady doesn't fire
-      setTimeout(() => { loadingScreen.hidden = true; }, 3000);
-    }
+      loadingText.textContent = 'Finding the globe…';
+      loadingSub.textContent = 'If this takes more than 10 seconds, click Show as a list.';
 
-    // Fetch letters
-    try {
-      allLetters = await fetchLetters();
-      if (allLetters.length === 0) {
-        hideAll();
-        filterBar.style.display = 'flex';
-        emptyGlobe.hidden = false;
-        loadingScreen.hidden = true;
+      // Build globe in try/catch — this is what was silently failing before
+      try {
+        const g = buildGlobe();
+        if (g && typeof g.onGlobeReady === 'function') {
+          try {
+            g.onGlobeReady(() => {
+              console.log('[globe] onGlobeReady fired');
+              hideLoading();
+            });
+          } catch (e) {
+            console.warn('[globe] onGlobeReady not available:', e);
+          }
+        }
+      } catch (e) {
+        console.error('[globe] build failed:', e);
+        // Don't leave the user stuck — show error, let them fall back
+        showFatal('Could not initialize the globe: ' + e.message);
         return;
       }
-      applyFilter();
+
+      // Reliable fallback: hide loading screen after 2.5s regardless
+      setTimeout(() => {
+        console.log('[globe] timeout fallback fired, hiding loading screen');
+        hideLoading();
+      }, 2500);
+    }
+
+    loadingText.textContent = 'Looking for letters…';
+
+    try {
+      allLetters = await fetchLetters();
     } catch (e) {
-      console.error('fetch:', e);
-      showFatal(e.message || 'Could not load letters.');
+      console.error('[globe] fetch failed:', e);
+      hideLoading();
+      showFatal('Could not load letters: ' + (e.message || 'unknown error'));
       return;
     }
 
-    // Start polling
+    hideLoading();
+
+    if (allLetters.length === 0 && !globeFailed) {
+      hideAll();
+      filterBar.style.display = 'flex';
+      emptyGlobe.hidden = false;
+      return;
+    }
+
+    applyFilter();
     startRefreshLoop();
   }
 

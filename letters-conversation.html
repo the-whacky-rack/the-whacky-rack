@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Correspondence — The Letter Globe</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --accent: #ff5a36;
+    --accent-dark: #e84625;
+    --bg: #141920;
+    --paper: #fbf6e8;
+    --paper-2: #fff5f0;
+    --ink: #2b2536;
+    --muted: #9a8f7c;
+    --border: rgba(0,0,0,.12);
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    min-height: 100%;
+    font-family: "Courier Prime", monospace;
+    background: radial-gradient(circle at 50% 10%, #55606d 0%, #2a323c 55%, #141920 100%);
+    background-attachment: fixed;
+    color: #fff;
+  }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; }
+
+  .top-bar {
+    position: sticky; top: 0;
+    padding: 14px 22px;
+    display: flex; justify-content: space-between; align-items: center;
+    z-index: 100;
+    background: rgba(20,25,32,.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(255,255,255,.08);
+  }
+  .brand { font-family: Arial, Helvetica, sans-serif; font-size: 18px; font-weight: 900; letter-spacing: -.5px; }
+  .brand span { color: var(--accent); }
+  .top-back { color: #fff; opacity: .7; font-size: 13px; padding: 8px 12px; transition: .15s ease; }
+  .top-back:hover { opacity: 1; }
+
+  .wrap { max-width: 780px; margin: 0 auto; padding: 30px 22px 120px; }
+
+  .loading { text-align: center; padding: 60px 20px; color: rgba(255,255,255,.55); font-size: 14px; }
+  .loading .spinner {
+    display: inline-block; width: 32px; height: 32px;
+    border: 3px solid rgba(255,255,255,.15); border-top-color: var(--accent);
+    border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 12px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .gate {
+    text-align: center; padding: 60px 20px; max-width: 480px; margin: 0 auto;
+  }
+  .gate .emoji { font-size: 52px; margin-bottom: 14px; line-height: 1; }
+  .gate h1 { font-family: "Caveat", cursive; font-size: 34px; margin: 0 0 10px; font-weight: 600; }
+  .gate p { font-size: 14px; color: rgba(255,255,255,.65); line-height: 1.7; margin: 0 0 22px; }
+  .gate .btn {
+    display: inline-block; padding: 12px 22px; border-radius: 50px;
+    font-size: 13px; font-weight: 800; transition: .2s ease;
+  }
+  .gate .btn-primary { background: var(--accent); color: #fff; border: 1px solid var(--accent); }
+  .gate .btn-primary:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
+  .gate .btn-ghost { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.25); }
+  .gate .btn-ghost:hover { background: rgba(255,255,255,.1); }
+
+  /* ---------- List view ---------- */
+  .page-head { margin-bottom: 24px; }
+  .page-head h1 { font-family: "Caveat", cursive; font-size: 38px; margin: 0 0 4px; font-weight: 600; }
+  .page-head p { font-size: 13px; color: rgba(255,255,255,.55); margin: 0; line-height: 1.6; }
+
+  .conv-list { display: flex; flex-direction: column; gap: 12px; }
+
+  .conv-card {
+    display: block;
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: 14px;
+    padding: 16px 18px;
+    text-decoration: none;
+    transition: .15s ease;
+    border: 1px solid transparent;
+    box-shadow: 0 4px 16px rgba(0,0,0,.2);
+  }
+  .conv-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .conv-card:active { transform: scale(.99); }
+
+  .conv-head {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 8px; flex-wrap: wrap;
+  }
+  .conv-flag { font-size: 22px; line-height: 1; }
+  .conv-name {
+    font-family: "Caveat", cursive; font-size: 20px; color: var(--ink);
+    flex: 1; min-width: 0;
+  }
+  .permanent-badge {
+    font-size: 10px; font-weight: 800; letter-spacing: .06em;
+    padding: 3px 8px; border-radius: 50px;
+    background: #fef3c7; color: #92400e;
+    white-space: nowrap;
+  }
+  .conv-time { font-size: 11px; color: var(--muted); white-space: nowrap; }
+
+  .conv-preview {
+    font-size: 13px; color: #666; line-height: 1.5;
+    margin: 0 0 10px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .conv-meta {
+    font-size: 11px; color: var(--muted);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .conv-meta .progress-bar {
+    flex: 1; height: 4px; background: rgba(0,0,0,.08);
+    border-radius: 2px; overflow: hidden; max-width: 120px;
+  }
+  .conv-meta .progress-fill {
+    height: 100%; background: var(--accent);
+    border-radius: 2px; transition: width .3s;
+  }
+  .conv-meta .progress-fill.done { background: #16a34a; }
+
+  .empty {
+    text-align: center; padding: 60px 20px;
+    background: rgba(255,255,255,.03);
+    border: 1px dashed rgba(255,255,255,.15);
+    border-radius: 16px;
+  }
+  .empty .emoji { font-size: 48px; margin-bottom: 12px; line-height: 1; }
+  .empty h2 { font-family: "Caveat", cursive; font-size: 28px; margin: 0 0 8px; font-weight: 600; }
+  .empty p { font-size: 13px; color: rgba(255,255,255,.6); line-height: 1.6; margin: 0 0 20px; }
+  .empty .btn {
+    display: inline-block; padding: 12px 22px; border-radius: 50px;
+    font-size: 13px; font-weight: 800;
+    background: var(--accent); color: #fff; border: 1px solid var(--accent);
+    transition: .2s ease;
+  }
+  .empty .btn:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
+
+  /* ---------- Thread view ---------- */
+  .back-to-list {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 13px; color: rgba(255,255,255,.65);
+    margin-bottom: 16px; transition: .15s ease;
+  }
+  .back-to-list:hover { color: #fff; }
+
+  .thread-header {
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: 16px;
+    padding: 20px 22px;
+    margin-bottom: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,.2);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .thread-header .big-flag { font-size: 40px; line-height: 1; flex-shrink: 0; }
+  .thread-header .info { flex: 1; min-width: 200px; }
+  .thread-header .info h1 {
+    font-family: "Caveat", cursive; font-size: 26px;
+    margin: 0 0 4px; font-weight: 600; color: var(--ink);
+  }
+  .thread-header .info .meta {
+    font-size: 12px; color: var(--muted); line-height: 1.5;
+  }
+  .thread-header .info .meta .permanent-badge {
+    display: inline-block; margin-left: 6px;
+  }
+
+  .penpal-banner {
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .penpal-banner.is-permanent {
+    background: #fef9e0;
+    border-color: #fde68a;
+    color: var(--ink);
+  }
+  .penpal-banner .text {
+    flex: 1; min-width: 200px;
+    font-size: 13px; line-height: 1.6;
+    color: rgba(255,255,255,.75);
+  }
+  .penpal-banner.is-permanent .text { color: var(--ink); }
+  .penpal-banner .text strong { color: #fff; }
+  .penpal-banner.is-permanent .text strong { color: #92400e; }
+  .penpal-banner .btn {
+    padding: 9px 18px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: .2s ease;
+    white-space: nowrap;
+  }
+  .penpal-banner .btn-primary {
+    background: var(--accent); color: #fff; border-color: var(--accent);
+  }
+  .penpal-banner .btn-primary:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
+  .penpal-banner .btn-ghost {
+    background: transparent; color: #fff; border-color: rgba(255,255,255,.25);
+  }
+  .penpal-banner .btn-ghost:hover { background: rgba(255,255,255,.08); }
+  .penpal-banner.is-permanent .btn-ghost {
+    background: transparent; color: #92400e; border-color: rgba(146,64,14,.4);
+  }
+  .penpal-banner.is-permanent .btn-ghost:hover { background: rgba(146,64,14,.1); }
+  .penpal-banner .progress-bar {
+    flex: 1; height: 5px; background: rgba(0,0,0,.2);
+    border-radius: 3px; overflow: hidden; max-width: 140px;
+    min-width: 80px;
+  }
+  .penpal-banner .progress-fill {
+    height: 100%; background: var(--accent);
+    border-radius: 3px; transition: width .3s;
+  }
+  .penpal-banner .progress-fill.done { background: #16a34a; }
+
+  .seed-card {
+    background: rgba(251, 246, 232, .35);
+    border: 1px dashed rgba(255,255,255,.2);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+    font-family: "Caveat", cursive;
+  }
+  .seed-card .seed-label {
+    font-family: "Courier Prime", monospace;
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.5);
+    margin-bottom: 8px;
+  }
+  .seed-card .seed-body {
+    color: #f0e6d2;
+    font-size: 16px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    margin: 0 0 10px;
+  }
+  .seed-card .seed-meta {
+    font-family: "Courier Prime", monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,.45);
+  }
+
+  .exchanges {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .exchange {
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: 12px;
+    padding: 14px 18px;
+    max-width: 82%;
+    box-shadow: 0 3px 12px rgba(0,0,0,.15);
+    position: relative;
+  }
+  .exchange.mine {
+    align-self: flex-end;
+    background: var(--paper-2);
+    border-left: 3px solid var(--accent);
+  }
+  .exchange.theirs {
+    align-self: flex-start;
+    border-left: 3px solid #7c3aed;
+  }
+  .exchange .body {
+    font-family: "Caveat", cursive;
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--ink);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin: 0 0 6px;
+  }
+  .exchange .meta {
+    font-size: 10px;
+    color: var(--muted);
+    text-align: right;
+  }
+  .exchange.mine .meta::before { content: "You · "; }
+
+  /* Reply composer */
+  .composer {
+    position: sticky;
+    bottom: 0;
+    background: rgba(20,25,32,.95);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 14px 0 20px;
+    margin: 0 -22px -120px;
+    padding-left: 22px;
+    padding-right: 22px;
+    border-top: 1px solid rgba(255,255,255,.08);
+  }
+  .composer-inner {
+    max-width: 780px; margin: 0 auto;
+    display: flex; gap: 10px; align-items: flex-end;
+  }
+  .composer textarea {
+    flex: 1;
+    min-height: 60px;
+    max-height: 180px;
+    padding: 12px 14px;
+    font-family: "Caveat", cursive;
+    font-size: 19px;
+    line-height: 1.5;
+    background: var(--paper);
+    color: var(--ink);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    outline: none;
+    resize: vertical;
+  }
+  .composer textarea:focus { border-color: var(--accent); }
+  .composer .send-btn {
+    padding: 14px 24px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 800;
+    background: var(--accent);
+    color: #fff;
+    border: 1px solid var(--accent);
+    cursor: pointer;
+    transition: .2s ease;
+    white-space: nowrap;
+  }
+  .composer .send-btn:hover:not(:disabled) {
+    background: var(--accent-dark); border-color: var(--accent-dark);
+  }
+  .composer .send-btn:disabled {
+    opacity: .5; cursor: not-allowed;
+  }
+  .composer .char-count {
+    font-size: 11px; color: rgba(255,255,255,.5);
+    text-align: right; margin-top: 4px;
+  }
+  .composer .char-count.over { color: var(--accent); }
+
+  .err-card {
+    background: #fef2f2; border: 1px solid #fecaca; color: #991b1b;
+    padding: 18px 22px; border-radius: 14px; font-size: 14px; line-height: 1.6;
+  }
+
+  @media (max-width: 700px) {
+    .wrap { padding: 20px 15px 130px; }
+    .top-bar { padding: 12px 15px; }
+    .brand { font-size: 16px; }
+    .top-back { font-size: 12px; }
+    .thread-header { padding: 16px 18px; border-radius: 14px; }
+    .thread-header .big-flag { font-size: 32px; }
+    .thread-header .info h1 { font-size: 22px; }
+    .exchange { max-width: 92%; padding: 12px 14px; }
+    .exchange .body { font-size: 17px; }
+    .composer { margin: 0 -15px -130px; padding-left: 15px; padding-right: 15px; }
+    .composer-inner { flex-direction: column; align-items: stretch; gap: 8px; }
+    .composer textarea { font-size: 18px; }
+    .composer .send-btn { padding: 12px 20px; }
+    .composer .char-count { text-align: left; }
+    .penpal-banner { padding: 12px 14px; }
+    .penpal-banner .progress-bar { max-width: 100%; }
+    .conv-card { padding: 14px 16px; }
+    .conv-name { font-size: 18px; }
+  }
+
+  /* toast */
+  .toast-container {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    z-index: 2000; display: flex; flex-direction: column; gap: 8px; align-items: center;
+  }
+  .toast {
+    padding: 12px 20px; border-radius: 50px;
+    background: #16a34a; color: #fff; font-size: 13px; font-weight: 600;
+    box-shadow: 0 10px 30px rgba(0,0,0,.4);
+    animation: toastIn .2s ease-out;
+  }
+  .toast.err { background: #dc2626; }
+  @keyframes toastIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="index.html" class="brand">The <span>Whacky</span> Rack</a>
+  <div class="top-actions">
+    <a href="letters-globe.html" class="top-back" id="top-back">← The Globe</a>
+  </div>
+</div>
+
+<main id="root" class="wrap">
+  <div class="loading">
+    <div class="spinner"></div>
+    <div>Opening the correspondence…</div>
+  </div>
+</main>
+
+<div class="toast-container" id="toast-container"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js"></script>
+<script>
+(function () {
+  console.log('[conv] boot');
+  const sb = window.wr ? window.wr.sb : null;
+  if (!sb) {
+    document.getElementById('root').innerHTML = '<div class="err-card">Auth library failed to load.</div>';
+    return;
+  }
+
+  const root        = document.getElementById('root');
+  const toastBox    = document.getElementById('toast-container');
+  const topBack     = document.getElementById('top-back');
+
+  const PERMANENT_THRESHOLD = 10;
+  let session = null;
+  let currentConv = null;
+  let currentExchanges = [];
+  let currentLetter = null;
+  let currentState = null;
+
+  /* ---------- Helpers ---------- */
+  function esc(s) {
+    return String(s ?? '').replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+
+  function flagFor(cc) {
+    if (!cc || cc.length !== 2) return '🌍';
+    const A = 0x1F1E6;
+    return String.fromCodePoint(
+      A + cc.toUpperCase().charCodeAt(0) - 65,
+      A + cc.toUpperCase().charCodeAt(1) - 65
+    );
+  }
+
+  function timeAgo(iso) {
+    if (!iso) return '';
+    const d = new Date(iso);
+    const s = Math.floor((Date.now() - d.getTime()) / 1000);
+    if (s < 60) return 'just now';
+    if (s < 3600) return Math.floor(s / 60) + 'm ago';
+    if (s < 86400) return Math.floor(s / 3600) + 'h ago';
+    if (s < 604800) return Math.floor(s / 86400) + 'd ago';
+    return d.toLocaleDateString();
+  }
+
+  function toast(msg, kind = 'ok') {
+    const el = document.createElement('div');
+    el.className = 'toast' + (kind === 'err' ? ' err' : '');
+    el.textContent = msg;
+    toastBox.appendChild(el);
+    setTimeout(() => el.remove(), 2800);
+  }
+
+  /* ---------- Country name from code ---------- */
+  async function getCountryName(code) {
+    if (!code) return '';
+    try {
+      const { data } = await sb.from('countries').select('name').eq('code', code).maybeSingle();
+      return data ? data.name : code;
+    } catch { return code; }
+  }
+
+  /* ---------- Sign-in gate ---------- */
+  function renderGate() {
+    root.innerHTML = `
+      <div class="gate">
+        <div class="emoji">✉</div>
+        <h1>Sign in to see your letters</h1>
+        <p>Correspondence is private. Sign in to read your ongoing conversations with the world.</p>
+        <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+          <a class="btn btn-primary" href="login.html">Sign in</a>
+          <a class="btn btn-ghost" href="signup.html">Join</a>
+        </div>
+      </div>
+    `;
+  }
+
+  /* ---------- List view ---------- */
+  async function loadList() {
+    topBack.textContent = '← The Globe';
+    topBack.href = 'letters-globe.html';
+
+    const { data, error } = await sb.rpc('get_my_conversations');
+    if (error) {
+      root.innerHTML = `<div class="err-card">Could not load conversations: ${esc(error.message)}</div>`;
+      return;
+    }
+
+    const convs = data || [];
+
+    if (convs.length === 0) {
+      root.innerHTML = `
+        <div class="page-head">
+          <h1>Your correspondence</h1>
+          <p>Every letter you've replied to, every pen pal you've made.</p>
+        </div>
+        <div class="empty">
+          <div class="emoji">📭</div>
+          <h2>No letters yet</h2>
+          <p>Reply to a letter on the globe to start a correspondence.</p>
+          <a class="btn" href="letters-globe.html">Visit the globe</a>
+        </div>
+      `;
+      return;
+    }
+
+    // Resolve country names in parallel
+    const countryNames = {};
+    const codes = new Set();
+    convs.forEach(c => {
+      if (c.other_party_country) codes.add(c.other_party_country);
+    });
+    await Promise.all(
+      [...codes].map(async cc => {
+        countryNames[cc] = await getCountryName(cc);
+      })
+    );
+
+    const cardsHtml = convs.map(c => {
+      const flag = flagFor(c.other_party_country);
+      const name = countryNames[c.other_party_country] || c.other_party_country || 'a distant country';
+      const count = Number(c.exchange_count) || 0;
+      const pct = Math.min(100, (count / PERMANENT_THRESHOLD) * 100);
+      const done = count >= PERMANENT_THRESHOLD;
+      const preview = c.letter_preview || '';
+      const lastAt = c.last_exchange_at || c.created_at;
+
+      return `
+        <a class="conv-card" href="letters-conversation.html?id=${encodeURIComponent(c.id)}">
+          <div class="conv-head">
+            <span class="conv-flag">${flag}</span>
+            <span class="conv-name">A correspondent in ${esc(name)}</span>
+            ${c.is_permanent ? '<span class="permanent-badge">⭐ Permanent</span>' : ''}
+            <span class="conv-time">${timeAgo(lastAt)}</span>
+          </div>
+          <div class="conv-preview">“${esc(preview)}…”</div>
+          <div class="conv-meta">
+            <span>${count} letter${count === 1 ? '' : 's'} exchanged</span>
+            <div class="progress-bar">
+              <div class="progress-fill${done ? ' done' : ''}" style="width:${pct}%"></div>
+            </div>
+            <span>${count}/${PERMANENT_THRESHOLD}</span>
+          </div>
+        </a>
+      `;
+    }).join('');
+
+    root.innerHTML = `
+      <div class="page-head">
+        <h1>Your correspondence</h1>
+        <p>${convs.length} active conversation${convs.length === 1 ? '' : 's'}.</p>
+      </div>
+      <div class="conv-list">${cardsHtml}</div>
+    `;
+  }
+
+  /* ---------- Thread view ---------- */
+  async function loadThread(convId) {
+    topBack.textContent = '← All conversations';
+    topBack.href = 'letters-conversation.html';
+
+    // Fetch conversations list to find this one (also gives us metadata)
+    const { data: convs, error: convsErr } = await sb.rpc('get_my_conversations');
+    if (convsErr) {
+      root.innerHTML = `<div class="err-card">Could not load conversation: ${esc(convsErr.message)}</div>`;
+      return;
+    }
+    const conv = (convs || []).find(c => c.id === convId);
+    if (!conv) {
+      root.innerHTML = `
+        <div class="err-card">
+          This conversation doesn't exist or has ended.
+          <a href="letters-conversation.html" style="color:inherit; text-decoration:underline; margin-left:8px;">← Back to all conversations</a>
+        </div>
+      `;
+      return;
+    }
+    currentConv = conv;
+
+    // Fetch exchanges
+    const { data: exchanges, error: exErr } = await sb.rpc('get_conversation', {
+      p_conversation_id: convId, p_limit: 500
+    });
+    if (exErr) {
+      root.innerHTML = `<div class="err-card">Could not load messages: ${esc(exErr.message)}</div>`;
+      return;
+    }
+    currentExchanges = exchanges || [];
+
+    // Fetch the original letter (best effort — may fail if deleted)
+    try {
+      const { data: letterArr } = await sb.rpc('read_letter', { p_letter_id: conv.letter_id });
+      currentLetter = letterArr ? letterArr[0] : null;
+    } catch (e) {
+      currentLetter = null;
+    }
+
+    // Current state
+    currentState = {
+      is_permanent: conv.is_permanent === true,
+      exchange_count: Number(conv.exchange_count) || 0,
+      penpal_author_requested: conv.penpal_author_requested === true,
+      penpal_replier_requested: conv.penpal_replier_requested === true,
+      i_am_author: conv.i_am_author === true
+    };
+
+    renderThread();
+  }
+
+  async function renderThread() {
+    const countryName = await getCountryName(currentConv.other_party_country);
+    const flag = flagFor(currentConv.other_party_country);
+    const count = currentState.exchange_count;
+
+    // ---- Thread header ----
+    const headerHtml = `
+      <div class="thread-header">
+        <div class="big-flag">${flag}</div>
+        <div class="info">
+          <h1>A correspondent in ${esc(countryName || currentConv.other_party_country || 'a distant country')}</h1>
+          <div class="meta">
+            ${count} letter${count === 1 ? '' : 's'} exchanged
+            ${currentState.is_permanent ? '<span class="permanent-badge">⭐ Permanent pen pals</span>' : ''}
+          </div>
+        </div>
+      </div>
+    `;
+
+    // ---- Pen-pal banner ----
+    const bannerHtml = renderPenpalBanner();
+
+    // ---- Seed card (original letter) ----
+    let seedHtml = '';
+    if (currentLetter) {
+      seedHtml = `
+        <div class="seed-card">
+          <div class="seed-label">The letter that started this</div>
+          <div class="seed-body">${esc(currentLetter.body)}</div>
+          <div class="seed-meta">
+            ✉ From ${flagFor(currentLetter.origin_country)} ${esc(currentLetter.origin_country)}
+            · ${timeAgo(currentLetter.created_at)}
+            ${currentLetter.is_mine ? ' · You wrote it' : ''}
+          </div>
+        </div>
+      `;
+    } else {
+      seedHtml = `
+        <div class="seed-card">
+          <div class="seed-label">The letter that started this</div>
+          <div class="seed-body" style="opacity:.6;">(The original letter is no longer available.)</div>
+        </div>
+      `;
+    }
+
+    // ---- Exchanges ----
+    const exchangesHtml = currentExchanges.map(ex => {
+      const isMine = ex.is_mine === true;
+      return `
+        <div class="exchange ${isMine ? 'mine' : 'theirs'}">
+          <div class="body">${esc(ex.body)}</div>
+          <div class="meta">${timeAgo(ex.created_at)}</div>
+        </div>
+      `;
+    }).join('');
+
+    // ---- Composer ----
+    const composerHtml = `
+      <div class="composer">
+        <div class="composer-inner">
+          <textarea id="compose-input" maxlength="600" placeholder="Write back…"></textarea>
+          <button class="send-btn" id="send-btn" type="button" disabled>Send →</button>
+        </div>
+        <div class="char-count" id="char-count" style="max-width:780px; margin: 4px auto 0;">0 / 600</div>
+      </div>
+    `;
+
+    root.innerHTML = `
+      ${headerHtml}
+      ${bannerHtml}
+      ${seedHtml}
+      <div class="exchanges" id="exchanges">${exchangesHtml}</div>
+      ${composerHtml}
+    `;
+
+    wireComposer();
+    wirePenpalButton();
+
+    // Jump to bottom
+    setTimeout(() => {
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'instant' });
+    }, 50);
+  }
+
+  function renderPenpalBanner() {
+    const s = currentState;
+    const count = s.exchange_count;
+    const pct = Math.min(100, (count / PERMANENT_THRESHOLD) * 100);
+    const done = count >= PERMANENT_THRESHOLD;
+
+    // Determine my request vs theirs
+    const myRequest = s.i_am_author ? s.penpal_author_requested : s.penpal_replier_requested;
+    const theirRequest = s.i_am_author ? s.penpal_replier_requested : s.penpal_author_requested;
+
+    // Permanent state
+    if (s.is_permanent) {
+      return `
+        <div class="penpal-banner is-permanent">
+          <div class="text">
+            <strong>⭐ Permanent pen pals.</strong>
+            You'll stay connected even after long silences.
+          </div>
+        </div>
+      `;
+    }
+
+    // Both requested but < 10
+    if (myRequest && theirRequest && !done) {
+      return `
+        <div class="penpal-banner">
+          <div class="text">
+            <strong>Almost there.</strong>
+            ${count} of ${PERMANENT_THRESHOLD} letters exchanged — ${PERMANENT_THRESHOLD - count} more to become permanent pen pals.
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        </div>
+      `;
+    }
+
+    // I requested, they haven't
+    if (myRequest && !theirRequest) {
+      return `
+        <div class="penpal-banner">
+          <div class="text">
+            <strong>You've asked to be permanent pen pals.</strong>
+            Waiting for them to agree. ${count} of ${PERMANENT_THRESHOLD} letters so far.
+          </div>
+          <div class="progress-bar"><div class="progress-fill${done ? ' done' : ''}" style="width:${pct}%"></div></div>
+        </div>
+      `;
+    }
+
+    // They requested, I haven't
+    if (theirRequest && !myRequest) {
+      return `
+        <div class="penpal-banner">
+          <div class="text">
+            <strong>They've asked to be permanent pen pals.</strong>
+            ${count >= PERMANENT_THRESHOLD
+              ? 'If you agree, you become permanent immediately.'
+              : `${count} of ${PERMANENT_THRESHOLD} letters so far.`}
+          </div>
+          <button class="btn btn-primary" id="penpal-btn" type="button">Accept</button>
+        </div>
+      `;
+    }
+
+    // Neither requested
+    if (count < PERMANENT_THRESHOLD) {
+      return `
+        <div class="penpal-banner">
+          <div class="text">
+            <strong>${count} of ${PERMANENT_THRESHOLD} letters exchanged.</strong>
+            Exchange ${PERMANENT_THRESHOLD - count} more to unlock permanent pen pals.
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        </div>
+      `;
+    }
+
+    // Neither requested but threshold reached
+    return `
+      <div class="penpal-banner">
+        <div class="text">
+          <strong>${PERMANENT_THRESHOLD} letters exchanged!</strong>
+          Ready to become permanent pen pals if you both agree.
+        </div>
+        <button class="btn btn-primary" id="penpal-btn" type="button">Ask to be pen pals</button>
+      </div>
+    `;
+  }
+
+  function wireComposer() {
+    const ta = document.getElementById('compose-input');
+    const btn = document.getElementById('send-btn');
+    const count = document.getElementById('char-count');
+    if (!ta || !btn || !count) return;
+
+    ta.addEventListener('input', () => {
+      const len = ta.value.length;
+      count.textContent = `${len} / 600`;
+      count.classList.toggle('over', len > 600);
+      btn.disabled = ta.value.trim().length < 1 || len > 600;
+    });
+
+    btn.addEventListener('click', async () => {
+      const body = ta.value.trim();
+      if (!body) return;
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+
+      try {
+        const { data, error } = await sb.rpc('send_exchange', {
+          p_conversation_id: currentConv.id,
+          p_body: body
+        });
+        if (error) throw error;
+
+        const row = data && data[0];
+        if (!row) throw new Error('No response');
+
+        // Append locally
+        currentExchanges.push({
+          id: row.exchange_id,
+          sender_id: session.user.id,
+          is_mine: true,
+          body: body,
+          created_at: row.created_at
+        });
+        currentState.exchange_count = Number(row.exchange_count) || (currentState.exchange_count + 1);
+        currentState.is_permanent = row.is_permanent === true;
+        currentState.penpal_author_requested = row.penpal_author_requested === true;
+        currentState.penpal_replier_requested = row.penpal_replier_requested === true;
+
+        // If just became permanent, celebrate
+        if (currentState.is_permanent && row.is_permanent === true && !currentConv.is_permanent) {
+          toast('⭐ You are now permanent pen pals.', 'ok');
+        }
+
+        // Rerender
+        renderThread();
+      } catch (err) {
+        console.error('[conv] send failed:', err);
+        toast(err.message || 'Could not send. Please try again.', 'err');
+        btn.disabled = false;
+        btn.textContent = 'Send →';
+      }
+    });
+  }
+
+  function wirePenpalButton() {
+    const btn = document.getElementById('penpal-btn');
+    if (!btn) return;
+    btn.addEventListener('click', async () => {
+      btn.disabled = true;
+      btn.textContent = 'Asking…';
+      try {
+        const { data, error } = await sb.rpc('request_penpal', {
+          p_conversation_id: currentConv.id
+        });
+        if (error) throw error;
+        const row = data && data[0];
+        if (!row) throw new Error('No response');
+
+        currentState.is_permanent = row.is_permanent === true;
+        currentState.exchange_count = Number(row.exchange_count) || currentState.exchange_count;
+        currentState.penpal_author_requested = row.penpal_author_requested === true;
+        currentState.penpal_replier_requested = row.penpal_replier_requested === true;
+
+        if (currentState.is_permanent) {
+          toast('⭐ You are now permanent pen pals.', 'ok');
+        } else {
+          toast('Request sent. Waiting for them to agree.', 'ok');
+        }
+        renderThread();
+      } catch (err) {
+        console.error('[conv] request_penpal failed:', err);
+        toast(err.message || 'Could not send request.', 'err');
+        btn.disabled = false;
+        btn.textContent = 'Try again';
+      }
+    });
+  }
+
+  /* ---------- Boot ---------- */
+  async function boot() {
+    const { data: { session: s } } = await sb.auth.getSession();
+    session = s;
+    if (!session) {
+      renderGate();
+      return;
+    }
+
+    const params = new URLSearchParams(location.search);
+    const convId = params.get('id');
+
+    try {
+      if (convId) {
+        await loadThread(convId);
+      } else {
+        await loadList();
+      }
+    } catch (e) {
+      console.error('[conv] boot failed:', e);
+      root.innerHTML = `<div class="err-card">Something went wrong. Please try again.</div>`;
+    }
+  }
+
+  boot();
+})();
+</script>
+</body>
+</html>

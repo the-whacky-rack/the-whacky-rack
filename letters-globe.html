@@ -26,7 +26,6 @@
   a { color: inherit; text-decoration: none; }
   button { font-family: inherit; }
 
-  /* ---------- Breathing animation for globe dots ---------- */
   @keyframes globeDotBreath {
     0%, 100% { transform: scale(1);    opacity: 0.85; }
     50%      { transform: scale(1.55); opacity: 0.45; }
@@ -312,13 +311,15 @@
   const globeViz      = document.getElementById('globeViz');
   const fallbackBtn   = document.getElementById('fallback-to-list');
 
-  let session     = null;
-  let globe       = null;
-  let allLetters  = [];
+  let session       = null;
+  let globe         = null;
+  let allLetters    = [];
+  let visibleLetters = [];
   let currentFilter = 'all';
   let refreshTimer  = null;
   let isMobile      = window.innerWidth < MOBILE_BREAKPOINT;
   let globeFailed   = false;
+  let pointerDownAt = null;
 
   /* ---------- Helpers ---------- */
   function flagFor(cc) {
@@ -380,58 +381,32 @@
     return data || [];
   }
 
-  /* ---------- Build HTML data for markers ---------- */
+  /* ---------- HTML data for markers ---------- */
   function toHtmlData(letters) {
     return letters.map(l => ({
       id: l.id,
       lat: Number(l.display_lat),
       lng: Number(l.display_lng),
       isBottle: l.delivery_mode === 'bottle',
-      isMine: l.is_mine === true,
-      origin_country: l.origin_country,
-      bottle_state: l.bottle_state
+      isMine: l.is_mine === true
     }));
   }
 
-  /* ---------- The breathing dot ---------- */
+  /* ---------- Breathing dot (visual only, no click handling) ---------- */
   function makeDot(d) {
-    // Color palette per letter type
     let color;
-    if (d.isMine)          color = '180, 150, 220'; // purple
-    else if (d.isBottle)   color = '80, 200, 255';  // cyan
-    else                   color = '255, 110, 50';  // orange
+    if (d.isMine)          color = '180, 150, 220';
+    else if (d.isBottle)   color = '80, 200, 255';
+    else                   color = '255, 110, 50';
 
-    const sizeCore = d.isMine ? 8  : 10;            // visible dot size (px)
-    const sizeGlow = d.isMine ? 26 : 34;            // glow ring diameter
-    const sizeHit  = 42;                            // click target diameter
+    const sizeCore = d.isMine ? 8  : 10;
+    const sizeGlow = d.isMine ? 26 : 34;
 
-    // Wrapper — 0x0, globe.gl positions this at the coordinate
     const wrapper = document.createElement('div');
-    wrapper.style.width = '0';
+    wrapper.style.width  = '0';
     wrapper.style.height = '0';
+    wrapper.style.pointerEvents = 'none';
 
-    // Invisible click target (larger, reliable to hit)
-    const hit = document.createElement('div');
-    hit.style.position = 'absolute';
-    hit.style.left = (-sizeHit / 2) + 'px';
-    hit.style.top  = (-sizeHit / 2) + 'px';
-    hit.style.width  = sizeHit + 'px';
-    hit.style.height = sizeHit + 'px';
-    hit.style.borderRadius = '50%';
-    hit.style.cursor = 'pointer';
-    hit.style.background = 'transparent';
-    hit.title = d.isMine
-      ? 'Your letter — click to open'
-      : (d.isBottle
-          ? (d.bottle_state === 'beached' ? 'A bottle washed ashore — click to open' : 'A bottle adrift — click to open')
-          : 'A letter — click to open');
-    hit.addEventListener('click', (e) => {
-      e.stopPropagation();
-      e.preventDefault();
-      window.location.href = `letters.html?id=${d.id}`;
-    });
-
-    // Breathing glow (decorative, does not capture clicks)
     const glow = document.createElement('div');
     glow.style.position = 'absolute';
     glow.style.left = (-sizeGlow / 2) + 'px';
@@ -442,10 +417,8 @@
     glow.style.background = `radial-gradient(circle, rgba(${color},0.85) 0%, rgba(${color},0.35) 45%, rgba(${color},0) 75%)`;
     glow.style.pointerEvents = 'none';
     glow.style.animation = 'globeDotBreath 2.6s ease-in-out infinite';
-    glow.style.transformOrigin = 'center';
     if (d.isMine) glow.style.animationDuration = '3.4s';
 
-    // Solid core (static, always visible)
     const core = document.createElement('div');
     core.style.position = 'absolute';
     core.style.left = (-sizeCore / 2) + 'px';
@@ -458,23 +431,27 @@
     core.style.border = '1px solid rgba(255,255,255,0.55)';
     core.style.pointerEvents = 'none';
 
-    // Hover effect on the hit area (highlight glow)
-    hit.addEventListener('mouseenter', () => {
-      glow.style.opacity = '1';
-      glow.style.transform = 'scale(1.3)';
-      core.style.boxShadow = `0 0 14px 4px rgba(${color},1)`;
-    });
-    hit.addEventListener('mouseleave', () => {
-      glow.style.opacity = '';
-      glow.style.transform = '';
-      core.style.boxShadow = `0 0 6px 1.5px rgba(${color},0.9)`;
-    });
-
     wrapper.appendChild(glow);
     wrapper.appendChild(core);
-    wrapper.appendChild(hit);
-
     return wrapper;
+  }
+
+  /* ---------- Nearest-letter lookup (for click handler) ---------- */
+  function findNearestLetter(lat, lng) {
+    if (!visibleLetters.length) return null;
+    let best = null, bestDist = Infinity;
+    const cosLat = Math.cos(lat * Math.PI / 180);
+    for (const l of visibleLetters) {
+      const dlat = Number(l.display_lat) - lat;
+      let dlng = Math.abs(Number(l.display_lng) - lng);
+      if (dlng > 180) dlng = 360 - dlng;
+      const dx = dlng * cosLat;
+      const dist = Math.sqrt(dlat * dlat + dx * dx);
+      if (dist < bestDist) { bestDist = dist; best = l; }
+    }
+    // Threshold: 4° at click latitude. At globe default altitude that's
+    // roughly the same visual radius as a dot's glow.
+    return bestDist <= 4 ? best : null;
   }
 
   /* ---------- Build globe ---------- */
@@ -506,7 +483,7 @@
     }
     console.log('[globe] tile mode:', tileModeUsed);
 
-    // Breathing dots (HTML markers) — this is now the only visual
+    // Breathing dots layer
     try {
       if (typeof g.htmlElementsData === 'function') {
         g.htmlElementsData([]);
@@ -533,7 +510,56 @@
       console.warn('[globe] controls setup failed:', e);
     }
 
-    // Initial POV — center on user's country
+    // Track pointer down to detect drags (so a drag doesn't accidentally click)
+    try {
+      globeViz.addEventListener('pointerdown', (e) => {
+        pointerDownAt = { x: e.clientX, y: e.clientY, t: Date.now() };
+      });
+    } catch (e) {}
+
+    // Click handling via onGlobeClick — reliable, no HTML pointer-events issues
+    try {
+      if (typeof g.onGlobeClick === 'function') {
+        g.onGlobeClick((coords, event) => {
+          // Ignore if this was a drag, not a tap
+          if (pointerDownAt && event) {
+            const dx = event.clientX - pointerDownAt.x;
+            const dy = event.clientY - pointerDownAt.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            const dt = Date.now() - pointerDownAt.t;
+            if (dist > 5 || dt > 800) return;
+          }
+          if (!coords) return;
+          const nearest = findNearestLetter(coords.lat, coords.lng);
+          if (nearest) {
+            window.location.href = `letters.html?id=${nearest.id}`;
+          }
+        });
+        console.log('[globe] onGlobeClick wired');
+      } else {
+        console.warn('[globe] onGlobeClick not available — clicks disabled');
+      }
+    } catch (e) {
+      console.warn('[globe] click setup failed:', e);
+    }
+
+    // Hover cursor feedback
+    try {
+      if (typeof g.onGlobeHover === 'function') {
+        g.onGlobeHover((coords) => {
+          if (!coords || coords.lat == null) {
+            globeViz.style.cursor = '';
+            return;
+          }
+          const nearest = findNearestLetter(coords.lat, coords.lng);
+          globeViz.style.cursor = nearest ? 'pointer' : '';
+        });
+      }
+    } catch (e) {
+      console.warn('[globe] hover setup failed:', e);
+    }
+
+    // Initial POV
     (async () => {
       let initLat = 20, initLng = 0;
       try {
@@ -546,7 +572,6 @@
           if (c && c.lat != null) { initLat = Number(c.lat); initLng = Number(c.lng); }
         }
       } catch (e) {}
-
       try {
         g.pointOfView({ lat: initLat, lng: initLng, altitude: 2.2 }, 1200);
       } catch (e) {}
@@ -556,7 +581,7 @@
     return g;
   }
 
-  /* ---------- Fallback to card list ---------- */
+  /* ---------- Fallback ---------- */
   function fallbackToList(reason) {
     console.warn('[globe] falling back to card list:', reason);
     globeFailed = true;
@@ -577,6 +602,7 @@
       filtered = allLetters.filter(l => l.delivery_mode === 'bottle');
     }
 
+    visibleLetters = filtered;
     updateFooter(filtered);
 
     if (isMobile || globeFailed) {

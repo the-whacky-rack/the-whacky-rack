@@ -295,6 +295,7 @@
 
   const ADULT_KEY = 'wr_letters_18plus_v1';
   const MOBILE_BREAKPOINT = 900;
+  const ARC_FLUSH_INTERVAL = 15000;
 
   const loadingScreen = document.getElementById('loading-screen');
   const loadingText   = document.getElementById('loading-text');
@@ -320,6 +321,14 @@
   let isMobile      = window.innerWidth < MOBILE_BREAKPOINT;
   let globeFailed   = false;
   let pointerDownAt = null;
+
+  // Arcs state
+  let countryCoords = {};
+  let arcsData      = [];
+  let arcRealtimeChannel = null;
+  let arcFlushTimer = null;
+  let arcDirty      = false;
+  let arcsInitialized = false;
 
   /* ---------- Helpers ---------- */
   function flagFor(cc) {
@@ -358,9 +367,7 @@
     filterBar.style.display = 'flex';
   }
 
-  function hideLoading() {
-    loadingScreen.hidden = true;
-  }
+  function hideLoading() { loadingScreen.hidden = true; }
 
   /* ---------- 18+ gate ---------- */
   function hasAdultConsent() {
@@ -381,6 +388,103 @@
     return data || [];
   }
 
+  /* ---------- Arcs: country coordinates ---------- */
+  async function loadCountryCoords() {
+    const { data, error } = await sb.from('countries')
+      .select('code, lat, lng')
+      .eq('is_active', true)
+      .not('lat', 'is', null);
+    if (error) throw error;
+    countryCoords = {};
+    (data || []).forEach(c => {
+      if (c.lat != null && c.lng != null) {
+        countryCoords[c.code] = { lat: Number(c.lat), lng: Number(c.lng) };
+      }
+    });
+    console.log('[globe] country coords loaded:', Object.keys(countryCoords).length);
+  }
+
+  /* ---------- Arcs: fetch from RPC ---------- */
+  async function fetchArcs() {
+    const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    const { data, error } = await sb.rpc('get_arc_events', { p_since: since });
+    if (error) throw error;
+    const out = [];
+    (data || []).forEach(a => {
+      const from = countryCoords[a.from_country];
+      const to   = countryCoords[a.to_country];
+      if (!from || !to) return;
+      if (a.from_country === a.to_country) return; // skip same-country arcs
+      out.push({
+        startLat: from.lat, startLng: from.lng,
+        endLat: to.lat, endLng: to.lng,
+        __id: a.id
+      });
+    });
+    return out;
+  }
+
+  /* ---------- Arcs: realtime subscription ---------- */
+  function subscribeToArcs() {
+    if (arcRealtimeChannel) return;
+    try {
+      arcRealtimeChannel = sb.channel('letter-arcs-' + session.user.id)
+        .on('postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'letter_arc_events' },
+          () => { arcDirty = true; }
+        )
+        .subscribe((status) => {
+          console.log('[globe] arc realtime status:', status);
+        });
+    } catch (e) {
+      console.warn('[globe] arc subscription failed:', e);
+    }
+  }
+
+  /* ---------- Arcs: flush loop ---------- */
+  function startArcFlushLoop() {
+    if (arcFlushTimer) clearInterval(arcFlushTimer);
+    arcFlushTimer = setInterval(async () => {
+      if (!arcDirty) return;
+      arcDirty = false;
+      try {
+        const next = await fetchArcs();
+        const oldIds = arcsData.map(a => a.__id).join(',');
+        const newIds = next.map(a => a.__id).join(',');
+        if (oldIds !== newIds) {
+          arcsData = next;
+          if (globe && typeof globe.arcsData === 'function') {
+            globe.arcsData(arcsData);
+          }
+          updateFooter(visibleLetters);
+          console.log('[globe] arcs refreshed:', arcsData.length);
+        }
+      } catch (e) {
+        console.warn('[globe] arc refresh failed:', e);
+      }
+    }, ARC_FLUSH_INTERVAL);
+  }
+
+  /* ---------- Arcs: init ---------- */
+  async function initArcs() {
+    if (arcsInitialized) return;
+    if (!globe) return;
+    arcsInitialized = true;
+    try {
+      await loadCountryCoords();
+      arcsData = await fetchArcs();
+      if (typeof globe.arcsData === 'function') {
+        globe.arcsData(arcsData);
+      }
+      updateFooter(visibleLetters);
+      subscribeToArcs();
+      startArcFlushLoop();
+      console.log('[globe] arcs initialized:', arcsData.length);
+    } catch (e) {
+      console.warn('[globe] arc init failed:', e);
+    }
+  }
+
   /* ---------- HTML data for markers ---------- */
   function toHtmlData(letters) {
     return letters.map(l => ({
@@ -392,7 +496,7 @@
     }));
   }
 
-  /* ---------- Breathing dot (visual only, no click handling) ---------- */
+  /* ---------- Breathing dot ---------- */
   function makeDot(d) {
     let color;
     if (d.isMine)          color = '180, 150, 220';
@@ -436,7 +540,7 @@
     return wrapper;
   }
 
-  /* ---------- Nearest-letter lookup (for click handler) ---------- */
+  /* ---------- Nearest-letter lookup ---------- */
   function findNearestLetter(lat, lng) {
     if (!visibleLetters.length) return null;
     let best = null, bestDist = Infinity;
@@ -449,8 +553,6 @@
       const dist = Math.sqrt(dlat * dlat + dx * dx);
       if (dist < bestDist) { bestDist = dist; best = l; }
     }
-    // Threshold: 4° at click latitude. At globe default altitude that's
-    // roughly the same visual radius as a dot's glow.
     return bestDist <= 4 ? best : null;
   }
 
@@ -483,6 +585,24 @@
     }
     console.log('[globe] tile mode:', tileModeUsed);
 
+    // Arc layer (yellow, animated dashes)
+    try {
+      g.arcsData([]);
+      if (typeof g.arcColor === 'function') {
+        g.arcColor(() => [
+          'rgba(255, 210, 80, 0.9)',
+          'rgba(255, 180, 40, 0.9)'
+        ]);
+      }
+      if (typeof g.arcDashLength === 'function')     g.arcDashLength(0.4);
+      if (typeof g.arcDashGap === 'function')        g.arcDashGap(0.2);
+      if (typeof g.arcDashAnimateTime === 'function') g.arcDashAnimateTime(() => 3000 + Math.random() * 2000);
+      if (typeof g.arcStroke === 'function')         g.arcStroke(0.5);
+      console.log('[globe] arc layer ready');
+    } catch (e) {
+      console.warn('[globe] arc setup failed:', e);
+    }
+
     // Breathing dots layer
     try {
       if (typeof g.htmlElementsData === 'function') {
@@ -500,7 +620,7 @@
       throw e;
     }
 
-    // Controls (auto-rotate, stopped on interaction)
+    // Controls
     try {
       const ctrl = g.controls();
       ctrl.autoRotate = true;
@@ -510,18 +630,17 @@
       console.warn('[globe] controls setup failed:', e);
     }
 
-    // Track pointer down to detect drags (so a drag doesn't accidentally click)
+    // Drag detection
     try {
       globeViz.addEventListener('pointerdown', (e) => {
         pointerDownAt = { x: e.clientX, y: e.clientY, t: Date.now() };
       });
     } catch (e) {}
 
-    // Click handling via onGlobeClick — reliable, no HTML pointer-events issues
+    // Click handling
     try {
       if (typeof g.onGlobeClick === 'function') {
         g.onGlobeClick((coords, event) => {
-          // Ignore if this was a drag, not a tap
           if (pointerDownAt && event) {
             const dx = event.clientX - pointerDownAt.x;
             const dy = event.clientY - pointerDownAt.y;
@@ -543,7 +662,7 @@
       console.warn('[globe] click setup failed:', e);
     }
 
-    // Hover cursor feedback
+    // Hover cursor
     try {
       if (typeof g.onGlobeHover === 'function') {
         g.onGlobeHover((coords) => {
@@ -620,7 +739,7 @@
       }
     }
 
-    if (allLetters.length === 0 && !globeFailed) {
+    if (allLetters.length === 0 && arcsData.length === 0 && !globeFailed) {
       emptyGlobe.hidden = false;
     } else {
       emptyGlobe.hidden = true;
@@ -632,15 +751,17 @@
     const mine    = visible.filter(l => l.is_mine).length;
     const letters = visible.filter(l => l.delivery_mode === 'static' && !l.is_mine).length;
     const bottles = visible.filter(l => l.delivery_mode === 'bottle' && !l.is_mine).length;
+    const arcs    = arcsData.length;
 
-    if (visible.length === 0) { globeFooter.hidden = true; return; }
-
-    globeFooter.hidden = false;
     const parts = [];
     if (letters > 0) parts.push(`<strong>${letters}</strong> letter${letters === 1 ? '' : 's'}`);
     if (bottles > 0) parts.push(`<strong>${bottles}</strong> bottle${bottles === 1 ? '' : 's'}`);
     if (mine > 0)    parts.push(`<strong>${mine}</strong> of your own`);
+    if (arcs > 0)    parts.push(`<strong>${arcs}</strong> crossing${arcs === 1 ? '' : 's'} today`);
 
+    if (parts.length === 0) { globeFooter.hidden = true; return; }
+
+    globeFooter.hidden = false;
     globeFooter.innerHTML = `The globe holds ${parts.join(' · ')}`;
   }
 
@@ -798,6 +919,17 @@
     hideLoading();
 
     if (allLetters.length === 0 && !globeFailed) {
+      // Empty-letters case: still try to load arcs before showing empty screen.
+      // (Arcs may be present from past conversations.)
+      if (!isMobile) {
+        try { await initArcs(); } catch (e) {}
+        if (arcsData.length > 0) {
+          // Arcs exist — show the globe with just arcs, no "empty" screen.
+          applyFilter();
+          startRefreshLoop();
+          return;
+        }
+      }
       hideAll();
       filterBar.style.display = 'flex';
       emptyGlobe.hidden = false;
@@ -805,6 +937,12 @@
     }
 
     applyFilter();
+
+    // Load arcs after letters/dots are visible (non-blocking feel).
+    if (!isMobile) {
+      await initArcs();
+    }
+
     startRefreshLoop();
   }
 

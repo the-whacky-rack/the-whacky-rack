@@ -406,7 +406,7 @@
 
   /* ---------- Arcs: fetch from RPC ---------- */
   async function fetchArcs() {
-    const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    const since = new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString();
     const { data, error } = await sb.rpc('get_arc_events', { p_since: since });
     if (error) throw error;
     const out = [];
@@ -757,7 +757,7 @@
     if (letters > 0) parts.push(`<strong>${letters}</strong> letter${letters === 1 ? '' : 's'}`);
     if (bottles > 0) parts.push(`<strong>${bottles}</strong> bottle${bottles === 1 ? '' : 's'}`);
     if (mine > 0)    parts.push(`<strong>${mine}</strong> of your own`);
-    if (arcs > 0)    parts.push(`<strong>${arcs}</strong> crossing${arcs === 1 ? '' : 's'} today`);
+       if (arcs > 0)    parts.push(`<strong>${arcs}</strong> recent crossing${arcs === 1 ? '' : 's'}`);
 
     if (parts.length === 0) { globeFooter.hidden = true; return; }
 

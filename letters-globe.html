@@ -51,6 +51,7 @@
   .top-compose-btn:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
   .top-back { color: #fff; opacity: .65; font-size: 13px; padding: 8px 12px; white-space: nowrap; transition: .15s ease; }
   .top-back:hover { opacity: 1; }
+  .top-inbox { opacity: .85; }
 
   .filter-bar {
     position: fixed; top: 64px; left: 50%; transform: translateX(-50%);
@@ -205,6 +206,7 @@
 <div class="top-bar">
   <a href="index.html" class="brand">The <span>Whacky</span> Rack</a>
   <div class="top-actions">
+    <a href="letters-conversation.html" class="top-back top-inbox">📬 Correspondence</a>
     <button class="top-compose-btn" id="compose-btn" type="button">✉ Write a letter</button>
     <a href="index.html" class="top-back">← Back</a>
   </div>
@@ -414,7 +416,7 @@
       const from = countryCoords[a.from_country];
       const to   = countryCoords[a.to_country];
       if (!from || !to) return;
-      if (a.from_country === a.to_country) return; // skip same-country arcs
+      if (a.from_country === a.to_country) return;
       out.push({
         startLat: from.lat, startLng: from.lng,
         endLat: to.lat, endLng: to.lng,
@@ -568,7 +570,6 @@
     const g = new Globe(globeViz);
     g.backgroundColor('#141920');
 
-    // Tile engine or static earth image
     let tileModeUsed = 'none';
     try {
       if (typeof g.globeTileEngineUrl === 'function') {
@@ -585,7 +586,6 @@
     }
     console.log('[globe] tile mode:', tileModeUsed);
 
-    // Arc layer (yellow, animated dashes)
     try {
       g.arcsData([]);
       if (typeof g.arcColor === 'function') {
@@ -603,7 +603,6 @@
       console.warn('[globe] arc setup failed:', e);
     }
 
-    // Breathing dots layer
     try {
       if (typeof g.htmlElementsData === 'function') {
         g.htmlElementsData([]);
@@ -620,7 +619,6 @@
       throw e;
     }
 
-    // Controls
     try {
       const ctrl = g.controls();
       ctrl.autoRotate = true;
@@ -630,14 +628,12 @@
       console.warn('[globe] controls setup failed:', e);
     }
 
-    // Drag detection
     try {
       globeViz.addEventListener('pointerdown', (e) => {
         pointerDownAt = { x: e.clientX, y: e.clientY, t: Date.now() };
       });
     } catch (e) {}
 
-    // Click handling
     try {
       if (typeof g.onGlobeClick === 'function') {
         g.onGlobeClick((coords, event) => {
@@ -662,7 +658,6 @@
       console.warn('[globe] click setup failed:', e);
     }
 
-    // Hover cursor
     try {
       if (typeof g.onGlobeHover === 'function') {
         g.onGlobeHover((coords) => {
@@ -678,7 +673,6 @@
       console.warn('[globe] hover setup failed:', e);
     }
 
-    // Initial POV
     (async () => {
       let initLat = 20, initLng = 0;
       try {
@@ -700,7 +694,6 @@
     return g;
   }
 
-  /* ---------- Fallback ---------- */
   function fallbackToList(reason) {
     console.warn('[globe] falling back to card list:', reason);
     globeFailed = true;
@@ -712,7 +705,6 @@
     applyFilter();
   }
 
-  /* ---------- Apply filter ---------- */
   function applyFilter() {
     let filtered = allLetters;
     if (currentFilter === 'static') {
@@ -746,7 +738,6 @@
     }
   }
 
-  /* ---------- Footer ---------- */
   function updateFooter(visible) {
     const mine    = visible.filter(l => l.is_mine).length;
     const letters = visible.filter(l => l.delivery_mode === 'static' && !l.is_mine).length;
@@ -757,7 +748,7 @@
     if (letters > 0) parts.push(`<strong>${letters}</strong> letter${letters === 1 ? '' : 's'}`);
     if (bottles > 0) parts.push(`<strong>${bottles}</strong> bottle${bottles === 1 ? '' : 's'}`);
     if (mine > 0)    parts.push(`<strong>${mine}</strong> of your own`);
-       if (arcs > 0)    parts.push(`<strong>${arcs}</strong> recent crossing${arcs === 1 ? '' : 's'}`);
+    if (arcs > 0)    parts.push(`<strong>${arcs}</strong> recent crossing${arcs === 1 ? '' : 's'}`);
 
     if (parts.length === 0) { globeFooter.hidden = true; return; }
 
@@ -765,7 +756,6 @@
     globeFooter.innerHTML = `The globe holds ${parts.join(' · ')}`;
   }
 
-  /* ---------- Mobile list ---------- */
   function renderMobileList(letters) {
     if (letters.length === 0) {
       mobileList.innerHTML = `
@@ -818,7 +808,6 @@
     }).join('');
   }
 
-  /* ---------- Filters ---------- */
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       currentFilter = btn.dataset.filter;
@@ -851,7 +840,6 @@
     });
   }
 
-  /* ---------- Boot ---------- */
   async function boot() {
     if (!hasAdultConsent()) {
       adultModal.classList.add('open');
@@ -919,12 +907,9 @@
     hideLoading();
 
     if (allLetters.length === 0 && !globeFailed) {
-      // Empty-letters case: still try to load arcs before showing empty screen.
-      // (Arcs may be present from past conversations.)
       if (!isMobile) {
         try { await initArcs(); } catch (e) {}
         if (arcsData.length > 0) {
-          // Arcs exist — show the globe with just arcs, no "empty" screen.
           applyFilter();
           startRefreshLoop();
           return;
@@ -938,7 +923,6 @@
 
     applyFilter();
 
-    // Load arcs after letters/dots are visible (non-blocking feel).
     if (!isMobile) {
       await initArcs();
     }

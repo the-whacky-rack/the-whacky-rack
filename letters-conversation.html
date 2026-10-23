@@ -56,9 +56,7 @@
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  .gate {
-    text-align: center; padding: 60px 20px; max-width: 480px; margin: 0 auto;
-  }
+  .gate { text-align: center; padding: 60px 20px; max-width: 480px; margin: 0 auto; }
   .gate .emoji { font-size: 52px; margin-bottom: 14px; line-height: 1; }
   .gate h1 { font-family: "Caveat", cursive; font-size: 34px; margin: 0 0 10px; font-weight: 600; }
   .gate p { font-size: 14px; color: rgba(255,255,255,.65); line-height: 1.7; margin: 0 0 22px; }
@@ -71,7 +69,6 @@
   .gate .btn-ghost { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.25); }
   .gate .btn-ghost:hover { background: rgba(255,255,255,.1); }
 
-  /* ---------- List view ---------- */
   .page-head { margin-bottom: 24px; }
   .page-head h1 { font-family: "Caveat", cursive; font-size: 38px; margin: 0 0 4px; font-weight: 600; }
   .page-head p { font-size: 13px; color: rgba(255,255,255,.55); margin: 0; line-height: 1.6; }
@@ -145,7 +142,6 @@
   }
   .empty .btn:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
 
-  /* ---------- Thread view ---------- */
   .back-to-list {
     display: inline-flex; align-items: center; gap: 6px;
     font-size: 13px; color: rgba(255,255,255,.65);
@@ -216,14 +212,6 @@
     background: var(--accent); color: #fff; border-color: var(--accent);
   }
   .penpal-banner .btn-primary:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
-  .penpal-banner .btn-ghost {
-    background: transparent; color: #fff; border-color: rgba(255,255,255,.25);
-  }
-  .penpal-banner .btn-ghost:hover { background: rgba(255,255,255,.08); }
-  .penpal-banner.is-permanent .btn-ghost {
-    background: transparent; color: #92400e; border-color: rgba(146,64,14,.4);
-  }
-  .penpal-banner.is-permanent .btn-ghost:hover { background: rgba(146,64,14,.1); }
   .penpal-banner .progress-bar {
     flex: 1; height: 5px; background: rgba(0,0,0,.2);
     border-radius: 3px; overflow: hidden; max-width: 140px;
@@ -235,6 +223,7 @@
   }
   .penpal-banner .progress-fill.done { background: #16a34a; }
 
+  /* Seed card (original letter) */
   .seed-card {
     background: rgba(251, 246, 232, .35);
     border: 1px dashed rgba(255,255,255,.2);
@@ -256,14 +245,16 @@
     font-size: 16px;
     line-height: 1.6;
     white-space: pre-wrap;
-    margin: 0 0 10px;
+    margin: 0 0 8px;
   }
   .seed-card .seed-meta {
     font-family: "Courier Prime", monospace;
     font-size: 11px;
     color: rgba(255,255,255,.45);
+    margin-top: 8px;
   }
 
+  /* Exchanges */
   .exchanges {
     display: flex;
     flex-direction: column;
@@ -305,7 +296,59 @@
   }
   .exchange.mine .meta::before { content: "You · "; }
 
-  /* Reply composer */
+  /* Translate pill (shared — sized for both seed and exchange contexts) */
+  .translate-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 50px;
+    background: rgba(0,0,0,.04);
+    border: 1px solid rgba(0,0,0,.1);
+    color: #666;
+    font-family: "Courier Prime", monospace;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .15s ease;
+    margin: 4px 0 6px;
+  }
+  .translate-pill:hover:not(:disabled) {
+    background: #fff;
+    border-color: rgba(0,0,0,.22);
+    color: #333;
+  }
+  .translate-pill:disabled,
+  .translate-pill.loading {
+    opacity: .55;
+    cursor: wait;
+  }
+  .translate-pill.translated {
+    background: rgba(255, 90, 54, .12);
+    border-color: rgba(255, 90, 54, .35);
+    color: var(--accent-dark);
+  }
+
+  /* On the seed card (dark bg), override pill colors */
+  .seed-card .translate-pill {
+    background: rgba(255,255,255,.08);
+    border-color: rgba(255,255,255,.2);
+    color: rgba(255,255,255,.75);
+    font-size: 11px;
+    padding: 5px 12px;
+  }
+  .seed-card .translate-pill:hover:not(:disabled) {
+    background: rgba(255,255,255,.16);
+    border-color: rgba(255,255,255,.35);
+    color: #fff;
+  }
+  .seed-card .translate-pill.translated {
+    background: rgba(255, 90, 54, .25);
+    border-color: rgba(255, 90, 54, .55);
+    color: #ffd0c0;
+  }
+
+  /* Composer */
   .composer {
     position: sticky;
     bottom: 0;
@@ -388,7 +431,6 @@
     .conv-name { font-size: 18px; }
   }
 
-  /* toast */
   .toast-container {
     position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
     z-index: 2000; display: flex; flex-direction: column; gap: 8px; align-items: center;
@@ -443,6 +485,12 @@
   let currentLetter = null;
   let currentState = null;
 
+  // Translation cache — per-letter seed + per-exchange, survives re-renders
+  let translateCache = {
+    seed: null,
+    exchanges: {}
+  };
+
   /* ---------- Helpers ---------- */
   function esc(s) {
     return String(s ?? '').replace(/[&<>"']/g, c => ({
@@ -478,7 +526,139 @@
     setTimeout(() => el.remove(), 2800);
   }
 
-  /* ---------- Country name from code ---------- */
+  function getTargetLangCode() {
+    return ((navigator.language || 'en').split('-')[0] || 'en').toLowerCase();
+  }
+
+  /* ---------- Translation engine ---------- */
+  async function fetchWithTimeout(url, ms) {
+    const controller = new AbortController();
+    const t = setTimeout(() => controller.abort(), ms);
+    try {
+      return await fetch(url, { signal: controller.signal });
+    } finally {
+      clearTimeout(t);
+    }
+  }
+
+  async function translateText(text) {
+    const target = getTargetLangCode();
+
+    try {
+      const url = 'https://lingva.ml/api/v1/auto/' + target + '/' + encodeURIComponent(text);
+      const res = await fetchWithTimeout(url, 6000);
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.translation) return data.translation;
+      }
+    } catch (e) {
+      console.warn('[translate] Lingva failed:', e);
+    }
+
+    try {
+      const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=' +
+                  target + '&dt=t&q=' + encodeURIComponent(text);
+      const res = await fetchWithTimeout(url, 6000);
+      if (res.ok) {
+        const data = await res.json();
+        if (data && Array.isArray(data[0])) {
+          const t = data[0].map(row => row && row[0] ? row[0] : '').join('');
+          if (t) return t;
+        }
+      }
+    } catch (e) {
+      console.warn('[translate] Google fallback failed:', e);
+    }
+
+    throw new Error('Translation service unavailable');
+  }
+
+  /* ---------- Translate pill handler ---------- */
+  function pillLabelFor(state) {
+    return (state && state.showing === 'translated') ? '🌐 Show original' : '🌐 Translate';
+  }
+
+  function pillClassFor(state) {
+    return 'translate-pill' + (state && state.showing === 'translated' ? ' translated' : '');
+  }
+
+  async function handleTranslateClick(pill) {
+    const key = pill.dataset.translateKey;
+    if (!key) return;
+
+    // Determine body element + original text
+    const bodyElId = key === '__seed__' ? 'seed-body' : ('exchange-body-' + key);
+    const bodyEl = document.getElementById(bodyElId);
+    if (!bodyEl) return;
+
+    const originalText = key === '__seed__'
+      ? (currentLetter && currentLetter.body)
+      : (currentExchanges.find(x => x.id === key) || {}).body;
+
+    if (!originalText) return;
+
+    // Ensure original HTML is cached
+    if (key === '__seed__') {
+      if (!translateCache.seed) {
+        translateCache.seed = { originalHtml: esc(originalText), translatedHtml: null, showing: 'original', fetching: false };
+      }
+    } else {
+      if (!translateCache.exchanges[key]) {
+        translateCache.exchanges[key] = { originalHtml: esc(originalText), translatedHtml: null, showing: 'original', fetching: false };
+      }
+    }
+    const cache = key === '__seed__' ? translateCache.seed : translateCache.exchanges[key];
+    if (cache.fetching) return;
+
+    // Toggle if already translated
+    if (cache.translatedHtml) {
+      if (cache.showing === 'original') {
+        bodyEl.innerHTML = cache.translatedHtml;
+        cache.showing = 'translated';
+      } else {
+        bodyEl.innerHTML = cache.originalHtml;
+        cache.showing = 'original';
+      }
+      pill.className = pillClassFor(cache);
+      pill.innerHTML = pillLabelFor(cache);
+      return;
+    }
+
+    // Fetch
+    cache.fetching = true;
+    pill.classList.add('loading');
+    pill.disabled = true;
+    const originalLabel = pill.innerHTML;
+    pill.textContent = 'Translating…';
+
+    try {
+      const translated = await translateText(originalText);
+      // Escaped + pre-wrap CSS handles newlines automatically
+      cache.translatedHtml = esc(translated);
+      cache.showing = 'translated';
+      bodyEl.innerHTML = cache.translatedHtml;
+      pill.className = pillClassFor(cache);
+      pill.innerHTML = pillLabelFor(cache);
+    } catch (err) {
+      console.error('[translate] failed:', err);
+      pill.innerHTML = originalLabel;
+      toast('Translation unavailable right now. Try again in a moment.', 'err');
+    } finally {
+      cache.fetching = false;
+      pill.classList.remove('loading');
+      pill.disabled = false;
+    }
+  }
+
+  // Single delegated handler — works for all pills, present and future
+  document.addEventListener('click', (e) => {
+    const pill = e.target.closest('.translate-pill[data-translate-key]');
+    if (!pill) return;
+    e.preventDefault();
+    handleTranslateClick(pill);
+  });
+
+  /* ---------- Country name ---------- */
   async function getCountryName(code) {
     if (!code) return '';
     try {
@@ -487,7 +667,6 @@
     } catch { return code; }
   }
 
-  /* ---------- Sign-in gate ---------- */
   function renderGate() {
     root.innerHTML = `
       <div class="gate">
@@ -531,17 +710,10 @@
       return;
     }
 
-    // Resolve country names in parallel
     const countryNames = {};
     const codes = new Set();
-    convs.forEach(c => {
-      if (c.other_party_country) codes.add(c.other_party_country);
-    });
-    await Promise.all(
-      [...codes].map(async cc => {
-        countryNames[cc] = await getCountryName(cc);
-      })
-    );
+    convs.forEach(c => { if (c.other_party_country) codes.add(c.other_party_country); });
+    await Promise.all([...codes].map(async cc => { countryNames[cc] = await getCountryName(cc); }));
 
     const cardsHtml = convs.map(c => {
       const flag = flagFor(c.other_party_country);
@@ -586,7 +758,6 @@
     topBack.textContent = '← All conversations';
     topBack.href = 'letters-conversation.html';
 
-    // Fetch conversations list to find this one (also gives us metadata)
     const { data: convs, error: convsErr } = await sb.rpc('get_my_conversations');
     if (convsErr) {
       root.innerHTML = `<div class="err-card">Could not load conversation: ${esc(convsErr.message)}</div>`;
@@ -604,7 +775,6 @@
     }
     currentConv = conv;
 
-    // Fetch exchanges
     const { data: exchanges, error: exErr } = await sb.rpc('get_conversation', {
       p_conversation_id: convId, p_limit: 500
     });
@@ -614,7 +784,6 @@
     }
     currentExchanges = exchanges || [];
 
-    // Fetch the original letter (best effort — may fail if deleted)
     try {
       const { data: letterArr } = await sb.rpc('read_letter', { p_letter_id: conv.letter_id });
       currentLetter = letterArr ? letterArr[0] : null;
@@ -622,7 +791,6 @@
       currentLetter = null;
     }
 
-    // Current state
     currentState = {
       is_permanent: conv.is_permanent === true,
       exchange_count: Number(conv.exchange_count) || 0,
@@ -639,7 +807,6 @@
     const flag = flagFor(currentConv.other_party_country);
     const count = currentState.exchange_count;
 
-    // ---- Thread header ----
     const headerHtml = `
       <div class="thread-header">
         <div class="big-flag">${flag}</div>
@@ -653,16 +820,23 @@
       </div>
     `;
 
-    // ---- Pen-pal banner ----
     const bannerHtml = renderPenpalBanner();
 
-    // ---- Seed card (original letter) ----
+    // Seed card
     let seedHtml = '';
     if (currentLetter) {
+      const seedCache = translateCache.seed;
+      const seedBodyHtml = (seedCache && seedCache.showing === 'translated')
+        ? seedCache.translatedHtml
+        : esc(currentLetter.body);
+      const seedPillClass = pillClassFor(seedCache);
+      const seedPillLabel = pillLabelFor(seedCache);
+
       seedHtml = `
         <div class="seed-card">
           <div class="seed-label">The letter that started this</div>
-          <div class="seed-body">${esc(currentLetter.body)}</div>
+          <div class="seed-body" id="seed-body">${seedBodyHtml}</div>
+          <button class="${seedPillClass}" data-translate-key="__seed__" type="button">${seedPillLabel}</button>
           <div class="seed-meta">
             ✉ From ${flagFor(currentLetter.origin_country)} ${esc(currentLetter.origin_country)}
             · ${timeAgo(currentLetter.created_at)}
@@ -679,18 +853,25 @@
       `;
     }
 
-    // ---- Exchanges ----
+    // Exchanges
     const exchangesHtml = currentExchanges.map(ex => {
       const isMine = ex.is_mine === true;
+      const exCache = translateCache.exchanges[ex.id];
+      const bodyHtml = (exCache && exCache.showing === 'translated')
+        ? exCache.translatedHtml
+        : esc(ex.body);
+      const pillClass = pillClassFor(exCache);
+      const pillLabel = pillLabelFor(exCache);
+
       return `
         <div class="exchange ${isMine ? 'mine' : 'theirs'}">
-          <div class="body">${esc(ex.body)}</div>
+          <div class="body" id="exchange-body-${ex.id}">${bodyHtml}</div>
+          <button class="${pillClass}" data-translate-key="${ex.id}" type="button">${pillLabel}</button>
           <div class="meta">${timeAgo(ex.created_at)}</div>
         </div>
       `;
     }).join('');
 
-    // ---- Composer ----
     const composerHtml = `
       <div class="composer">
         <div class="composer-inner">
@@ -712,7 +893,6 @@
     wireComposer();
     wirePenpalButton();
 
-    // Jump to bottom
     setTimeout(() => {
       window.scrollTo({ top: document.body.scrollHeight, behavior: 'instant' });
     }, 50);
@@ -724,11 +904,9 @@
     const pct = Math.min(100, (count / PERMANENT_THRESHOLD) * 100);
     const done = count >= PERMANENT_THRESHOLD;
 
-    // Determine my request vs theirs
     const myRequest = s.i_am_author ? s.penpal_author_requested : s.penpal_replier_requested;
     const theirRequest = s.i_am_author ? s.penpal_replier_requested : s.penpal_author_requested;
 
-    // Permanent state
     if (s.is_permanent) {
       return `
         <div class="penpal-banner is-permanent">
@@ -740,7 +918,6 @@
       `;
     }
 
-    // Both requested but < 10
     if (myRequest && theirRequest && !done) {
       return `
         <div class="penpal-banner">
@@ -753,7 +930,6 @@
       `;
     }
 
-    // I requested, they haven't
     if (myRequest && !theirRequest) {
       return `
         <div class="penpal-banner">
@@ -766,7 +942,6 @@
       `;
     }
 
-    // They requested, I haven't
     if (theirRequest && !myRequest) {
       return `
         <div class="penpal-banner">
@@ -781,7 +956,6 @@
       `;
     }
 
-    // Neither requested
     if (count < PERMANENT_THRESHOLD) {
       return `
         <div class="penpal-banner">
@@ -794,7 +968,6 @@
       `;
     }
 
-    // Neither requested but threshold reached
     return `
       <div class="penpal-banner">
         <div class="text">
@@ -835,7 +1008,6 @@
         const row = data && data[0];
         if (!row) throw new Error('No response');
 
-        // Append locally
         currentExchanges.push({
           id: row.exchange_id,
           sender_id: session.user.id,
@@ -848,12 +1020,10 @@
         currentState.penpal_author_requested = row.penpal_author_requested === true;
         currentState.penpal_replier_requested = row.penpal_replier_requested === true;
 
-        // If just became permanent, celebrate
         if (currentState.is_permanent && row.is_permanent === true && !currentConv.is_permanent) {
           toast('⭐ You are now permanent pen pals.', 'ok');
         }
 
-        // Rerender
         renderThread();
       } catch (err) {
         console.error('[conv] send failed:', err);

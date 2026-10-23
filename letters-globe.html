@@ -543,7 +543,7 @@
   }
 
   /* ---------- Nearest-letter lookup ---------- */
-  function findNearestLetter(lat, lng) {
+   function findNearestLetter(lat, lng) {
     if (!visibleLetters.length) return null;
     let best = null, bestDist = Infinity;
     const cosLat = Math.cos(lat * Math.PI / 180);
@@ -555,7 +555,19 @@
       const dist = Math.sqrt(dlat * dlat + dx * dx);
       if (dist < bestDist) { bestDist = dist; best = l; }
     }
-    return bestDist <= 4 ? best : null;
+    // Threshold scales with camera altitude:
+    //   Default zoom (2.2)    → ~2.6°  (matches dot glow size on screen)
+    //   Zoomed in (0.5)       → 0.8°   (tight precision)
+    //   Zoomed way out (4.0+) → ~4.8°  (forgiving when globe is small)
+    let altitude = 2.2;
+    try {
+      if (globe && typeof globe.pointOfView === 'function') {
+        const pov = globe.pointOfView();
+        if (pov && pov.altitude != null) altitude = Number(pov.altitude);
+      }
+    } catch (e) {}
+    const threshold = Math.max(0.8, altitude * 1.2);
+    return bestDist <= threshold ? best : null;
   }
 
   /* ---------- Build globe ---------- */

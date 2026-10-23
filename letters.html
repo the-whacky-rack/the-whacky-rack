@@ -32,7 +32,6 @@
 
   a { color: inherit; text-decoration: none; }
 
-  /* ---------- Top bar ---------- */
   .top-bar {
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -79,7 +78,6 @@
   }
   .back-link:hover { opacity: 1; }
 
-  /* ---------- Stage ---------- */
   .stage {
     min-height: 100vh;
     display: grid;
@@ -92,7 +90,6 @@
     max-width: 760px;
   }
 
-  /* ---------- Beached banner ---------- */
   .beached-banner {
     margin-bottom: 18px;
     background: rgba(211,58,58,.18);
@@ -107,7 +104,6 @@
   }
   .beached-banner strong { color: #fff; font-style: normal; }
 
-  /* ---------- Airmail frame ---------- */
   .frame {
     width: 100%;
     padding: 12px;
@@ -119,7 +115,6 @@
     box-shadow: 0 40px 70px -25px rgba(0,0,0,.85), 0 0 0 1px rgba(0,0,0,.3);
   }
 
-  /* ---------- Postcard ---------- */
   .postcard {
     display: grid;
     grid-template-columns: 1fr 2px 1fr;
@@ -134,7 +129,6 @@
     margin: 16px 0;
   }
 
-  /* ---------- Left half ---------- */
   .left {
     padding: 34px 30px 30px;
     min-width: 0;
@@ -162,7 +156,34 @@
     color: var(--ink);
   }
 
-  /* ---------- Right half ---------- */
+  /* Translate pill */
+  .translate-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 50px;
+    background: rgba(0,0,0,.04);
+    border: 1px solid rgba(0,0,0,.1);
+    color: #666;
+    font-family: "Courier Prime", monospace;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .15s ease;
+    margin: 4px 0 4px;
+  }
+  .translate-pill:hover:not(:disabled) {
+    background: #fff;
+    border-color: rgba(0,0,0,.22);
+    color: #333;
+  }
+  .translate-pill:disabled,
+  .translate-pill.loading {
+    opacity: .55;
+    cursor: wait;
+  }
+
   .right {
     position: relative;
     padding: 22px 24px 24px;
@@ -251,7 +272,6 @@
     margin-bottom: 2px;
   }
 
-  /* ---------- Actions ---------- */
   .actions {
     margin-top: 26px;
     display: flex;
@@ -297,7 +317,6 @@
     cursor: not-allowed;
   }
 
-  /* ---------- Info panels ---------- */
   .panel-msg {
     text-align: center;
     padding: 40px 20px;
@@ -323,7 +342,6 @@
     line-height: 1;
   }
 
-  /* ---------- Modals (shared) ---------- */
   .modal {
     display: none;
     position: fixed;
@@ -399,7 +417,6 @@
   .modal-status.ok { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
   .modal-status.err { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
 
-  /* ---------- Compose modal specifics ---------- */
   .compose-inner {
     max-width: 560px;
     padding: 0;
@@ -521,7 +538,6 @@
     color: #333;
   }
 
-  /* ---------- Reply modal textarea (kept for existing reply modal) ---------- */
   .modal-inner textarea {
     width: 100%;
     min-height: 140px;
@@ -545,7 +561,6 @@
     margin-top: 6px;
   }
 
-  /* ---------- Toast ---------- */
   .toast-container {
     position: fixed;
     bottom: 20px;
@@ -573,7 +588,6 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* ---------- Mobile ---------- */
   @media (max-width: 680px) {
     .top-bar { padding: 12px 15px; }
     .brand { font-size: 16px; }
@@ -623,7 +637,6 @@
   </div>
 </main>
 
-<!-- 18+ gate modal -->
 <div class="modal" id="adult-modal" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="modal-inner" style="text-align:center;">
     <h2>Before you read</h2>
@@ -644,7 +657,6 @@
   </div>
 </div>
 
-<!-- Reply modal -->
 <div class="modal" id="reply-modal" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="modal-inner">
     <h3>Write back</h3>
@@ -662,7 +674,6 @@
   </div>
 </div>
 
-<!-- Report modal -->
 <div class="modal" id="report-modal" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="modal-inner">
     <h3>Report this letter</h3>
@@ -680,7 +691,6 @@
   </div>
 </div>
 
-<!-- Compose modal -->
 <div class="modal" id="compose-modal" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="modal-inner compose-inner">
     <div class="compose-paper">
@@ -726,7 +736,6 @@
   const sb = window.wr.sb;
   const ADULT_KEY = 'wr_letters_18plus_v1';
 
-  // Elements
   const stageEl       = document.getElementById('stage');
   const adultModal    = document.getElementById('adult-modal');
   const replyModal    = document.getElementById('reply-modal');
@@ -750,11 +759,18 @@
   const topComposeBtn = document.getElementById('top-compose-btn');
   const toastBox      = document.getElementById('toast-container');
 
-  // State
   let currentLetter  = null;
   let existingConvId = null;
   let session        = null;
   let composeMode    = 'static';
+
+  // Translation state (reset per letter render)
+  let translateState = {
+    originalHtml: null,
+    translatedHtml: null,
+    showing: 'original',
+    fetching: false
+  };
 
   /* ---------- Helpers ---------- */
   function esc(s) {
@@ -778,6 +794,127 @@
     el.textContent = msg;
     toastBox.appendChild(el);
     setTimeout(() => el.remove(), 2800);
+  }
+
+  function getTargetLangCode() {
+    return ((navigator.language || 'en').split('-')[0] || 'en').toLowerCase();
+  }
+
+  function getTargetLangName() {
+    const code = getTargetLangCode();
+    try {
+      if (typeof Intl !== 'undefined' && Intl.DisplayNames) {
+        const name = new Intl.DisplayNames([code], { type: 'language' }).of(code);
+        if (name) return name;
+      }
+    } catch (e) {}
+    return code.toUpperCase();
+  }
+
+  /* ---------- Translation ---------- */
+  async function fetchWithTimeout(url, ms) {
+    const controller = new AbortController();
+    const t = setTimeout(() => controller.abort(), ms);
+    try {
+      const res = await fetch(url, { signal: controller.signal });
+      return res;
+    } finally {
+      clearTimeout(t);
+    }
+  }
+
+  async function translateText(text) {
+    const target = getTargetLangCode();
+
+    // Try Lingva first (open source, CORS-friendly)
+    try {
+      const url = 'https://lingva.ml/api/v1/auto/' + target + '/' + encodeURIComponent(text);
+      const res = await fetchWithTimeout(url, 6000);
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.translation) {
+          return { text: data.translation, target };
+        }
+      }
+    } catch (e) {
+      console.warn('[translate] Lingva failed:', e);
+    }
+
+    // Fall back to Google's unofficial translate endpoint
+    try {
+      const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=' +
+                  target + '&dt=t&q=' + encodeURIComponent(text);
+      const res = await fetchWithTimeout(url, 6000);
+      if (res.ok) {
+        const data = await res.json();
+        if (data && Array.isArray(data[0])) {
+          const translated = data[0].map(row => row && row[0] ? row[0] : '').join('');
+          if (translated) return { text: translated, target };
+        }
+      }
+    } catch (e) {
+      console.warn('[translate] Google fallback failed:', e);
+    }
+
+    throw new Error('Translation service unavailable');
+  }
+
+  function renderTextAsParagraphs(text) {
+    return String(text || '')
+      .split(/\n{2,}/)
+      .map(p => `<p>${esc(p)}</p>`)
+      .join('');
+  }
+
+  async function handleTranslateClick() {
+    if (translateState.fetching) return;
+    const bodyEl = document.getElementById('letter-body');
+    const btn = document.getElementById('translate-pill');
+    if (!bodyEl || !btn) return;
+
+    // Toggle if already translated
+    if (translateState.translatedHtml) {
+      if (translateState.showing === 'original') {
+        bodyEl.innerHTML = translateState.translatedHtml;
+        btn.innerHTML = '🌐 Show original';
+        translateState.showing = 'translated';
+      } else {
+        bodyEl.innerHTML = translateState.originalHtml;
+        btn.innerHTML = '🌐 Translate to ' + getTargetLangName();
+        translateState.showing = 'original';
+      }
+      return;
+    }
+
+    // First fetch
+    if (!translateState.originalHtml) {
+      translateState.originalHtml = bodyEl.innerHTML;
+    }
+
+    translateState.fetching = true;
+    btn.classList.add('loading');
+    btn.disabled = true;
+    const originalLabel = btn.innerHTML;
+    btn.textContent = 'Translating…';
+
+    try {
+      const result = await translateText(currentLetter.body);
+      const html = renderTextAsParagraphs(result.text);
+      translateState.translatedHtml = html;
+      bodyEl.innerHTML = html;
+      translateState.showing = 'translated';
+      btn.classList.remove('loading');
+      btn.disabled = false;
+      btn.innerHTML = '🌐 Show original';
+    } catch (err) {
+      console.error('[translate] failed:', err);
+      btn.classList.remove('loading');
+      btn.disabled = false;
+      btn.innerHTML = originalLabel;
+      toast('Translation unavailable right now. Try again in a moment.', 'err');
+    } finally {
+      translateState.fetching = false;
+    }
   }
 
   /* ---------- 18+ gate ---------- */
@@ -851,14 +988,19 @@
 
   /* ---------- Postcard renderer ---------- */
   function renderPostcard(letter, convId) {
+    // Reset translation state for this letter
+    translateState = {
+      originalHtml: null,
+      translatedHtml: null,
+      showing: 'original',
+      fetching: false
+    };
+
     const isBeached  = letter.delivery_mode === 'bottle' && letter.bottle_state === 'beached';
     const originFlag = flagFor(letter.origin_country);
     const targetFlag = flagFor(letter.target_country);
 
-    const paragraphs = String(letter.body || '')
-      .split(/\n{2,}/)
-      .map(p => `<p>${esc(p)}</p>`)
-      .join('');
+    const paragraphs = renderTextAsParagraphs(letter.body);
 
     const beachedHtml = isBeached ? `
       <div class="beached-banner">
@@ -902,7 +1044,10 @@
           <div class="postcard">
             <div class="left">
               <p class="salut">Dear Stranger,</p>
-              ${paragraphs}
+              <div id="letter-body">${paragraphs}</div>
+              <button class="translate-pill" id="translate-pill" type="button">
+                🌐 Translate to ${esc(getTargetLangName())}
+              </button>
               <p class="sign">— ${originFlag} ${esc(letter.origin_country)}</p>
             </div>
             <div class="divider"></div>
@@ -934,6 +1079,9 @@
 
     const reportBtn = document.getElementById('report-btn');
     if (reportBtn) reportBtn.addEventListener('click', openReportModal);
+
+    const translateBtn = document.getElementById('translate-pill');
+    if (translateBtn) translateBtn.addEventListener('click', handleTranslateClick);
   }
 
   /* ---------- Reply modal ---------- */

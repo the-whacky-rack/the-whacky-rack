@@ -302,6 +302,35 @@
             color: #5a1e0c;
         }
 
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 20px;
+            font-size: 14px;
+        }
+
+        .data-table th,
+        .data-table td {
+            text-align: left;
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+            line-height: 1.55;
+        }
+
+        .data-table th {
+            background: #fafafa;
+            font-weight: 800;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            color: #555;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: 0;
+        }
+
         /* ---------------- CONTACT CARD ---------------- */
 
         .contact-card {
@@ -464,6 +493,12 @@
 
             .contact-card {
                 padding: 26px 20px;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 10px 8px;
+                font-size: 13px;
             }
         }
 
@@ -1092,6 +1127,223 @@
                 or via our <a class="inline-link" href="grievance.html">Grievance Officer page</a>.
                 We treat vendor disputes as one of the categories we handle and
                 will act within the timeframes required by law.
+            </p>
+        </div>
+
+        <!-- ============ 18: The Letter Globe — What We Collect ============ -->
+        <div class="content-section">
+            <h2><span class="num">18</span>The Letter Globe — What We Collect</h2>
+
+            <p>
+                The Letter Globe has its own data model, distinct from the rest of the Site.
+                This section explains what we collect, what we don't, and how geography
+                is handled to protect your location.
+            </p>
+
+            <h3>What we collect when you send a letter</h3>
+            <ul>
+                <li><strong>Letter body</strong> — the text you write, up to 600 characters.</li>
+                <li><strong>Delivery mode</strong> — either "letter" (static) or "bottle" (drifting).</li>
+                <li><strong>Country</strong> — the two-letter country code resolved at the moment of send, from your profile, your timezone, or (as a fallback) headers from our hosting provider. This is stored permanently on the letter.</li>
+                <li><strong>Coarsened location</strong> — the country's centroid, offset by a few degrees at random, rounded to four decimal places. This is <strong>not</strong> your actual location. It is a randomized point near the center of your country.</li>
+                <li><strong>Bottle waypoints</strong> (bottles only) — a precomputed drift path from a random ocean seed to a target country, generated at the moment of send.</li>
+                <li><strong>Your user ID</strong> — stored on the letter so we can show you your own letters and prevent you from replying to yourself.</li>
+                <li><strong>Timestamp</strong> — when the letter was sent.</li>
+            </ul>
+
+            <h3>What we collect when you reply</h3>
+            <ul>
+                <li><strong>Reply body</strong> — what you write, up to 600 characters.</li>
+                <li><strong>Your country</strong> — resolved at the moment of reply, using the same chain as above.</li>
+                <li><strong>Conversation link</strong> — the connection between you and the original letter.</li>
+                <li><strong>Timestamp</strong> — when the reply was sent.</li>
+            </ul>
+
+            <h3>What we collect when you exchange messages</h3>
+            <ul>
+                <li><strong>Message body</strong> — what you write, up to 600 characters.</li>
+                <li><strong>Sender ID</strong> — which side of the conversation you are.</li>
+                <li><strong>Timestamp</strong> — when the message was sent.</li>
+            </ul>
+
+            <h3>What we collect when you report a letter</h3>
+            <ul>
+                <li><strong>The letter you reported</strong> and <strong>your reason</strong> (3–500 characters).</li>
+                <li><strong>Your user ID as reporter</strong> — visible only to moderators, never to the letter's author.</li>
+                <li><strong>Timestamp</strong>.</li>
+            </ul>
+
+            <h3>Arc events (anonymous)</h3>
+            <p>
+                When a reply or exchange is sent between two different countries, we record
+                an anonymous <strong>arc event</strong>: from-country, to-country, and a
+                timestamp. Arc events contain <strong>no user IDs, no session IDs, and no
+                link to any individual message</strong>. They are used only to visualize
+                cross-border conversations on the globe, and are automatically deleted
+                after <strong>24 hours</strong> by an hourly cron job.
+            </p>
+
+            <h3>What we do NOT collect</h3>
+            <div class="callout">
+                <strong>We do not collect:</strong>
+                <ul style="margin:8px 0 0; padding-left:20px;">
+                    <li>Your exact latitude or longitude, at any point.</li>
+                    <li>Your IP address for the Letter Globe feature. Country is derived from headers transiently; the IP itself is discarded and never stored in the letters tables.</li>
+                    <li>Read state — we never record who opened which letter or when.</li>
+                    <li>Notification preferences for the Letter Globe — there are none.</li>
+                    <li>Analytics on letter-specific pages (page views, link clicks). The analytics.js script is not loaded on letters.html, letters-globe.html, or letters-conversation.html.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============ 19: Letter Globe Retention ============ -->
+        <div class="content-section">
+            <h2><span class="num">19</span>Letter Globe Retention &amp; Deletion</h2>
+
+            <h3>Retention periods</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Retention</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Static letters (unreplied)</strong></td>
+                        <td>30 days from creation</td>
+                        <td>Then status becomes <code>expired</code> and the letter is no longer visible anywhere.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Bottle letters (unreplied)</strong></td>
+                        <td>60 days from creation</td>
+                        <td>Allows for the full drift cycle plus a discovery window.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Conversations</strong></td>
+                        <td>90 days of inactivity</td>
+                        <td>Deleted 90 days after the last exchange from either side. Exempt if permanent pen pals.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Deleted letters (soft)</strong></td>
+                        <td>180 days after deletion</td>
+                        <td>Then permanently purged from the database.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Arc events</strong></td>
+                        <td>24 hours</td>
+                        <td>Purged hourly by <code>purge_arc_events()</code>.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Letter reports</strong></td>
+                        <td>Indefinite</td>
+                        <td>Retained for moderation trail and legal compliance.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Moderation log entries</strong></td>
+                        <td>Indefinite</td>
+                        <td>Retained for audit trail.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Account deletion and letters</h3>
+            <p>
+                If you delete your account, your letters become attributed to
+                <code>[deleted]_xxxxxxxx</code> as with all your other content. The letter
+                bodies remain visible until they expire, unless they have already been
+                claimed and are part of an active conversation.
+            </p>
+            <p>
+                Conversations you were part of remain accessible to the other participant,
+                attributed to <code>[deleted]_xxxxxxxx</code>. Their correspondent status
+                changes only when they themselves take action.
+            </p>
+
+            <h3>What cannot be reversed</h3>
+            <ul>
+                <li>Hard deletion of a letter after 180 days is permanent and irreversible.</li>
+                <li>Expiry of an unreplied letter is irreversible (though the letter body remains in the database for moderation purposes until purge).</li>
+                <li>Deletion of a conversation marks it deleted; the exchanges remain in the database for moderation purposes until account deletion or a specific request.</li>
+            </ul>
+
+            <h3>Exercising your rights</h3>
+            <p>
+                You can request export or specific deletion of your letter-related data at
+                any time by emailing
+                <a class="inline-link" href="mailto:the.whacky.rack@limbomail.com">the.whacky.rack@limbomail.com</a>.
+                We respond within the timeframe required by applicable law in your
+                jurisdiction.
+            </p>
+        </div>
+
+        <!-- ============ 20: Letter Globe Transparency ============ -->
+        <div class="content-section">
+            <h2><span class="num">20</span>Letter Globe — Transparency &amp; Safety</h2>
+
+            <h3>What administrators can see</h3>
+            <p>
+                Site administrators (currently one person) can see, for moderation and
+                support purposes:
+            </p>
+            <ul>
+                <li>Letter bodies and metadata (mode, country, timestamps, bottle state).</li>
+                <li>Conversation metadata and exchange bodies.</li>
+                <li>Reports filed by users, including the reporter's identity.</li>
+                <li>Moderation log entries.</li>
+                <li>Aggregated arc events, up to 24 hours old.</li>
+            </ul>
+
+            <h3>What administrators cannot do</h3>
+            <ul>
+                <li>Identify readers of any specific letter — we do not record read state.</li>
+                <li>Geolocate a user beyond their country.</li>
+                <li>Edit a user's letter body. Administrators can hide, unhide, or delete letters; we do not modify content.</li>
+                <li>Access other users' conversations without an active moderation reason (and every access is logged in the moderation log).</li>
+            </ul>
+
+            <h3>Database-level security</h3>
+            <p>
+                The Letter Globe tables enforce Row-Level Security (RLS) on every table.
+                Users can only read:
+            </p>
+            <ul>
+                <li>Their own conversations (where they are the author or replier).</li>
+                <li>Conversation metadata and exchange bodies within those conversations.</li>
+                <li>Letter metadata (country, mode, coarsened location) via the <code>list_letters_near</code> RPC — which returns only metadata, never the body.</li>
+                <li>Letter bodies via the <code>read_letter</code> RPC — which returns the body but never the author's identity.</li>
+                <li>Anonymized arc events, capped at the last 6 hours.</li>
+            </ul>
+            <p>
+                Users cannot read another user's letter body directly from the database.
+                They cannot read another user's conversation. They cannot query the
+                letters table for bulk data.
+            </p>
+
+            <h3>Rate limiting as a safety measure</h3>
+            <p>
+                The rate limits described in our Terms of Service (5 letters per hour, 20
+                replies per hour, and so on) exist both to prevent spam and to limit the
+                impact of any compromised account. They are enforced server-side inside
+                the RPCs — they cannot be bypassed by client-side manipulation.
+            </p>
+
+            <h3>International transfers</h3>
+            <p>
+                All Letter Globe data is stored in our Supabase database, which is hosted
+                in the United States. As with the rest of the Site, standard transfer
+                mechanisms (including Standard Contractual Clauses where applicable) govern
+                the transfer of EU/UK personal data to the US.
+            </p>
+
+            <h3>Abuse of the Letter Globe</h3>
+            <p>
+                If you believe someone is using the Letter Globe to harass, spam, scam, or
+                otherwise abuse other users, please report the specific letter using the
+                in-app Report button, or contact our
+                <a class="inline-link" href="grievance.html">Grievance Officer</a>. We
+                prioritize reports involving harassment, threats, or financial fraud.
             </p>
         </div>
 

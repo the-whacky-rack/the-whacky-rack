@@ -656,6 +656,24 @@
   </div>
 </div>
 
+<!-- Report modal -->
+<div class="modal" id="report-modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal-inner">
+    <h3>Report this letter</h3>
+    <p>
+      Your report is private — the author won't see your name. Three reports
+      auto-hide a letter pending review.
+    </p>
+    <textarea id="report-reason" maxlength="500" placeholder="What's the problem? (min 3 characters)"></textarea>
+    <div class="char-count"><span id="report-count">0</span> / 500</div>
+    <div class="modal-status" id="report-status"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="report-cancel" type="button">Cancel</button>
+      <button class="btn btn-primary" id="report-send" type="button" disabled>Submit report</button>
+    </div>
+  </div>
+</div>
+
 <!-- Compose modal -->
 <div class="modal" id="compose-modal" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="modal-inner compose-inner">
@@ -710,6 +728,11 @@
   const replyCountEl  = document.getElementById('reply-count');
   const replySend     = document.getElementById('reply-send');
   const replyStatus   = document.getElementById('reply-status');
+  const reportModal   = document.getElementById('report-modal');
+  const reportText    = document.getElementById('report-reason');
+  const reportCountEl = document.getElementById('report-count');
+  const reportSend    = document.getElementById('report-send');
+  const reportStatus  = document.getElementById('report-status');
   const composeModal  = document.getElementById('compose-modal');
   const composeText   = document.getElementById('compose-text');
   const composeCountEl= document.getElementById('compose-count');
@@ -856,6 +879,7 @@
       actionsHtml = `
         <button class="btn btn-primary" id="reply-btn" type="button">Reply</button>
         <a class="btn btn-ghost" href="index.html">Skip</a>
+        <button class="btn btn-ghost" id="report-btn" type="button" style="opacity:.7; font-size:12px; padding:10px 18px;">⚠ Report</button>
       `;
     }
 
@@ -901,6 +925,9 @@
 
     const replyBtn = document.getElementById('reply-btn');
     if (replyBtn) replyBtn.addEventListener('click', openReplyModal);
+
+    const reportBtn = document.getElementById('report-btn');
+    if (reportBtn) reportBtn.addEventListener('click', openReportModal);
   }
 
   /* ---------- Reply modal ---------- */
@@ -965,6 +992,65 @@
       replyStatus.textContent = err.message || 'Could not send reply.';
       replySend.disabled = false;
       replySend.textContent = 'Send reply';
+    }
+  });
+
+  /* ---------- Report modal ---------- */
+  function openReportModal() {
+    reportText.value = '';
+    reportCountEl.textContent = '0';
+    reportSend.disabled = true;
+    reportSend.textContent = 'Submit report';
+    reportStatus.className = 'modal-status';
+    reportStatus.textContent = '';
+    reportModal.classList.add('open');
+    reportModal.setAttribute('aria-hidden', 'false');
+    setTimeout(() => reportText.focus(), 100);
+  }
+
+  function closeReportModal() {
+    reportModal.classList.remove('open');
+    reportModal.setAttribute('aria-hidden', 'true');
+  }
+
+  reportText.addEventListener('input', () => {
+    reportCountEl.textContent = String(reportText.value.length);
+    reportSend.disabled = reportText.value.trim().length < 3;
+  });
+
+  document.getElementById('report-cancel').addEventListener('click', closeReportModal);
+  reportModal.addEventListener('click', (e) => {
+    if (e.target === reportModal) closeReportModal();
+  });
+
+  reportSend.addEventListener('click', async () => {
+    if (!currentLetter) return;
+    const reason = reportText.value.trim();
+    if (reason.length < 3) return;
+
+    reportSend.disabled = true;
+    reportSend.textContent = 'Submitting…';
+    reportStatus.className = 'modal-status';
+
+    try {
+      const { error } = await sb.rpc('report_letter', {
+        p_letter_id: currentLetter.id,
+        p_reason:    reason
+      });
+      if (error) throw error;
+
+      reportStatus.className = 'modal-status show ok';
+      reportStatus.textContent = 'Report submitted. Thank you.';
+      toast('Report submitted.', 'ok');
+      setTimeout(() => {
+        closeReportModal();
+      }, 1400);
+    } catch (err) {
+      console.error(err);
+      reportStatus.className = 'modal-status show err';
+      reportStatus.textContent = err.message || 'Could not submit report.';
+      reportSend.disabled = false;
+      reportSend.textContent = 'Submit report';
     }
   });
 
@@ -1086,6 +1172,7 @@
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
     if (replyModal.classList.contains('open')) closeReplyModal();
+    if (reportModal.classList.contains('open')) closeReportModal();
     if (composeModal.classList.contains('open')) closeComposeModal();
   });
 

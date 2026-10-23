@@ -14,6 +14,7 @@
     { href: "side-rack.html",     label: "Side Rack",  active: ["side-rack.html", "vendors.html", "vendor-profile.html"] },
     { href: "world.html",         label: "World",      active: ["world.html"] },
     { href: "history.html",       label: "History",    active: ["history.html"] },
+    { href: "letters-globe.html", label: "Globe", active: ["letters-globe.html", "letters.html", "letters-conversation.html"] },
     { href: "yap.html",           label: "Yap it!",    active: ["yap.html", "yap-thread.html"] },
     { href: "tape.html",          label: "Tape it!",   active: ["tape.html", "tape-thread.html"] },
     { href: "search-users.html",  label: "People",     active: ["search-users.html"] },

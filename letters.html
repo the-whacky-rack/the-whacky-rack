@@ -631,6 +631,12 @@
       Letters on The Letter Globe are written by adults, for adults. Some may
       contain mature themes. Please confirm you are 18 or older to continue.
     </p>
+    <p style="font-size:11px; color:#999; line-height:1.6; margin-bottom:18px;">
+      By continuing, you agree to our
+      <a href="terms.html" style="color:#e84625; font-weight:700; text-decoration:underline;">Terms of Service</a>
+      and <a href="privacy.html" style="color:#e84625; font-weight:700; text-decoration:underline;">Privacy Policy</a>,
+      including the Letter Globe sections covering public letters, moderation, and expiry.
+    </p>
     <div class="modal-actions" style="justify-content:center;">
       <a class="btn btn-ghost" href="index.html">Leave</a>
       <button class="btn btn-primary" id="adult-yes" type="button">I'm 18 or older</button>
@@ -978,7 +984,7 @@
       replyStatus.textContent = 'Your reply is on its way. Opening the conversation…';
       toast('Reply sent.', 'ok');
 
-      const convId = data;  // reply_to_letter returns conversation_id
+      const convId = data;
       setTimeout(() => {
         if (convId) {
           window.location.href = `letters-conversation.html?id=${convId}`;
@@ -1061,7 +1067,6 @@
       return;
     }
 
-    // Reset state
     composeText.value = '';
     composeCountEl.textContent = '0';
     composeSend.disabled = true;
@@ -1070,7 +1075,6 @@
     composeStatus.textContent = '';
     setComposeMode('static');
 
-    // Try to pre-fill "From: XX"
     try {
       const { data } = await sb.from('profiles')
         .select('country, timezone')
@@ -1092,7 +1096,6 @@
   function closeComposeModal() {
     composeModal.classList.remove('open');
     composeModal.setAttribute('aria-hidden', 'true');
-    // If we opened via ?compose=1, strip the param so refresh doesn't reopen
     const url = new URL(location.href);
     if (url.searchParams.get('compose') === '1') {
       url.searchParams.delete('compose');
@@ -1164,7 +1167,7 @@
       composeStatus.className = 'modal-status show err';
       composeStatus.textContent = err.message || 'Could not send letter.';
       composeSend.disabled = false;
-      setComposeMode(composeMode); // restores button text
+      setComposeMode(composeMode);
     }
   });
 
@@ -1176,7 +1179,6 @@
     if (composeModal.classList.contains('open')) closeComposeModal();
   });
 
-  /* ---------- Top Compose button ---------- */
   topComposeBtn.addEventListener('click', openComposeModal);
 
   /* ---------- Boot ---------- */
@@ -1209,7 +1211,7 @@
     const wantsCompose = params.get('compose') === '1';
 
     if (wantsCompose) {
-      renderNoId();               // neutral background behind modal
+      renderNoId();
       await openComposeModal();
       return;
     }

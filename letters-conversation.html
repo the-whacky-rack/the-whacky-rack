@@ -17,6 +17,8 @@
     --paper-2: #fff5f0;
     --ink: #2b2536;
     --muted: #9a8f7c;
+    --airmail-red: #d33a3a;
+    --airmail-blue: #26478f;
     --border: rgba(0,0,0,.12);
   }
   * { box-sizing: border-box; }
@@ -31,6 +33,7 @@
   a { color: inherit; text-decoration: none; }
   button { font-family: inherit; }
 
+  /* ---------- Top bar ---------- */
   .top-bar {
     position: sticky; top: 0;
     padding: 14px 22px;
@@ -46,7 +49,7 @@
   .top-back { color: #fff; opacity: .7; font-size: 13px; padding: 8px 12px; transition: .15s ease; }
   .top-back:hover { opacity: 1; }
 
-  .wrap { max-width: 780px; margin: 0 auto; padding: 30px 22px 120px; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 24px 22px 130px; }
 
   .loading { text-align: center; padding: 60px 20px; color: rgba(255,255,255,.55); font-size: 14px; }
   .loading .spinner {
@@ -69,52 +72,34 @@
   .gate .btn-ghost { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.25); }
   .gate .btn-ghost:hover { background: rgba(255,255,255,.1); }
 
+  /* ---------- List view (unchanged) ---------- */
   .page-head { margin-bottom: 24px; }
   .page-head h1 { font-family: "Caveat", cursive; font-size: 38px; margin: 0 0 4px; font-weight: 600; }
   .page-head p { font-size: 13px; color: rgba(255,255,255,.55); margin: 0; line-height: 1.6; }
 
   .conv-list { display: flex; flex-direction: column; gap: 12px; }
-
   .conv-card {
-    display: block;
-    background: var(--paper);
-    color: var(--ink);
-    border-radius: 14px;
-    padding: 16px 18px;
-    text-decoration: none;
-    transition: .15s ease;
-    border: 1px solid transparent;
+    display: block; background: var(--paper); color: var(--ink);
+    border-radius: 14px; padding: 16px 18px; text-decoration: none;
+    transition: .15s ease; border: 1px solid transparent;
     box-shadow: 0 4px 16px rgba(0,0,0,.2);
   }
   .conv-card:hover { border-color: var(--accent); transform: translateY(-1px); }
   .conv-card:active { transform: scale(.99); }
-
-  .conv-head {
-    display: flex; align-items: center; gap: 10px;
-    margin-bottom: 8px; flex-wrap: wrap;
-  }
+  .conv-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
   .conv-flag { font-size: 22px; line-height: 1; }
-  .conv-name {
-    font-family: "Caveat", cursive; font-size: 20px; color: var(--ink);
-    flex: 1; min-width: 0;
-  }
+  .conv-name { font-family: "Caveat", cursive; font-size: 20px; color: var(--ink); flex: 1; min-width: 0; }
   .permanent-badge {
     font-size: 10px; font-weight: 800; letter-spacing: .06em;
     padding: 3px 8px; border-radius: 50px;
-    background: #fef3c7; color: #92400e;
-    white-space: nowrap;
+    background: #fef3c7; color: #92400e; white-space: nowrap;
   }
   .conv-time { font-size: 11px; color: var(--muted); white-space: nowrap; }
-
   .conv-preview {
-    font-size: 13px; color: #666; line-height: 1.5;
-    margin: 0 0 10px;
+    font-size: 13px; color: #666; line-height: 1.5; margin: 0 0 10px;
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
-  .conv-meta {
-    font-size: 11px; color: var(--muted);
-    display: flex; align-items: center; gap: 10px;
-  }
+  .conv-meta { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 10px; }
   .conv-meta .progress-bar {
     flex: 1; height: 4px; background: rgba(0,0,0,.08);
     border-radius: 2px; overflow: hidden; max-width: 120px;
@@ -142,6 +127,7 @@
   }
   .empty .btn:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
 
+  /* ---------- Thread view: header + banner ---------- */
   .back-to-list {
     display: inline-flex; align-items: center; gap: 6px;
     font-size: 13px; color: rgba(255,255,255,.65);
@@ -150,16 +136,10 @@
   .back-to-list:hover { color: #fff; }
 
   .thread-header {
-    background: var(--paper);
-    color: var(--ink);
-    border-radius: 16px;
-    padding: 20px 22px;
-    margin-bottom: 16px;
+    background: var(--paper); color: var(--ink);
+    border-radius: 16px; padding: 18px 22px; margin-bottom: 14px;
     box-shadow: 0 6px 20px rgba(0,0,0,.2);
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    flex-wrap: wrap;
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
   }
   .thread-header .big-flag { font-size: 40px; line-height: 1; flex-shrink: 0; }
   .thread-header .info { flex: 1; min-width: 200px; }
@@ -167,9 +147,7 @@
     font-family: "Caveat", cursive; font-size: 26px;
     margin: 0 0 4px; font-weight: 600; color: var(--ink);
   }
-  .thread-header .info .meta {
-    font-size: 12px; color: var(--muted); line-height: 1.5;
-  }
+  .thread-header .info .meta { font-size: 12px; color: var(--muted); line-height: 1.5; }
   .thread-header .info .meta .permanent-badge {
     display: inline-block; margin-left: 6px;
   }
@@ -179,34 +157,23 @@
     border: 1px solid rgba(255,255,255,.12);
     border-radius: 12px;
     padding: 14px 18px;
-    margin-bottom: 18px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    flex-wrap: wrap;
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
   }
   .penpal-banner.is-permanent {
-    background: #fef9e0;
-    border-color: #fde68a;
-    color: var(--ink);
+    background: #fef9e0; border-color: #fde68a; color: var(--ink);
   }
   .penpal-banner .text {
     flex: 1; min-width: 200px;
-    font-size: 13px; line-height: 1.6;
-    color: rgba(255,255,255,.75);
+    font-size: 13px; line-height: 1.6; color: rgba(255,255,255,.75);
   }
   .penpal-banner.is-permanent .text { color: var(--ink); }
   .penpal-banner .text strong { color: #fff; }
   .penpal-banner.is-permanent .text strong { color: #92400e; }
   .penpal-banner .btn {
-    padding: 9px 18px;
-    border-radius: 50px;
-    font-size: 12px;
-    font-weight: 800;
-    cursor: pointer;
-    border: 1px solid transparent;
-    transition: .2s ease;
-    white-space: nowrap;
+    padding: 9px 18px; border-radius: 50px;
+    font-size: 12px; font-weight: 800; cursor: pointer;
+    border: 1px solid transparent; transition: .2s ease; white-space: nowrap;
   }
   .penpal-banner .btn-primary {
     background: var(--accent); color: #fff; border-color: var(--accent);
@@ -214,8 +181,7 @@
   .penpal-banner .btn-primary:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
   .penpal-banner .progress-bar {
     flex: 1; height: 5px; background: rgba(0,0,0,.2);
-    border-radius: 3px; overflow: hidden; max-width: 140px;
-    min-width: 80px;
+    border-radius: 3px; overflow: hidden; max-width: 140px; min-width: 80px;
   }
   .penpal-banner .progress-fill {
     height: 100%; background: var(--accent);
@@ -223,152 +189,251 @@
   }
   .penpal-banner .progress-fill.done { background: #16a34a; }
 
-  /* Seed card (original letter) */
-  .seed-card {
-    background: rgba(251, 246, 232, .35);
-    border: 1px dashed rgba(255,255,255,.2);
-    border-radius: 12px;
-    padding: 16px 20px;
-    margin-bottom: 22px;
-    font-family: "Caveat", cursive;
-  }
-  .seed-card .seed-label {
-    font-family: "Courier Prime", monospace;
-    font-size: 10px;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,.5);
+  /* ---------- Letter stage (stack of postcards) ---------- */
+  .letter-stage {
+    position: relative;
+    padding-bottom: 42px;
     margin-bottom: 8px;
   }
-  .seed-card .seed-body {
-    color: #f0e6d2;
-    font-size: 16px;
-    line-height: 1.6;
-    white-space: pre-wrap;
-    margin: 0 0 8px;
-  }
-  .seed-card .seed-meta {
-    font-family: "Courier Prime", monospace;
-    font-size: 11px;
-    color: rgba(255,255,255,.45);
-    margin-top: 8px;
-  }
 
-  /* Exchanges */
-  .exchanges {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 24px;
-  }
-
-  .exchange {
+  .stack-shadow {
+    position: absolute;
+    left: 0; right: 0; top: 0; bottom: 42px;
     background: var(--paper);
-    color: var(--ink);
-    border-radius: 12px;
-    padding: 14px 18px;
-    max-width: 82%;
-    box-shadow: 0 3px 12px rgba(0,0,0,.15);
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,.25);
+    pointer-events: none;
+  }
+  .stack-shadow.s1 { transform: translate(6px, 12px) rotate(0.6deg); opacity: 0.65; z-index: 1; }
+  .stack-shadow.s2 { transform: translate(-5px, 24px) rotate(-0.4deg); opacity: 0.45; z-index: 0; }
+  .stack-shadow.s3 { transform: translate(3px, 34px) rotate(0.3deg); opacity: 0.3; z-index: -1; }
+
+  .letter-card {
+    position: relative;
+    z-index: 10;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+  .letter-card.switching-out {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.98);
+  }
+
+  .airmail-frame {
+    padding: 10px;
+    border-radius: 8px;
+    background: repeating-linear-gradient(45deg,
+      var(--airmail-red) 0 12px, #fff 12px 24px,
+      var(--airmail-blue) 24px 36px, #fff 36px 48px);
+    box-shadow: 0 25px 50px -20px rgba(0,0,0,.75), 0 0 0 1px rgba(0,0,0,.3);
+  }
+  .letter-inner {
+    background: var(--paper);
+    background-image: repeating-linear-gradient(0deg, rgba(0,0,0,.015) 0 1px, transparent 1px 24px);
+    border-radius: 4px;
+    padding: 26px 28px 22px;
+    min-height: 260px;
     position: relative;
   }
-  .exchange.mine {
-    align-self: flex-end;
-    background: var(--paper-2);
-    border-left: 3px solid var(--accent);
+
+  .letter-top {
+    display: flex; align-items: flex-start; gap: 14px;
+    margin-bottom: 16px;
   }
-  .exchange.theirs {
-    align-self: flex-start;
-    border-left: 3px solid #7c3aed;
+  .sender-label {
+    flex: 1; min-width: 0;
+    font-family: "Courier Prime", monospace;
+    font-size: 12px;
+    color: #666;
+    line-height: 1.5;
+    padding-top: 6px;
   }
-  .exchange .body {
+  .sender-label .you {
+    color: var(--accent-dark);
+    font-weight: 800;
+  }
+  .sender-label .from {
+    font-weight: 700;
+  }
+  .card-badge {
+    display: inline-block;
+    background: #fef3c7;
+    color: #92400e;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 50px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  .mini-stamp {
+    width: 64px; height: 76px;
+    padding: 4px;
+    background: #fff;
+    transform: rotate(3deg);
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,.2));
+    flex-shrink: 0;
+    --r: 4px;
+    -webkit-mask:
+      radial-gradient(circle var(--r) at 50% 0,    #0000 97%, #000) top    / calc(2*var(--r)) var(--r) repeat-x,
+      radial-gradient(circle var(--r) at 50% 100%, #0000 97%, #000) bottom / calc(2*var(--r)) var(--r) repeat-x,
+      radial-gradient(circle var(--r) at 0 50%,    #0000 97%, #000) left   / var(--r) calc(2*var(--r)) repeat-y,
+      radial-gradient(circle var(--r) at 100% 50%, #0000 97%, #000) right  / var(--r) calc(2*var(--r)) repeat-y,
+      linear-gradient(#000,#000) center / calc(100% - 2*var(--r)) calc(100% - 2*var(--r)) no-repeat;
+    mask:
+      radial-gradient(circle var(--r) at 50% 0,    #0000 97%, #000) top    / calc(2*var(--r)) var(--r) repeat-x,
+      radial-gradient(circle var(--r) at 50% 100%, #0000 97%, #000) bottom / calc(2*var(--r)) var(--r) repeat-x,
+      radial-gradient(circle var(--r) at 0 50%,    #0000 97%, #000) left   / var(--r) calc(2*var(--r)) repeat-y,
+      radial-gradient(circle var(--r) at 100% 50%, #0000 97%, #000) right  / var(--r) calc(2*var(--r)) repeat-y,
+      linear-gradient(#000,#000) center / calc(100% - 2*var(--r)) calc(100% - 2*var(--r)) no-repeat;
+  }
+  .mini-stamp-inner {
+    height: 100%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    border: 1px solid rgba(38,71,143,.3);
+    background: linear-gradient(160deg, #f7f3e8, #e6ddc7);
+    gap: 2px;
+    color: var(--airmail-blue);
+  }
+  .mini-stamp-inner .flag { font-size: 26px; line-height: 1; }
+  .mini-stamp-inner .cc { font-size: 9px; font-weight: 700; letter-spacing: .12em; }
+
+  .letter-body {
     font-family: "Caveat", cursive;
-    font-size: 19px;
-    line-height: 1.55;
-    color: var(--ink);
+    font-size: 21px;
+    line-height: 1.6;
+    color: #3a3448;
     white-space: pre-wrap;
     word-wrap: break-word;
-    margin: 0 0 6px;
+    margin: 0 0 14px;
   }
-  .exchange .meta {
-    font-size: 10px;
-    color: var(--muted);
-    text-align: right;
+  .letter-body.seed-preview {
+    opacity: 0.92;
   }
-  .exchange.mine .meta::before { content: "You · "; }
 
-  /* Translate pill (shared — sized for both seed and exchange contexts) */
+  .letter-meta {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 12px;
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px dashed rgba(0,0,0,.14);
+    font-family: "Courier Prime", monospace;
+    font-size: 11px;
+    color: var(--muted);
+    flex-wrap: wrap;
+  }
+  .letter-meta .position {
+    background: rgba(0,0,0,.05);
+    padding: 3px 9px;
+    border-radius: 50px;
+    font-weight: 800;
+    letter-spacing: .03em;
+  }
+
+  /* Translate pill */
   .translate-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 4px 10px;
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 5px 12px;
     border-radius: 50px;
     background: rgba(0,0,0,.04);
     border: 1px solid rgba(0,0,0,.1);
     color: #666;
     font-family: "Courier Prime", monospace;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 700;
     cursor: pointer;
     transition: .15s ease;
-    margin: 4px 0 6px;
+    margin: 2px 0 4px;
   }
   .translate-pill:hover:not(:disabled) {
-    background: #fff;
-    border-color: rgba(0,0,0,.22);
-    color: #333;
+    background: #fff; border-color: rgba(0,0,0,.22); color: #333;
   }
   .translate-pill:disabled,
-  .translate-pill.loading {
-    opacity: .55;
-    cursor: wait;
-  }
+  .translate-pill.loading { opacity: .55; cursor: wait; }
   .translate-pill.translated {
     background: rgba(255, 90, 54, .12);
     border-color: rgba(255, 90, 54, .35);
     color: var(--accent-dark);
   }
 
-  /* On the seed card (dark bg), override pill colors */
-  .seed-card .translate-pill {
+  /* ---------- Navigation ---------- */
+  .letter-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px;
+    margin: 20px 0 26px;
+    padding: 4px 0;
+  }
+  .nav-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 10px 18px;
+    border-radius: 50px;
     background: rgba(255,255,255,.08);
-    border-color: rgba(255,255,255,.2);
-    color: rgba(255,255,255,.75);
-    font-size: 11px;
-    padding: 5px 12px;
-  }
-  .seed-card .translate-pill:hover:not(:disabled) {
-    background: rgba(255,255,255,.16);
-    border-color: rgba(255,255,255,.35);
+    border: 1px solid rgba(255,255,255,.18);
     color: #fff;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: .15s ease;
+    white-space: nowrap;
   }
-  .seed-card .translate-pill.translated {
-    background: rgba(255, 90, 54, .25);
-    border-color: rgba(255, 90, 54, .55);
-    color: #ffd0c0;
+  .nav-btn:hover:not(:disabled) {
+    background: rgba(255,255,255,.16);
+    border-color: rgba(255,255,255,.4);
   }
+  .nav-btn:disabled {
+    opacity: .3;
+    cursor: not-allowed;
+  }
+  .nav-center {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    flex: 1;
+    min-width: 0;
+  }
+  .nav-counter {
+    font-family: "Caveat", cursive;
+    font-size: 17px;
+    font-weight: 600;
+    color: rgba(255,255,255,.85);
+    letter-spacing: -.2px;
+  }
+  .nav-dots {
+    display: flex; gap: 4px; flex-wrap: wrap; justify-content: center;
+    max-width: 100%;
+  }
+  .nav-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.2);
+    cursor: pointer;
+    transition: .15s ease;
+    border: 0;
+    padding: 0;
+  }
+  .nav-dot:hover { background: rgba(255,255,255,.45); }
+  .nav-dot.active { background: var(--accent); width: 20px; border-radius: 4px; }
 
-  /* Composer */
+  /* ---------- Composer ---------- */
   .composer {
-    position: sticky;
-    bottom: 0;
-    background: rgba(20,25,32,.95);
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(20,25,32,.96);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    padding: 14px 0 20px;
-    margin: 0 -22px -120px;
-    padding-left: 22px;
-    padding-right: 22px;
+    padding: 12px 22px 18px;
     border-top: 1px solid rgba(255,255,255,.08);
+    z-index: 50;
   }
   .composer-inner {
-    max-width: 780px; margin: 0 auto;
+    max-width: 720px; margin: 0 auto;
     display: flex; gap: 10px; align-items: flex-end;
   }
   .composer textarea {
     flex: 1;
-    min-height: 60px;
-    max-height: 180px;
+    min-height: 56px;
+    max-height: 140px;
     padding: 12px 14px;
     font-family: "Caveat", cursive;
     font-size: 19px;
@@ -382,7 +447,7 @@
   }
   .composer textarea:focus { border-color: var(--accent); }
   .composer .send-btn {
-    padding: 14px 24px;
+    padding: 14px 22px;
     border-radius: 50px;
     font-size: 13px;
     font-weight: 800;
@@ -396,12 +461,13 @@
   .composer .send-btn:hover:not(:disabled) {
     background: var(--accent-dark); border-color: var(--accent-dark);
   }
-  .composer .send-btn:disabled {
-    opacity: .5; cursor: not-allowed;
-  }
+  .composer .send-btn:disabled { opacity: .5; cursor: not-allowed; }
   .composer .char-count {
-    font-size: 11px; color: rgba(255,255,255,.5);
-    text-align: right; margin-top: 4px;
+    position: absolute;
+    right: 22px;
+    bottom: 2px;
+    font-size: 10px;
+    color: rgba(255,255,255,.4);
   }
   .composer .char-count.over { color: var(--accent); }
 
@@ -410,30 +476,34 @@
     padding: 18px 22px; border-radius: 14px; font-size: 14px; line-height: 1.6;
   }
 
+  /* ---------- Mobile ---------- */
   @media (max-width: 700px) {
-    .wrap { padding: 20px 15px 130px; }
+    .wrap { padding: 18px 15px 140px; }
     .top-bar { padding: 12px 15px; }
     .brand { font-size: 16px; }
     .top-back { font-size: 12px; }
     .thread-header { padding: 16px 18px; border-radius: 14px; }
     .thread-header .big-flag { font-size: 32px; }
     .thread-header .info h1 { font-size: 22px; }
-    .exchange { max-width: 92%; padding: 12px 14px; }
-    .exchange .body { font-size: 17px; }
-    .composer { margin: 0 -15px -130px; padding-left: 15px; padding-right: 15px; }
+    .letter-inner { padding: 20px 18px 18px; }
+    .letter-body { font-size: 18px; }
+    .mini-stamp { width: 52px; height: 62px; }
+    .mini-stamp-inner .flag { font-size: 22px; }
+    .mini-stamp-inner .cc { font-size: 8px; }
+    .letter-nav { flex-wrap: wrap; }
+    .nav-btn { padding: 9px 14px; font-size: 11px; }
+    .nav-center { order: -1; width: 100%; }
+    .composer { padding: 10px 15px 14px; }
     .composer-inner { flex-direction: column; align-items: stretch; gap: 8px; }
-    .composer textarea { font-size: 18px; }
-    .composer .send-btn { padding: 12px 20px; }
-    .composer .char-count { text-align: left; }
-    .penpal-banner { padding: 12px 14px; }
-    .penpal-banner .progress-bar { max-width: 100%; }
-    .conv-card { padding: 14px 16px; }
-    .conv-name { font-size: 18px; }
+    .composer textarea { font-size: 18px; min-height: 50px; }
+    .composer .send-btn { padding: 11px 18px; }
+    .composer .char-count { position: static; text-align: right; margin-top: 2px; }
   }
 
   .toast-container {
-    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
     z-index: 2000; display: flex; flex-direction: column; gap: 8px; align-items: center;
+    pointer-events: none;
   }
   .toast {
     padding: 12px 20px; border-radius: 50px;
@@ -479,17 +549,24 @@
   const topBack     = document.getElementById('top-back');
 
   const PERMANENT_THRESHOLD = 10;
+
   let session = null;
   let currentConv = null;
-  let currentExchanges = [];
   let currentLetter = null;
+  let currentExchanges = [];
   let currentState = null;
 
-  // Translation cache — per-letter seed + per-exchange, survives re-renders
-  let translateCache = {
-    seed: null,
-    exchanges: {}
-  };
+  // Unified stack — includes seed as first item, exchanges after
+  // Index 0 = oldest, length-1 = latest
+  let stackedLetters = [];
+  let currentIndex = 0;
+
+  // Country info
+  let myCountry = null;
+  let otherPartyCountryName = '';
+
+  // Translation cache — keyed by letter id (or '__seed__')
+  let translateCache = {};
 
   /* ---------- Helpers ---------- */
   function esc(s) {
@@ -530,7 +607,7 @@
     return ((navigator.language || 'en').split('-')[0] || 'en').toLowerCase();
   }
 
-  /* ---------- Translation engine ---------- */
+  /* ---------- Translation ---------- */
   async function fetchWithTimeout(url, ms) {
     const controller = new AbortController();
     const t = setTimeout(() => controller.abort(), ms);
@@ -573,58 +650,44 @@
     throw new Error('Translation service unavailable');
   }
 
-  /* ---------- Translate pill handler ---------- */
-  function pillLabelFor(state) {
-    return (state && state.showing === 'translated') ? '🌐 Show original' : '🌐 Translate';
-  }
-
-  function pillClassFor(state) {
-    return 'translate-pill' + (state && state.showing === 'translated' ? ' translated' : '');
-  }
-
+  /* ---------- Translate handler ---------- */
   async function handleTranslateClick(pill) {
     const key = pill.dataset.translateKey;
     if (!key) return;
 
-    // Determine body element + original text
-    const bodyElId = key === '__seed__' ? 'seed-body' : ('exchange-body-' + key);
-    const bodyEl = document.getElementById(bodyElId);
+    const bodyEl = document.getElementById('letter-body');
     if (!bodyEl) return;
 
-    const originalText = key === '__seed__'
-      ? (currentLetter && currentLetter.body)
-      : (currentExchanges.find(x => x.id === key) || {}).body;
+    // Find the source text
+    const entry = stackedLetters.find(x => String(x.id) === String(key));
+    if (!entry) return;
 
-    if (!originalText) return;
-
-    // Ensure original HTML is cached
-    if (key === '__seed__') {
-      if (!translateCache.seed) {
-        translateCache.seed = { originalHtml: esc(originalText), translatedHtml: null, showing: 'original', fetching: false };
-      }
-    } else {
-      if (!translateCache.exchanges[key]) {
-        translateCache.exchanges[key] = { originalHtml: esc(originalText), translatedHtml: null, showing: 'original', fetching: false };
-      }
+    if (!translateCache[key]) {
+      translateCache[key] = {
+        originalHtml: esc(entry.body),
+        translatedHtml: null,
+        showing: 'original',
+        fetching: false
+      };
     }
-    const cache = key === '__seed__' ? translateCache.seed : translateCache.exchanges[key];
+    const cache = translateCache[key];
     if (cache.fetching) return;
 
-    // Toggle if already translated
     if (cache.translatedHtml) {
       if (cache.showing === 'original') {
         bodyEl.innerHTML = cache.translatedHtml;
         cache.showing = 'translated';
+        pill.className = 'translate-pill translated';
+        pill.innerHTML = '🌐 Show original';
       } else {
         bodyEl.innerHTML = cache.originalHtml;
         cache.showing = 'original';
+        pill.className = 'translate-pill';
+        pill.innerHTML = '🌐 Translate';
       }
-      pill.className = pillClassFor(cache);
-      pill.innerHTML = pillLabelFor(cache);
       return;
     }
 
-    // Fetch
     cache.fetching = true;
     pill.classList.add('loading');
     pill.disabled = true;
@@ -632,13 +695,12 @@
     pill.textContent = 'Translating…';
 
     try {
-      const translated = await translateText(originalText);
-      // Escaped + pre-wrap CSS handles newlines automatically
+      const translated = await translateText(entry.body);
       cache.translatedHtml = esc(translated);
       cache.showing = 'translated';
       bodyEl.innerHTML = cache.translatedHtml;
-      pill.className = pillClassFor(cache);
-      pill.innerHTML = pillLabelFor(cache);
+      pill.className = 'translate-pill translated';
+      pill.innerHTML = '🌐 Show original';
     } catch (err) {
       console.error('[translate] failed:', err);
       pill.innerHTML = originalLabel;
@@ -650,7 +712,6 @@
     }
   }
 
-  // Single delegated handler — works for all pills, present and future
   document.addEventListener('click', (e) => {
     const pill = e.target.closest('.translate-pill[data-translate-key]');
     if (!pill) return;
@@ -667,6 +728,7 @@
     } catch { return code; }
   }
 
+  /* ---------- Gate ---------- */
   function renderGate() {
     root.innerHTML = `
       <div class="gate">
@@ -753,7 +815,7 @@
     `;
   }
 
-  /* ---------- Thread view ---------- */
+  /* ---------- Thread load ---------- */
   async function loadThread(convId) {
     topBack.textContent = '← All conversations';
     topBack.href = 'letters-conversation.html';
@@ -799,11 +861,51 @@
       i_am_author: conv.i_am_author === true
     };
 
+    // My country (for labeling own exchanges)
+    try {
+      const { data: prof } = await sb.from('profiles').select('country').eq('id', session.user.id).maybeSingle();
+      const cc = (prof && prof.country || '').toUpperCase();
+      myCountry = /^[A-Z]{2}$/.test(cc) ? cc : null;
+    } catch (e) { myCountry = null; }
+
+    // Other party's country name
+    try {
+      otherPartyCountryName = await getCountryName(currentConv.other_party_country);
+    } catch (e) { otherPartyCountryName = currentConv.other_party_country || ''; }
+
+    // Build unified stack: seed first (oldest), then exchanges
+    stackedLetters = [];
+
+    if (currentLetter) {
+      stackedLetters.push({
+        id: '__seed__',
+        body: currentLetter.body,
+        created_at: currentLetter.created_at,
+        is_mine: currentLetter.is_mine === true,
+        is_seed: true,
+        sender_country: currentLetter.origin_country
+      });
+    }
+
+    currentExchanges.forEach(ex => {
+      stackedLetters.push({
+        id: ex.id,
+        body: ex.body,
+        created_at: ex.created_at,
+        is_mine: ex.is_mine === true,
+        is_seed: false,
+        sender_country: ex.is_mine ? myCountry : currentConv.other_party_country
+      });
+    });
+
+    // Default view: latest on top
+    currentIndex = Math.max(0, stackedLetters.length - 1);
+
     renderThread();
   }
 
+  /* ---------- Thread render ---------- */
   async function renderThread() {
-    const countryName = await getCountryName(currentConv.other_party_country);
     const flag = flagFor(currentConv.other_party_country);
     const count = currentState.exchange_count;
 
@@ -811,7 +913,7 @@
       <div class="thread-header">
         <div class="big-flag">${flag}</div>
         <div class="info">
-          <h1>A correspondent in ${esc(countryName || currentConv.other_party_country || 'a distant country')}</h1>
+          <h1>A correspondent in ${esc(otherPartyCountryName || currentConv.other_party_country || 'a distant country')}</h1>
           <div class="meta">
             ${count} letter${count === 1 ? '' : 's'} exchanged
             ${currentState.is_permanent ? '<span class="permanent-badge">⭐ Permanent pen pals</span>' : ''}
@@ -822,82 +924,193 @@
 
     const bannerHtml = renderPenpalBanner();
 
-    // Seed card
-    let seedHtml = '';
-    if (currentLetter) {
-      const seedCache = translateCache.seed;
-      const seedBodyHtml = (seedCache && seedCache.showing === 'translated')
-        ? seedCache.translatedHtml
-        : esc(currentLetter.body);
-      const seedPillClass = pillClassFor(seedCache);
-      const seedPillLabel = pillLabelFor(seedCache);
-
-      seedHtml = `
-        <div class="seed-card">
-          <div class="seed-label">The letter that started this</div>
-          <div class="seed-body" id="seed-body">${seedBodyHtml}</div>
-          <button class="${seedPillClass}" data-translate-key="__seed__" type="button">${seedPillLabel}</button>
-          <div class="seed-meta">
-            ✉ From ${flagFor(currentLetter.origin_country)} ${esc(currentLetter.origin_country)}
-            · ${timeAgo(currentLetter.created_at)}
-            ${currentLetter.is_mine ? ' · You wrote it' : ''}
-          </div>
-        </div>
-      `;
-    } else {
-      seedHtml = `
-        <div class="seed-card">
-          <div class="seed-label">The letter that started this</div>
-          <div class="seed-body" style="opacity:.6;">(The original letter is no longer available.)</div>
-        </div>
-      `;
-    }
-
-    // Exchanges
-    const exchangesHtml = currentExchanges.map(ex => {
-      const isMine = ex.is_mine === true;
-      const exCache = translateCache.exchanges[ex.id];
-      const bodyHtml = (exCache && exCache.showing === 'translated')
-        ? exCache.translatedHtml
-        : esc(ex.body);
-      const pillClass = pillClassFor(exCache);
-      const pillLabel = pillLabelFor(exCache);
-
-      return `
-        <div class="exchange ${isMine ? 'mine' : 'theirs'}">
-          <div class="body" id="exchange-body-${ex.id}">${bodyHtml}</div>
-          <button class="${pillClass}" data-translate-key="${ex.id}" type="button">${pillLabel}</button>
-          <div class="meta">${timeAgo(ex.created_at)}</div>
-        </div>
-      `;
-    }).join('');
-
-    const composerHtml = `
+    root.innerHTML = `
+      ${headerHtml}
+      ${bannerHtml}
+      <div class="letter-stage" id="letter-stage">
+        <div class="letter-card" id="letter-card"></div>
+      </div>
+      <div class="letter-nav" id="letter-nav"></div>
       <div class="composer">
         <div class="composer-inner">
           <textarea id="compose-input" maxlength="600" placeholder="Write back…"></textarea>
           <button class="send-btn" id="send-btn" type="button" disabled>Send →</button>
         </div>
-        <div class="char-count" id="char-count" style="max-width:780px; margin: 4px auto 0;">0 / 600</div>
+        <div class="char-count" id="char-count">0 / 600</div>
       </div>
     `;
 
-    root.innerHTML = `
-      ${headerHtml}
-      ${bannerHtml}
-      ${seedHtml}
-      <div class="exchanges" id="exchanges">${exchangesHtml}</div>
-      ${composerHtml}
-    `;
-
+    renderStackShadows();
+    renderCard();
+    renderNav();
     wireComposer();
     wirePenpalButton();
-
-    setTimeout(() => {
-      window.scrollTo({ top: document.body.scrollHeight, behavior: 'instant' });
-    }, 50);
   }
 
+  /* ---------- Render stack shadows ---------- */
+  function renderStackShadows() {
+    const stage = document.getElementById('letter-stage');
+    if (!stage) return;
+    stage.querySelectorAll('.stack-shadow').forEach(el => el.remove());
+
+    const card = document.getElementById('letter-card');
+    if (!card) return;
+
+    const shadowCount = Math.min(3, currentIndex);
+    const classes = ['s1', 's2', 's3'];
+    for (let i = 0; i < shadowCount; i++) {
+      const sh = document.createElement('div');
+      sh.className = 'stack-shadow ' + classes[i];
+      stage.insertBefore(sh, card);
+    }
+  }
+
+  /* ---------- Render current card ---------- */
+  function renderCard() {
+    const card = document.getElementById('letter-card');
+    if (!card) return;
+
+    const entry = stackedLetters[currentIndex];
+    if (!entry) {
+      card.innerHTML = `<div class="airmail-frame"><div class="letter-inner">
+        <div class="letter-body seed-preview">This letter is no longer available.</div>
+      </div></div>`;
+      return;
+    }
+
+    const isMine = entry.is_mine === true;
+    const cache = translateCache[String(entry.id)];
+    const showingTranslation = cache && cache.showing === 'translated';
+    const bodyHtml = showingTranslation ? cache.translatedHtml : esc(entry.body);
+    const pillClass = 'translate-pill' + (showingTranslation ? ' translated' : '');
+    const pillLabel = showingTranslation ? '🌐 Show original' : '🌐 Translate';
+
+    // Sender label
+    let senderLabel;
+    if (isMine) {
+      senderLabel = `<span class="sender-label"><span class="you">✉ You wrote</span>${entry.sender_country ? ' from ' + flagFor(entry.sender_country) + ' ' + esc(entry.sender_country) : ''}</span>`;
+    } else {
+      const country = entry.sender_country || currentConv.other_party_country;
+      const countryName = country === currentConv.other_party_country
+        ? (otherPartyCountryName || country)
+        : country;
+      senderLabel = `<span class="sender-label"><span class="from">${flagFor(country)} A letter from ${esc(countryName || 'somewhere')}</span></span>`;
+    }
+
+    // Stamp (uses sender's country)
+    const stampCountry = entry.sender_country || (isMine ? myCountry : currentConv.other_party_country) || '';
+    const stampHtml = `
+      <div class="mini-stamp">
+        <div class="mini-stamp-inner">
+          <span class="flag">${flagFor(stampCountry)}</span>
+          <span class="cc">${esc(stampCountry || '—')}</span>
+        </div>
+      </div>
+    `;
+
+    // Badge (Latest on newest, First on seed)
+    const isLatest = currentIndex === stackedLetters.length - 1;
+    const isSeed = entry.is_seed === true;
+    let badge = '';
+    if (isLatest && !isSeed) badge = '<span class="card-badge">Latest</span>';
+    else if (isSeed) badge = '<span class="card-badge">Original</span>';
+
+    card.innerHTML = `
+      <div class="airmail-frame">
+        <div class="letter-inner">
+          <div class="letter-top">
+            ${senderLabel.replace('</span>', badge + '</span>')}
+            ${stampHtml}
+          </div>
+          <div class="letter-body" id="letter-body">${bodyHtml}</div>
+          <button class="${pillClass}" data-translate-key="${esc(entry.id)}" type="button">${pillLabel}</button>
+          <div class="letter-meta">
+            <span>${timeAgo(entry.created_at)}</span>
+            <span class="position">Letter ${currentIndex + 1} of ${stackedLetters.length}</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  /* ---------- Render navigation ---------- */
+  function renderNav() {
+    const nav = document.getElementById('letter-nav');
+    if (!nav) return;
+
+    const total = stackedLetters.length;
+    const atOldest = currentIndex === 0;
+    const atNewest = currentIndex === total - 1;
+
+    // Dots (only if 15 or fewer letters, otherwise just counter)
+    let dotsHtml = '';
+    if (total <= 15 && total > 1) {
+      dotsHtml = '<div class="nav-dots">';
+      for (let i = 0; i < total; i++) {
+        dotsHtml += `<button class="nav-dot${i === currentIndex ? ' active' : ''}" data-nav-index="${i}" type="button" aria-label="Go to letter ${i+1}"></button>`;
+      }
+      dotsHtml += '</div>';
+    }
+
+    nav.innerHTML = `
+      <button class="nav-btn" id="nav-older" type="button" ${atOldest ? 'disabled' : ''}>← Older</button>
+      <div class="nav-center">
+        <span class="nav-counter">Letter ${currentIndex + 1} of ${total}</span>
+        ${dotsHtml}
+      </div>
+      <button class="nav-btn" id="nav-newer" type="button" ${atNewest ? 'disabled' : ''}>Newer →</button>
+    `;
+
+    const olderBtn = document.getElementById('nav-older');
+    const newerBtn = document.getElementById('nav-newer');
+    if (olderBtn) olderBtn.addEventListener('click', () => navigateTo(currentIndex - 1));
+    if (newerBtn) newerBtn.addEventListener('click', () => navigateTo(currentIndex + 1));
+
+    nav.querySelectorAll('[data-nav-index]').forEach(dot => {
+      dot.addEventListener('click', () => {
+        const idx = parseInt(dot.dataset.navIndex, 10);
+        if (!isNaN(idx)) navigateTo(idx);
+      });
+    });
+  }
+
+  /* ---------- Navigate ---------- */
+  function navigateTo(newIndex) {
+    if (newIndex < 0 || newIndex >= stackedLetters.length) return;
+    if (newIndex === currentIndex) return;
+
+    const card = document.getElementById('letter-card');
+    if (!card) { currentIndex = newIndex; return; }
+
+    card.classList.add('switching-out');
+
+    setTimeout(() => {
+      currentIndex = newIndex;
+      renderStackShadows();
+      renderCard();
+      renderNav();
+      card.classList.remove('switching-out');
+    }, 250);
+  }
+
+  /* ---------- Keyboard navigation ---------- */
+  document.addEventListener('keydown', (e) => {
+    // Only when thread is active
+    if (!stackedLetters.length) return;
+    // Ignore if focus is on input/textarea
+    const tag = (e.target.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea') return;
+
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      navigateTo(currentIndex - 1);
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      navigateTo(currentIndex + 1);
+    }
+  });
+
+  /* ---------- Penpal banner ---------- */
   function renderPenpalBanner() {
     const s = currentState;
     const count = s.exchange_count;
@@ -979,6 +1192,7 @@
     `;
   }
 
+  /* ---------- Composer ---------- */
   function wireComposer() {
     const ta = document.getElementById('compose-input');
     const btn = document.getElementById('send-btn');
@@ -1008,13 +1222,27 @@
         const row = data && data[0];
         if (!row) throw new Error('No response');
 
-        currentExchanges.push({
+        // Append to exchanges list
+        const newEx = {
           id: row.exchange_id,
           sender_id: session.user.id,
           is_mine: true,
           body: body,
           created_at: row.created_at
+        };
+        currentExchanges.push(newEx);
+
+        // Add to stack
+        stackedLetters.push({
+          id: newEx.id,
+          body: newEx.body,
+          created_at: newEx.created_at,
+          is_mine: true,
+          is_seed: false,
+          sender_country: myCountry
         });
+
+        // Update state
         currentState.exchange_count = Number(row.exchange_count) || (currentState.exchange_count + 1);
         currentState.is_permanent = row.is_permanent === true;
         currentState.penpal_author_requested = row.penpal_author_requested === true;
@@ -1024,7 +1252,12 @@
           toast('⭐ You are now permanent pen pals.', 'ok');
         }
 
-        renderThread();
+        // Jump to the new letter (latest, top of stack)
+        currentIndex = stackedLetters.length - 1;
+
+        // Re-render everything
+        await renderThread();
+        toast('Letter sent.', 'ok');
       } catch (err) {
         console.error('[conv] send failed:', err);
         toast(err.message || 'Could not send. Please try again.', 'err');
@@ -1034,6 +1267,7 @@
     });
   }
 
+  /* ---------- Penpal button ---------- */
   function wirePenpalButton() {
     const btn = document.getElementById('penpal-btn');
     if (!btn) return;
@@ -1058,7 +1292,7 @@
         } else {
           toast('Request sent. Waiting for them to agree.', 'ok');
         }
-        renderThread();
+        await renderThread();
       } catch (err) {
         console.error('[conv] request_penpal failed:', err);
         toast(err.message || 'Could not send request.', 'err');

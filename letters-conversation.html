@@ -72,44 +72,12 @@
   .gate .btn-ghost { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.25); }
   .gate .btn-ghost:hover { background: rgba(255,255,255,.1); }
 
-  /* ---------- List view (unchanged) ---------- */
-  .page-head { margin-bottom: 24px; }
+  /* ---------- Page header ---------- */
+  .page-head { margin-bottom: 22px; }
   .page-head h1 { font-family: "Caveat", cursive; font-size: 38px; margin: 0 0 4px; font-weight: 600; }
   .page-head p { font-size: 13px; color: rgba(255,255,255,.55); margin: 0; line-height: 1.6; }
 
-  .conv-list { display: flex; flex-direction: column; gap: 12px; }
-  .conv-card {
-    display: block; background: var(--paper); color: var(--ink);
-    border-radius: 14px; padding: 16px 18px; text-decoration: none;
-    transition: .15s ease; border: 1px solid transparent;
-    box-shadow: 0 4px 16px rgba(0,0,0,.2);
-  }
-  .conv-card:hover { border-color: var(--accent); transform: translateY(-1px); }
-  .conv-card:active { transform: scale(.99); }
-  .conv-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
-  .conv-flag { font-size: 22px; line-height: 1; }
-  .conv-name { font-family: "Caveat", cursive; font-size: 20px; color: var(--ink); flex: 1; min-width: 0; }
-  .permanent-badge {
-    font-size: 10px; font-weight: 800; letter-spacing: .06em;
-    padding: 3px 8px; border-radius: 50px;
-    background: #fef3c7; color: #92400e; white-space: nowrap;
-  }
-  .conv-time { font-size: 11px; color: var(--muted); white-space: nowrap; }
-  .conv-preview {
-    font-size: 13px; color: #666; line-height: 1.5; margin: 0 0 10px;
-    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  }
-  .conv-meta { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 10px; }
-  .conv-meta .progress-bar {
-    flex: 1; height: 4px; background: rgba(0,0,0,.08);
-    border-radius: 2px; overflow: hidden; max-width: 120px;
-  }
-  .conv-meta .progress-fill {
-    height: 100%; background: var(--accent);
-    border-radius: 2px; transition: width .3s;
-  }
-  .conv-meta .progress-fill.done { background: #16a34a; }
-
+  /* ---------- Empty state ---------- */
   .empty {
     text-align: center; padding: 60px 20px;
     background: rgba(255,255,255,.03);
@@ -127,7 +95,7 @@
   }
   .empty .btn:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
 
-  /* ---------- Thread view: header + banner ---------- */
+  /* ---------- Back link ---------- */
   .back-to-list {
     display: inline-flex; align-items: center; gap: 6px;
     font-size: 13px; color: rgba(255,255,255,.65);
@@ -135,6 +103,7 @@
   }
   .back-to-list:hover { color: #fff; }
 
+  /* ---------- Thread header (only used in thread view) ---------- */
   .thread-header {
     background: var(--paper); color: var(--ink);
     border-radius: 16px; padding: 18px 22px; margin-bottom: 14px;
@@ -152,6 +121,7 @@
     display: inline-block; margin-left: 6px;
   }
 
+  /* ---------- Penpal banner ---------- */
   .penpal-banner {
     background: rgba(255,255,255,.05);
     border: 1px solid rgba(255,255,255,.12);
@@ -189,7 +159,7 @@
   }
   .penpal-banner .progress-fill.done { background: #16a34a; }
 
-  /* ---------- Letter stage (stack of postcards) ---------- */
+  /* ---------- Shared letter stage (stack + shadows) ---------- */
   .letter-stage {
     position: relative;
     padding-bottom: 42px;
@@ -235,6 +205,114 @@
     position: relative;
   }
 
+  /* ---------- List card (conversation summary) ---------- */
+  #conv-card .airmail-frame {
+    cursor: pointer;
+    transition: transform .2s ease;
+  }
+  #conv-card .airmail-frame:hover {
+    transform: translateY(-2px);
+  }
+
+  .list-card-inner {
+    padding: 24px 26px 22px;
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .conv-card-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .conv-card-flag {
+    font-size: 36px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .conv-card-title-block {
+    flex: 1;
+    min-width: 0;
+  }
+  .conv-card-title {
+    font-family: "Caveat", cursive;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 4px;
+    line-height: 1.25;
+  }
+  .conv-card-subtitle {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .conv-card-preview {
+    font-family: "Caveat", cursive;
+    font-size: 18px;
+    line-height: 1.55;
+    color: #4a4458;
+    margin: 0 0 14px;
+    padding: 12px 14px;
+    background: rgba(255,255,255,.55);
+    border-radius: 8px;
+    border-left: 3px solid rgba(255, 90, 54, 0.35);
+    word-wrap: break-word;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+
+  .conv-card-progress {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .conv-card-progress .progress-bar {
+    flex: 1;
+    height: 5px;
+    background: rgba(0,0,0,.08);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .conv-card-progress .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 3px;
+    transition: width .3s;
+  }
+  .conv-card-progress .progress-fill.done {
+    background: #16a34a;
+  }
+  .conv-card-progress .progress-text {
+    font-family: "Courier Prime", monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    min-width: 36px;
+    text-align: right;
+  }
+
+  .conv-card-hint {
+    margin-top: auto;
+    text-align: center;
+    font-family: "Caveat", cursive;
+    font-size: 17px;
+    color: var(--accent-dark);
+    padding-top: 12px;
+    border-top: 1px dashed rgba(0,0,0,.14);
+    transition: letter-spacing .2s ease;
+  }
+  #conv-card .airmail-frame:hover .conv-card-hint {
+    letter-spacing: 1px;
+  }
+
+  /* ---------- Thread card sender label ---------- */
   .letter-top {
     display: flex; align-items: flex-start; gap: 14px;
     margin-bottom: 16px;
@@ -247,13 +325,8 @@
     line-height: 1.5;
     padding-top: 6px;
   }
-  .sender-label .you {
-    color: var(--accent-dark);
-    font-weight: 800;
-  }
-  .sender-label .from {
-    font-weight: 700;
-  }
+  .sender-label .you { color: var(--accent-dark); font-weight: 800; }
+  .sender-label .from { font-weight: 700; }
   .card-badge {
     display: inline-block;
     background: #fef3c7;
@@ -286,7 +359,7 @@
       radial-gradient(circle var(--r) at 50% 0,    #0000 97%, #000) top    / calc(2*var(--r)) var(--r) repeat-x,
       radial-gradient(circle var(--r) at 50% 100%, #0000 97%, #000) bottom / calc(2*var(--r)) var(--r) repeat-x,
       radial-gradient(circle var(--r) at 0 50%,    #0000 97%, #000) left   / var(--r) calc(2*var(--r)) repeat-y,
-      radial-gradient(circle var(--r) at 100% 50%, #0000 97%, #000) right  / var(--r) calc(2*var(--r)) repeat-y,
+      radial-gradient(circle at 100% 50%, #0000 97%, #000) right  / var(--r) calc(2*var(--r)) repeat-y,
       linear-gradient(#000,#000) center / calc(100% - 2*var(--r)) calc(100% - 2*var(--r)) no-repeat;
   }
   .mini-stamp-inner {
@@ -309,9 +382,6 @@
     word-wrap: break-word;
     margin: 0 0 14px;
   }
-  .letter-body.seed-preview {
-    opacity: 0.92;
-  }
 
   .letter-meta {
     display: flex; justify-content: space-between; align-items: center;
@@ -332,7 +402,7 @@
     letter-spacing: .03em;
   }
 
-  /* Translate pill */
+  /* ---------- Translate pill ---------- */
   .translate-pill {
     display: inline-flex; align-items: center; gap: 5px;
     padding: 5px 12px;
@@ -358,11 +428,11 @@
     color: var(--accent-dark);
   }
 
-  /* ---------- Navigation ---------- */
+  /* ---------- Navigation (shared) ---------- */
   .letter-nav {
     display: flex; align-items: center; justify-content: space-between;
     gap: 12px;
-    margin: 20px 0 26px;
+    margin: 20px 0 14px;
     padding: 4px 0;
   }
   .nav-btn {
@@ -414,6 +484,15 @@
   }
   .nav-dot:hover { background: rgba(255,255,255,.45); }
   .nav-dot.active { background: var(--accent); width: 20px; border-radius: 4px; }
+
+  /* ---------- List hint ---------- */
+  .list-hint {
+    text-align: center;
+    margin-top: 4px;
+    font-size: 12px;
+    color: rgba(255,255,255,.4);
+    font-style: italic;
+  }
 
   /* ---------- Composer ---------- */
   .composer {
@@ -493,6 +572,11 @@
     .letter-nav { flex-wrap: wrap; }
     .nav-btn { padding: 9px 14px; font-size: 11px; }
     .nav-center { order: -1; width: 100%; }
+    .list-card-inner { padding: 18px 18px 16px; min-height: 200px; }
+    .conv-card-flag { font-size: 28px; }
+    .conv-card-title { font-size: 19px; }
+    .conv-card-preview { font-size: 16px; padding: 10px 12px; }
+    .conv-card-hint { font-size: 15px; }
     .composer { padding: 10px 15px 14px; }
     .composer-inner { flex-direction: column; align-items: stretch; gap: 8px; }
     .composer textarea { font-size: 18px; min-height: 50px; }
@@ -551,21 +635,23 @@
   const PERMANENT_THRESHOLD = 10;
 
   let session = null;
+
+  // LIST VIEW state
+  let convStack = [];      // sorted newest-first by last_exchange_at
+  let listIndex = 0;
+
+  // THREAD VIEW state
   let currentConv = null;
   let currentLetter = null;
   let currentExchanges = [];
   let currentState = null;
+  let stackedLetters = [];  // oldest-first (seed first, then exchanges)
+  let currentIndex = 0;     // index in stackedLetters
 
-  // Unified stack — includes seed as first item, exchanges after
-  // Index 0 = oldest, length-1 = latest
-  let stackedLetters = [];
-  let currentIndex = 0;
-
-  // Country info
   let myCountry = null;
   let otherPartyCountryName = '';
 
-  // Translation cache — keyed by letter id (or '__seed__')
+  // Translation cache (shared for thread view only)
   let translateCache = {};
 
   /* ---------- Helpers ---------- */
@@ -620,7 +706,6 @@
 
   async function translateText(text) {
     const target = getTargetLangCode();
-
     try {
       const url = 'https://lingva.ml/api/v1/auto/' + target + '/' + encodeURIComponent(text);
       const res = await fetchWithTimeout(url, 6000);
@@ -631,7 +716,6 @@
     } catch (e) {
       console.warn('[translate] Lingva failed:', e);
     }
-
     try {
       const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=' +
                   target + '&dt=t&q=' + encodeURIComponent(text);
@@ -646,19 +730,15 @@
     } catch (e) {
       console.warn('[translate] Google fallback failed:', e);
     }
-
     throw new Error('Translation service unavailable');
   }
 
-  /* ---------- Translate handler ---------- */
   async function handleTranslateClick(pill) {
     const key = pill.dataset.translateKey;
     if (!key) return;
-
     const bodyEl = document.getElementById('letter-body');
     if (!bodyEl) return;
 
-    // Find the source text
     const entry = stackedLetters.find(x => String(x.id) === String(key));
     if (!entry) return;
 
@@ -743,7 +823,9 @@
     `;
   }
 
-  /* ---------- List view ---------- */
+  /* ============================================================
+     LIST VIEW — Stack of conversations
+     ============================================================ */
   async function loadList() {
     topBack.textContent = '← The Globe';
     topBack.href = 'letters-globe.html';
@@ -772,50 +854,194 @@
       return;
     }
 
+    // Resolve country names for all conversations
     const countryNames = {};
     const codes = new Set();
     convs.forEach(c => { if (c.other_party_country) codes.add(c.other_party_country); });
     await Promise.all([...codes].map(async cc => { countryNames[cc] = await getCountryName(cc); }));
 
-    const cardsHtml = convs.map(c => {
-      const flag = flagFor(c.other_party_country);
-      const name = countryNames[c.other_party_country] || c.other_party_country || 'a distant country';
-      const count = Number(c.exchange_count) || 0;
-      const pct = Math.min(100, (count / PERMANENT_THRESHOLD) * 100);
-      const done = count >= PERMANENT_THRESHOLD;
-      const preview = c.letter_preview || '';
-      const lastAt = c.last_exchange_at || c.created_at;
+    // Sort newest-first
+    convStack = [...convs].sort((a, b) => {
+      const aT = new Date(a.last_exchange_at || a.created_at).getTime();
+      const bT = new Date(b.last_exchange_at || b.created_at).getTime();
+      return bT - aT;
+    });
+    listIndex = 0;
 
-      return `
-        <a class="conv-card" href="letters-conversation.html?id=${encodeURIComponent(c.id)}">
-          <div class="conv-head">
-            <span class="conv-flag">${flag}</span>
-            <span class="conv-name">A correspondent in ${esc(name)}</span>
-            ${c.is_permanent ? '<span class="permanent-badge">⭐ Permanent</span>' : ''}
-            <span class="conv-time">${timeAgo(lastAt)}</span>
-          </div>
-          <div class="conv-preview">“${esc(preview)}…”</div>
-          <div class="conv-meta">
-            <span>${count} letter${count === 1 ? '' : 's'} exchanged</span>
-            <div class="progress-bar">
-              <div class="progress-fill${done ? ' done' : ''}" style="width:${pct}%"></div>
-            </div>
-            <span>${count}/${PERMANENT_THRESHOLD}</span>
-          </div>
-        </a>
-      `;
-    }).join('');
+    convStack.forEach(c => {
+      c.__countryName = countryNames[c.other_party_country] || c.other_party_country || 'a distant country';
+    });
+
+    renderListStack();
+  }
+
+  function renderListStack() {
+    const total = convStack.length;
 
     root.innerHTML = `
       <div class="page-head">
         <h1>Your correspondence</h1>
-        <p>${convs.length} active conversation${convs.length === 1 ? '' : 's'}.</p>
+        <p>${total} active conversation${total === 1 ? '' : 's'}.</p>
       </div>
-      <div class="conv-list">${cardsHtml}</div>
+
+      <div class="letter-stage" id="letter-stage">
+        <div class="letter-card" id="conv-card"></div>
+      </div>
+
+      <div class="letter-nav" id="conv-nav"></div>
+
+      <p class="list-hint">Click any letter to open the conversation</p>
     `;
+
+    renderConvShadows();
+    renderConvCard();
+    renderConvNav();
   }
 
-  /* ---------- Thread load ---------- */
+  function renderConvShadows() {
+    const stage = document.getElementById('letter-stage');
+    const card = document.getElementById('conv-card');
+    if (!stage || !card) return;
+    stage.querySelectorAll('.stack-shadow').forEach(el => el.remove());
+
+    const total = convStack.length;
+    // Latest (index 0) has the deepest pile behind it; oldest has nothing behind
+    const shadowCount = Math.min(3, total - 1 - listIndex);
+    const classes = ['s1', 's2', 's3'];
+    for (let i = 0; i < shadowCount; i++) {
+      const sh = document.createElement('div');
+      sh.className = 'stack-shadow ' + classes[i];
+      stage.insertBefore(sh, card);
+    }
+  }
+
+  function renderConvCard() {
+    const card = document.getElementById('conv-card');
+    if (!card) return;
+
+    const conv = convStack[listIndex];
+    if (!conv) { card.innerHTML = ''; return; }
+
+    const flag = flagFor(conv.other_party_country);
+    const name = conv.__countryName || 'a distant country';
+    const count = Number(conv.exchange_count) || 0;
+    const pct = Math.min(100, (count / PERMANENT_THRESHOLD) * 100);
+    const done = count >= PERMANENT_THRESHOLD;
+    const preview = (conv.letter_preview || '').trim();
+    const lastAt = conv.last_exchange_at || conv.created_at;
+
+    card.innerHTML = `
+      <div class="airmail-frame" id="conv-card-click">
+        <div class="letter-inner list-card-inner">
+          <div class="conv-card-top">
+            <span class="conv-card-flag">${flag}</span>
+            <div class="conv-card-title-block">
+              <div class="conv-card-title">A correspondent in ${esc(name)}</div>
+              <div class="conv-card-subtitle">
+                ${count} letter${count === 1 ? '' : 's'} exchanged
+                · last ${timeAgo(lastAt)}
+              </div>
+            </div>
+            ${conv.is_permanent ? '<span class="permanent-badge">⭐ Permanent</span>' : ''}
+          </div>
+
+          ${preview ? `<div class="conv-card-preview">“${esc(preview)}…”</div>` : ''}
+
+          <div class="conv-card-progress">
+            <div class="progress-bar">
+              <div class="progress-fill${done ? ' done' : ''}" style="width:${pct}%"></div>
+            </div>
+            <span class="progress-text">${count}/${PERMANENT_THRESHOLD}</span>
+          </div>
+
+          <div class="conv-card-hint">Open this letter →</div>
+        </div>
+      </div>
+    `;
+
+    const clickTarget = document.getElementById('conv-card-click');
+    if (clickTarget) {
+      clickTarget.addEventListener('click', () => {
+        window.location.href = `letters-conversation.html?id=${encodeURIComponent(conv.id)}`;
+      });
+    }
+  }
+
+  function renderConvNav() {
+    const nav = document.getElementById('conv-nav');
+    if (!nav) return;
+
+    const total = convStack.length;
+    const atNewest = listIndex === 0;
+    const atOldest = listIndex === total - 1;
+
+    let dotsHtml = '';
+    if (total <= 15 && total > 1) {
+      dotsHtml = '<div class="nav-dots">';
+      for (let i = 0; i < total; i++) {
+        dotsHtml += `<button class="nav-dot${i === listIndex ? ' active' : ''}" data-conv-index="${i}" type="button" aria-label="Conversation ${i + 1}"></button>`;
+      }
+      dotsHtml += '</div>';
+    }
+
+    nav.innerHTML = `
+      <button class="nav-btn" id="conv-older" type="button" ${atOldest ? 'disabled' : ''}>← Older</button>
+      <div class="nav-center">
+        <span class="nav-counter">Letter ${listIndex + 1} of ${total}</span>
+        ${dotsHtml}
+      </div>
+      <button class="nav-btn" id="conv-newer" type="button" ${atNewest ? 'disabled' : ''}>Newer →</button>
+    `;
+
+    document.getElementById('conv-older')?.addEventListener('click', () => navigateConv(listIndex + 1));
+    document.getElementById('conv-newer')?.addEventListener('click', () => navigateConv(listIndex - 1));
+
+    nav.querySelectorAll('[data-conv-index]').forEach(dot => {
+      dot.addEventListener('click', () => {
+        const idx = parseInt(dot.dataset.convIndex, 10);
+        if (!isNaN(idx)) navigateConv(idx);
+      });
+    });
+  }
+
+  function navigateConv(newIndex) {
+    if (newIndex < 0 || newIndex >= convStack.length) return;
+    if (newIndex === listIndex) return;
+
+    const card = document.getElementById('conv-card');
+    if (!card) { listIndex = newIndex; return; }
+
+    card.classList.add('switching-out');
+    setTimeout(() => {
+      listIndex = newIndex;
+      renderConvShadows();
+      renderConvCard();
+      renderConvNav();
+      card.classList.remove('switching-out');
+    }, 250);
+  }
+
+  // Keyboard nav for list
+  document.addEventListener('keydown', (e) => {
+    // Only in list view
+    if (!convStack.length) return;
+    // Only when NOT in thread view (currentConv would be null)
+    if (currentConv) return;
+    const tag = (e.target.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea') return;
+
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      navigateConv(listIndex + 1);  // ← Older
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      navigateConv(listIndex - 1);  // Newer →
+    }
+  });
+
+  /* ============================================================
+     THREAD VIEW — Same as previous (left/right flow + airmail)
+     ============================================================ */
   async function loadThread(convId) {
     topBack.textContent = '← All conversations';
     topBack.href = 'letters-conversation.html';
@@ -861,21 +1087,18 @@
       i_am_author: conv.i_am_author === true
     };
 
-    // My country (for labeling own exchanges)
     try {
       const { data: prof } = await sb.from('profiles').select('country').eq('id', session.user.id).maybeSingle();
       const cc = (prof && prof.country || '').toUpperCase();
       myCountry = /^[A-Z]{2}$/.test(cc) ? cc : null;
     } catch (e) { myCountry = null; }
 
-    // Other party's country name
     try {
       otherPartyCountryName = await getCountryName(currentConv.other_party_country);
     } catch (e) { otherPartyCountryName = currentConv.other_party_country || ''; }
 
     // Build unified stack: seed first (oldest), then exchanges
     stackedLetters = [];
-
     if (currentLetter) {
       stackedLetters.push({
         id: '__seed__',
@@ -886,7 +1109,6 @@
         sender_country: currentLetter.origin_country
       });
     }
-
     currentExchanges.forEach(ex => {
       stackedLetters.push({
         id: ex.id,
@@ -898,13 +1120,11 @@
       });
     });
 
-    // Default view: latest on top
     currentIndex = Math.max(0, stackedLetters.length - 1);
 
     renderThread();
   }
 
-  /* ---------- Thread render ---------- */
   async function renderThread() {
     const flag = flagFor(currentConv.other_party_country);
     const count = currentState.exchange_count;
@@ -947,15 +1167,13 @@
     wirePenpalButton();
   }
 
-  /* ---------- Render stack shadows ---------- */
   function renderStackShadows() {
     const stage = document.getElementById('letter-stage');
-    if (!stage) return;
+    const card = document.getElementById('letter-card');
+    if (!stage || !card) return;
     stage.querySelectorAll('.stack-shadow').forEach(el => el.remove());
 
-    const card = document.getElementById('letter-card');
-    if (!card) return;
-
+    // Thread view: oldest (index 0) = 0 shadows; latest (index last) = 3 shadows
     const shadowCount = Math.min(3, currentIndex);
     const classes = ['s1', 's2', 's3'];
     for (let i = 0; i < shadowCount; i++) {
@@ -965,7 +1183,6 @@
     }
   }
 
-  /* ---------- Render current card ---------- */
   function renderCard() {
     const card = document.getElementById('letter-card');
     if (!card) return;
@@ -973,7 +1190,7 @@
     const entry = stackedLetters[currentIndex];
     if (!entry) {
       card.innerHTML = `<div class="airmail-frame"><div class="letter-inner">
-        <div class="letter-body seed-preview">This letter is no longer available.</div>
+        <div class="letter-body">This letter is no longer available.</div>
       </div></div>`;
       return;
     }
@@ -985,7 +1202,6 @@
     const pillClass = 'translate-pill' + (showingTranslation ? ' translated' : '');
     const pillLabel = showingTranslation ? '🌐 Show original' : '🌐 Translate';
 
-    // Sender label
     let senderLabel;
     if (isMine) {
       senderLabel = `<span class="sender-label"><span class="you">✉ You wrote</span>${entry.sender_country ? ' from ' + flagFor(entry.sender_country) + ' ' + esc(entry.sender_country) : ''}</span>`;
@@ -997,7 +1213,6 @@
       senderLabel = `<span class="sender-label"><span class="from">${flagFor(country)} A letter from ${esc(countryName || 'somewhere')}</span></span>`;
     }
 
-    // Stamp (uses sender's country)
     const stampCountry = entry.sender_country || (isMine ? myCountry : currentConv.other_party_country) || '';
     const stampHtml = `
       <div class="mini-stamp">
@@ -1008,7 +1223,6 @@
       </div>
     `;
 
-    // Badge (Latest on newest, First on seed)
     const isLatest = currentIndex === stackedLetters.length - 1;
     const isSeed = entry.is_seed === true;
     let badge = '';
@@ -1033,7 +1247,6 @@
     `;
   }
 
-  /* ---------- Render navigation ---------- */
   function renderNav() {
     const nav = document.getElementById('letter-nav');
     if (!nav) return;
@@ -1042,12 +1255,11 @@
     const atOldest = currentIndex === 0;
     const atNewest = currentIndex === total - 1;
 
-    // Dots (only if 15 or fewer letters, otherwise just counter)
     let dotsHtml = '';
     if (total <= 15 && total > 1) {
       dotsHtml = '<div class="nav-dots">';
       for (let i = 0; i < total; i++) {
-        dotsHtml += `<button class="nav-dot${i === currentIndex ? ' active' : ''}" data-nav-index="${i}" type="button" aria-label="Go to letter ${i+1}"></button>`;
+        dotsHtml += `<button class="nav-dot${i === currentIndex ? ' active' : ''}" data-nav-index="${i}" type="button" aria-label="Go to letter ${i + 1}"></button>`;
       }
       dotsHtml += '</div>';
     }
@@ -1061,10 +1273,8 @@
       <button class="nav-btn" id="nav-newer" type="button" ${atNewest ? 'disabled' : ''}>Newer →</button>
     `;
 
-    const olderBtn = document.getElementById('nav-older');
-    const newerBtn = document.getElementById('nav-newer');
-    if (olderBtn) olderBtn.addEventListener('click', () => navigateTo(currentIndex - 1));
-    if (newerBtn) newerBtn.addEventListener('click', () => navigateTo(currentIndex + 1));
+    document.getElementById('nav-older')?.addEventListener('click', () => navigateTo(currentIndex - 1));
+    document.getElementById('nav-newer')?.addEventListener('click', () => navigateTo(currentIndex + 1));
 
     nav.querySelectorAll('[data-nav-index]').forEach(dot => {
       dot.addEventListener('click', () => {
@@ -1074,7 +1284,6 @@
     });
   }
 
-  /* ---------- Navigate ---------- */
   function navigateTo(newIndex) {
     if (newIndex < 0 || newIndex >= stackedLetters.length) return;
     if (newIndex === currentIndex) return;
@@ -1083,7 +1292,6 @@
     if (!card) { currentIndex = newIndex; return; }
 
     card.classList.add('switching-out');
-
     setTimeout(() => {
       currentIndex = newIndex;
       renderStackShadows();
@@ -1093,11 +1301,10 @@
     }, 250);
   }
 
-  /* ---------- Keyboard navigation ---------- */
+  // Keyboard nav for thread
   document.addEventListener('keydown', (e) => {
-    // Only when thread is active
     if (!stackedLetters.length) return;
-    // Ignore if focus is on input/textarea
+    if (!currentConv) return;
     const tag = (e.target.tagName || '').toLowerCase();
     if (tag === 'input' || tag === 'textarea') return;
 
@@ -1110,7 +1317,6 @@
     }
   });
 
-  /* ---------- Penpal banner ---------- */
   function renderPenpalBanner() {
     const s = currentState;
     const count = s.exchange_count;
@@ -1130,7 +1336,6 @@
         </div>
       `;
     }
-
     if (myRequest && theirRequest && !done) {
       return `
         <div class="penpal-banner">
@@ -1142,7 +1347,6 @@
         </div>
       `;
     }
-
     if (myRequest && !theirRequest) {
       return `
         <div class="penpal-banner">
@@ -1154,7 +1358,6 @@
         </div>
       `;
     }
-
     if (theirRequest && !myRequest) {
       return `
         <div class="penpal-banner">
@@ -1168,7 +1371,6 @@
         </div>
       `;
     }
-
     if (count < PERMANENT_THRESHOLD) {
       return `
         <div class="penpal-banner">
@@ -1180,7 +1382,6 @@
         </div>
       `;
     }
-
     return `
       <div class="penpal-banner">
         <div class="text">
@@ -1192,7 +1393,6 @@
     `;
   }
 
-  /* ---------- Composer ---------- */
   function wireComposer() {
     const ta = document.getElementById('compose-input');
     const btn = document.getElementById('send-btn');
@@ -1222,7 +1422,6 @@
         const row = data && data[0];
         if (!row) throw new Error('No response');
 
-        // Append to exchanges list
         const newEx = {
           id: row.exchange_id,
           sender_id: session.user.id,
@@ -1232,7 +1431,6 @@
         };
         currentExchanges.push(newEx);
 
-        // Add to stack
         stackedLetters.push({
           id: newEx.id,
           body: newEx.body,
@@ -1242,7 +1440,6 @@
           sender_country: myCountry
         });
 
-        // Update state
         currentState.exchange_count = Number(row.exchange_count) || (currentState.exchange_count + 1);
         currentState.is_permanent = row.is_permanent === true;
         currentState.penpal_author_requested = row.penpal_author_requested === true;
@@ -1252,10 +1449,7 @@
           toast('⭐ You are now permanent pen pals.', 'ok');
         }
 
-        // Jump to the new letter (latest, top of stack)
         currentIndex = stackedLetters.length - 1;
-
-        // Re-render everything
         await renderThread();
         toast('Letter sent.', 'ok');
       } catch (err) {
@@ -1267,7 +1461,6 @@
     });
   }
 
-  /* ---------- Penpal button ---------- */
   function wirePenpalButton() {
     const btn = document.getElementById('penpal-btn');
     if (!btn) return;

@@ -33,7 +33,6 @@
   a { color: inherit; text-decoration: none; }
   button { font-family: inherit; }
 
-  /* ---------- Top bar ---------- */
   .top-bar {
     position: sticky; top: 0;
     padding: 14px 22px;
@@ -72,12 +71,10 @@
   .gate .btn-ghost { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.25); }
   .gate .btn-ghost:hover { background: rgba(255,255,255,.1); }
 
-  /* ---------- Page header ---------- */
   .page-head { margin-bottom: 22px; }
   .page-head h1 { font-family: "Caveat", cursive; font-size: 38px; margin: 0 0 4px; font-weight: 600; }
   .page-head p { font-size: 13px; color: rgba(255,255,255,.55); margin: 0; line-height: 1.6; }
 
-  /* ---------- Empty state ---------- */
   .empty {
     text-align: center; padding: 60px 20px;
     background: rgba(255,255,255,.03);
@@ -95,7 +92,6 @@
   }
   .empty .btn:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
 
-  /* ---------- Back link ---------- */
   .back-to-list {
     display: inline-flex; align-items: center; gap: 6px;
     font-size: 13px; color: rgba(255,255,255,.65);
@@ -103,7 +99,6 @@
   }
   .back-to-list:hover { color: #fff; }
 
-  /* ---------- Thread header (only used in thread view) ---------- */
   .thread-header {
     background: var(--paper); color: var(--ink);
     border-radius: 16px; padding: 18px 22px; margin-bottom: 14px;
@@ -121,7 +116,6 @@
     display: inline-block; margin-left: 6px;
   }
 
-  /* ---------- Penpal banner ---------- */
   .penpal-banner {
     background: rgba(255,255,255,.05);
     border: 1px solid rgba(255,255,255,.12);
@@ -159,11 +153,16 @@
   }
   .penpal-banner .progress-fill.done { background: #16a34a; }
 
-  /* ---------- Shared letter stage (stack + shadows) ---------- */
+  /* ---------- Letter stage ---------- */
   .letter-stage {
     position: relative;
     padding-bottom: 42px;
     margin-bottom: 8px;
+  }
+  /* Thread view: no shadows, no extra padding */
+  .letter-stage.no-stack {
+    padding-bottom: 0;
+    margin-bottom: 0;
   }
 
   .stack-shadow {
@@ -359,7 +358,7 @@
       radial-gradient(circle var(--r) at 50% 0,    #0000 97%, #000) top    / calc(2*var(--r)) var(--r) repeat-x,
       radial-gradient(circle var(--r) at 50% 100%, #0000 97%, #000) bottom / calc(2*var(--r)) var(--r) repeat-x,
       radial-gradient(circle var(--r) at 0 50%,    #0000 97%, #000) left   / var(--r) calc(2*var(--r)) repeat-y,
-      radial-gradient(circle at 100% 50%, #0000 97%, #000) right  / var(--r) calc(2*var(--r)) repeat-y,
+      radial-gradient(circle var(--r) at 100% 50%, #0000 97%, #000) right  / var(--r) calc(2*var(--r)) repeat-y,
       linear-gradient(#000,#000) center / calc(100% - 2*var(--r)) calc(100% - 2*var(--r)) no-repeat;
   }
   .mini-stamp-inner {
@@ -402,7 +401,6 @@
     letter-spacing: .03em;
   }
 
-  /* ---------- Translate pill ---------- */
   .translate-pill {
     display: inline-flex; align-items: center; gap: 5px;
     padding: 5px 12px;
@@ -428,7 +426,6 @@
     color: var(--accent-dark);
   }
 
-  /* ---------- Navigation (shared) ---------- */
   .letter-nav {
     display: flex; align-items: center; justify-content: space-between;
     gap: 12px;
@@ -485,7 +482,6 @@
   .nav-dot:hover { background: rgba(255,255,255,.45); }
   .nav-dot.active { background: var(--accent); width: 20px; border-radius: 4px; }
 
-  /* ---------- List hint ---------- */
   .list-hint {
     text-align: center;
     margin-top: 4px;
@@ -494,7 +490,6 @@
     font-style: italic;
   }
 
-  /* ---------- Composer ---------- */
   .composer {
     position: fixed;
     bottom: 0; left: 0; right: 0;
@@ -555,7 +550,6 @@
     padding: 18px 22px; border-radius: 14px; font-size: 14px; line-height: 1.6;
   }
 
-  /* ---------- Mobile ---------- */
   @media (max-width: 700px) {
     .wrap { padding: 18px 15px 140px; }
     .top-bar { padding: 12px 15px; }
@@ -637,7 +631,7 @@
   let session = null;
 
   // LIST VIEW state
-  let convStack = [];      // sorted newest-first by last_exchange_at
+  let convStack = [];
   let listIndex = 0;
 
   // THREAD VIEW state
@@ -645,13 +639,12 @@
   let currentLetter = null;
   let currentExchanges = [];
   let currentState = null;
-  let stackedLetters = [];  // oldest-first (seed first, then exchanges)
-  let currentIndex = 0;     // index in stackedLetters
+  let stackedLetters = [];
+  let currentIndex = 0;
 
   let myCountry = null;
   let otherPartyCountryName = '';
 
-  // Translation cache (shared for thread view only)
   let translateCache = {};
 
   /* ---------- Helpers ---------- */
@@ -824,7 +817,7 @@
   }
 
   /* ============================================================
-     LIST VIEW — Stack of conversations
+     LIST VIEW — stack of conversation letters
      ============================================================ */
   async function loadList() {
     topBack.textContent = '← The Globe';
@@ -854,13 +847,11 @@
       return;
     }
 
-    // Resolve country names for all conversations
     const countryNames = {};
     const codes = new Set();
     convs.forEach(c => { if (c.other_party_country) codes.add(c.other_party_country); });
     await Promise.all([...codes].map(async cc => { countryNames[cc] = await getCountryName(cc); }));
 
-    // Sort newest-first
     convStack = [...convs].sort((a, b) => {
       const aT = new Date(a.last_exchange_at || a.created_at).getTime();
       const bT = new Date(b.last_exchange_at || b.created_at).getTime();
@@ -890,7 +881,7 @@
 
       <div class="letter-nav" id="conv-nav"></div>
 
-      <p class="list-hint">Click any letter to open the conversation</p>
+      <p class="list-hint">Click the letter to open the conversation</p>
     `;
 
     renderConvShadows();
@@ -905,7 +896,6 @@
     stage.querySelectorAll('.stack-shadow').forEach(el => el.remove());
 
     const total = convStack.length;
-    // Latest (index 0) has the deepest pile behind it; oldest has nothing behind
     const shadowCount = Math.min(3, total - 1 - listIndex);
     const classes = ['s1', 's2', 's3'];
     for (let i = 0; i < shadowCount; i++) {
@@ -1021,26 +1011,24 @@
     }, 250);
   }
 
-  // Keyboard nav for list
+  // Keyboard nav for list view
   document.addEventListener('keydown', (e) => {
-    // Only in list view
     if (!convStack.length) return;
-    // Only when NOT in thread view (currentConv would be null)
-    if (currentConv) return;
+    if (currentConv) return; // thread view active, ignore
     const tag = (e.target.tagName || '').toLowerCase();
     if (tag === 'input' || tag === 'textarea') return;
 
     if (e.key === 'ArrowLeft') {
       e.preventDefault();
-      navigateConv(listIndex + 1);  // ← Older
+      navigateConv(listIndex + 1);
     } else if (e.key === 'ArrowRight') {
       e.preventDefault();
-      navigateConv(listIndex - 1);  // Newer →
+      navigateConv(listIndex - 1);
     }
   });
 
   /* ============================================================
-     THREAD VIEW — Same as previous (left/right flow + airmail)
+     THREAD VIEW — sequential letter cards, no stack shadows
      ============================================================ */
   async function loadThread(convId) {
     topBack.textContent = '← All conversations';
@@ -1097,7 +1085,6 @@
       otherPartyCountryName = await getCountryName(currentConv.other_party_country);
     } catch (e) { otherPartyCountryName = currentConv.other_party_country || ''; }
 
-    // Build unified stack: seed first (oldest), then exchanges
     stackedLetters = [];
     if (currentLetter) {
       stackedLetters.push({
@@ -1144,10 +1131,11 @@
 
     const bannerHtml = renderPenpalBanner();
 
+    // NOTE: .no-stack modifier → no shadow cards in thread view
     root.innerHTML = `
       ${headerHtml}
       ${bannerHtml}
-      <div class="letter-stage" id="letter-stage">
+      <div class="letter-stage no-stack" id="letter-stage">
         <div class="letter-card" id="letter-card"></div>
       </div>
       <div class="letter-nav" id="letter-nav"></div>
@@ -1160,27 +1148,10 @@
       </div>
     `;
 
-    renderStackShadows();
     renderCard();
     renderNav();
     wireComposer();
     wirePenpalButton();
-  }
-
-  function renderStackShadows() {
-    const stage = document.getElementById('letter-stage');
-    const card = document.getElementById('letter-card');
-    if (!stage || !card) return;
-    stage.querySelectorAll('.stack-shadow').forEach(el => el.remove());
-
-    // Thread view: oldest (index 0) = 0 shadows; latest (index last) = 3 shadows
-    const shadowCount = Math.min(3, currentIndex);
-    const classes = ['s1', 's2', 's3'];
-    for (let i = 0; i < shadowCount; i++) {
-      const sh = document.createElement('div');
-      sh.className = 'stack-shadow ' + classes[i];
-      stage.insertBefore(sh, card);
-    }
   }
 
   function renderCard() {
@@ -1294,14 +1265,13 @@
     card.classList.add('switching-out');
     setTimeout(() => {
       currentIndex = newIndex;
-      renderStackShadows();
       renderCard();
       renderNav();
       card.classList.remove('switching-out');
     }, 250);
   }
 
-  // Keyboard nav for thread
+  // Keyboard nav for thread view
   document.addEventListener('keydown', (e) => {
     if (!stackedLetters.length) return;
     if (!currentConv) return;

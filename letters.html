@@ -12,7 +12,6 @@
   :root {
     --red: #d33a3a;
     --blue: #26478f;
-    --r: 5px;
     --paper: #fbf6e8;
     --ink: #2b2536;
     --accent: #ff5a36;
@@ -50,11 +49,7 @@
     color: #fff;
   }
   .brand span { color: var(--accent); }
-  .top-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
+  .top-actions { display: flex; align-items: center; gap: 12px; }
   .top-compose-btn {
     background: var(--accent);
     color: #fff;
@@ -85,10 +80,7 @@
     padding: 80px 20px 40px;
     position: relative;
   }
-  .stage-inner {
-    width: 100%;
-    max-width: 760px;
-  }
+  .stage-inner { width: 100%; max-width: 760px; }
 
   .beached-banner {
     margin-bottom: 18px;
@@ -156,82 +148,178 @@
     color: var(--ink);
   }
 
-  /* Translate pill */
-  .translate-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    border-radius: 50px;
-    background: rgba(0,0,0,.04);
-    border: 1px solid rgba(0,0,0,.1);
-    color: #666;
-    font-family: "Courier Prime", monospace;
-    font-size: 11px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: .15s ease;
-    margin: 4px 0 4px;
-  }
-  .translate-pill:hover:not(:disabled) {
-    background: #fff;
-    border-color: rgba(0,0,0,.22);
-    color: #333;
-  }
-  .translate-pill:disabled,
-  .translate-pill.loading {
-    opacity: .55;
-    cursor: wait;
-  }
-
   .right {
     position: relative;
     padding: 22px 24px 24px;
     min-width: 0;
   }
 
+  /* ============== STAMP SYSTEM ============== */
   .stamp {
     position: absolute;
     top: 18px;
     right: 20px;
-    width: 80px;
-    height: 96px;
-    padding: 6px;
     background: #fff;
-    transform: rotate(4deg);
-    filter: drop-shadow(0 3px 4px rgba(0,0,0,.28));
+    transform: rotate(2deg);
+    filter: drop-shadow(0 3px 5px rgba(0,0,0,.32));
+    --scale: 1;
+    width: calc(84px * var(--scale));
+    height: calc(100px * var(--scale));
+    padding: calc(6px * var(--scale));
+    --r: calc(4px * var(--scale));
     -webkit-mask:
-      radial-gradient(circle var(--r) at 50% 0,    #0000 97%, #000) top    / calc(2*var(--r)) var(--r) repeat-x,
-      radial-gradient(circle var(--r) at 50% 100%, #0000 97%, #000) bottom / calc(2*var(--r)) var(--r) repeat-x,
-      radial-gradient(circle var(--r) at 0 50%,    #0000 97%, #000) left   / var(--r) calc(2*var(--r)) repeat-y,
-      radial-gradient(circle var(--r) at 100% 50%, #0000 97%, #000) right  / var(--r) calc(2*var(--r)) repeat-y,
-      linear-gradient(#000,#000) center / calc(100% - 2*var(--r)) calc(100% - 2*var(--r)) no-repeat;
+      radial-gradient(circle var(--r) at 50% 0,    #0000 97%, #000) top    / calc(2 * var(--r)) var(--r) repeat-x,
+      radial-gradient(circle var(--r) at 50% 100%, #0000 97%, #000) bottom / calc(2 * var(--r)) var(--r) repeat-x,
+      radial-gradient(circle var(--r) at 0 50%,    #0000 97%, #000) left   / var(--r) calc(2 * var(--r)) repeat-y,
+      radial-gradient(circle var(--r) at 100% 50%, #0000 97%, #000) right  / var(--r) calc(2 * var(--r)) repeat-y,
+      linear-gradient(#000,#000) center / calc(100% - 2 * var(--r)) calc(100% - 2 * var(--r)) no-repeat;
     mask:
-      radial-gradient(circle var(--r) at 50% 0,    #0000 97%, #000) top    / calc(2*var(--r)) var(--r) repeat-x,
-      radial-gradient(circle var(--r) at 50% 100%, #0000 97%, #000) bottom / calc(2*var(--r)) var(--r) repeat-x,
-      radial-gradient(circle var(--r) at 0 50%,    #0000 97%, #000) left   / var(--r) calc(2*var(--r)) repeat-y,
-      radial-gradient(circle var(--r) at 100% 50%, #0000 97%, #000) right  / var(--r) calc(2*var(--r)) repeat-y,
-      linear-gradient(#000,#000) center / calc(100% - 2*var(--r)) calc(100% - 2*var(--r)) no-repeat;
+      radial-gradient(circle var(--r) at 50% 0,    #0000 97%, #000) top    / calc(2 * var(--r)) var(--r) repeat-x,
+      radial-gradient(circle var(--r) at 50% 100%, #0000 97%, #000) bottom / calc(2 * var(--r)) var(--r) repeat-x,
+      radial-gradient(circle var(--r) at 0 50%,    #0000 97%, #000) left   / var(--r) calc(2 * var(--r)) repeat-y,
+      radial-gradient(circle var(--r) at 100% 50%, #0000 97%, #000) right  / var(--r) calc(2 * var(--r)) repeat-y,
+      linear-gradient(#000,#000) center / calc(100% - 2 * var(--r)) calc(100% - 2 * var(--r)) no-repeat;
   }
-  .stamp-in {
-    height: 100%;
-    display: grid;
-    align-content: center;
-    justify-items: center;
-    gap: 2px;
-    border: 1px solid rgba(38,71,143,.45);
-    text-align: center;
-    color: var(--blue);
-    background: linear-gradient(160deg, #f7f3e8, #e6ddc7);
-  }
-  .stamp-in .c { font-size: 5.5px; letter-spacing: .14em; }
-  .stamp-in .v { font-family: "Caveat", cursive; font-size: 26px; line-height: .9; color: #b3342f; }
-  .stamp-in .s { font-size: 6px; letter-spacing: .16em; }
+  .stamp.stamp-sm { --scale: 0.76; }
+  .stamp.stamp-md { --scale: 0.84; }
 
+  .stamp .stamp-inner {
+    height: 100%;
+    font-size: calc(13px * var(--scale));
+    font-family: "Courier Prime", monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .stamp-country {
+    font-size: 0.42em;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    line-height: 1;
+    width: 100%;
+    z-index: 1;
+  }
+  .stamp-art {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .stamp-emblem {
+    font-size: 2.4em;
+    line-height: 1;
+    filter: drop-shadow(0 1px 1px rgba(0,0,0,.22));
+    z-index: 1;
+  }
+  .stamp-value {
+    font-size: 1em;
+    font-weight: 700;
+    line-height: 1;
+    width: 100%;
+    z-index: 1;
+  }
+  .stamp-year {
+    position: absolute;
+    bottom: 1px;
+    right: 3px;
+    font-size: 0.3em;
+    opacity: .5;
+    letter-spacing: .05em;
+  }
+
+  /* Blossom (soft pink) */
+  .stamp-blossom .stamp-inner {
+    background:
+      radial-gradient(circle at 20% 20%, rgba(255,255,255,.6) 0%, transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(255,255,255,.5) 0%, transparent 40%),
+      linear-gradient(165deg, #fef4f6 0%, #fbe0e8 55%, #f4c3d2 100%);
+    border: 1px solid #8b3a5a;
+    padding: 0.5em 0.4em 0.4em;
+  }
+  .stamp-blossom .stamp-country { color: #8b3a5a; }
+  .stamp-blossom .stamp-value { color: #8b3a5a; }
+
+  /* Formal (burgundy band + cream) */
+  .stamp-formal .stamp-inner {
+    background: linear-gradient(180deg, #f7f3e8 0%, #f0e8d4 100%);
+    border: 1.5px solid #c9a227;
+    padding: 0;
+  }
+  .stamp-formal .stamp-top-band {
+    background: #8b2c3d;
+    color: #f0e8d4;
+    width: 100%;
+    padding: 0.3em 0.3em 0.25em;
+    font-size: 0.38em;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-align: center;
+  }
+  .stamp-formal .stamp-art { padding: 0.3em 0; }
+  .stamp-formal .stamp-art-ring {
+    width: 3.4em;
+    height: 3.4em;
+    border-radius: 50%;
+    border: 1px solid #8b2c3d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: rgba(201,162,39,.08);
+  }
+  .stamp-formal .stamp-art-ring::before {
+    content: "";
+    position: absolute;
+    inset: 0.25em;
+    border-radius: 50%;
+    border: 1px dashed rgba(139,44,61,.4);
+  }
+  .stamp-formal .stamp-emblem { font-size: 1.7em; }
+  .stamp-formal .stamp-value {
+    color: #8b2c3d;
+    padding-bottom: 0.3em;
+    font-size: 1.05em;
+  }
+
+  /* Tricolor (layered colorful) */
+  .stamp-tricolor .stamp-inner {
+    background: var(--tricolor,
+      linear-gradient(180deg, #ff9933 0%, #ffe0b3 22%, #f7f3e8 50%, #c3e8c3 78%, #138808 100%));
+    border: 1px solid #000;
+    padding: 0.35em;
+  }
+  .stamp-tricolor .stamp-inner::before {
+    content: "";
+    position: absolute;
+    inset: 0.3em;
+    border: 1px solid rgba(0,0,0,.35);
+    border-radius: 2px;
+    pointer-events: none;
+  }
+  .stamp-tricolor .stamp-inner::after {
+    content: "";
+    position: absolute;
+    inset: 0.5em;
+    border: 0.5px dashed rgba(0,0,0,.3);
+    border-radius: 1px;
+    pointer-events: none;
+  }
+  .stamp-tricolor .stamp-country { color: #000; font-weight: 800; }
+  .stamp-tricolor .stamp-emblem  { font-size: 2.2em; }
+  .stamp-tricolor .stamp-value   { color: #000; font-weight: 900; font-size: 1.05em; }
+
+  /* Postmark */
   .postmark {
     position: absolute;
     top: 58px;
-    right: 100px;
+    right: 108px;
     width: 92px;
     height: 92px;
     border-radius: 50%;
@@ -272,6 +360,31 @@
     margin-bottom: 2px;
   }
 
+  /* Translate pill */
+  .translate-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 50px;
+    background: rgba(0,0,0,.04);
+    border: 1px solid rgba(0,0,0,.1);
+    color: #666;
+    font-family: "Courier Prime", monospace;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .15s ease;
+    margin: 4px 0 4px;
+  }
+  .translate-pill:hover:not(:disabled) {
+    background: #fff;
+    border-color: rgba(0,0,0,.22);
+    color: #333;
+  }
+  .translate-pill:disabled,
+  .translate-pill.loading { opacity: .55; cursor: wait; }
+
   .actions {
     margin-top: 26px;
     display: flex;
@@ -294,28 +407,11 @@
     justify-content: center;
     white-space: nowrap;
   }
-  .btn-primary {
-    background: var(--accent);
-    color: #fff;
-    border-color: var(--accent);
-  }
-  .btn-primary:hover:not(:disabled) {
-    background: var(--accent-dark);
-    border-color: var(--accent-dark);
-  }
-  .btn-ghost {
-    background: rgba(255,255,255,.1);
-    color: #fff;
-    border-color: rgba(255,255,255,.25);
-  }
-  .btn-ghost:hover {
-    background: rgba(255,255,255,.2);
-    border-color: rgba(255,255,255,.4);
-  }
-  .btn:disabled {
-    opacity: .55;
-    cursor: not-allowed;
-  }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn-primary:hover:not(:disabled) { background: var(--accent-dark); border-color: var(--accent-dark); }
+  .btn-ghost { background: rgba(255,255,255,.1); color: #fff; border-color: rgba(255,255,255,.25); }
+  .btn-ghost:hover { background: rgba(255,255,255,.2); border-color: rgba(255,255,255,.4); }
+  .btn:disabled { opacity: .55; cursor: not-allowed; }
 
   .panel-msg {
     text-align: center;
@@ -336,11 +432,7 @@
     line-height: 1.7;
     margin: 0 0 22px;
   }
-  .panel-msg .emoji {
-    font-size: 48px;
-    margin-bottom: 14px;
-    line-height: 1;
-  }
+  .panel-msg .emoji { font-size: 48px; margin-bottom: 14px; line-height: 1; }
 
   .modal {
     display: none;
@@ -370,8 +462,7 @@
     from { opacity: 0; transform: translateY(10px) scale(.98); }
     to { opacity: 1; transform: translateY(0) scale(1); }
   }
-  .modal-inner h2,
-  .modal-inner h3 {
+  .modal-inner h2, .modal-inner h3 {
     font-family: "Caveat", cursive;
     color: var(--ink);
     margin: 0 0 8px;
@@ -379,12 +470,7 @@
   }
   .modal-inner h2 { font-size: 30px; }
   .modal-inner h3 { font-size: 26px; }
-  .modal-inner p {
-    font-size: 13px;
-    color: #666;
-    line-height: 1.65;
-    margin: 0 0 16px;
-  }
+  .modal-inner p { font-size: 13px; color: #666; line-height: 1.65; margin: 0 0 16px; }
   .modal-actions {
     display: flex;
     gap: 10px;
@@ -392,19 +478,13 @@
     margin-top: 18px;
     flex-wrap: wrap;
   }
-  .modal-actions .btn {
-    padding: 12px 22px;
-    font-size: 13px;
-  }
+  .modal-actions .btn { padding: 12px 22px; font-size: 13px; }
   .modal-actions .btn-ghost {
     background: #fff;
     color: #333;
     border: 1px solid #e8e4dc;
   }
-  .modal-actions .btn-ghost:hover {
-    background: #fafafa;
-    border-color: #bbb;
-  }
+  .modal-actions .btn-ghost:hover { background: #fafafa; border-color: #bbb; }
   .modal-status {
     margin-top: 12px;
     padding: 10px 12px;
@@ -417,13 +497,7 @@
   .modal-status.ok { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
   .modal-status.err { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
 
-  .compose-inner {
-    max-width: 560px;
-    padding: 0;
-    overflow: hidden;
-    background: transparent;
-    box-shadow: none;
-  }
+  .compose-inner { max-width: 560px; padding: 0; overflow: hidden; background: transparent; box-shadow: none; }
   .compose-paper {
     background: var(--paper);
     background-image: repeating-linear-gradient(0deg, rgba(0,0,0,.015) 0 1px, transparent 1px 24px);
@@ -454,17 +528,8 @@
     box-sizing: border-box;
   }
   .compose-textarea::placeholder { color: #b8af9a; }
-  .compose-count {
-    text-align: right;
-    font-size: 11px;
-    color: #9a8f7c;
-    margin-top: 6px;
-  }
-  .compose-divider {
-    height: 1px;
-    background: rgba(0,0,0,.12);
-    margin: 20px 0 18px;
-  }
+  .compose-count { text-align: right; font-size: 11px; color: #9a8f7c; margin-top: 6px; }
+  .compose-divider { height: 1px; background: rgba(0,0,0,.12); margin: 20px 0 18px; }
   .compose-section-label {
     font-size: 10px;
     letter-spacing: .18em;
@@ -472,11 +537,7 @@
     color: #9a8f7c;
     margin-bottom: 10px;
   }
-  .compose-modes {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
+  .compose-modes { display: flex; gap: 8px; margin-bottom: 16px; }
   .compose-mode {
     flex: 1;
     display: flex;
@@ -494,21 +555,11 @@
     color: #555;
   }
   .compose-mode:hover { border-color: #b8a98a; }
-  .compose-mode.active {
-    background: #fff5f0;
-    border-color: var(--accent);
-    color: var(--accent-dark);
-  }
+  .compose-mode.active { background: #fff5f0; border-color: var(--accent); color: var(--accent-dark); }
   .compose-mode input { display: none; }
   .compose-mode .mode-icon { font-size: 16px; line-height: 1; }
   .compose-mode .mode-text { flex: 1; }
-
-  .compose-from {
-    font-family: "Caveat", cursive;
-    font-size: 19px;
-    color: var(--ink);
-    margin: 0 0 4px;
-  }
+  .compose-from { font-family: "Caveat", cursive; font-size: 19px; color: var(--ink); margin: 0 0 4px; }
   .compose-from-detail {
     font-family: "Courier Prime", monospace;
     font-size: 11px;
@@ -516,27 +567,14 @@
     line-height: 1.5;
     margin-bottom: 20px;
   }
-
-  .compose-actions {
-    display: flex;
-    gap: 10px;
-    justify-content: flex-end;
-    margin-top: 8px;
-  }
-  .compose-actions .btn {
-    padding: 12px 22px;
-    font-size: 13px;
-  }
+  .compose-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; }
+  .compose-actions .btn { padding: 12px 22px; font-size: 13px; }
   .compose-actions .btn-ghost {
     background: transparent;
     color: #666;
     border: 1px solid #d8cfba;
   }
-  .compose-actions .btn-ghost:hover {
-    background: #fff;
-    border-color: #b8a98a;
-    color: #333;
-  }
+  .compose-actions .btn-ghost:hover { background: #fff; border-color: #b8a98a; color: #333; }
 
   .modal-inner textarea {
     width: 100%;
@@ -554,12 +592,7 @@
     box-sizing: border-box;
   }
   .modal-inner textarea:focus { border-color: var(--accent); }
-  .char-count {
-    text-align: right;
-    font-size: 11px;
-    color: #888;
-    margin-top: 6px;
-  }
+  .char-count { text-align: right; font-size: 11px; color: #888; margin-top: 6px; }
 
   .toast-container {
     position: fixed;
@@ -602,8 +635,7 @@
     .left .sign { font-size: 22px; }
     .right { padding: 20px 20px 24px; min-height: 200px; }
     .addr { margin-top: 140px; }
-    .stamp { width: 64px; height: 78px; }
-    .stamp-in .v { font-size: 22px; }
+    .stamp { top: 12px; right: 14px; --scale: 0.76; }
     .postmark { width: 72px; height: 72px; top: 46px; right: 82px; font-size: 6.5px; }
     .actions .btn { flex: 1; padding: 13px 18px; }
     .modal-inner { padding: 24px 20px 20px; }
@@ -697,9 +729,7 @@
       <div class="compose-heading">Dear Stranger,</div>
       <textarea id="compose-text" class="compose-textarea" maxlength="600" placeholder="Write what's on your mind. This letter will travel across the world, to someone you'll never meet — unless they write back."></textarea>
       <div class="compose-count"><span id="compose-count">0</span> / 600</div>
-
       <div class="compose-divider"></div>
-
       <div class="compose-section-label">How should this travel?</div>
       <div class="compose-modes">
         <label class="compose-mode active" data-mode="static">
@@ -713,12 +743,9 @@
           <span class="mode-text">As a bottle</span>
         </label>
       </div>
-
       <p class="compose-from" id="compose-from">From: …</p>
       <p class="compose-from-detail" id="compose-from-detail">Letters appear at your country. Bottles drift across the ocean for about 6 hours.</p>
-
       <div class="modal-status" id="compose-status"></div>
-
       <div class="compose-actions">
         <button class="btn btn-ghost" id="compose-cancel" type="button">Cancel</button>
         <button class="btn btn-primary" id="compose-send" type="button" disabled>Send letter →</button>
@@ -736,6 +763,38 @@
   const sb = window.wr.sb;
   const ADULT_KEY = 'wr_letters_18plus_v1';
 
+  /* ---------- Stamp lookup ---------- */
+  const COUNTRY_STAMPS = {
+    JP: { style: 'blossom',  emblem: '🌸', value: '¥10',    label: 'NIPPON POST' },
+    CN: { style: 'blossom',  emblem: '🐉', value: '¥10',    label: 'CHINA POST' },
+    SG: { style: 'blossom',  emblem: '🦁', value: 'S$2',    label: 'SINGAPORE POST' },
+    DE: { style: 'formal',   emblem: '🦅', value: '10',     label: 'DEUTSCHE POST' },
+    GB: { style: 'formal',   emblem: '👑', value: '1st',    label: 'ROYAL MAIL' },
+    FR: { style: 'formal',   emblem: '🗼', value: '10c',    label: 'LA POSTE' },
+    NL: { style: 'formal',   emblem: '🌷', value: '1',      label: 'POSTNL' },
+    SE: { style: 'formal',   emblem: '❄️', value: '10 kr',  label: 'POSTNORD' },
+    PL: { style: 'formal',   emblem: '🦅', value: '10 zł',  label: 'POCZTA POLSKA' },
+    IT: { style: 'formal',   emblem: '🏛️', value: '€1',     label: 'POSTE ITALIANE' },
+    ES: { style: 'formal',   emblem: '🐂', value: '€1',     label: 'CORREOS' },
+    US: { style: 'formal',   emblem: '🗽', value: '5¢',     label: 'US POSTAGE' },
+    CA: { style: 'formal',   emblem: '🍁', value: '10¢',    label: 'CANADA POST' },
+    AU: { style: 'formal',   emblem: '🦘', value: '$1',     label: 'AUSTRALIA POST' },
+    IN: { style: 'tricolor', emblem: '🦚', value: '₹10',    label: 'INDIA POST' },
+    BR: { style: 'tricolor', emblem: '🦜', value: 'R$2',    label: 'CORREIOS' },
+    MX: { style: 'tricolor', emblem: '🦅', value: '$5',     label: 'CORREOS MX' },
+    SA: { style: 'tricolor', emblem: '🌙', value: '10 SAR', label: 'SAUDI POST' },
+    AE: { style: 'tricolor', emblem: '🦅', value: '10 AED', label: 'EMIRATES POST' }
+  };
+
+  const TRICOLOR_COLORS = {
+    IN: '#ff9933, #ffe0b3, #f7f3e8, #c3e8c3, #138808',
+    BR: '#009c3b, #ffdf00, #f7f3e8, #ffdf00, #002776',
+    MX: '#006847, #f7f3e8, #ce1126',
+    SA: '#006c35, #f7f3e8, #006c35',
+    AE: '#00732f, #f7f3e8, #000000'
+  };
+
+  /* ---------- Elements ---------- */
   const stageEl       = document.getElementById('stage');
   const adultModal    = document.getElementById('adult-modal');
   const replyModal    = document.getElementById('reply-modal');
@@ -764,12 +823,8 @@
   let session        = null;
   let composeMode    = 'static';
 
-  // Translation state (reset per letter render)
   let translateState = {
-    originalHtml: null,
-    translatedHtml: null,
-    showing: 'original',
-    fetching: false
+    originalHtml: null, translatedHtml: null, showing: 'original', fetching: false
   };
 
   /* ---------- Helpers ---------- */
@@ -778,7 +833,6 @@
       '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
     }[c]));
   }
-
   function flagFor(cc) {
     if (!cc || cc.length !== 2) return '🌍';
     const A = 0x1F1E6;
@@ -787,7 +841,6 @@
       A + cc.toUpperCase().charCodeAt(1) - 65
     );
   }
-
   function toast(msg, kind = 'ok') {
     const el = document.createElement('div');
     el.className = 'toast' + (kind === 'err' ? ' err' : '');
@@ -795,11 +848,9 @@
     toastBox.appendChild(el);
     setTimeout(() => el.remove(), 2800);
   }
-
   function getTargetLangCode() {
     return ((navigator.language || 'en').split('-')[0] || 'en').toLowerCase();
   }
-
   function getTargetLangName() {
     const code = getTargetLangCode();
     try {
@@ -811,36 +862,74 @@
     return code.toUpperCase();
   }
 
+  /* ---------- Stamp builder ---------- */
+  function buildStampHtml(countryCode, sizeClass = '') {
+    if (!countryCode) return '';
+    const cc = String(countryCode).toUpperCase();
+    const cfg = COUNTRY_STAMPS[cc];
+    if (!cfg) return '';
+
+    const size = sizeClass ? ' ' + sizeClass : '';
+    const gradientStyle = cfg.style === 'tricolor' && TRICOLOR_COLORS[cc]
+      ? `style="--tricolor: linear-gradient(180deg, ${TRICOLOR_COLORS[cc]});"`
+      : '';
+
+    if (cfg.style === 'blossom') {
+      return `
+        <div class="stamp stamp-blossom${size}" ${gradientStyle}>
+          <div class="stamp-inner">
+            <div class="stamp-country">${esc(cfg.label)}</div>
+            <div class="stamp-art"><span class="stamp-emblem">${cfg.emblem}</span></div>
+            <div class="stamp-value">${esc(cfg.value)}</div>
+            <div class="stamp-year">2026</div>
+          </div>
+        </div>
+      `;
+    }
+    if (cfg.style === 'formal') {
+      return `
+        <div class="stamp stamp-formal${size}" ${gradientStyle}>
+          <div class="stamp-inner">
+            <div class="stamp-top-band">${esc(cfg.label)}</div>
+            <div class="stamp-art">
+              <div class="stamp-art-ring"><span class="stamp-emblem">${cfg.emblem}</span></div>
+            </div>
+            <div class="stamp-value">${esc(cfg.value)}</div>
+          </div>
+        </div>
+      `;
+    }
+    if (cfg.style === 'tricolor') {
+      return `
+        <div class="stamp stamp-tricolor${size}" ${gradientStyle}>
+          <div class="stamp-inner">
+            <div class="stamp-country">${esc(cfg.label)}</div>
+            <div class="stamp-art"><span class="stamp-emblem">${cfg.emblem}</span></div>
+            <div class="stamp-value">${esc(cfg.value)}</div>
+          </div>
+        </div>
+      `;
+    }
+    return '';
+  }
+
   /* ---------- Translation ---------- */
   async function fetchWithTimeout(url, ms) {
     const controller = new AbortController();
     const t = setTimeout(() => controller.abort(), ms);
-    try {
-      const res = await fetch(url, { signal: controller.signal });
-      return res;
-    } finally {
-      clearTimeout(t);
-    }
+    try { return await fetch(url, { signal: controller.signal }); }
+    finally { clearTimeout(t); }
   }
-
   async function translateText(text) {
     const target = getTargetLangCode();
-
-    // Try Lingva first (open source, CORS-friendly)
     try {
       const url = 'https://lingva.ml/api/v1/auto/' + target + '/' + encodeURIComponent(text);
       const res = await fetchWithTimeout(url, 6000);
       if (res.ok) {
         const data = await res.json();
-        if (data && data.translation) {
-          return { text: data.translation, target };
-        }
+        if (data && data.translation) return data.translation;
       }
-    } catch (e) {
-      console.warn('[translate] Lingva failed:', e);
-    }
-
-    // Fall back to Google's unofficial translate endpoint
+    } catch (e) { console.warn('[translate] Lingva failed:', e); }
     try {
       const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=' +
                   target + '&dt=t&q=' + encodeURIComponent(text);
@@ -848,31 +937,25 @@
       if (res.ok) {
         const data = await res.json();
         if (data && Array.isArray(data[0])) {
-          const translated = data[0].map(row => row && row[0] ? row[0] : '').join('');
-          if (translated) return { text: translated, target };
+          const t = data[0].map(row => row && row[0] ? row[0] : '').join('');
+          if (t) return t;
         }
       }
-    } catch (e) {
-      console.warn('[translate] Google fallback failed:', e);
-    }
-
+    } catch (e) { console.warn('[translate] Google fallback failed:', e); }
     throw new Error('Translation service unavailable');
   }
-
   function renderTextAsParagraphs(text) {
     return String(text || '')
       .split(/\n{2,}/)
       .map(p => `<p>${esc(p)}</p>`)
       .join('');
   }
-
   async function handleTranslateClick() {
     if (translateState.fetching) return;
     const bodyEl = document.getElementById('letter-body');
     const btn = document.getElementById('translate-pill');
     if (!bodyEl || !btn) return;
 
-    // Toggle if already translated
     if (translateState.translatedHtml) {
       if (translateState.showing === 'original') {
         bodyEl.innerHTML = translateState.translatedHtml;
@@ -886,11 +969,7 @@
       return;
     }
 
-    // First fetch
-    if (!translateState.originalHtml) {
-      translateState.originalHtml = bodyEl.innerHTML;
-    }
-
+    if (!translateState.originalHtml) translateState.originalHtml = bodyEl.innerHTML;
     translateState.fetching = true;
     btn.classList.add('loading');
     btn.disabled = true;
@@ -899,7 +978,7 @@
 
     try {
       const result = await translateText(currentLetter.body);
-      const html = renderTextAsParagraphs(result.text);
+      const html = renderTextAsParagraphs(result);
       translateState.translatedHtml = html;
       bodyEl.innerHTML = html;
       translateState.showing = 'translated';
@@ -931,7 +1010,6 @@
     if (error) return { error };
     return { letter: (data && data[0]) || null };
   }
-
   async function checkExistingConversation(letterId) {
     const { data, error } = await sb.rpc('get_my_conversations');
     if (error || !data) return null;
@@ -939,7 +1017,7 @@
     return conv ? conv.id : null;
   }
 
-  /* ---------- Stage messages ---------- */
+  /* ---------- Stage renderers ---------- */
   function renderSignIn() {
     stageEl.innerHTML = `
       <div class="panel-msg">
@@ -953,7 +1031,6 @@
       </div>
     `;
   }
-
   function renderNoId() {
     stageEl.innerHTML = `
       <div class="panel-msg">
@@ -969,7 +1046,6 @@
     const cta = document.getElementById('compose-cta');
     if (cta) cta.addEventListener('click', openComposeModal);
   }
-
   function renderNotFound() {
     stageEl.innerHTML = `
       <div class="panel-msg">
@@ -988,13 +1064,7 @@
 
   /* ---------- Postcard renderer ---------- */
   function renderPostcard(letter, convId) {
-    // Reset translation state for this letter
-    translateState = {
-      originalHtml: null,
-      translatedHtml: null,
-      showing: 'original',
-      fetching: false
-    };
+    translateState = { originalHtml: null, translatedHtml: null, showing: 'original', fetching: false };
 
     const isBeached  = letter.delivery_mode === 'bottle' && letter.bottle_state === 'beached';
     const originFlag = flagFor(letter.origin_country);
@@ -1037,6 +1107,15 @@
       </div>
     ` : '';
 
+    // Stamp: only for static letters (bottles have no postal stamp)
+    const showStamp = letter.delivery_mode === 'static';
+    const stampHtml = showStamp ? buildStampHtml(letter.origin_country) : '';
+    const postmarkHtml = showStamp ? `
+      <div class="postmark">
+        <span>EARTH<br>VIA GLOBE<br>IN TRANSIT</span>
+      </div>
+    ` : '';
+
     stageEl.innerHTML = `
       <div class="stage-inner">
         ${beachedHtml}
@@ -1052,16 +1131,8 @@
             </div>
             <div class="divider"></div>
             <div class="right">
-              <div class="stamp">
-                <div class="stamp-in">
-                  <span class="c">THE WHACKY RACK</span>
-                  <span class="v">✉</span>
-                  <span class="s">LETTER GLOBE</span>
-                </div>
-              </div>
-              <div class="postmark">
-                <span>EARTH<br>VIA GLOBE<br>IN TRANSIT</span>
-              </div>
+              ${stampHtml}
+              ${postmarkHtml}
               <div class="addr">
                 <div class="label">To</div>
                 ${toHtml}
@@ -1076,10 +1147,8 @@
 
     const replyBtn = document.getElementById('reply-btn');
     if (replyBtn) replyBtn.addEventListener('click', openReplyModal);
-
     const reportBtn = document.getElementById('report-btn');
     if (reportBtn) reportBtn.addEventListener('click', openReportModal);
-
     const translateBtn = document.getElementById('translate-pill');
     if (translateBtn) translateBtn.addEventListener('click', handleTranslateClick);
   }
@@ -1096,49 +1165,38 @@
     replyModal.setAttribute('aria-hidden', 'false');
     setTimeout(() => replyText.focus(), 100);
   }
-
   function closeReplyModal() {
     replyModal.classList.remove('open');
     replyModal.setAttribute('aria-hidden', 'true');
   }
-
   replyText.addEventListener('input', () => {
     replyCountEl.textContent = String(replyText.value.length);
     replySend.disabled = replyText.value.trim().length < 1;
   });
-
   document.getElementById('reply-cancel').addEventListener('click', closeReplyModal);
   replyModal.addEventListener('click', (e) => {
     if (e.target === replyModal) closeReplyModal();
   });
-
   replySend.addEventListener('click', async () => {
     if (!currentLetter) return;
     const body = replyText.value.trim();
     if (!body) return;
-
     replySend.disabled = true;
     replySend.textContent = 'Sending…';
     replyStatus.className = 'modal-status';
-
     try {
       const { data, error } = await sb.rpc('reply_to_letter', {
         p_letter_id: currentLetter.id,
-        p_body:      body
+        p_body: body
       });
       if (error) throw error;
-
       replyStatus.className = 'modal-status show ok';
       replyStatus.textContent = 'Your reply is on its way. Opening the conversation…';
       toast('Reply sent.', 'ok');
-
       const convId = data;
       setTimeout(() => {
-        if (convId) {
-          window.location.href = `letters-conversation.html?id=${convId}`;
-        } else {
-          window.location.href = 'index.html';
-        }
+        if (convId) window.location.href = `letters-conversation.html?id=${convId}`;
+        else window.location.href = 'index.html';
       }, 1200);
     } catch (err) {
       console.error(err);
@@ -1161,44 +1219,35 @@
     reportModal.setAttribute('aria-hidden', 'false');
     setTimeout(() => reportText.focus(), 100);
   }
-
   function closeReportModal() {
     reportModal.classList.remove('open');
     reportModal.setAttribute('aria-hidden', 'true');
   }
-
   reportText.addEventListener('input', () => {
     reportCountEl.textContent = String(reportText.value.length);
     reportSend.disabled = reportText.value.trim().length < 3;
   });
-
   document.getElementById('report-cancel').addEventListener('click', closeReportModal);
   reportModal.addEventListener('click', (e) => {
     if (e.target === reportModal) closeReportModal();
   });
-
   reportSend.addEventListener('click', async () => {
     if (!currentLetter) return;
     const reason = reportText.value.trim();
     if (reason.length < 3) return;
-
     reportSend.disabled = true;
     reportSend.textContent = 'Submitting…';
     reportStatus.className = 'modal-status';
-
     try {
       const { error } = await sb.rpc('report_letter', {
         p_letter_id: currentLetter.id,
-        p_reason:    reason
+        p_reason: reason
       });
       if (error) throw error;
-
       reportStatus.className = 'modal-status show ok';
       reportStatus.textContent = 'Report submitted. Thank you.';
       toast('Report submitted.', 'ok');
-      setTimeout(() => {
-        closeReportModal();
-      }, 1400);
+      setTimeout(closeReportModal, 1400);
     } catch (err) {
       console.error(err);
       reportStatus.className = 'modal-status show err';
@@ -1210,11 +1259,7 @@
 
   /* ---------- Compose modal ---------- */
   async function openComposeModal() {
-    if (!session) {
-      window.location.href = 'login.html';
-      return;
-    }
-
+    if (!session) { window.location.href = 'login.html'; return; }
     composeText.value = '';
     composeCountEl.textContent = '0';
     composeSend.disabled = true;
@@ -1222,12 +1267,9 @@
     composeStatus.className = 'modal-status';
     composeStatus.textContent = '';
     setComposeMode('static');
-
     try {
       const { data } = await sb.from('profiles')
-        .select('country, timezone')
-        .eq('id', session.user.id)
-        .maybeSingle();
+        .select('country, timezone').eq('id', session.user.id).maybeSingle();
       const prof = data || {};
       let cc = (prof.country || '').toUpperCase();
       if (!/^[A-Z]{2}$/.test(cc)) cc = null;
@@ -1235,12 +1277,10 @@
     } catch (e) {
       composeFrom.textContent = 'From: your country';
     }
-
     composeModal.classList.add('open');
     composeModal.setAttribute('aria-hidden', 'false');
     setTimeout(() => composeText.focus(), 100);
   }
-
   function closeComposeModal() {
     composeModal.classList.remove('open');
     composeModal.setAttribute('aria-hidden', 'true');
@@ -1250,7 +1290,6 @@
       history.replaceState({}, '', url.pathname + (url.search || ''));
     }
   }
-
   function setComposeMode(mode) {
     composeMode = mode;
     document.querySelectorAll('.compose-mode').forEach(el => {
@@ -1258,7 +1297,6 @@
     });
     const radio = document.querySelector(`.compose-mode[data-mode="${mode}"] input`);
     if (radio) radio.checked = true;
-
     if (mode === 'bottle') {
       composeFromDetail.textContent = 'Bottles drift across the ocean for about 6 hours, then wash ashore in another country.';
       composeSend.textContent = '🍾 Send as bottle →';
@@ -1267,48 +1305,34 @@
       composeSend.textContent = 'Send letter →';
     }
   }
-
   composeText.addEventListener('input', () => {
     composeCountEl.textContent = String(composeText.value.length);
     composeSend.disabled = composeText.value.trim().length < 1;
   });
-
   document.querySelectorAll('.compose-mode').forEach(el => {
     el.addEventListener('click', () => setComposeMode(el.dataset.mode));
   });
-
   composeCancel.addEventListener('click', closeComposeModal);
   composeModal.addEventListener('click', (e) => {
     if (e.target === composeModal) closeComposeModal();
   });
-
   composeSend.addEventListener('click', async () => {
     const body = composeText.value.trim();
     if (!body) return;
-
     composeSend.disabled = true;
     composeSend.textContent = 'Sending…';
     composeStatus.className = 'modal-status';
-
     try {
-      const { data, error } = await sb.rpc('send_letter', {
-        p_body: body,
-        p_mode: composeMode
-      });
+      const { data, error } = await sb.rpc('send_letter', { p_body: body, p_mode: composeMode });
       if (error) throw error;
-
       const newId = (data && data[0] && data[0].id) || null;
       composeStatus.className = 'modal-status show ok';
       composeStatus.textContent = composeMode === 'bottle'
         ? '🍾 Your bottle is on the water. Opening it…'
         : '✉ Your letter is flying. Opening it…';
-
       setTimeout(() => {
-        if (newId) {
-          window.location.href = `letters.html?id=${newId}`;
-        } else {
-          window.location.href = 'letters.html';
-        }
+        if (newId) window.location.href = `letters.html?id=${newId}`;
+        else window.location.href = 'letters.html';
       }, 800);
     } catch (err) {
       console.error(err);
@@ -1319,7 +1343,6 @@
     }
   });
 
-  /* ---------- ESC to close any open modal ---------- */
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
     if (replyModal.classList.contains('open')) closeReplyModal();
@@ -1333,7 +1356,6 @@
   async function boot() {
     const { data: { session: s } } = await sb.auth.getSession();
     session = s;
-
     if (!hasAdultConsent()) {
       adultModal.classList.add('open');
       adultModal.setAttribute('aria-hidden', 'false');
@@ -1347,44 +1369,26 @@
     }
     proceed();
   }
-
   async function proceed() {
-    if (!session) {
-      renderSignIn();
-      return;
-    }
-
-    const params   = new URLSearchParams(location.search);
+    if (!session) { renderSignIn(); return; }
+    const params = new URLSearchParams(location.search);
     const letterId = params.get('id');
     const wantsCompose = params.get('compose') === '1';
-
     if (wantsCompose) {
       renderNoId();
       await openComposeModal();
       return;
     }
-
-    if (!letterId) {
-      renderNoId();
-      return;
-    }
-
+    if (!letterId) { renderNoId(); return; }
     const [loadRes, convId] = await Promise.all([
       loadLetter(letterId),
       checkExistingConversation(letterId)
     ]);
-
-    if (loadRes.error || !loadRes.letter) {
-      renderNotFound();
-      return;
-    }
-
-    currentLetter  = loadRes.letter;
+    if (loadRes.error || !loadRes.letter) { renderNotFound(); return; }
+    currentLetter = loadRes.letter;
     existingConvId = convId;
-
     renderPostcard(currentLetter, existingConvId);
   }
-
   boot();
 })();
 </script>

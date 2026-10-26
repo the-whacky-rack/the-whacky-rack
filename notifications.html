@@ -404,6 +404,32 @@
                             text: `<strong>${esc(actor)}</strong> upvoted your comment`,
                             url: n.context_id ? `yap-thread.html?id=${n.context_id}` : "#"
                         };
+                                            case "gift_awb_to_you":
+                        return {
+                            icon: "🎁",
+                            text: `<strong>${esc(actor)}</strong> sent you a gift! <span class="snippet">AWB: ${esc(n.snippet || '')}</span>`,
+                            url: n.target_id ? `letters-gift-awb.html?id=${n.target_id}` : "#"
+                        };
+                    case "gift_awb_by_you":
+                        return {
+                            icon: "📦",
+                            text: `Your gift to <strong>${esc(actor)}</strong> is on its way. <span class="snippet">AWB: ${esc(n.snippet || '')}</span>`,
+                            url: n.target_id ? `letters-gift-awb.html?id=${n.target_id}` : "#"
+                        };
+                    case "gift_delivered_to_you":
+                        return {
+                            icon: "🎉",
+                            text: `<strong>${esc(actor)}</strong>'s gift has arrived! Open it.`,
+                            url: n.target_id ? `letters-gift-awb.html?id=${n.target_id}` : "#"
+                        };
+                    case "gift_delivered_by_you":
+                        return {
+                            icon: "✅",
+                            text: `Your gift to <strong>${esc(actor)}</strong> was delivered.`,
+                            url: n.target_id ? `letters-gift-awb.html?id=${n.target_id}` : "#"
+                        };
+
+                        
                     default:
                         return { icon: "🔔", text: "New activity", url: "#" };
                 }

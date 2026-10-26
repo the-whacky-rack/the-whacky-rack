@@ -48,7 +48,7 @@
   .top-back { color: #fff; opacity: .7; font-size: 13px; padding: 8px 12px; transition: .15s ease; }
   .top-back:hover { opacity: 1; }
 
-  .wrap { max-width: 720px; margin: 0 auto; padding: 24px 22px 130px; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 24px 22px 200px; }
 
   .loading { text-align: center; padding: 60px 20px; color: rgba(255,255,255,.55); font-size: 14px; }
   .loading .spinner {
@@ -62,7 +62,10 @@
   .gate .emoji { font-size: 52px; margin-bottom: 14px; line-height: 1; }
   .gate h1 { font-family: "Caveat", cursive; font-size: 34px; margin: 0 0 10px; font-weight: 600; }
   .gate p { font-size: 14px; color: rgba(255,255,255,.65); line-height: 1.7; margin: 0 0 22px; }
-  .gate .btn { display: inline-block; padding: 12px 22px; border-radius: 50px; font-size: 13px; font-weight: 800; transition: .2s ease; }
+  .gate .btn {
+    display: inline-block; padding: 12px 22px; border-radius: 50px;
+    font-size: 13px; font-weight: 800; transition: .2s ease;
+  }
   .gate .btn-primary { background: var(--accent); color: #fff; border: 1px solid var(--accent); }
   .gate .btn-primary:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
   .gate .btn-ghost { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.25); }
@@ -131,7 +134,6 @@
   }
   .penpal-banner .progress-fill.done { background: #16a34a; }
 
-  /* Stage / shadows */
   .letter-stage { position: relative; padding-bottom: 42px; margin-bottom: 8px; }
   .letter-stage.no-stack { padding-bottom: 0; margin-bottom: 0; }
 
@@ -162,15 +164,12 @@
     min-height: 260px; position: relative;
   }
 
-  /* ==================== STAMP SYSTEM ==================== */
+  /* Stamp system (kept from previous batch) */
   .stamp {
-    position: relative;
-    background: #fff;
-    transform: rotate(2deg);
+    position: relative; background: #fff; transform: rotate(2deg);
     filter: drop-shadow(0 3px 5px rgba(0,0,0,.32));
     --scale: 1;
-    width: calc(84px * var(--scale));
-    height: calc(100px * var(--scale));
+    width: calc(84px * var(--scale)); height: calc(100px * var(--scale));
     padding: calc(6px * var(--scale));
     --r: calc(4px * var(--scale));
     -webkit-mask:
@@ -191,8 +190,7 @@
   .stamp.stamp-md { --scale: 0.84; }
 
   .stamp .stamp-inner {
-    height: 100%;
-    font-size: calc(13px * var(--scale));
+    height: 100%; font-size: calc(13px * var(--scale));
     font-family: "Courier Prime", monospace;
     display: flex; flex-direction: column; align-items: center; justify-content: space-between;
     text-align: center; position: relative; overflow: hidden;
@@ -205,14 +203,9 @@
     flex: 1; width: 100%; display: flex; align-items: center; justify-content: center;
     position: relative;
   }
-  .stamp-emblem {
-    font-size: 2.4em; line-height: 1;
-    filter: drop-shadow(0 1px 1px rgba(0,0,0,.22));
-    z-index: 1;
-  }
+  .stamp-emblem { font-size: 2.4em; line-height: 1; filter: drop-shadow(0 1px 1px rgba(0,0,0,.22)); z-index: 1; }
   .stamp-value { font-size: 1em; font-weight: 700; line-height: 1; width: 100%; z-index: 1; }
 
-  /* Blossom */
   .stamp-blossom .stamp-inner {
     background:
       radial-gradient(circle at 20% 20%, rgba(255,255,255,.6) 0%, transparent 40%),
@@ -224,7 +217,6 @@
   .stamp-blossom .stamp-country { color: #8b3a5a; }
   .stamp-blossom .stamp-value { color: #8b3a5a; }
 
-  /* Formal */
   .stamp-formal .stamp-inner {
     background: linear-gradient(180deg, #f7f3e8 0%, #f0e8d4 100%);
     border: 1.5px solid #c9a227; padding: 0;
@@ -248,7 +240,6 @@
   .stamp-formal .stamp-emblem { font-size: 1.7em; }
   .stamp-formal .stamp-value { color: #8b2c3d; padding-bottom: 0.3em; font-size: 1.05em; }
 
-  /* Tricolor */
   .stamp-tricolor .stamp-inner {
     background: var(--tricolor,
       linear-gradient(180deg, #ff9933 0%, #ffe0b3 22%, #f7f3e8 50%, #c3e8c3 78%, #138808 100%));
@@ -266,27 +257,17 @@
   .stamp-tricolor .stamp-emblem  { font-size: 2.2em; }
   .stamp-tricolor .stamp-value   { color: #000; font-weight: 900; font-size: 1.05em; }
 
-  /* ---------- List postcard layout ---------- */
+  /* List postcard */
   #conv-card .airmail-frame { cursor: pointer; transition: transform .2s ease; }
   #conv-card .airmail-frame:hover { transform: translateY(-2px); }
-
   .conv-postcard {
-    display: grid;
-    grid-template-columns: 1fr 2px 1fr;
-    min-height: 340px;
-    border-radius: 4px;
-    overflow: hidden;
+    display: grid; grid-template-columns: 1fr 2px 1fr;
+    min-height: 340px; border-radius: 4px; overflow: hidden;
     background: var(--paper);
     background-image: repeating-linear-gradient(0deg, rgba(0,0,0,.015) 0 1px, transparent 1px 24px);
   }
-  .conv-postcard .divider {
-    background: linear-gradient(rgba(0,0,0,.18), rgba(0,0,0,.12));
-    margin: 14px 0;
-  }
-  .conv-postcard .left {
-    padding: 26px 24px 22px; min-width: 0;
-    display: flex; flex-direction: column;
-  }
+  .conv-postcard .divider { background: linear-gradient(rgba(0,0,0,.18), rgba(0,0,0,.12)); margin: 14px 0; }
+  .conv-postcard .left { padding: 26px 24px 22px; min-width: 0; display: flex; flex-direction: column; }
   .conv-postcard .left .salut {
     font-family: "Caveat", cursive; font-size: 24px; margin: 0 0 10px; color: var(--ink);
   }
@@ -294,25 +275,14 @@
     font-family: "Caveat", cursive; font-size: 18px; line-height: 1.55;
     color: #3a3448; white-space: pre-wrap; word-wrap: break-word;
     margin: 0 0 12px; flex: 1;
-    display: -webkit-box; -webkit-line-clamp: 7; -webkit-box-orient: vertical;
-    overflow: hidden;
+    display: -webkit-box; -webkit-line-clamp: 7; -webkit-box-orient: vertical; overflow: hidden;
   }
   .conv-postcard .sign {
     font-family: "Caveat", cursive; font-size: 18px;
     text-align: right; margin-top: auto; padding-top: 8px; color: var(--ink);
   }
-
-  .conv-postcard .right {
-    position: relative;
-    padding: 18px 20px 18px;
-    min-width: 0;
-    display: flex; flex-direction: column;
-  }
-  .conv-postcard .right .stamp {
-    position: absolute;
-    top: 16px; right: 18px;
-  }
-
+  .conv-postcard .right { position: relative; padding: 18px 20px 18px; min-width: 0; display: flex; flex-direction: column; }
+  .conv-postcard .right .stamp { position: absolute; top: 16px; right: 18px; }
   .conv-postcard .postmark {
     position: absolute; top: 46px; right: 100px;
     width: 82px; height: 82px; border-radius: 50%;
@@ -326,7 +296,6 @@
     content: ""; position: absolute; inset: 5px;
     border: 1px dashed rgba(38,71,143,.35); border-radius: 50%;
   }
-
   .conv-postcard .addr { margin-top: auto; padding-top: 90px; }
   .conv-postcard .addr .label {
     font-size: 8px; letter-spacing: .26em; text-transform: uppercase;
@@ -338,10 +307,7 @@
     border-bottom: 1px solid rgba(0,0,0,.22);
     word-wrap: break-word; line-height: 1.35;
   }
-
-  .conv-postcard .progress-row {
-    display: flex; align-items: center; gap: 8px; margin-top: 12px;
-  }
+  .conv-postcard .progress-row { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
   .conv-postcard .progress-bar {
     flex: 1; height: 4px; background: rgba(0,0,0,.08);
     border-radius: 2px; overflow: hidden;
@@ -364,10 +330,8 @@
     padding: 2px 8px; border-radius: 50px; margin-top: 6px; align-self: flex-start;
   }
 
-  /* ---------- Thread card ---------- */
-  .letter-top {
-    display: flex; align-items: flex-start; gap: 14px; margin-bottom: 16px;
-  }
+  /* Thread card */
+  .letter-top { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 16px; }
   .sender-label {
     flex: 1; min-width: 0;
     font-family: "Courier Prime", monospace; font-size: 12px;
@@ -393,13 +357,11 @@
     content: "drift"; position: absolute; bottom: 3px; right: 4px;
     font-size: 6px; letter-spacing: .12em; text-transform: uppercase;
   }
-
   .letter-body {
     font-family: "Caveat", cursive; font-size: 21px; line-height: 1.6;
     color: #3a3448; white-space: pre-wrap; word-wrap: break-word;
     margin: 0 0 14px;
   }
-
   .letter-meta {
     display: flex; justify-content: space-between; align-items: center; gap: 12px;
     margin-top: 18px; padding-top: 14px;
@@ -429,6 +391,167 @@
     border-color: rgba(255, 90, 54, .35);
     color: var(--accent-dark);
   }
+
+  /* === Gift card in thread === */
+  .gift-inner { min-height: 200px; }
+  .gift-status-header {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 14px;
+  }
+  .gift-status-icon {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; flex-shrink: 0;
+    background: var(--paper-2);
+    border: 2px dashed rgba(255,90,54,.4);
+  }
+  .gift-status-header.delivered .gift-status-icon {
+    background: #dcfce7;
+    border: 2px solid #16a34a;
+  }
+  .gift-status-text { flex: 1; min-width: 0; }
+  .gift-status-title {
+    font-family: "Caveat", cursive;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.2;
+    margin-bottom: 3px;
+  }
+  .gift-status-sub {
+    font-family: "Courier Prime", monospace;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+  .gift-in-transit-meta {
+    background: rgba(0,0,0,.03);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+    display: flex; flex-direction: column; gap: 6px;
+    font-family: "Courier Prime", monospace;
+    font-size: 11px;
+    color: #555;
+  }
+  .gift-in-transit-meta strong {
+    display: inline-block;
+    margin-right: 6px;
+    font-weight: 800;
+    color: var(--muted);
+    letter-spacing: .06em;
+    font-size: 9px;
+    text-transform: uppercase;
+  }
+  .gift-delivered-thumb {
+    display: flex; gap: 12px; align-items: center;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,.08);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 14px;
+  }
+  .gift-thumb-img {
+    width: 60px; height: 60px;
+    border-radius: 8px;
+    background: var(--paper-2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 30px;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  .gift-thumb-img img { width: 100%; height: 100%; object-fit: cover; }
+  .gift-thumb-info { flex: 1; min-width: 0; }
+  .gift-thumb-name {
+    font-family: "Caveat", cursive;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.2;
+    margin-bottom: 3px;
+  }
+  .gift-thumb-meta {
+    font-family: "Courier Prime", monospace;
+    font-size: 10px;
+    color: var(--muted);
+  }
+  .gift-reveal {
+    display: flex; gap: 14px; align-items: center;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,.08);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 14px;
+  }
+  .gift-reveal-img {
+    width: 80px; height: 80px;
+    border-radius: 10px;
+    background: var(--paper-2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  .gift-reveal-img img { width: 100%; height: 100%; object-fit: cover; }
+  .gift-reveal-info { flex: 1; min-width: 0; }
+  .gift-reveal-name {
+    font-family: "Caveat", cursive;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+  .gift-reveal-cat {
+    font-family: "Courier Prime", monospace;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--accent-dark);
+  }
+  .gift-message-inline {
+    font-family: "Caveat", cursive;
+    font-size: 17px;
+    line-height: 1.6;
+    color: #3a3448;
+    margin: 0 0 12px;
+    padding: 10px 14px;
+    background: var(--paper-2);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  .gift-vendor-inline {
+    font-family: "Courier Prime", monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: .04em;
+    margin-bottom: 14px;
+  }
+  .gift-meta-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 4px;
+    margin-bottom: 4px;
+  }
+  .gift-track-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 8px 16px;
+    border-radius: 50px;
+    background: var(--accent);
+    color: #fff;
+    border: 1px solid var(--accent);
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .02em;
+    text-decoration: none;
+    transition: .15s ease;
+  }
+  .gift-track-btn:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
 
   /* Nav */
   .letter-nav {
@@ -466,15 +589,44 @@
     color: rgba(255,255,255,.4); font-style: italic;
   }
 
-  /* Composer */
+  /* Composer + gift CTA */
   .composer {
     position: fixed; bottom: 0; left: 0; right: 0;
     background: rgba(20,25,32,.96);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    padding: 12px 22px 18px;
+    padding: 10px 22px 18px;
     border-top: 1px solid rgba(255,255,255,.08);
     z-index: 50;
+  }
+  .gift-cta-row {
+    max-width: 720px; margin: 0 auto 8px;
+    display: flex; justify-content: center;
+    min-height: 0;
+  }
+  .gift-cta-row:empty { display: none; }
+  .gift-cta-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 22px;
+    border-radius: 50px;
+    background: var(--accent);
+    color: #fff;
+    border: 1px solid var(--accent);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: .2s ease;
+  }
+  .gift-cta-btn:hover:not(:disabled) {
+    background: var(--accent-dark);
+    border-color: var(--accent-dark);
+  }
+  .gift-cta-btn:disabled {
+    background: rgba(255,255,255,.06);
+    color: rgba(255,255,255,.5);
+    border-color: rgba(255,255,255,.14);
+    cursor: not-allowed;
   }
   .composer-inner {
     max-width: 720px; margin: 0 auto;
@@ -508,8 +660,226 @@
     padding: 18px 22px; border-radius: 14px; font-size: 14px; line-height: 1.6;
   }
 
+  /* === Modals === */
+  .modal {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,.75); z-index: 1000;
+    align-items: center; justify-content: center;
+    padding: 20px; overflow-y: auto;
+  }
+  .modal.open { display: flex; }
+  .modal-inner {
+    background: var(--paper);
+    border-radius: 16px;
+    padding: 26px 26px 22px;
+    max-width: 520px; width: 100%;
+    max-height: 92vh; overflow-y: auto;
+    color: var(--ink);
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,.5);
+    animation: modalIn .18s ease-out;
+  }
+  @keyframes modalIn {
+    from { opacity: 0; transform: translateY(10px) scale(.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .modal-inner h3 {
+    font-family: "Caveat", cursive;
+    color: var(--ink);
+    margin: 0 0 6px;
+    font-weight: 600;
+    font-size: 26px;
+    line-height: 1.2;
+  }
+  .modal-inner > p {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.55;
+    margin: 0 0 16px;
+  }
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 18px;
+    flex-wrap: wrap;
+  }
+  .modal-actions .btn {
+    padding: 11px 20px;
+    border-radius: 50px;
+    font-family: "Courier Prime", monospace;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: .15s ease;
+    border: 1px solid transparent;
+  }
+  .modal-actions .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .modal-actions .btn-primary:hover:not(:disabled) { background: var(--accent-dark); border-color: var(--accent-dark); }
+  .modal-actions .btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+  .modal-actions .btn-ghost {
+    background: #fff;
+    color: #333;
+    border: 1px solid #d8cfba;
+  }
+  .modal-actions .btn-ghost:hover { border-color: #bbb; }
+
+  .modal-status {
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    display: none;
+    line-height: 1.55;
+  }
+  .modal-status.show { display: block; }
+  .modal-status.ok { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+  .modal-status.err { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+
+  /* Gift gallery */
+  .gift-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+  .gift-grid-option {
+    background: #fff;
+    border: 1px solid #e8e4dc;
+    border-radius: 12px;
+    padding: 14px 10px 12px;
+    cursor: pointer;
+    text-align: center;
+    transition: .15s ease;
+    font-family: inherit;
+    color: var(--ink);
+  }
+  .gift-grid-option:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,.08);
+  }
+  .gift-grid-option:active { transform: translateY(0); }
+  .gift-grid-emoji {
+    font-size: 38px;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .gift-grid-name {
+    font-family: "Caveat", cursive;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.25;
+    margin-bottom: 4px;
+    color: var(--ink);
+  }
+  .gift-grid-vendor {
+    font-family: "Courier Prime", monospace;
+    font-size: 8px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .gift-grid-loading {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 32px 20px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  /* Gift message preview */
+  .gift-preview-box {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 12px;
+    background: #fff;
+    border: 1px solid #d8cfba;
+    border-radius: 12px;
+    margin-bottom: 4px;
+  }
+  .gift-preview-emoji {
+    width: 56px;
+    height: 56px;
+    border-radius: 10px;
+    background: var(--paper-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    flex-shrink: 0;
+  }
+  .gift-preview-info { flex: 1; min-width: 0; }
+  .gift-preview-name {
+    font-family: "Caveat", cursive;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.2;
+    margin-bottom: 2px;
+  }
+  .gift-preview-vendor {
+    font-family: "Courier Prime", monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+  .gift-preview-route {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 4px 12px;
+    font-family: "Courier Prime", monospace;
+    font-size: 11px;
+    color: var(--muted);
+    gap: 8px;
+  }
+  .gift-preview-route .arrow {
+    color: var(--accent);
+    font-weight: 800;
+    font-size: 14px;
+  }
+
+  .gift-message-label {
+    display: block;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #555;
+    margin: 8px 0 6px;
+  }
+  .gift-message-ta {
+    width: 100%;
+    min-height: 82px;
+    padding: 12px 14px;
+    font-family: "Caveat", cursive;
+    font-size: 18px;
+    line-height: 1.5;
+    background: #fff;
+    border: 1px solid #d8cfba;
+    border-radius: 10px;
+    outline: none;
+    resize: vertical;
+    color: var(--ink);
+    box-sizing: border-box;
+  }
+  .gift-message-ta:focus { border-color: var(--accent); }
+  .gift-message-count {
+    text-align: right;
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 4px;
+    font-family: "Courier Prime", monospace;
+  }
+
   @media (max-width: 700px) {
-    .wrap { padding: 18px 15px 140px; }
+    .wrap { padding: 18px 15px 220px; }
     .top-bar { padding: 12px 15px; }
     .brand { font-size: 16px; }
     .top-back { font-size: 12px; }
@@ -539,15 +909,29 @@
     .letter-nav { flex-wrap: wrap; }
     .nav-btn { padding: 9px 14px; font-size: 11px; }
     .nav-center { order: -1; width: 100%; }
+
+    .gift-status-title { font-size: 19px; }
+    .gift-reveal-name { font-size: 19px; }
+    .gift-reveal-img { width: 64px; height: 64px; font-size: 34px; }
+    .gift-status-icon { width: 44px; height: 44px; font-size: 22px; }
+
     .composer { padding: 10px 15px 14px; }
     .composer-inner { flex-direction: column; align-items: stretch; gap: 8px; }
     .composer textarea { font-size: 18px; min-height: 50px; }
     .composer .send-btn { padding: 11px 18px; }
     .composer .char-count { position: static; text-align: right; margin-top: 2px; }
+    .gift-cta-row { margin-bottom: 6px; }
+    .gift-cta-btn { font-size: 11px; padding: 9px 18px; }
+
+    .modal-inner { padding: 22px 20px 18px; }
+    .modal-inner h3 { font-size: 22px; }
+    .gift-grid { grid-template-columns: repeat(2, 1fr); }
+    .gift-grid-emoji { font-size: 32px; }
+    .gift-grid-name { font-size: 14px; }
   }
 
   .toast-container {
-    position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
+    position: fixed; bottom: 200px; left: 50%; transform: translateX(-50%);
     z-index: 2000; display: flex; flex-direction: column; gap: 8px; align-items: center;
     pointer-events: none;
   }
@@ -578,6 +962,41 @@
 </main>
 
 <div class="toast-container" id="toast-container"></div>
+
+<!-- Gift gallery modal -->
+<div class="modal" id="gift-gallery-modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal-inner" style="max-width: 640px;">
+    <h3>Choose a gift</h3>
+    <p>Symbolic gifts, sent as a courier package. Select one to continue.</p>
+    <div class="gift-grid" id="gift-grid">
+      <div class="gift-grid-loading">Loading gifts…</div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="gift-gallery-cancel" type="button">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Gift message modal -->
+<div class="modal" id="gift-message-modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal-inner" style="max-width: 500px;">
+    <h3>Send this gift</h3>
+    <p>Add an optional message. It will arrive with the package.</p>
+
+    <div id="gift-preview"></div>
+
+    <label class="gift-message-label" for="gift-message-text">Message <span style="text-transform:none; letter-spacing:0; font-weight:500; color:#aaa;">(optional, up to 300 chars)</span></label>
+    <textarea id="gift-message-text" class="gift-message-ta" maxlength="300" placeholder="A short note to accompany the gift…"></textarea>
+    <div class="gift-message-count"><span id="gift-message-count">0</span> / 300</div>
+
+    <div class="modal-status" id="gift-send-status"></div>
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="gift-message-back" type="button">Back</button>
+      <button class="btn btn-primary" id="gift-message-send" type="button">Send gift →</button>
+    </div>
+  </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="auth.js"></script>
@@ -611,7 +1030,6 @@
     SA: { style: 'tricolor', emblem: '🌙', value: '10 SAR', label: 'SAUDI POST' },
     AE: { style: 'tricolor', emblem: '🦅', value: '10 AED', label: 'EMIRATES POST' }
   };
-
   const TRICOLOR_COLORS = {
     IN: '#ff9933, #ffe0b3, #f7f3e8, #c3e8c3, #138808',
     BR: '#009c3b, #ffdf00, #f7f3e8, #ffdf00, #002776',
@@ -632,12 +1050,19 @@
   let currentConv = null;
   let currentLetter = null;
   let currentExchanges = [];
+  let currentGifts = [];
   let currentState = null;
   let stackedLetters = [];
   let currentIndex = 0;
   let myCountry = null;
   let otherPartyCountryName = '';
   let translateCache = {};
+
+  // Gift flow state
+  let giftEligibility = null;
+  let giftCatalog = null;
+  let selectedGift = null;
+  let sendingGift = false;
 
   /* ---------- Helpers ---------- */
   function esc(s) {
@@ -680,46 +1105,19 @@
     const cc = String(countryCode).toUpperCase();
     const cfg = COUNTRY_STAMPS[cc];
     if (!cfg) return '';
-
     const size = sizeClass ? ' ' + sizeClass : '';
     const gradientStyle = cfg.style === 'tricolor' && TRICOLOR_COLORS[cc]
       ? `style="--tricolor: linear-gradient(180deg, ${TRICOLOR_COLORS[cc]});"`
       : '';
 
     if (cfg.style === 'blossom') {
-      return `
-        <div class="stamp stamp-blossom${size}" ${gradientStyle}>
-          <div class="stamp-inner">
-            <div class="stamp-country">${esc(cfg.label)}</div>
-            <div class="stamp-art"><span class="stamp-emblem">${cfg.emblem}</span></div>
-            <div class="stamp-value">${esc(cfg.value)}</div>
-          </div>
-        </div>
-      `;
+      return `<div class="stamp stamp-blossom${size}" ${gradientStyle}><div class="stamp-inner"><div class="stamp-country">${esc(cfg.label)}</div><div class="stamp-art"><span class="stamp-emblem">${cfg.emblem}</span></div><div class="stamp-value">${esc(cfg.value)}</div></div></div>`;
     }
     if (cfg.style === 'formal') {
-      return `
-        <div class="stamp stamp-formal${size}" ${gradientStyle}>
-          <div class="stamp-inner">
-            <div class="stamp-top-band">${esc(cfg.label)}</div>
-            <div class="stamp-art">
-              <div class="stamp-art-ring"><span class="stamp-emblem">${cfg.emblem}</span></div>
-            </div>
-            <div class="stamp-value">${esc(cfg.value)}</div>
-          </div>
-        </div>
-      `;
+      return `<div class="stamp stamp-formal${size}" ${gradientStyle}><div class="stamp-inner"><div class="stamp-top-band">${esc(cfg.label)}</div><div class="stamp-art"><div class="stamp-art-ring"><span class="stamp-emblem">${cfg.emblem}</span></div></div><div class="stamp-value">${esc(cfg.value)}</div></div></div>`;
     }
     if (cfg.style === 'tricolor') {
-      return `
-        <div class="stamp stamp-tricolor${size}" ${gradientStyle}>
-          <div class="stamp-inner">
-            <div class="stamp-country">${esc(cfg.label)}</div>
-            <div class="stamp-art"><span class="stamp-emblem">${cfg.emblem}</span></div>
-            <div class="stamp-value">${esc(cfg.value)}</div>
-          </div>
-        </div>
-      `;
+      return `<div class="stamp stamp-tricolor${size}" ${gradientStyle}><div class="stamp-inner"><div class="stamp-country">${esc(cfg.label)}</div><div class="stamp-art"><span class="stamp-emblem">${cfg.emblem}</span></div><div class="stamp-value">${esc(cfg.value)}</div></div></div>`;
     }
     return '';
   }
@@ -789,7 +1187,6 @@
     pill.disabled = true;
     const originalLabel = pill.innerHTML;
     pill.textContent = 'Translating…';
-
     try {
       const translated = await translateText(entry.body);
       cache.translatedHtml = esc(translated);
@@ -837,7 +1234,7 @@
   }
 
   /* ============================================================
-     LIST VIEW — stack of full postcards
+     LIST VIEW
      ============================================================ */
   async function loadList() {
     topBack.textContent = '← The Globe';
@@ -936,13 +1333,8 @@
       ? `<p class="conv-preview">${esc(preview)}${preview.length >= 195 ? '…' : ''}</p>`
       : `<p class="conv-preview" style="opacity:.55; font-style:italic;">(This letter is no longer available.)</p>`;
 
-    // Stamp: from the correspondent's country (always shown on list)
     const stampHtml = buildStampHtml(conv.other_party_country, 'stamp-md');
-    const postmarkHtml = `
-      <div class="postmark">
-        <span>EARTH<br>VIA GLOBE<br>IN TRANSIT</span>
-      </div>
-    `;
+    const postmarkHtml = `<div class="postmark"><span>EARTH<br>VIA GLOBE<br>IN TRANSIT</span></div>`;
 
     card.innerHTML = `
       <div class="airmail-frame" id="conv-card-click">
@@ -1031,6 +1423,7 @@
   document.addEventListener('keydown', (e) => {
     if (!convStack.length) return;
     if (currentConv) return;
+    if (document.querySelector('.modal.open')) return;
     const tag = (e.target.tagName || '').toLowerCase();
     if (tag === 'input' || tag === 'textarea') return;
     if (e.key === 'ArrowLeft') { e.preventDefault(); navigateConv(listIndex + 1); }
@@ -1056,14 +1449,20 @@
     }
     currentConv = conv;
 
-    const { data: exchanges, error: exErr } = await sb.rpc('get_conversation', {
-      p_conversation_id: convId, p_limit: 500
-    });
-    if (exErr) {
-      root.innerHTML = `<div class="err-card">Could not load messages: ${esc(exErr.message)}</div>`;
+    // Fetch exchanges + gifts + eligibility in parallel
+    const [exRes, giftsRes, eligRes] = await Promise.all([
+      sb.rpc('get_conversation', { p_conversation_id: convId, p_limit: 500 }),
+      sb.rpc('get_conversation_gifts', { p_conversation_id: convId }),
+      sb.rpc('get_gift_eligibility', { p_conversation_id: convId })
+    ]);
+
+    if (exRes.error) {
+      root.innerHTML = `<div class="err-card">Could not load messages: ${esc(exRes.error.message)}</div>`;
       return;
     }
-    currentExchanges = exchanges || [];
+    currentExchanges = exRes.data || [];
+    currentGifts = giftsRes.error ? [] : (giftsRes.data || []);
+    giftEligibility = eligRes.error ? null : (eligRes.data?.[0] || null);
 
     try {
       const { data: letterArr } = await sb.rpc('read_letter', { p_letter_id: conv.letter_id });
@@ -1088,12 +1487,15 @@
       otherPartyCountryName = await getCountryName(currentConv.other_party_country);
     } catch (e) { otherPartyCountryName = currentConv.other_party_country || ''; }
 
-    stackedLetters = [];
+    // Build stackedLetters — letters + gifts sorted by date
+    const items = [];
     if (currentLetter) {
-      stackedLetters.push({
+      items.push({
+        type: 'letter',
         id: '__seed__',
         body: currentLetter.body,
         created_at: currentLetter.created_at,
+        _sort_at: new Date(currentLetter.created_at).getTime(),
         is_mine: currentLetter.is_mine === true,
         is_seed: true,
         sender_country: currentLetter.origin_country,
@@ -1101,17 +1503,28 @@
       });
     }
     currentExchanges.forEach(ex => {
-      stackedLetters.push({
+      items.push({
+        type: 'letter',
         id: ex.id,
         body: ex.body,
         created_at: ex.created_at,
+        _sort_at: new Date(ex.created_at).getTime(),
         is_mine: ex.is_mine === true,
         is_seed: false,
         sender_country: ex.is_mine ? myCountry : currentConv.other_party_country,
-        delivery_mode: 'static' // replies are always postal
+        delivery_mode: 'static'
+      });
+    });
+    currentGifts.forEach(g => {
+      items.push({
+        type: 'gift',
+        id: g.id,
+        _sort_at: new Date(g.shipped_at).getTime(),
+        gift: g
       });
     });
 
+    stackedLetters = items.sort((a, b) => a._sort_at - b._sort_at);
     currentIndex = Math.max(0, stackedLetters.length - 1);
     renderThread();
   }
@@ -1119,6 +1532,10 @@
   async function renderThread() {
     const flag = flagFor(currentConv.other_party_country);
     const count = currentState.exchange_count;
+    const giftCount = currentGifts.length;
+    const giftSuffix = giftCount > 0
+      ? ` · ${giftCount} gift${giftCount === 1 ? '' : 's'}`
+      : '';
 
     const headerHtml = `
       <div class="thread-header">
@@ -1126,7 +1543,7 @@
         <div class="info">
           <h1>A correspondent in ${esc(otherPartyCountryName || currentConv.other_party_country || 'a distant country')}</h1>
           <div class="meta">
-            ${count} letter${count === 1 ? '' : 's'} exchanged
+            ${count} letter${count === 1 ? '' : 's'} exchanged${giftSuffix}
             ${currentState.is_permanent ? '<span class="permanent-badge">⭐ Permanent pen pals</span>' : ''}
           </div>
         </div>
@@ -1143,6 +1560,7 @@
       </div>
       <div class="letter-nav" id="letter-nav"></div>
       <div class="composer">
+        <div class="gift-cta-row" id="gift-cta-row"></div>
         <div class="composer-inner">
           <textarea id="compose-input" maxlength="600" placeholder="Write back…"></textarea>
           <button class="send-btn" id="send-btn" type="button" disabled>Send →</button>
@@ -1152,6 +1570,7 @@
     `;
     renderCard();
     renderNav();
+    renderGiftRow();
     wireComposer();
     wirePenpalButton();
   }
@@ -1167,6 +1586,12 @@
       return;
     }
 
+    if (entry.type === 'gift') {
+      card.innerHTML = renderGiftCardHtml(entry.gift);
+      return;
+    }
+
+    // Letter entry (existing logic preserved)
     const isMine = entry.is_mine === true;
     const cache = translateCache[String(entry.id)];
     const showingTranslation = cache && cache.showing === 'translated';
@@ -1185,14 +1610,10 @@
       senderLabel = `<span class="sender-label"><span class="from">${flagFor(country)} A letter from ${esc(countryName || 'somewhere')}</span></span>`;
     }
 
-    // Stamp logic:
-    //  - Seed bottle → no stamp (bottles don't go through postal system)
-    //  - Seed static → stamp from origin_country
-    //  - Exchanges → always stamp from sender_country
     const isSeedBottle = entry.is_seed === true && entry.delivery_mode === 'bottle';
     const stampCountry = entry.sender_country || (isMine ? myCountry : currentConv.other_party_country) || '';
 
-    let stampBlockHtml = '';
+    let stampBlockHtml;
     if (isSeedBottle || !stampCountry) {
       stampBlockHtml = `<div class="no-stamp-placeholder" title="A bottle adrift — no postal stamp"></div>`;
     } else {
@@ -1223,6 +1644,331 @@
     `;
   }
 
+  /* ---------- Gift card (three variants) ---------- */
+  function renderGiftCardHtml(g) {
+    const isDelivered = g.status === 'delivered';
+    const isMine = g.is_mine === true;
+    const senderFlag = flagFor(g.origin_country);
+    const receiverFlag = flagFor(g.destination_country);
+
+    if (!isDelivered) {
+      // In transit
+      const etaMs = new Date(g.estimated_delivery_at).getTime();
+      const daysLeft = Math.max(0, Math.ceil((etaMs - Date.now()) / 86400000));
+      const daysLabel = daysLeft > 0
+        ? `${daysLeft} day${daysLeft === 1 ? '' : 's'} remaining`
+        : 'Arriving soon';
+
+      return `
+        <div class="airmail-frame">
+          <div class="letter-inner gift-inner">
+            <div class="gift-status-header">
+              <div class="gift-status-icon">📦</div>
+              <div class="gift-status-text">
+                <div class="gift-status-title">A package is on its way</div>
+                <div class="gift-status-sub">
+                  ${isMine
+                    ? `To ${receiverFlag} ${esc(g.destination_country)}`
+                    : `From ${senderFlag} ${esc(g.origin_country)}`}
+                </div>
+              </div>
+            </div>
+            <div class="gift-in-transit-meta">
+              <div><strong>AWB</strong> ${esc(g.awb_number)}</div>
+              <div><strong>ETA</strong> ${daysLabel}</div>
+            </div>
+            <div class="gift-meta-actions">
+              <a class="gift-track-btn" href="letters-gift-awb.html?id=${esc(g.id)}">Track AWB →</a>
+            </div>
+            <div class="letter-meta">
+              <span>Shipped ${timeAgo(g.shipped_at)}</span>
+              <span class="position">Letter ${currentIndex + 1} of ${stackedLetters.length}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Delivered
+    if (isMine) {
+      // Sender perspective
+      const giftVisual = g.gift_image_url
+        ? `<img src="${esc(g.gift_image_url)}" alt="">`
+        : (g.gift_emoji || '🎁');
+      return `
+        <div class="airmail-frame">
+          <div class="letter-inner gift-inner">
+            <div class="gift-status-header delivered">
+              <div class="gift-status-icon">✅</div>
+              <div class="gift-status-text">
+                <div class="gift-status-title">Your gift was delivered</div>
+                <div class="gift-status-sub">To ${receiverFlag} ${esc(g.destination_country)}</div>
+              </div>
+            </div>
+            <div class="gift-delivered-thumb">
+              <div class="gift-thumb-img">${giftVisual}</div>
+              <div class="gift-thumb-info">
+                <div class="gift-thumb-name">${esc(g.gift_name || 'A gift')}</div>
+                <div class="gift-thumb-meta">Delivered ${timeAgo(g.delivered_at)}</div>
+              </div>
+            </div>
+            <div class="gift-meta-actions">
+              <a class="gift-track-btn" href="letters-gift-awb.html?id=${esc(g.id)}">View AWB →</a>
+            </div>
+            <div class="letter-meta">
+              <span>Shipped ${timeAgo(g.shipped_at)}</span>
+              <span class="position">Letter ${currentIndex + 1} of ${stackedLetters.length}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Receiver perspective — full reveal
+    const giftVisual = g.gift_image_url
+      ? `<img src="${esc(g.gift_image_url)}" alt="">`
+      : (g.gift_emoji || '🎁');
+
+    const messageHtml = g.message
+      ? `<div class="gift-message-inline">${esc(g.message)}</div>`
+      : '';
+    const vendorHtml = g.vendor_name
+      ? `<div class="gift-vendor-inline">Sponsored by ${esc(g.vendor_name)}</div>`
+      : '';
+
+    return `
+      <div class="airmail-frame">
+        <div class="letter-inner gift-inner">
+          <div class="gift-status-header delivered">
+            <div class="gift-status-icon">🎁</div>
+            <div class="gift-status-text">
+              <div class="gift-status-title">You have received a gift!</div>
+              <div class="gift-status-sub">From ${senderFlag} ${esc(g.origin_country)}</div>
+            </div>
+          </div>
+          <div class="gift-reveal">
+            <div class="gift-reveal-img">${giftVisual}</div>
+            <div class="gift-reveal-info">
+              <div class="gift-reveal-name">${esc(g.gift_name || 'A gift')}</div>
+              ${g.gift_category ? `<div class="gift-reveal-cat">${esc(g.gift_category)}</div>` : ''}
+            </div>
+          </div>
+          ${messageHtml}
+          ${vendorHtml}
+          <div class="gift-meta-actions">
+            <a class="gift-track-btn" href="letters-gift-awb.html?id=${esc(g.id)}">View AWB →</a>
+          </div>
+          <div class="letter-meta">
+            <span>Delivered ${timeAgo(g.delivered_at)}</span>
+            <span class="position">Letter ${currentIndex + 1} of ${stackedLetters.length}</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  /* ---------- Gift CTA row below compose ---------- */
+  function renderGiftRow() {
+    const row = document.getElementById('gift-cta-row');
+    if (!row) return;
+
+    const e = giftEligibility;
+    if (!e) { row.innerHTML = ''; return; }
+
+    // Threshold not met — hide entirely
+    if ((e.sent_by_me || 0) < 3 || (e.sent_by_them || 0) < 3) {
+      row.innerHTML = '';
+      return;
+    }
+
+    if (e.can_send) {
+      row.innerHTML = `
+        <button class="gift-cta-btn" id="gift-cta-trigger" type="button">
+          📦 Send a gift →
+        </button>
+      `;
+      document.getElementById('gift-cta-trigger')?.addEventListener('click', openGiftGallery);
+    } else {
+      let label = '📦 Gift unavailable';
+      if (e.reason_if_not && /recently/i.test(e.reason_if_not) && e.next_available_at) {
+        const days = Math.max(1, Math.ceil((new Date(e.next_available_at) - Date.now()) / 86400000));
+        label = `📦 Next gift in ${days} day${days === 1 ? '' : 's'}`;
+      } else if (e.reason_if_not && /weekly/i.test(e.reason_if_not)) {
+        label = '📦 Weekly gift limit reached';
+      } else if (e.reason_if_not) {
+        label = `📦 ${e.reason_if_not}`;
+      }
+      row.innerHTML = `
+        <button class="gift-cta-btn" type="button" disabled>${esc(label)}</button>
+      `;
+    }
+  }
+
+  /* ---------- Gift gallery modal ---------- */
+  async function openGiftGallery() {
+    const modal = document.getElementById('gift-gallery-modal');
+    const grid = document.getElementById('gift-grid');
+    grid.innerHTML = '<div class="gift-grid-loading">Loading gifts…</div>';
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+
+    if (!giftCatalog) {
+      const { data, error } = await sb.rpc('get_gift_catalog');
+      if (error) {
+        grid.innerHTML = `<div class="gift-grid-loading" style="color:#991b1b;">Could not load gifts: ${esc(error.message)}</div>`;
+        return;
+      }
+      giftCatalog = data || [];
+    }
+
+    if (giftCatalog.length === 0) {
+      grid.innerHTML = `<div class="gift-grid-loading">No gifts are available right now.</div>`;
+      return;
+    }
+
+    grid.innerHTML = giftCatalog.map(g => `
+      <button type="button" class="gift-grid-option" data-gift-id="${g.id}">
+        <div class="gift-grid-emoji">${esc(g.emoji)}</div>
+        <div class="gift-grid-name">${esc(g.name)}</div>
+        <div class="gift-grid-vendor">${esc(g.vendor_name)}</div>
+      </button>
+    `).join('');
+
+    grid.querySelectorAll('.gift-grid-option').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = Number(btn.dataset.giftId);
+        const gift = giftCatalog.find(g => Number(g.id) === id);
+        if (gift) selectGiftForMessage(gift);
+      });
+    });
+  }
+  function closeGiftGallery() {
+    const modal = document.getElementById('gift-gallery-modal');
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+  }
+
+  /* ---------- Gift message modal ---------- */
+  function selectGiftForMessage(gift) {
+    selectedGift = gift;
+    closeGiftGallery();
+    openGiftMessage(gift);
+  }
+
+  function openGiftMessage(gift) {
+    const modal = document.getElementById('gift-message-modal');
+    const preview = document.getElementById('gift-preview');
+    const ta = document.getElementById('gift-message-text');
+    const count = document.getElementById('gift-message-count');
+    const status = document.getElementById('gift-send-status');
+    const send = document.getElementById('gift-message-send');
+
+    const senderCountry = myCountry || currentConv.other_party_country || '??';
+    const receiverCountry = currentConv.other_party_country || '??';
+
+    preview.innerHTML = `
+      <div class="gift-preview-box">
+        <div class="gift-preview-emoji">${esc(gift.emoji)}</div>
+        <div class="gift-preview-info">
+          <div class="gift-preview-name">${esc(gift.name)}</div>
+          <div class="gift-preview-vendor">Sponsored by ${esc(gift.vendor_name)}</div>
+        </div>
+      </div>
+      <div class="gift-preview-route">
+        <span>${flagFor(senderCountry)} You</span>
+        <span class="arrow">→</span>
+        <span>${flagFor(receiverCountry)} Them</span>
+      </div>
+    `;
+
+    ta.value = '';
+    count.textContent = '0';
+    status.className = 'modal-status';
+    status.textContent = '';
+    send.disabled = false;
+    send.textContent = 'Send gift →';
+
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    setTimeout(() => ta.focus(), 100);
+  }
+  function closeGiftMessage() {
+    const modal = document.getElementById('gift-message-modal');
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    selectedGift = null;
+  }
+
+  async function submitGift() {
+    if (!selectedGift || !currentConv) return;
+    if (sendingGift) return;
+    sendingGift = true;
+
+    const ta = document.getElementById('gift-message-text');
+    const status = document.getElementById('gift-send-status');
+    const send = document.getElementById('gift-message-send');
+    const message = ta.value.trim();
+
+    send.disabled = true;
+    send.textContent = 'Sending…';
+    status.className = 'modal-status';
+
+    try {
+      const { data, error } = await sb.rpc('send_gift', {
+        p_conversation_id: currentConv.id,
+        p_gift_catalog_id: Number(selectedGift.id),
+        p_message: message || null
+      });
+      if (error) throw error;
+
+      status.className = 'modal-status show ok';
+      status.textContent = 'Gift booked. Tracking number issued.';
+      toast('Gift sent. AWB issued.', 'ok');
+
+      setTimeout(async () => {
+        closeGiftMessage();
+        await loadThread(currentConv.id);
+        toast('The package is on its way.', 'ok');
+      }, 900);
+
+    } catch (err) {
+      console.error('[gift] send failed:', err);
+      status.className = 'modal-status show err';
+      status.textContent = err.message || 'Could not send gift.';
+      send.disabled = false;
+      send.textContent = 'Send gift →';
+    } finally {
+      sendingGift = false;
+    }
+  }
+
+  /* ---------- Gift modal wiring ---------- */
+  document.getElementById('gift-gallery-cancel').addEventListener('click', closeGiftGallery);
+  document.getElementById('gift-gallery-modal').addEventListener('click', (e) => {
+    if (e.target.id === 'gift-gallery-modal') closeGiftGallery();
+  });
+
+  document.getElementById('gift-message-back').addEventListener('click', () => {
+    // Back returns to gallery
+    const prev = selectedGift;
+    closeGiftMessage();
+    if (prev) openGiftGallery();
+  });
+  document.getElementById('gift-message-send').addEventListener('click', submitGift);
+
+  const giftMessageTa = document.getElementById('gift-message-text');
+  giftMessageTa.addEventListener('input', () => {
+    document.getElementById('gift-message-count').textContent = String(giftMessageTa.value.length);
+  });
+
+  // Escape closes whichever modal is open
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    if (document.getElementById('gift-gallery-modal').classList.contains('open')) closeGiftGallery();
+    if (document.getElementById('gift-message-modal').classList.contains('open')) closeGiftMessage();
+  });
+
+  /* ---------- Nav ---------- */
   function renderNav() {
     const nav = document.getElementById('letter-nav');
     if (!nav) return;
@@ -1249,157 +1995,4 @@
     document.getElementById('nav-newer')?.addEventListener('click', () => navigateTo(currentIndex + 1));
     nav.querySelectorAll('[data-nav-index]').forEach(dot => {
       dot.addEventListener('click', () => {
-        const idx = parseInt(dot.dataset.navIndex, 10);
-        if (!isNaN(idx)) navigateTo(idx);
-      });
-    });
-  }
-
-  function navigateTo(newIndex) {
-    if (newIndex < 0 || newIndex >= stackedLetters.length) return;
-    if (newIndex === currentIndex) return;
-    const card = document.getElementById('letter-card');
-    if (!card) { currentIndex = newIndex; return; }
-    card.classList.add('switching-out');
-    setTimeout(() => {
-      currentIndex = newIndex;
-      renderCard();
-      renderNav();
-      card.classList.remove('switching-out');
-    }, 250);
-  }
-
-  document.addEventListener('keydown', (e) => {
-    if (!stackedLetters.length) return;
-    if (!currentConv) return;
-    const tag = (e.target.tagName || '').toLowerCase();
-    if (tag === 'input' || tag === 'textarea') return;
-    if (e.key === 'ArrowLeft') { e.preventDefault(); navigateTo(currentIndex - 1); }
-    else if (e.key === 'ArrowRight') { e.preventDefault(); navigateTo(currentIndex + 1); }
-  });
-
-  function renderPenpalBanner() {
-    const s = currentState;
-    const count = s.exchange_count;
-    const pct = Math.min(100, (count / PERMANENT_THRESHOLD) * 100);
-    const done = count >= PERMANENT_THRESHOLD;
-    const myRequest = s.i_am_author ? s.penpal_author_requested : s.penpal_replier_requested;
-    const theirRequest = s.i_am_author ? s.penpal_replier_requested : s.penpal_author_requested;
-
-    if (s.is_permanent) {
-      return `<div class="penpal-banner is-permanent"><div class="text"><strong>⭐ Permanent pen pals.</strong> You'll stay connected even after long silences.</div></div>`;
-    }
-    if (myRequest && theirRequest && !done) {
-      return `<div class="penpal-banner"><div class="text"><strong>Almost there.</strong> ${count} of ${PERMANENT_THRESHOLD} letters exchanged — ${PERMANENT_THRESHOLD - count} more to become permanent pen pals.</div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div></div>`;
-    }
-    if (myRequest && !theirRequest) {
-      return `<div class="penpal-banner"><div class="text"><strong>You've asked to be permanent pen pals.</strong> Waiting for them to agree. ${count} of ${PERMANENT_THRESHOLD} letters so far.</div><div class="progress-bar"><div class="progress-fill${done ? ' done' : ''}" style="width:${pct}%"></div></div></div>`;
-    }
-    if (theirRequest && !myRequest) {
-      return `<div class="penpal-banner"><div class="text"><strong>They've asked to be permanent pen pals.</strong> ${count >= PERMANENT_THRESHOLD ? 'If you agree, you become permanent immediately.' : `${count} of ${PERMANENT_THRESHOLD} letters so far.`}</div><button class="btn btn-primary" id="penpal-btn" type="button">Accept</button></div>`;
-    }
-    if (count < PERMANENT_THRESHOLD) {
-      return `<div class="penpal-banner"><div class="text"><strong>${count} of ${PERMANENT_THRESHOLD} letters exchanged.</strong> Exchange ${PERMANENT_THRESHOLD - count} more to unlock permanent pen pals.</div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div></div>`;
-    }
-    return `<div class="penpal-banner"><div class="text"><strong>${PERMANENT_THRESHOLD} letters exchanged!</strong> Ready to become permanent pen pals if you both agree.</div><button class="btn btn-primary" id="penpal-btn" type="button">Ask to be pen pals</button></div>`;
-  }
-
-  function wireComposer() {
-    const ta = document.getElementById('compose-input');
-    const btn = document.getElementById('send-btn');
-    const count = document.getElementById('char-count');
-    if (!ta || !btn || !count) return;
-
-    ta.addEventListener('input', () => {
-      const len = ta.value.length;
-      count.textContent = `${len} / 600`;
-      count.classList.toggle('over', len > 600);
-      btn.disabled = ta.value.trim().length < 1 || len > 600;
-    });
-
-    btn.addEventListener('click', async () => {
-      const body = ta.value.trim();
-      if (!body) return;
-      btn.disabled = true;
-      btn.textContent = 'Sending…';
-      try {
-        const { data, error } = await sb.rpc('send_exchange', {
-          p_conversation_id: currentConv.id, p_body: body
-        });
-        if (error) throw error;
-        const row = data && data[0];
-        if (!row) throw new Error('No response');
-
-        const newEx = { id: row.exchange_id, sender_id: session.user.id, is_mine: true, body: body, created_at: row.created_at };
-        currentExchanges.push(newEx);
-        stackedLetters.push({
-          id: newEx.id, body: newEx.body, created_at: newEx.created_at,
-          is_mine: true, is_seed: false, sender_country: myCountry, delivery_mode: 'static'
-        });
-
-        currentState.exchange_count = Number(row.exchange_count) || (currentState.exchange_count + 1);
-        currentState.is_permanent = row.is_permanent === true;
-        currentState.penpal_author_requested = row.penpal_author_requested === true;
-        currentState.penpal_replier_requested = row.penpal_replier_requested === true;
-
-        if (currentState.is_permanent && row.is_permanent === true && !currentConv.is_permanent) {
-          toast('⭐ You are now permanent pen pals.', 'ok');
-        }
-        currentIndex = stackedLetters.length - 1;
-        await renderThread();
-        toast('Letter sent.', 'ok');
-      } catch (err) {
-        console.error('[conv] send failed:', err);
-        toast(err.message || 'Could not send. Please try again.', 'err');
-        btn.disabled = false;
-        btn.textContent = 'Send →';
-      }
-    });
-  }
-
-  function wirePenpalButton() {
-    const btn = document.getElementById('penpal-btn');
-    if (!btn) return;
-    btn.addEventListener('click', async () => {
-      btn.disabled = true;
-      btn.textContent = 'Asking…';
-      try {
-        const { data, error } = await sb.rpc('request_penpal', { p_conversation_id: currentConv.id });
-        if (error) throw error;
-        const row = data && data[0];
-        if (!row) throw new Error('No response');
-        currentState.is_permanent = row.is_permanent === true;
-        currentState.exchange_count = Number(row.exchange_count) || currentState.exchange_count;
-        currentState.penpal_author_requested = row.penpal_author_requested === true;
-        currentState.penpal_replier_requested = row.penpal_replier_requested === true;
-        if (currentState.is_permanent) toast('⭐ You are now permanent pen pals.', 'ok');
-        else toast('Request sent. Waiting for them to agree.', 'ok');
-        await renderThread();
-      } catch (err) {
-        console.error('[conv] request_penpal failed:', err);
-        toast(err.message || 'Could not send request.', 'err');
-        btn.disabled = false;
-        btn.textContent = 'Try again';
-      }
-    });
-  }
-
-  async function boot() {
-    const { data: { session: s } } = await sb.auth.getSession();
-    session = s;
-    if (!session) { renderGate(); return; }
-    const params = new URLSearchParams(location.search);
-    const convId = params.get('id');
-    try {
-      if (convId) await loadThread(convId);
-      else await loadList();
-    } catch (e) {
-      console.error('[conv] boot failed:', e);
-      root.innerHTML = `<div class="err-card">Something went wrong. Please try again.</div>`;
-    }
-  }
-  boot();
-})();
-</script>
-</body>
-</html>
+        const

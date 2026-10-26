@@ -317,6 +317,35 @@ return String(s ?? "").replace(/[&<>"']/g, c => ({
             (n.snippet ? ` <span class="snippet">"${esc(n.snippet)}"</span>` : ""),
             url: "vendor-portal.html"
             };
+      /* ---------- Gift Courier ---------- */
+      case "gift_awb_to_you":
+        return {
+          icon: "🎁",
+          text: `<strong>${esc(actor)}</strong> sent you a gift! <span class="snippet">AWB: ${esc(n.snippet || '')}</span>`,
+          url: n.target_id ? `letters-gift-awb.html?id=${n.target_id}` : "#"
+        };
+
+      case "gift_awb_by_you":
+        return {
+          icon: "📦",
+          text: `Your gift to <strong>${esc(actor)}</strong> is on its way. <span class="snippet">AWB: ${esc(n.snippet || '')}</span>`,
+          url: n.target_id ? `letters-gift-awb.html?id=${n.target_id}` : "#"
+        };
+
+      case "gift_delivered_to_you":
+        return {
+          icon: "🎉",
+          text: `<strong>${esc(actor)}</strong>'s gift has arrived! Open it.`,
+          url: n.target_id ? `letters-gift-awb.html?id=${n.target_id}` : "#"
+        };
+
+      case "gift_delivered_by_you":
+        return {
+          icon: "✅",
+          text: `Your gift to <strong>${esc(actor)}</strong> was delivered.`,
+          url: n.target_id ? `letters-gift-awb.html?id=${n.target_id}` : "#"
+        };
+
 
             default:
             return { icon: "🔔", text: "New activity", url: "#" };

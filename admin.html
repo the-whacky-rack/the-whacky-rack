@@ -236,19 +236,20 @@
 
 <div class="toast-container" id="toast-container"></div>
 
-<!-- Vendor details modal -->
 <div class="modal" id="vendor-modal" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="modal-inner" id="vendor-modal-body"></div>
 </div>
 
-<!-- Shop product add/edit modal -->
 <div class="modal" id="shop-product-modal" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="modal-inner" id="shop-product-modal-body"></div>
 </div>
 
-<!-- Bulk import modal -->
 <div class="modal" id="bulk-import-modal" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="modal-inner" id="bulk-import-modal-body"></div>
+</div>
+
+<div class="modal" id="gift-modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal-inner" id="gift-modal-body"></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -264,6 +265,8 @@
   const shopProductModalBody = document.getElementById("shop-product-modal-body");
   const bulkImportModal = document.getElementById("bulk-import-modal");
   const bulkImportModalBody = document.getElementById("bulk-import-modal-body");
+  const giftModal = document.getElementById("gift-modal");
+  const giftModalBody = document.getElementById("gift-modal-body");
 
   let me = null;
   let tab = "vendors";
@@ -283,6 +286,10 @@
   let letterReports = [];
   let letters = [];
   let letterFilter = "all";
+
+  // Gift Courier state
+  let gifts = [];
+  let giftsFilter = "all";
 
   function esc(s) {
     return String(s ?? "").replace(/[&<>"']/g, c => ({
@@ -314,7 +321,7 @@
     setTimeout(() => el.remove(), 2800);
   }
   function labelTarget(t) {
-    return ({ yap:"Yap", yap_comment:"Yap comment", tape:"Tape", tape_comment:"Tape comment", profile:"Profile", letter:"Letter" })[t] || t;
+    return ({ yap:"Yap", yap_comment:"Yap comment", tape:"Tape", tape_comment:"Tape comment", profile:"Profile", letter:"Letter", gift:"Gift", gift_catalog:"Gift Catalog" })[t] || t;
   }
 
   async function loadReports() {
@@ -388,6 +395,12 @@
     letters = data || [];
   }
 
+  async function loadGifts() {
+    const { data, error } = await sb.rpc("admin_list_gifts");
+    if (error) { console.error(error); gifts = []; return; }
+    gifts = data || [];
+  }
+
   async function loadAll() {
     await Promise.all([
       loadReports(),
@@ -396,7 +409,8 @@
       loadCategories(),
       loadCountries(),
       loadLetterReports(),
-      loadLetters()
+      loadLetters(),
+      loadGifts()
     ]);
   }
 
@@ -408,7 +422,7 @@
       <div class="page-head">
         <div class="kicker">Signed in as ${esc(me.username)}</div>
         <h1>Moderation <span>panel</span></h1>
-        <p>Reports, vendors, shop products, vendor products, categories, and letters.</p>
+        <p>Reports, vendors, shop products, vendor products, categories, letters, and gifts.</p>
       </div>
 
       <div class="tabs">
@@ -430,6 +444,9 @@
         <button class="tab-btn ${tab==="letters"?"active":""}" data-tab="letters">
           📜 Letters<span class="count">${letterReports.length}</span>
         </button>
+        <button class="tab-btn ${tab==="gifts"?"active":""}" data-tab="gifts">
+          🎁 Gifts<span class="count">${gifts.length}</span>
+        </button>
         <button class="tab-btn ${tab==="log"?"active":""}" data-tab="log">
           📜 Mod log
         </button>
@@ -445,6 +462,7 @@
     else if (tab === "products") content.innerHTML = renderVendorProducts();
     else if (tab === "categories") content.innerHTML = renderCategories();
     else if (tab === "letters") content.innerHTML = renderLetters();
+    else if (tab === "gifts") content.innerHTML = renderGifts();
     else content.innerHTML = renderLogs();
   }
 
@@ -867,6 +885,201 @@
     return filterBar + reportsSection + lettersHtml;
   }
 
+  /* ---------- Gifts tab ---------- */
+  function renderGifts() {
+    const filters = [
+      ["all", "All"],
+      ["active", "Active"],
+      ["inactive", "Inactive"]
+    ];
+
+    const toolbar = `
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; align-items:center;">
+        ${filters.map(([val,label]) => `
+          <button class="tab-btn ${giftsFilter===val?"active":""}" style="padding:8px 14px; font-size:12px;"
+            data-gifts-filter="${val}">${label}</button>
+        `).join("")}
+        <button class="rep-btn approve" id="add-gift-btn" type="button" style="margin-left:auto;">+ Add gift</button>
+      </div>
+    `;
+
+    let filtered = gifts;
+    if (giftsFilter === "active") filtered = gifts.filter(g => g.is_active);
+    else if (giftsFilter === "inactive") filtered = gifts.filter(g => !g.is_active);
+
+    if (filtered.length === 0) {
+      return toolbar + `<div class="card"><div class="empty">
+        <div class="emoji">🎁</div>
+        <strong>No ${giftsFilter === "all" ? "" : esc(giftsFilter) + " "}gifts</strong>
+        ${giftsFilter === "all" ? "Add the first gift with the button above." : "Adjust the filter or add a new gift."}
+      </div></div>`;
+    }
+
+    const gridHtml = `
+      <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:16px;">
+        ${filtered.map(g => `
+          <div class="card" style="margin:0; padding:0; overflow:hidden;">
+            <div style="padding:22px 16px; text-align:center; background:#fafafa; border-bottom:1px solid var(--border);">
+              <div style="font-size:56px; line-height:1; margin-bottom:6px;">${esc(g.emoji)}</div>
+              <div style="font-family:ui-monospace,monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted);">
+                ${esc(g.category || "—")}
+              </div>
+            </div>
+            <div style="padding:16px 18px;">
+              <h3 style="margin:0 0 4px; font-size:15px; font-weight:900; line-height:1.3;">${esc(g.name)}</h3>
+              <div style="font-size:11px; color:var(--muted); margin-bottom:10px; line-height:1.4;">
+                ${esc(g.vendor_name)}${g.value_note ? " · " + esc(g.value_note) : ""}
+              </div>
+              <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+                <span class="status-pill ${g.is_active ? 'approved' : 'rejected'}">${g.is_active ? 'ACTIVE' : 'INACTIVE'}</span>
+                <span style="font-family:ui-monospace,monospace; font-size:10px; color:#888;">order ${g.sort_order}</span>
+              </div>
+              <div class="vendor-actions" style="margin-top:12px;">
+                <button class="rep-btn" data-action="edit-gift" data-gift-id="${g.id}">Edit</button>
+                <a class="rep-btn" href="${esc(g.vendor_url)}" target="_blank" rel="noopener sponsored">Vendor ↗</a>
+                <button class="rep-btn ${g.is_active ? 'warn' : 'approve'}" data-action="toggle-gift-active" data-gift-id="${g.id}" data-active="${g.is_active ? '1' : '0'}">${g.is_active ? 'Deactivate' : 'Activate'}</button>
+                <button class="rep-btn reject" data-action="delete-gift" data-gift-id="${g.id}" data-gift-name="${esc(g.name)}">Delete</button>
+              </div>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    `;
+
+    return toolbar + gridHtml;
+  }
+
+  /* ---------- Gift add/edit modal ---------- */
+  function openGiftModal(gift) {
+    const isEdit = !!gift;
+    const g = gift || {};
+
+    giftModalBody.innerHTML = `
+      <button class="modal-close" type="button" id="gift-modal-close" aria-label="Close">×</button>
+      <h3>${isEdit ? "Edit gift" : "Add gift"}</h3>
+      <p class="modal-sub">${isEdit ? "Update this catalog item. Existing gifts already sent will still render the original snapshot." : "New items appear in the gift gallery immediately."}</p>
+
+      <form id="gift-form" novalidate>
+        <div class="field-grid">
+          <div>
+            <label for="gf-name">Name</label>
+            <input id="gf-name" type="text" maxlength="80" required value="${isEdit ? esc(g.name) : ""}">
+          </div>
+          <div>
+            <label for="gf-emoji">Emoji</label>
+            <input id="gf-emoji" type="text" maxlength="8" required value="${isEdit ? esc(g.emoji) : "🎁"}">
+          </div>
+        </div>
+
+        <label for="gf-description">Description <span class="optional">(optional)</span></label>
+        <textarea id="gf-description" maxlength="200" rows="2">${isEdit ? esc(g.description || "") : ""}</textarea>
+
+        <div class="field-grid">
+          <div>
+            <label for="gf-category">Category</label>
+            <input id="gf-category" type="text" maxlength="40" required value="${isEdit ? esc(g.category) : ""}" placeholder="teddy, jewelry, painting…">
+          </div>
+          <div>
+            <label for="gf-value">Value note <span class="optional">(optional)</span></label>
+            <input id="gf-value" type="text" maxlength="40" value="${isEdit ? esc(g.value_note || "") : ""}" placeholder="worth ~$20">
+          </div>
+        </div>
+
+        <label for="gf-image">Image URL <span class="optional">(optional — emoji is used if blank)</span></label>
+        <input id="gf-image" type="url" maxlength="400" value="${isEdit ? esc(g.image_url || "") : ""}" placeholder="https://...">
+
+        <div class="field-grid">
+          <div>
+            <label for="gf-vendor-name">Vendor name</label>
+            <input id="gf-vendor-name" type="text" maxlength="80" required value="${isEdit ? esc(g.vendor_name) : ""}">
+          </div>
+          <div>
+            <label for="gf-vendor-url">Vendor URL (https://)</label>
+            <input id="gf-vendor-url" type="url" maxlength="300" required value="${isEdit ? esc(g.vendor_url) : ""}" placeholder="https://...">
+          </div>
+        </div>
+
+        <div class="field-grid">
+          <div>
+            <label for="gf-sort">Sort order <span class="optional">(lower = earlier)</span></label>
+            <input id="gf-sort" type="number" min="0" max="9999" value="${isEdit ? (g.sort_order || 100) : 100}">
+          </div>
+          <div style="display:flex; align-items:flex-end; padding-bottom:6px;">
+            <div class="check-row" style="margin-top:0;">
+              <input id="gf-active" type="checkbox" ${(!isEdit || g.is_active) ? "checked" : ""}>
+              <label for="gf-active">Active (visible in gallery)</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="status" id="gf-status"></div>
+
+        <div class="modal-actions">
+          <button class="rep-btn" type="button" id="gift-modal-cancel">Cancel</button>
+          <button class="rep-btn approve" type="submit" id="gift-modal-submit">${isEdit ? "Save changes" : "Add gift"}</button>
+        </div>
+      </form>
+    `;
+
+    giftModal.classList.add("open");
+    giftModal.setAttribute("aria-hidden", "false");
+
+    const form = document.getElementById("gift-form");
+    const statusEl = document.getElementById("gf-status");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      statusEl.className = "status";
+
+      const submitBtn = document.getElementById("gift-modal-submit");
+      submitBtn.disabled = true;
+      const oldText = submitBtn.textContent;
+      submitBtn.textContent = "Saving…";
+
+      const basePayload = {
+        p_name:        document.getElementById("gf-name").value.trim(),
+        p_description: document.getElementById("gf-description").value.trim() || null,
+        p_emoji:       document.getElementById("gf-emoji").value.trim(),
+        p_image_url:   document.getElementById("gf-image").value.trim() || null,
+        p_category:    document.getElementById("gf-category").value.trim(),
+        p_value_note:  document.getElementById("gf-value").value.trim() || null,
+        p_vendor_name: document.getElementById("gf-vendor-name").value.trim(),
+        p_vendor_url:  document.getElementById("gf-vendor-url").value.trim(),
+        p_sort_order:  parseInt(document.getElementById("gf-sort").value, 10) || 100
+      };
+
+      try {
+        let error;
+        if (isEdit) {
+          const payload = Object.assign({}, basePayload, {
+            p_id: g.id,
+            p_is_active: document.getElementById("gf-active").checked
+          });
+          ({ error } = await sb.rpc("admin_update_gift", payload));
+        } else {
+          ({ error } = await sb.rpc("admin_add_gift", basePayload));
+        }
+        if (error) throw error;
+
+        toast(isEdit ? "Gift updated." : "Gift added.", "ok");
+        closeGiftModal();
+        await loadGifts();
+        render();
+      } catch (err) {
+        console.error(err);
+        statusEl.className = "status show err";
+        statusEl.textContent = err.message || "Could not save.";
+        submitBtn.disabled = false;
+        submitBtn.textContent = oldText;
+      }
+    });
+  }
+
+  function closeGiftModal() {
+    giftModal.classList.remove("open");
+    giftModal.setAttribute("aria-hidden", "true");
+  }
+
   /* ---------------- Vendor modal ---------------- */
 
   function openVendorModal(vendorId) {
@@ -1167,7 +1380,6 @@ Weird Lamp,https://...,https://amazon...,Lamps,US,,</div>
       header.forEach((h, idx) => {
         row[h] = (cols[idx] || "").trim();
       });
-      // Skip fully-empty rows
       if (!row.name && !row.link) continue;
       rows.push(row);
     }
@@ -1353,383 +1565,4 @@ Weird Lamp,https://...,https://amazon...,Lamps,US,,</div>
       if (tab === "log") await loadLogs();
       if (tab === "shop") await loadShopProducts();
       if (tab === "letters") await Promise.all([loadLetterReports(), loadLetters()]);
-      render();
-      return;
-    }
-
-    const vf = e.target.closest("[data-vendor-filter]");
-    if (vf) {
-      vendorFilter = vf.dataset.vendorFilter;
-      await loadVendors();
-      render();
-      return;
-    }
-    const pf = e.target.closest("[data-product-filter]");
-    if (pf) {
-      productFilter = pf.dataset.productFilter;
-      await loadVendorProducts();
-      render();
-      return;
-    }
-    const lf = e.target.closest("[data-letter-filter]");
-    if (lf) {
-      letterFilter = lf.dataset.letterFilter;
-      await loadLetters();
-      render();
-      return;
-    }
-
-    if (e.target.id === "cat-add-btn") { await addCategory(); return; }
-
-    if (e.target.id === "vendor-modal-close" || e.target === vendorModal) {
-      closeVendorModal();
-      return;
-    }
-    if (e.target.id === "shop-modal-close" || e.target.id === "shop-modal-cancel" || e.target === shopProductModal) {
-      closeShopProductModal();
-      return;
-    }
-    if (e.target.id === "bulk-modal-close" || e.target.id === "bulk-modal-cancel" || e.target === bulkImportModal) {
-      closeBulkImportModal();
-      return;
-    }
-
-    // Shop tab controls
-    if (e.target.id === "shop-add-btn") { openShopProductModal("add", null); return; }
-    if (e.target.id === "shop-bulk-btn") { openBulkImportModal(); return; }
-    if (e.target.id === "shop-refresh-btn") {
-      await loadShopProducts();
-      render();
-      return;
-    }
-
-    const btn = e.target.closest("[data-action]");
-    if (!btn) return;
-    const action = btn.dataset.action;
-
-    if (action === "dismiss" || action === "resolve") {
-      const note = prompt(action === "dismiss" ? "Optional note:" : "Optional note:", "");
-      if (note === null) return;
-      btn.disabled = true;
-      try {
-        const { error } = await sb.rpc("resolve_report", {
-          p_report_id: btn.dataset.reportId,
-          p_action: action === "dismiss" ? "dismissed" : "resolved",
-          p_note: note || null
-        });
-        if (error) throw error;
-        toast(action === "dismiss" ? "Dismissed." : "Resolved.", "ok");
-        await loadReports();
-        render();
-      } catch (err) {
-        console.error(err);
-        toast(err.message || "Failed.", "err");
-        btn.disabled = false;
-      }
-      return;
-    }
-    if (action === "remove") {
-      if (!confirm("Soft-delete this content?")) return;
-      btn.disabled = true;
-      try {
-        const { error: rmErr } = await sb.rpc("admin_remove_content", {
-          p_target_type: btn.dataset.targetType,
-          p_target_id: btn.dataset.targetId
-        });
-        if (rmErr) throw rmErr;
-        const reportRow = reports.find(r =>
-          r.target_id === btn.dataset.targetId && r.target_type === btn.dataset.targetType);
-        if (reportRow) {
-          await sb.rpc("resolve_report", {
-            p_report_id: reportRow.report_id,
-            p_action: "resolved",
-            p_note: "Content removed by moderator."
-          });
-        }
-        toast("Removed and report resolved.", "ok");
-        await loadReports();
-        render();
-      } catch (err) {
-        console.error(err);
-        toast(err.message || "Failed.", "err");
-        btn.disabled = false;
-      }
-      return;
-    }
-
-    // Shop product actions
-    if (action === "edit-shop-product") {
-      const p = shopProducts.find(x => x.id === parseInt(btn.dataset.productId, 10));
-      if (p) openShopProductModal("edit", p);
-      return;
-    }
-    if (action === "delete-shop-product") {
-      btn.disabled = true;
-      try {
-        await handleShopProductDelete(parseInt(btn.dataset.productId, 10), btn.dataset.productName);
-      } finally {
-        if (document.body.contains(btn)) btn.disabled = false;
-      }
-      return;
-    }
-
-    if (action === "view-vendor") { openVendorModal(btn.dataset.vendorId); return; }
-    if (["approve-vendor","reject-vendor","suspend-vendor","restore-vendor","set-limit"].includes(action)) {
-      btn.disabled = true;
-      try {
-        await handleVendorAction(action, btn.dataset.vendorId);
-      } finally {
-        if (document.body.contains(btn)) btn.disabled = false;
-      }
-      return;
-    }
-    if (action === "toggle-feature-vendor") {
-      btn.disabled = true;
-      const featured = btn.dataset.featured === "1";
-      try {
-        const { error } = await sb.rpc("admin_set_vendor_featured", {
-          p_vendor_id: btn.dataset.vendorId,
-          p_is_featured: !featured,
-          p_order: 0
-        });
-        if (error) throw error;
-        toast(featured ? "Vendor unfeatured." : "Vendor featured.", "ok");
-        await loadVendors();
-        render();
-      } catch (err) {
-        console.error(err);
-        toast(err.message || "Failed.", "err");
-        btn.disabled = false;
-      }
-      return;
-    }
-    if (action === "toggle-verify-vendor") {
-      btn.disabled = true;
-      const verified = btn.dataset.verified === "1";
-      try {
-        const { error } = await sb.rpc("admin_set_vendor_verified", {
-          p_vendor_id: btn.dataset.vendorId,
-          p_is_verified: !verified
-        });
-        if (error) throw error;
-        toast(verified ? "Vendor verification removed." : "Vendor verified.", "ok");
-        closeVendorModal();
-        await loadVendors();
-        render();
-      } catch (err) {
-        console.error(err);
-        toast(err.message || "Failed.", "err");
-        btn.disabled = false;
-      }
-      return;
-    }
-
-    if (action === "approve-product" || action === "reject-product") {
-      btn.disabled = true;
-      try {
-        await handleProductAction(action, btn.dataset.productId);
-      } finally {
-        if (document.body.contains(btn)) btn.disabled = false;
-      }
-      return;
-    }
-    if (action === "toggle-feature-product") {
-      btn.disabled = true;
-      const featured = btn.dataset.featured === "1";
-      try {
-        const { error } = await sb.rpc("admin_set_product_featured", {
-          p_product_id: parseInt(btn.dataset.productId, 10),
-          p_is_featured: !featured,
-          p_order: 0
-        });
-        if (error) throw error;
-        toast(featured ? "Product unfeatured." : "Product featured.", "ok");
-        await loadVendorProducts();
-        render();
-      } catch (err) {
-        console.error(err);
-        toast(err.message || "Failed.", "err");
-        btn.disabled = false;
-      }
-      return;
-    }
-
-    // Letter moderation actions
-    if (action === "view-letter") {
-      btn.disabled = true;
-      try {
-        const { data, error } = await sb.rpc("admin_get_letter", { p_letter_id: btn.dataset.letterId });
-        if (error) throw error;
-        const l = data && data[0];
-        if (!l) throw new Error("Letter not found");
-        alert(
-          "LETTER " + l.id + "\n" +
-          "Status: " + l.status + (l.is_deleted ? " (deleted)" : "") + "\n" +
-          "Author: " + (l.author_username || "unknown") + " (" + (l.author_country || "?") + ")\n" +
-          "Mode: " + l.delivery_mode +
-            (l.bottle_state ? " (" + l.bottle_state + ")" : "") + "\n" +
-          "From: " + l.origin_country +
-            (l.target_country ? " → " + l.target_country : "") + "\n" +
-          "Conversations: " + l.conversation_count + "\n" +
-          "Created: " + new Date(l.created_at).toLocaleString() + "\n\n" +
-          l.body
-        );
-      } catch (err) {
-        console.error(err);
-        toast(err.message || "Could not load letter.", "err");
-      } finally {
-        if (document.body.contains(btn)) btn.disabled = false;
-      }
-      return;
-    }
-
-    if (action === "hide-letter") {
-      const reason = prompt("Reason for hiding (min 3 chars):", "");
-      if (reason === null) return;
-      if (reason.trim().length < 3) { toast("Reason too short.", "err"); return; }
-      btn.disabled = true;
-      try {
-        const { error } = await sb.rpc("admin_hide_letter", {
-          p_letter_id: btn.dataset.letterId, p_reason: reason.trim()
-        });
-        if (error) throw error;
-        toast("Letter hidden.", "ok");
-        await Promise.all([loadLetterReports(), loadLetters()]);
-        render();
-      } catch (err) {
-        console.error(err);
-        toast(err.message || "Failed.", "err");
-        btn.disabled = false;
-      }
-      return;
-    }
-
-    if (action === "unhide-letter") {
-      btn.disabled = true;
-      try {
-        const { error } = await sb.rpc("admin_unhide_letter", { p_letter_id: btn.dataset.letterId });
-        if (error) throw error;
-        toast("Letter unhidden.", "ok");
-        await Promise.all([loadLetterReports(), loadLetters()]);
-        render();
-      } catch (err) {
-        console.error(err);
-        toast(err.message || "Failed.", "err");
-        btn.disabled = false;
-      }
-      return;
-    }
-
-    if (action === "delete-letter") {
-      if (!confirm("Soft-delete this letter? It will no longer be visible anywhere.")) return;
-      btn.disabled = true;
-      try {
-        const { error } = await sb.rpc("admin_delete_letter", { p_letter_id: btn.dataset.letterId });
-        if (error) throw error;
-        toast("Letter deleted.", "ok");
-        await Promise.all([loadLetterReports(), loadLetters()]);
-        render();
-      } catch (err) {
-        console.error(err);
-        toast(err.message || "Failed.", "err");
-        btn.disabled = false;
-      }
-      return;
-    }
-
-    if (action === "resolve-letter-report" || action === "dismiss-letter-report") {
-      const note = prompt("Optional note:", "");
-      if (note === null) return;
-      btn.disabled = true;
-      try {
-        const { error } = await sb.rpc("admin_resolve_letter_report", {
-          p_report_id: btn.dataset.reportId,
-          p_action: action === "dismiss-letter-report" ? "dismissed" : "resolved",
-          p_note: note.trim() || null
-        });
-        if (error) throw error;
-        toast("Report " + (action === "dismiss-letter-report" ? "dismissed." : "resolved."), "ok");
-        await Promise.all([loadLetterReports(), loadLetters()]);
-        render();
-      } catch (err) {
-        console.error(err);
-        toast(err.message || "Failed.", "err");
-        btn.disabled = false;
-      }
-      return;
-    }
-
-    if (["edit-cat","activate-cat","deactivate-cat","delete-cat"].includes(action)) {
-      btn.disabled = true;
-      try {
-        await handleCategoryAction(action, parseInt(btn.dataset.catId, 10));
-      } finally {
-        if (document.body.contains(btn)) btn.disabled = false;
-      }
-      return;
-    }
-  });
-
-  /* Debounced shop search + country filter */
-  document.addEventListener("input", (e) => {
-    if (e.target.id === "shop-search") {
-      clearTimeout(window.__shopSearchTimer);
-      window.__shopSearchTimer = setTimeout(async () => {
-        shopFilterSearch = e.target.value.trim();
-        await loadShopProducts();
-        render();
-      }, 350);
-    }
-  });
-  document.addEventListener("change", async (e) => {
-    if (e.target.id === "shop-country-filter") {
-      shopFilterCountry = e.target.value;
-      await loadShopProducts();
-      render();
-    }
-  });
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      if (vendorModal.classList.contains("open")) closeVendorModal();
-      if (shopProductModal.classList.contains("open")) closeShopProductModal();
-      if (bulkImportModal.classList.contains("open")) closeBulkImportModal();
-    }
-  });
-
-  /* ---------------- Boot ---------------- */
-
-  async function boot() {
-    const { data: { session } } = await sb.auth.getSession();
-    if (!session) {
-      root.innerHTML = `<div class="err-card">
-        <h2>Sign in required</h2>
-        <p>You must be signed in as an admin to view this page.</p>
-        <p><a href="login.html">Sign in →</a></p>
-      </div>`;
-      return;
-    }
-    const { data: profile } = await sb.from("profiles")
-      .select("id, username, is_admin")
-      .eq("id", session.user.id)
-      .maybeSingle();
-    me = profile;
-
-    if (!me || !me.is_admin) {
-      root.innerHTML = `<div class="err-card">
-        <h2>Admins only</h2>
-        <p>This page is only for moderators.</p>
-        <p><a href="index.html">← Back home</a></p>
-      </div>`;
-      return;
-    }
-
-    await loadAll();
-    render();
-  }
-
-  boot();
-})();
-</script>
-</body>
-</html>
+      if (tab

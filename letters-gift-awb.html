@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Air Waybill — The Whacky Rack Courier</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --accent: #ff5a36;
+    --accent-dark: #e84625;
+    --bg: #141920;
+    --paper: #fbf6e8;
+    --paper-2: #fff5f0;
+    --ink: #2b2536;
+    --muted: #9a8f7c;
+    --airmail-red: #d33a3a;
+    --airmail-blue: #26478f;
+    --border: rgba(0,0,0,.12);
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    min-height: 100%;
+    font-family: "Courier Prime", monospace;
+    background: radial-gradient(circle at 50% 10%, #55606d 0%, #2a323c 55%, #141920 100%);
+    background-attachment: fixed;
+    color: #fff;
+  }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; }
+
+  /* Top chrome */
+  .page-chrome {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 20px 22px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: rgba(255,255,255,.7);
+    padding: 8px 12px;
+    border-radius: 50px;
+    transition: .15s ease;
+    white-space: nowrap;
+  }
+  .back-link:hover {
+    background: rgba(255,255,255,.06);
+    color: #fff;
+  }
+  .back-link.primary-back {
+    color: #fff;
+    font-weight: 700;
+  }
+
+  /* Main wrapper */
+  .awb-wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 12px 22px 100px;
+  }
+
+  /* The document */
+  .awb-doc {
+    background: var(--paper);
+    background-image: repeating-linear-gradient(0deg, rgba(0,0,0,.015) 0 1px, transparent 1px 24px);
+    border-radius: 8px;
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,.8), 0 0 0 1px rgba(0,0,0,.3);
+    padding: 34px 36px 28px;
+    color: var(--ink);
+    position: relative;
+    overflow: hidden;
+  }
+  .awb-doc::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: repeating-linear-gradient(45deg,
+      var(--airmail-red) 0 8px, #fff 8px 16px,
+      var(--airmail-blue) 16px 24px, #fff 24px 32px);
+  }
+
+  /* Header row */
+  .awb-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .awb-brand {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: -.3px;
+    color: var(--ink);
+  }
+  .awb-brand span { color: var(--accent); }
+  .awb-brand-sub {
+    font-size: 9px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .awb-seal {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid var(--airmail-blue);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--airmail-blue);
+    transform: rotate(-8deg);
+    flex-shrink: 0;
+    background: rgba(38,71,143,.04);
+  }
+  .awb-seal .wr { font-family: "Courier Prime", monospace; font-weight: 700; font-size: 14px; line-height: 1; }
+  .awb-seal .sub { font-size: 5px; letter-spacing: .15em; line-height: 1; margin-top: 2px; }
+
+  /* Doc type + AWB number */
+  .awb-doc-type {
+    font-size: 10px;
+    letter-spacing: .25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .awb-doc-title {
+    font-family: "Courier Prime", monospace;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -.3px;
+    margin: 0 0 14px;
+  }
+  .awb-code {
+    font-family: "Courier Prime", monospace;
+    font-size: 16px;
+    font-weight: 700;
+    background: #fff;
+    border: 1.5px solid var(--ink);
+    padding: 8px 14px;
+    border-radius: 3px;
+    display: inline-block;
+    letter-spacing: .04em;
+    color: var(--ink);
+    margin-bottom: 14px;
+  }
+
+  /* Barcode */
+  .barcode {
+    display: flex;
+    align-items: stretch;
+    height: 44px;
+    margin-bottom: 4px;
+    gap: 0;
+    background: #fff;
+    padding: 4px 0;
+    border-radius: 2px;
+  }
+  .barcode .bar {
+    height: 100%;
+    flex-shrink: 0;
+  }
+  .barcode .bar.black { background: var(--ink); }
+  .barcode .bar.white { background: transparent; }
+  .barcode-text {
+    font-family: "Courier Prime", monospace;
+    font-size: 9px;
+    letter-spacing: .3em;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  /* Section blocks */
+  .awb-section {
+    padding: 16px 0;
+    border-bottom: 1px dashed rgba(0,0,0,.2);
+  }
+  .awb-section:last-child { border-bottom: 0; }
+  .awb-section-title {
+    font-size: 9px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 700;
+    margin: 0 0 12px;
+  }
+
+  /* Route (sender / receiver) */
+  .awb-route {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    padding: 20px 0;
+    border-bottom: 1px dashed rgba(0,0,0,.2);
+  }
+  .route-side .lbl {
+    font-size: 9px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .route-side .flag {
+    font-size: 32px;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .route-side .country {
+    font-family: "Caveat", cursive;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 6px;
+    line-height: 1.1;
+  }
+  .route-side .date {
+    font-family: "Courier Prime", monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: .04em;
+  }
+
+  /* Facts row */
+  .awb-facts {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding: 14px 0;
+    border-bottom: 1px dashed rgba(0,0,0,.2);
+  }
+  .fact .lbl {
+    font-size: 9px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 700;
+    margin-bottom: 3px;
+  }
+  .fact .val {
+    font-family: "Courier Prime", monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .status-pill {
+    display: inline-block;
+    font-family: "Courier Prime", monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 50px;
+  }
+  .status-pill.in_transit  { background: #fff5f0; color: var(--accent-dark); }
+  .status-pill.delivered   { background: #dcfce7; color: #166534; }
+  .status-pill.cancelled   { background: #f1eee8; color: #666; }
+  .status-pill.undeliverable { background: #fee2e2; color: #991b1b; }
+
+  /* Tracking timeline */
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .timeline-item {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    position: relative;
+    padding: 10px 0;
+  }
+  .timeline-item + .timeline-item::before {
+    content: "";
+    position: absolute;
+    left: 13px;
+    top: -10px;
+    height: 10px;
+    width: 2px;
+    background: rgba(0,0,0,.12);
+  }
+  .timeline-item.done + .timeline-item::before,
+  .timeline-item.active + .timeline-item::before {
+    background: #166534;
+  }
+
+  .timeline-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    flex-shrink: 0;
+    font-family: "Courier Prime", monospace;
+    font-weight: 700;
+    position: relative;
+    z-index: 1;
+  }
+  .timeline-item.done .timeline-icon {
+    background: #166534;
+    color: #fff;
+  }
+  .timeline-item.active .timeline-icon {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 0 0 4px rgba(255,90,54,.15);
+  }
+  .timeline-item.pending .timeline-icon {
+    background: #fff;
+    border: 1.5px dashed rgba(0,0,0,.25);
+    color: var(--muted);
+  }
+
+  .timeline-body {
+    flex: 1;
+    min-width: 0;
+    padding-top: 3px;
+  }
+  .timeline-stage {
+    font-family: "Courier Prime", monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin-bottom: 3px;
+  }
+  .timeline-item.pending .timeline-stage {
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .timeline-meta {
+    font-family: "Courier Prime", monospace;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+  .timeline-meta .loc {
+    display: inline-block;
+    margin-right: 8px;
+  }
+
+  /* Contents */
+  .contents-box {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,.12);
+    border-radius: 6px;
+    padding: 16px;
+  }
+  .sealed {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .sealed-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 8px;
+    background: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    flex-shrink: 0;
+    border: 1.5px dashed rgba(0,0,0,.22);
+    color: var(--muted);
+  }
+  .sealed-text {
+    flex: 1;
+    min-width: 0;
+  }
+  .sealed-title {
+    font-family: "Caveat", cursive;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .sealed-sub {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .revealed {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .gift-image {
+    width: 76px;
+    height: 76px;
+    border-radius: 8px;
+    background: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+    flex-shrink: 0;
+    border: 1px solid rgba(0,0,0,.08);
+    overflow: hidden;
+  }
+  .gift-image img { width: 100%; height: 100%; object-fit: cover; }
+  .gift-info { flex: 1; min-width: 0; }
+  .gift-name {
+    font-family: "Caveat", cursive;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 0 0 4px;
+    line-height: 1.2;
+  }
+  .gift-category {
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--accent-dark);
+    margin-bottom: 4px;
+  }
+  .gift-desc {
+    font-size: 12px;
+    color: #555;
+    line-height: 1.55;
+    margin: 0;
+  }
+  .gift-message {
+    font-family: "Caveat", cursive;
+    font-size: 17px;
+    line-height: 1.6;
+    color: #3a3448;
+    margin: 14px 0 0;
+    padding: 10px 14px;
+    background: var(--paper-2);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    position: relative;
+  }
+  .gift-message .msg-label {
+    display: block;
+    font-family: "Courier Prime", monospace;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-style: normal;
+  }
+
+  /* Sponsor */
+  .awb-sponsor {
+    background: var(--paper-2);
+    border: 1px solid rgba(255,90,54,.18);
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-top: 4px;
+  }
+  .sponsor-lbl {
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .sponsor-name {
+    font-family: "Caveat", cursive;
+    font-size: 19px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 6px;
+    line-height: 1.2;
+  }
+  .sponsor-link {
+    font-family: "Courier Prime", monospace;
+    font-size: 11px;
+    color: var(--accent-dark);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    display: inline-block;
+    word-break: break-all;
+  }
+  .sponsor-link:hover { color: #000; }
+
+  /* Foot */
+  .awb-foot {
+    text-align: center;
+    font-size: 9px;
+    letter-spacing: .14em;
+    color: var(--muted);
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px dashed rgba(0,0,0,.2);
+    text-transform: uppercase;
+  }
+  .awb-foot .tiny {
+    font-size: 8px;
+    letter-spacing: .1em;
+    margin-top: 4px;
+    opacity: .7;
+    text-transform: none;
+  }
+
+  /* State cards */
+  .state-card {
+    max-width: 480px;
+    margin: 40px auto;
+    text-align: center;
+    padding: 44px 26px;
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 16px;
+  }
+  .state-card .emoji { font-size: 48px; margin-bottom: 14px; line-height: 1; }
+  .state-card h2 {
+    font-family: "Caveat", cursive;
+    font-size: 30px;
+    margin: 0 0 10px;
+    font-weight: 600;
+    color: #fff;
+  }
+  .state-card p {
+    font-size: 13px;
+    color: rgba(255,255,255,.6);
+    line-height: 1.65;
+    margin: 0 0 22px;
+  }
+  .state-card .btn {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 800;
+    background: var(--accent);
+    color: #fff;
+    border: 1px solid var(--accent);
+    transition: .2s ease;
+  }
+  .state-card .btn:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
+  .state-card .btn-ghost {
+    background: transparent;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,.25);
+    margin-left: 8px;
+  }
+  .state-card .btn-ghost:hover { background: rgba(255,255,255,.08); }
+
+  .spinner {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    border: 3px solid rgba(255,255,255,.15);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 12px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Mobile */
+  @media (max-width: 680px) {
+    .awb-wrap { padding: 8px 15px 80px; }
+    .page-chrome { padding: 14px 15px 0; }
+    .awb-doc { padding: 26px 20px 22px; border-radius: 6px; }
+    .awb-title, .awb-doc-title { font-size: 18px; }
+    .awb-code { font-size: 14px; padding: 7px 11px; }
+    .awb-route { grid-template-columns: 1fr; gap: 16px; }
+    .route-side .flag { font-size: 26px; }
+    .route-side .country { font-size: 18px; }
+    .awb-facts { gap: 16px; }
+    .timeline-stage { font-size: 10px; }
+    .timeline-meta { font-size: 10px; }
+    .gift-name { font-size: 19px; }
+    .gift-message { font-size: 15px; }
+    .awb-seal { width: 40px; height: 40px; }
+    .awb-seal .wr { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-chrome" id="page-chrome">
+  <a href="javascript:history.back()" class="back-link">← Back</a>
+  <a href="letters-globe.html" class="back-link">🌍 The Globe</a>
+</div>
+
+<main class="awb-wrap" id="root">
+  <div class="state-card">
+    <div class="spinner"></div>
+    <p>Retrieving waybill…</p>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js"></script>
+<script>
+(function () {
+  const sb = window.wr ? window.wr.sb : null;
+  if (!sb) {
+    document.getElementById('root').innerHTML = '<div class="state-card"><h2>Error</h2><p>Auth library failed to load.</p></div>';
+    return;
+  }
+
+  const root = document.getElementById('root');
+  const pageChrome = document.getElementById('page-chrome');
+
+  /* ---------- Helpers ---------- */
+  function esc(s) {
+    return String(s ?? '').replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+  function flagFor(cc) {
+    if (!cc || cc.length !== 2) return '🌍';
+    const A = 0x1F1E6;
+    return String.fromCodePoint(
+      A + cc.toUpperCase().charCodeAt(0) - 65,
+      A + cc.toUpperCase().charCodeAt(1) - 65
+    );
+  }
+  function fmtTime(iso) {
+    const d = new Date(iso);
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = d.toLocaleString('en-US', { month: 'short' }).toUpperCase();
+    const year = d.getFullYear();
+    const hh = String(d.getHours()).padStart(2, '0');
+    const mm = String(d.getMinutes()).padStart(2, '0');
+    return `${day} ${month} ${year} · ${hh}:${mm}`;
+  }
+  function fmtDateShort(iso) {
+    const d = new Date(iso);
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = d.toLocaleString('en-US', { month: 'short' }).toUpperCase();
+    const year = d.getFullYear();
+    return `${day} ${month} ${year}`;
+  }
+  function fmtDistance(km) {
+    if (km == null) return '—';
+    return Math.round(Number(km)).toLocaleString() + ' km';
+  }
+  function fmtDays(d) {
+    d = Number(d) || 0;
+    return `${d} day${d === 1 ? '' : 's'}`;
+  }
+  function stageLabel(s) {
+    return ({
+      booked: 'Booked',
+      in_transit: 'In Transit',
+      out_for_delivery: 'Out for Delivery',
+      delivered: 'Delivered'
+    })[s] || s;
+  }
+
+  /* ---------- Barcode builder (deterministic from AWB) ---------- */
+  function buildBarcode(awb) {
+    let seed = 0;
+    for (let i = 0; i < awb.length; i++) {
+      seed = (seed * 31 + awb.charCodeAt(i)) & 0x7fffffff;
+    }
+    const bars = [];
+    const count = 78;
+    for (let i = 0; i < count; i++) {
+      seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+      const width = 1 + (seed % 3);
+      const isBlack = i % 2 === 0;
+      bars.push(`<div class="bar ${isBlack ? 'black' : 'white'}" style="width:${width}px"></div>`);
+    }
+    return bars.join('');
+  }
+
+  /* ---------- Renderers ---------- */
+  function renderLoading() {
+    root.innerHTML = `
+      <div class="state-card">
+        <div class="spinner"></div>
+        <p>Retrieving waybill…</p>
+      </div>
+    `;
+  }
+
+  function renderError(title, message, extraActions = '') {
+    pageChrome.style.display = 'none';
+    root.innerHTML = `
+      <div class="state-card">
+        <div class="emoji">⚡</div>
+        <h2>${esc(title)}</h2>
+        <p>${esc(message)}</p>
+        <div>
+          <a class="btn" href="letters-globe.html">← The Globe</a>
+          ${extraActions}
+        </div>
+      </div>
+    `;
+  }
+
+  function renderSignIn() {
+    pageChrome.style.display = 'none';
+    root.innerHTML = `
+      <div class="state-card">
+        <div class="emoji">🔒</div>
+        <h2>Sign in required</h2>
+        <p>Waybills are only visible to the sender and the receiver of the gift.</p>
+        <div>
+          <a class="btn" href="login.html">Sign in</a>
+          <a class="btn btn-ghost" href="signup.html">Join</a>
+        </div>
+      </div>
+    `;
+  }
+
+  /* ---------- AWB document renderer ---------- */
+  function renderDocument(g) {
+    // Update top-chrome link to conversation
+    if (g.conversation_id) {
+      pageChrome.innerHTML = `
+        <a href="letters-conversation.html?id=${encodeURIComponent(g.conversation_id)}" class="back-link primary-back">← Back to conversation</a>
+        <a href="letters-globe.html" class="back-link">🌍 The Globe</a>
+      `;
+      pageChrome.style.display = '';
+    }
+
+    const isMine = g.is_mine === true;
+    const isDelivered = g.status === 'delivered';
+    const isCancelled = g.status === 'cancelled';
+    const isUndeliverable = g.status === 'undeliverable';
+
+    // Status display text
+    const statusClass = isDelivered ? 'delivered'
+                      : isCancelled ? 'cancelled'
+                      : isUndeliverable ? 'undeliverable'
+                      : 'in_transit';
+    const statusText = isDelivered ? 'Delivered'
+                     : isCancelled ? 'Cancelled'
+                     : isUndeliverable ? 'Undeliverable'
+                     : 'In Transit';
+
+    // Sender / receiver
+    const senderFlag = flagFor(g.origin_country);
+    const receiverFlag = flagFor(g.destination_country);
+
+    const senderDateLbl = isMine ? 'Shipped' : 'Dispatched';
+    const receiverDateLbl = isDelivered ? 'Delivered' : 'Est. arrival';
+    const receiverDate = isDelivered && g.delivered_at
+      ? fmtDateShort(g.delivered_at)
+      : fmtDateShort(g.estimated_delivery_at);
+
+    // Timeline
+    const tracking = Array.isArray(g.tracking) ? g.tracking : [];
+    const now = Date.now();
+    const pastEvents = tracking.filter(t => new Date(t.event_at).getTime() <= now);
+    const lastPastIdx = pastEvents.length
+      ? tracking.findIndex(t => t.event_at === pastEvents[pastEvents.length - 1].event_at)
+      : -1;
+
+    const timelineHtml = tracking.map((t, i) => {
+      const eventMs = new Date(t.event_at).getTime();
+      const isPast = eventMs <= now;
+      let state;
+      if (!isPast) state = 'pending';
+      else if (i === lastPastIdx && !isDelivered && !isCancelled && !isUndeliverable) state = 'active';
+      else state = 'done';
+
+      const icon = state === 'done' ? '✓' : state === 'active' ? '●' : '○';
+      const loc = t.location ? `<span class="loc">${esc(t.location)}</span>` : '';
+      const time = isPast ? fmtTime(t.event_at) : `Est. ${fmtDateShort(t.event_at)}`;
+
+      return `
+        <div class="timeline-item ${state}">
+          <div class="timeline-icon">${icon}</div>
+          <div class="timeline-body">
+            <div class="timeline-stage">${esc(stageLabel(t.stage))}</div>
+            <div class="timeline-meta">${loc}${esc(time)}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    // Contents
+    let contentsHtml;
+    if (g.is_revealed) {
+      const giftVisual = g.gift_image_url
+        ? `<img src="${esc(g.gift_image_url)}" alt="${esc(g.gift_name || 'Gift')}">`
+        : (g.gift_emoji || '🎁');
+
+      const messageBlock = g.message
+        ? `<div class="gift-message">
+             <span class="msg-label">${isMine ? 'Your message' : 'Message from sender'}</span>
+             ${esc(g.message)}
+           </div>`
+        : '';
+
+      contentsHtml = `
+        <div class="revealed">
+          <div class="gift-image">${giftVisual}</div>
+          <div class="gift-info">
+            <div class="gift-category">${esc(g.gift_category || 'Gift')}</div>
+            <h3 class="gift-name">${esc(g.gift_name || 'A gift')}</h3>
+            ${g.gift_description ? `<p class="gift-desc">${esc(g.gift_description)}</p>` : ''}
+          </div>
+        </div>
+        ${messageBlock}
+      `;
+    } else {
+      contentsHtml = `
+        <div class="sealed">
+          <div class="sealed-icon">📦</div>
+          <div class="sealed-text">
+            <div class="sealed-title">Contents sealed</div>
+            <div class="sealed-sub">
+              The package contents will be revealed when it arrives.
+              ${isDelivered ? '' : 'Estimated delivery: ' + fmtDateShort(g.estimated_delivery_at) + '.'}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Sponsor
+    const sponsorHtml = g.vendor_name
+      ? `
+        <div class="awb-sponsor">
+          <div class="sponsor-lbl">Sponsored by</div>
+          <div class="sponsor-name">${esc(g.vendor_name)}</div>
+          <a class="sponsor-link" href="${esc(g.vendor_url)}" target="_blank" rel="noopener sponsored">
+            Visit ${esc(g.vendor_name)} ↗
+          </a>
+        </div>
+      `
+      : '';
+
+    // Assemble
+    root.innerHTML = `
+      <div class="awb-doc">
+        <div class="awb-head">
+          <div>
+            <div class="awb-brand">The <span>Whacky</span> Rack</div>
+            <div class="awb-brand-sub">Courier Service</div>
+          </div>
+          <div class="awb-seal">
+            <div class="wr">WR</div>
+            <div class="sub">SEALED</div>
+          </div>
+        </div>
+
+        <div class="awb-doc-type">Air Waybill</div>
+        <h1 class="awb-doc-title">Tracking Document</h1>
+
+        <div class="awb-code">${esc(g.awb_number)}</div>
+
+        <div class="barcode">${buildBarcode(g.awb_number)}</div>
+        <div class="barcode-text">${esc(g.awb_number.replace(/-/g, ' '))}</div>
+
+        <div class="awb-route">
+          <div class="route-side">
+            <div class="lbl">Sender</div>
+            <div class="flag">${senderFlag}</div>
+            <div class="country">${esc(g.origin_country)}</div>
+            <div class="date">${senderDateLbl} ${fmtDateShort(g.shipped_at)}</div>
+          </div>
+          <div class="route-side">
+            <div class="lbl">Receiver</div>
+            <div class="flag">${receiverFlag}</div>
+            <div class="country">${esc(g.destination_country)}</div>
+            <div class="date">${receiverDateLbl} ${receiverDate}</div>
+          </div>
+        </div>
+
+        <div class="awb-facts">
+          <div class="fact">
+            <div class="lbl">Status</div>
+            <div class="val"><span class="status-pill ${statusClass}">${statusText}</span></div>
+          </div>
+          <div class="fact">
+            <div class="lbl">Distance</div>
+            <div class="val">${fmtDistance(g.distance_km)}</div>
+          </div>
+          <div class="fact">
+            <div class="lbl">Transit</div>
+            <div class="val">${fmtDays(g.delivery_days)}</div>
+          </div>
+        </div>
+
+        <div class="awb-section">
+          <h2 class="awb-section-title">Tracking History</h2>
+          <div class="timeline">${timelineHtml}</div>
+        </div>
+
+        <div class="awb-section">
+          <h2 class="awb-section-title">Contents</h2>
+          <div class="contents-box">${contentsHtml}</div>
+        </div>
+
+        <div class="awb-section">
+          ${sponsorHtml}
+        </div>
+
+        <div class="awb-foot">
+          A Whacky Rack service · Fictional courier
+          <div class="tiny">This is a symbolic gift delivery. No physical item is shipped.</div>
+        </div>
+      </div>
+    `;
+  }
+
+  /* ---------- AWB lookup ---------- */
+  async function resolveAwb(awb) {
+    const { data, error } = await sb.from('letter_gifts')
+      .select('id')
+      .eq('awb_number', awb)
+      .maybeSingle();
+    if (error) return null;
+    return data ? data.id : null;
+  }
+
+  /* ---------- Boot ---------- */
+  async function boot() {
+    // Session check
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) {
+      renderSignIn();
+      return;
+    }
+
+    const params = new URLSearchParams(location.search);
+    let giftId = params.get('id');
+    const awb = params.get('awb');
+
+    // Resolve AWB → gift id if needed
+    if (!giftId && awb) {
+      renderLoading();
+      const resolved = await resolveAwb(awb);
+      if (!resolved) {
+        renderError('Waybill not found',
+          'This tracking number doesn\'t match any gift you sent or received.');
+        return;
+      }
+      giftId = resolved;
+    }
+
+    if (!giftId) {
+      renderError('No waybill specified',
+        'Open this page from a gift notification, or use the AWB number from your conversation.');
+      return;
+    }
+
+    renderLoading();
+
+    const { data, error } = await sb.rpc('get_gift_details', { p_gift_id: giftId });
+
+    if (error) {
+      console.error('[awb] rpc error:', error);
+      if (error.message && /not authorized|not found/i.test(error.message)) {
+        renderError('Not yours to view',
+          'This waybill doesn\'t belong to you. If you think this is a mistake, contact support.');
+      } else {
+        renderError('Couldn\'t load waybill', error.message || 'Please try again in a moment.');
+      }
+      return;
+    }
+
+    const gift = data && data[0];
+    if (!gift) {
+      renderError('Waybill not found',
+        'This gift no longer exists.');
+      return;
+    }
+
+    renderDocument(gift);
+  }
+
+  boot();
+})();
+</script>
+</body>
+</html>

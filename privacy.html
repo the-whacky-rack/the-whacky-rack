@@ -1362,6 +1362,80 @@
                 prioritize reports involving harassment, threats, or financial fraud.
             </p>
         </div>
+        <div class="content-section">
+            <h2><span class="num">21</span>The Gift Courier — Data</h2>
+
+            <p>
+                The Gift Courier is a feature of The Letter Globe. This section
+                explains the additional data the feature collects and how it is
+                handled.
+            </p>
+
+            <h3>What we collect when you send a gift</h3>
+            <ul>
+                <li><strong>Gift choice</strong> — which catalogue item you selected (e.g. "A Teddy Bear").</li>
+                <li><strong>Optional message</strong> — up to 300 characters, if you add one. Filtered for URLs, emails, phone numbers, etc.</li>
+                <li><strong>Sender and recipient user IDs</strong> — so the gift can be shown to both parties and gated appropriately.</li>
+                <li><strong>Sender country and recipient country</strong> — used to compute the simulated delivery time. Both are already stored on the underlying conversation.</li>
+                <li><strong>Distance in kilometers</strong> — computed from country centroids at send time.</li>
+                <li><strong>Timestamps</strong> — when the gift was shipped, when it is expected to arrive, when it was delivered.</li>
+                <li><strong>AWB number</strong> — a unique tracking identifier generated at send time.</li>
+                <li><strong>Fictional tracking events</strong> — the "booked", "in transit", "out for delivery", and "delivered" waypoints, pre-computed at send time with future timestamps.</li>
+            </ul>
+
+            <h3>Contents are sealed until delivery</h3>
+            <p>
+                For the recipient, the gift's image, name, category, and message
+                are <strong>hidden until the delivery date passes</strong>. This
+                is enforced server-side — the database returns null for these
+                fields to the recipient until the gift is delivered. Before
+                delivery, the recipient sees a generic "sealed package" view.
+                The sender sees their own gift content immediately.
+            </p>
+
+            <h3>Tracking events are pre-computed, not real-time</h3>
+            <p>
+                All four tracking waypoints are inserted into the database at send
+                time, with timestamps in the future. The AWB page shows the
+                waypoints whose timestamps have passed. Once the estimated
+                delivery timestamp arrives, an hourly scheduled job marks the
+                gift as "delivered" and sends delivery notifications to both
+                parties.
+            </p>
+
+            <h3>Vendor information</h3>
+            <ul>
+                <li>Each gift is linked to a sponsor. The sponsor's display name and website URL are stored alongside the gift.</li>
+                <li>Clicking the sponsor link opens their website in a new tab. If analytics consent has been given, the click is recorded (like any other outbound affiliate link) in our custom analytics table.</li>
+                <li>Sponsor name and URL are <strong>always visible</strong>, even to recipients whose gift contents are still sealed. This ensures attribution is preserved regardless of delivery state.</li>
+            </ul>
+
+            <h3>Notifications</h3>
+            <p>
+                Both parties receive notifications when a gift is sent (with the
+                AWB number, which opens the tracking document) and when the gift
+                is delivered. Notifications contain the AWB number and the other
+                party's display info, but never the gift contents for the
+                recipient before delivery.
+            </p>
+
+            <h3>Retention</h3>
+            <ul>
+                <li><strong>Gifts</strong> — retained indefinitely in the database, both for the sender's and the recipient's history, unless the underlying conversation is deleted or a specific deletion request is made.</li>
+                <li><strong>Tracking events</strong> — retained alongside the gift.</li>
+                <li><strong>Cancelled or undeliverable gifts</strong> — soft-deleted and hard-purged after 90 days.</li>
+                <li><strong>Gift notifications</strong> — retained as part of the standard notification history (subject to the general notification retention rules).</li>
+            </ul>
+
+            <h3>No real-world tracking</h3>
+            <p>
+                The AWB, courier timeline, and delivery events are
+                <strong>fictional</strong>. They do not correspond to any real
+                shipment, real logistics provider, or real tracking number. Do
+                not use an AWB number to look up a real package — it exists only
+                within The Whacky Rack.
+            </p>
+        </div>
 
         <div class="contact-card">
             <h2>Privacy questions?</h2>

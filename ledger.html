@@ -7,26 +7,28 @@
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Courier+Prime:wght@400;700&family=Playfair+Display:wght@600;700;900&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Courier+Prime:wght@400;700&family=Playfair+Display:wght@500;700;900&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #141920;
-    --paper: #f5ead2;
-    --paper-dark: #e6dcbe;
-    --ink: #2b1f0e;
-    --ink-soft: #4a3822;
-    --red: #7a1a1a;
-    --red-bright: #a52a2a;
-    --gold: #8b6a2a;
-    --muted: #8b7a55;
+    --paper: #fbf6e8;
+    --paper-dark: #f4ecd8;
+    --ink: #2b2536;
+    --muted: #8a7f6a;
     --accent: #ff5a36;
     --accent-dark: #e84625;
+    --airmail-red: #d33a3a;
+    --airmail-blue: #26478f;
+    --seal: #8b1e15;
+    --seal-light: #c73a2e;
+    --gold: #c9a227;
+    --gold-light: #e8c85c;
   }
   * { box-sizing: border-box; }
   html, body {
     margin: 0; padding: 0;
     min-height: 100%;
-    font-family: "Cormorant Garamond", serif;
+    font-family: "Courier Prime", monospace;
     background: radial-gradient(circle at 50% 10%, #55606d 0%, #2a323c 55%, #141920 100%);
     background-attachment: fixed;
     color: #fff;
@@ -34,303 +36,69 @@
   a { color: inherit; text-decoration: none; }
   button { font-family: inherit; }
 
-  /* Chrome */
-  .chrome {
-    max-width: 820px;
-    margin: 0 auto;
-    padding: 22px 22px 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
+  /* Top bar */
+  .top-bar {
+    position: sticky; top: 0;
+    padding: 14px 22px;
+    display: flex; justify-content: space-between; align-items: center;
+    z-index: 100;
+    background: rgba(20,25,32,.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(255,255,255,.08);
   }
-  .chrome-back {
-    font-family: "Courier Prime", monospace;
-    font-size: 13px;
-    color: rgba(255,255,255,.7);
+  .brand { font-family: Arial, Helvetica, sans-serif; font-size: 18px; font-weight: 900; letter-spacing: -.5px; }
+  .brand span { color: var(--accent); }
+  .top-actions { display: flex; align-items: center; gap: 10px; }
+  .top-back { color: #fff; opacity: .7; font-size: 13px; padding: 8px 12px; transition: .15s ease; }
+  .top-back:hover { opacity: 1; }
+  .top-print {
     padding: 8px 14px;
     border-radius: 50px;
+    background: rgba(255,255,255,.06);
     border: 1px solid rgba(255,255,255,.15);
-    transition: .15s ease;
-  }
-  .chrome-back:hover { color: #fff; border-color: rgba(255,255,255,.35); }
-  .chrome-actions { display: flex; gap: 8px; }
-  .chrome-btn {
-    font-family: "Courier Prime", monospace;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: .05em;
-    padding: 9px 16px;
-    border-radius: 50px;
-    background: rgba(255,255,255,.08);
-    border: 1px solid rgba(255,255,255,.2);
     color: #fff;
+    font-size: 11px;
+    font-weight: 700;
     cursor: pointer;
     transition: .15s ease;
-  }
-  .chrome-btn:hover { background: rgba(255,255,255,.16); border-color: rgba(255,255,255,.4); }
-  .chrome-btn.primary { background: var(--accent); border-color: var(--accent); }
-  .chrome-btn.primary:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
-
-  /* The document */
-  .ledger-wrap { max-width: 820px; margin: 0 auto; padding: 12px 22px 100px; }
-
-  .ledger-doc {
-    background: var(--paper);
-    background-image:
-      radial-gradient(ellipse at 20% 20%, rgba(139,90,43,.06) 0%, transparent 45%),
-      radial-gradient(ellipse at 80% 80%, rgba(139,90,43,.05) 0%, transparent 40%);
-    border-radius: 6px;
-    padding: 46px 52px 40px;
-    color: var(--ink);
-    box-shadow:
-      0 30px 70px -20px rgba(0,0,0,.85),
-      0 0 0 1px rgba(0,0,0,.3),
-      inset 0 0 60px rgba(139,90,43,.08);
-    position: relative;
-    overflow: hidden;
-  }
-  .ledger-doc::before {
-    content: "";
-    position: absolute;
-    inset: 14px;
-    border: 1px solid rgba(122,26,26,.15);
-    border-radius: 3px;
-    pointer-events: none;
-  }
-  .ledger-doc::after {
-    content: "";
-    position: absolute;
-    inset: 18px;
-    border: 1px solid rgba(122,26,26,.08);
-    border-radius: 2px;
-    pointer-events: none;
-  }
-  .ledger-doc > * { position: relative; z-index: 1; }
-
-  /* Seal */
-  .ledger-seal-wrap { display: flex; justify-content: center; margin-bottom: 22px; }
-  .ledger-seal {
-    width: 90px; height: 90px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, #c9302c 0%, #9a2422 55%, #6e1a18 100%);
-    box-shadow:
-      inset 0 3px 6px rgba(255,255,255,.2),
-      inset 0 -4px 8px rgba(0,0,0,.4),
-      0 6px 14px rgba(0,0,0,.3);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 42px;
-    color: #f4ecd8;
-    position: relative;
-    transform: rotate(-4deg);
-  }
-  .ledger-seal::before {
-    content: "";
-    position: absolute;
-    inset: 8px;
-    border-radius: 50%;
-    border: 1.5px solid rgba(244,236,216,.4);
-  }
-  .ledger-seal::after {
-    content: "";
-    position: absolute;
-    inset: 14px;
-    border-radius: 50%;
-    border: 1px dashed rgba(244,236,216,.28);
-  }
-
-  /* Title */
-  .ledger-title-block { text-align: center; margin-bottom: 26px; }
-  .ledger-title {
-    font-family: "Playfair Display", serif;
-    font-size: 36px;
-    font-weight: 700;
-    letter-spacing: -1px;
-    color: var(--ink);
-    margin: 0 0 6px;
-    line-height: 1;
-  }
-  .ledger-subtitle {
-    font-family: "Cormorant Garamond", serif;
-    font-size: 18px;
-    font-weight: 500;
-    letter-spacing: .42em;
-    text-transform: uppercase;
-    color: var(--red);
-    margin: 0;
-    padding-left: .42em;
-  }
-  .ledger-subhead {
-    font-family: "Caveat", cursive;
-    font-size: 17px;
-    color: var(--ink-soft);
-    font-style: italic;
-    margin: 14px 0 0;
-  }
-
-  .ledger-rule {
-    height: 1px;
-    background: linear-gradient(90deg,
-      transparent 0%,
-      rgba(122,26,26,.4) 15%,
-      rgba(122,26,26,.4) 85%,
-      transparent 100%);
-    margin: 22px 0;
-  }
-
-  /* Identity block */
-  .ledger-identity { display: flex; flex-direction: column; gap: 10px; }
-  .identity-row {
-    display: flex;
-    align-items: baseline;
-    font-family: "Cormorant Garamond", serif;
-    font-size: 17px;
-  }
-  .id-label { font-weight: 500; color: var(--ink-soft); flex-shrink: 0; }
-  .id-leader {
-    flex: 1;
-    border-bottom: 1px dotted rgba(139,90,43,.4);
-    margin: 0 8px 4px;
-    min-width: 30px;
-  }
-  .id-value {
-    font-family: "Courier Prime", monospace;
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--red);
     letter-spacing: .02em;
-    text-align: right;
+  }
+  .top-print:hover { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.3); }
+
+  /* Wrap */
+  .wrap {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 30px 22px 80px;
   }
 
-  /* Sections */
-  .ledger-section { margin: 26px 0; }
-  .ledger-section h3 {
-    font-family: "Playfair Display", serif;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: .25em;
-    text-transform: uppercase;
-    color: var(--ink);
-    margin: 0 0 6px;
-    padding-bottom: 6px;
-    border-bottom: 2px solid var(--ink);
-  }
-  .section-note {
-    font-family: "Caveat", cursive;
-    font-size: 15px;
-    color: var(--red);
-    opacity: .78;
-    margin: 0 0 14px;
-    font-style: italic;
-  }
-  .ledger-row { display: flex; align-items: baseline; padding: 6px 0; }
-  .row-label {
-    font-family: "Cormorant Garamond", serif;
-    font-size: 16px;
-    color: var(--ink-soft);
-    font-weight: 500;
-    flex-shrink: 0;
-  }
-  .row-leader {
-    flex: 1;
-    border-bottom: 1px dotted rgba(139,90,43,.35);
-    margin: 0 8px 4px;
-    min-width: 20px;
-  }
-  .row-value {
-    font-family: "Courier Prime", monospace;
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--red);
-    text-align: right;
-    white-space: nowrap;
-  }
-  .row-value.muted { color: var(--muted); font-weight: 400; font-style: italic; }
-
-  /* Flags row */
-  .flags-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    padding: 6px 0 12px;
-  }
-  .flag-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 12px 4px 6px;
-    background: rgba(255,255,255,.5);
-    border: 1px solid rgba(122,26,26,.18);
-    border-radius: 50px;
-    font-family: "Cormorant Garamond", serif;
-    font-size: 13px;
-    color: var(--ink-soft);
-    font-weight: 500;
-  }
-  .flag-chip .flag-emoji { font-size: 18px; line-height: 1; }
-
-  /* Signature */
-  .ledger-signature { margin-top: 34px; text-align: center; }
-  .sig-label {
-    font-family: "Cormorant Garamond", serif;
-    font-size: 12px;
-    letter-spacing: .18em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 14px;
-  }
-  .sig-line {
-    font-family: "Caveat", cursive;
-    font-size: 34px;
-    color: var(--ink);
-    transform: rotate(-2deg);
-    display: inline-block;
-    padding-bottom: 4px;
-    border-bottom: 1px solid rgba(43,37,54,.4);
-    min-width: 200px;
-    line-height: 1;
-  }
-  .sig-date {
-    font-family: "Cormorant Garamond", serif;
-    font-size: 13px;
-    color: var(--ink-soft);
-    margin-top: 12px;
-    font-style: italic;
-  }
-  .ledger-footer-note {
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px dashed rgba(122,26,26,.28);
-    text-align: center;
-    font-family: "Cormorant Garamond", serif;
-    font-size: 12px;
-    color: var(--muted);
-    line-height: 1.7;
-    font-style: italic;
-  }
-
-  /* State cards */
+  /* States */
   .state-card {
     max-width: 480px;
     margin: 60px auto;
     text-align: center;
-    padding: 44px 26px;
+    padding: 40px 24px;
     background: rgba(255,255,255,.04);
     border: 1px solid rgba(255,255,255,.12);
     border-radius: 16px;
-    color: rgba(255,255,255,.85);
-    font-family: "Courier Prime", monospace;
   }
   .state-card .emoji { font-size: 48px; margin-bottom: 14px; line-height: 1; }
   .state-card h2 {
     font-family: "Playfair Display", serif;
-    font-size: 26px; margin: 0 0 10px; font-weight: 600; color: #fff;
+    font-size: 28px;
+    margin: 0 0 10px;
+    color: #fff;
   }
-  .state-card p { font-size: 13px; color: rgba(255,255,255,.6); line-height: 1.7; margin: 0 0 20px; }
+  .state-card p {
+    font-size: 13px;
+    color: rgba(255,255,255,.65);
+    line-height: 1.7;
+    margin: 0 0 22px;
+  }
   .state-card .btn {
     display: inline-block;
-    padding: 12px 22px;
+    padding: 12px 24px;
     border-radius: 50px;
     font-size: 13px;
     font-weight: 800;
@@ -338,8 +106,6 @@
     color: #fff;
     border: 1px solid var(--accent);
     transition: .2s ease;
-    text-decoration: none;
-    font-family: "Courier Prime", monospace;
   }
   .state-card .btn:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
   .spinner {
@@ -353,65 +119,350 @@
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* Mobile */
-  @media (max-width: 700px) {
-    .chrome { padding: 14px 15px 8px; }
-    .chrome-back { font-size: 11px; padding: 7px 12px; }
-    .chrome-btn { font-size: 11px; padding: 8px 13px; }
-    .ledger-wrap { padding: 8px 12px 60px; }
-    .ledger-doc { padding: 32px 24px 30px; }
-    .ledger-title { font-size: 26px; letter-spacing: -.6px; }
-    .ledger-subtitle { font-size: 14px; letter-spacing: .32em; }
-    .ledger-subhead { font-size: 15px; }
-    .ledger-seal { width: 70px; height: 70px; font-size: 32px; }
-    .identity-row { font-size: 15px; }
-    .id-value { font-size: 13px; }
-    .ledger-section h3 { font-size: 11px; letter-spacing: .2em; }
-    .section-note { font-size: 13px; }
-    .row-label { font-size: 14px; }
-    .row-value { font-size: 13px; }
-    .flag-chip { font-size: 12px; padding: 3px 10px 3px 5px; }
-    .flag-chip .flag-emoji { font-size: 15px; }
-    .sig-line { font-size: 26px; min-width: 160px; }
-    .sig-date, .sig-label { font-size: 12px; }
-    .ledger-footer-note { font-size: 11px; }
+  /* ============================================
+     LEDGER DOCUMENT
+     ============================================ */
+  .ledger {
+    background-color: var(--paper);
+    background-image:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'><path d='M0 30 Q30 20 60 30 T120 30' fill='none' stroke='%2326478f' stroke-opacity='0.04' stroke-width='0.8'/><path d='M0 60 Q30 50 60 60 T120 60' fill='none' stroke='%2326478f' stroke-opacity='0.035' stroke-width='0.8'/><path d='M0 90 Q30 80 60 90 T120 90' fill='none' stroke='%2326478f' stroke-opacity='0.03' stroke-width='0.8'/></svg>");
+    color: var(--ink);
+    border-radius: 4px;
+    box-shadow: 0 40px 80px -20px rgba(0,0,0,.85), 0 0 0 1px rgba(0,0,0,.3);
+    padding: 60px 60px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .ledger::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, var(--airmail-red) 0 2%, #fff 2% 4%, var(--airmail-blue) 4% 6%, #fff 6% 8%) top left / 8% 5px repeat-x,
+      linear-gradient(90deg, var(--airmail-red) 0 2%, #fff 2% 4%, var(--airmail-blue) 4% 6%, #fff 6% 8%) bottom left / 8% 5px repeat-x;
+    pointer-events: none;
+  }
+  .ledger > * { position: relative; }
+
+  /* Corner seal */
+  .corner-seal {
+    position: absolute;
+    top: 26px;
+    right: 30px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 32% 32%, var(--seal-light) 0%, var(--seal) 65%, #4a0f0a 100%);
+    box-shadow:
+      inset -2px -3px 6px rgba(0,0,0,.35),
+      inset 2px 3px 5px rgba(255,255,255,.1),
+      0 3px 6px rgba(0,0,0,.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #f5ddc7;
+    font-family: "Playfair Display", serif;
+    font-weight: 900;
+    font-size: 18px;
+    letter-spacing: .03em;
+    transform: rotate(-8deg);
   }
 
-  /* Print */
+  /* Header */
+  .ledger-head {
+    text-align: center;
+    padding-bottom: 26px;
+    border-bottom: 2px solid rgba(38,71,143,.25);
+    margin-bottom: 30px;
+  }
+  .ledger-kicker {
+    font-family: "Courier Prime", monospace;
+    font-size: 10px;
+    letter-spacing: .4em;
+    text-transform: uppercase;
+    color: var(--airmail-red);
+    margin-bottom: 12px;
+  }
+  .ledger-title {
+    font-family: "Playfair Display", serif;
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -1px;
+    line-height: 1.05;
+    margin: 0 0 6px;
+  }
+  .ledger-title em { font-style: italic; color: var(--airmail-red); }
+  .ledger-subtitle {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 16px;
+    font-style: italic;
+    color: var(--muted);
+    margin: 0;
+    letter-spacing: .02em;
+  }
+
+  /* Narrative */
+  .narrative {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 17px;
+    line-height: 1.75;
+    color: var(--ink);
+    margin: 0 0 34px;
+    letter-spacing: .01em;
+  }
+  .narrative strong {
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .narrative .username {
+    font-family: "Courier Prime", monospace;
+    font-size: 15px;
+    font-weight: 700;
+    background: rgba(38,71,143,.06);
+    padding: 1px 6px;
+    border-radius: 3px;
+    color: var(--airmail-blue);
+  }
+
+  /* Section */
+  .section {
+    margin-bottom: 30px;
+  }
+  .section-head {
+    font-family: "Courier Prime", monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .3em;
+    text-transform: uppercase;
+    color: var(--airmail-blue);
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(38,71,143,.2);
+    margin: 0 0 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .section-head .ornament {
+    color: var(--airmail-red);
+    font-size: 12px;
+    letter-spacing: .2em;
+    opacity: .7;
+  }
+
+  /* Ledger rows */
+  .ledger-line {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 6px 0;
+    font-family: "Courier Prime", monospace;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .ledger-line .label {
+    color: var(--ink);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .ledger-line .dots {
+    flex: 1;
+    border-bottom: 2px dotted rgba(38,71,143,.28);
+    transform: translateY(-3px);
+    min-width: 20px;
+  }
+  .ledger-line .value {
+    color: var(--ink);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    flex-shrink: 0;
+    letter-spacing: .02em;
+  }
+  .ledger-line .value.accent {
+    color: var(--airmail-red);
+    font-size: 15px;
+    font-weight: 900;
+  }
+  .ledger-line .value.flag {
+    font-family: "Courier Prime", monospace;
+    font-size: 20px;
+    line-height: 1;
+  }
+  .ledger-line .value.sub {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 13px;
+    font-style: italic;
+    color: var(--muted);
+    font-weight: 500;
+    margin-left: 6px;
+  }
+
+  /* Country chips */
+  .country-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 4px 0 8px;
+  }
+  .country-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px 4px 8px;
+    background: rgba(38,71,143,.06);
+    border: 1px solid rgba(38,71,143,.18);
+    border-radius: 50px;
+    font-family: "Courier Prime", monospace;
+    font-size: 11px;
+    color: var(--airmail-blue);
+    letter-spacing: .04em;
+    font-weight: 700;
+  }
+  .country-chip .flag-icon {
+    font-size: 14px;
+    line-height: 1;
+  }
+  .country-chip.is-top {
+    background: rgba(211,58,58,.09);
+    border-color: rgba(211,58,58,.4);
+    color: var(--airmail-red);
+  }
+
+  /* Longest conversation callout */
+  .callout {
+    background: rgba(255,250,235,.7);
+    border-left: 3px solid var(--airmail-red);
+    border-radius: 3px;
+    padding: 14px 18px;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--ink);
+    margin: 4px 0 8px;
+  }
+  .callout .big {
+    font-family: "Playfair Display", serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--airmail-red);
+    letter-spacing: -.3px;
+    line-height: 1.2;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .callout a {
+    color: var(--airmail-red);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    font-family: "Courier Prime", monospace;
+    font-size: 12px;
+    letter-spacing: .04em;
+  }
+  .callout a:hover { color: var(--ink); }
+
+  /* Empty-state hint */
+  .empty-hint {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 15px;
+    font-style: italic;
+    color: var(--muted);
+    padding: 6px 0 4px;
+    line-height: 1.6;
+  }
+
+  /* Footer */
+  .ledger-foot {
+    margin-top: 44px;
+    padding-top: 20px;
+    border-top: 1px dashed rgba(38,71,143,.3);
+    text-align: center;
+    font-family: "Courier Prime", monospace;
+    font-size: 10px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .ledger-foot .row1 {
+    color: var(--airmail-red);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .ledger-foot .row2 {
+    opacity: .75;
+  }
+
+  /* Mobile */
+  @media (max-width: 700px) {
+    .top-bar { padding: 12px 15px; }
+    .brand { font-size: 16px; }
+    .top-back { font-size: 12px; }
+    .wrap { padding: 20px 15px 60px; }
+    .ledger {
+      padding: 44px 22px 26px;
+      border-radius: 3px;
+    }
+    .corner-seal {
+      top: 18px;
+      right: 20px;
+      width: 42px;
+      height: 42px;
+      font-size: 13px;
+    }
+    .ledger-kicker { font-size: 9px; letter-spacing: .3em; }
+    .ledger-title { font-size: 26px; letter-spacing: -.6px; }
+    .ledger-subtitle { font-size: 14px; }
+    .narrative { font-size: 15px; line-height: 1.7; margin-bottom: 26px; }
+    .section { margin-bottom: 24px; }
+    .section-head { font-size: 9px; letter-spacing: .22em; }
+    .ledger-line {
+      font-size: 13px;
+      padding: 5px 0;
+    }
+    .ledger-line .value.accent { font-size: 14px; }
+    .country-chip { font-size: 10px; padding: 3px 8px 3px 6px; }
+    .country-chip .flag-icon { font-size: 12px; }
+    .callout { padding: 12px 14px; font-size: 14px; }
+    .callout .big { font-size: 18px; }
+    .ledger-foot { font-size: 9px; letter-spacing: .1em; margin-top: 32px; }
+  }
+
+  /* ============================================
+     PRINT
+     ============================================ */
   @media print {
-    @page { margin: 15mm; size: A4; }
+    @page { margin: 14mm; size: A4 portrait; }
     body { background: #fff !important; }
-    .chrome { display: none !important; }
-    .ledger-wrap { max-width: none; padding: 0; }
-    .ledger-doc {
-      box-shadow: none;
-      border: 1px solid #ccc;
-      background: #fbf6e8;
+    .top-bar { display: none !important; }
+    .wrap { max-width: none !important; padding: 0 !important; margin: 0 !important; }
+    .ledger {
+      box-shadow: none !important;
+      border-radius: 0 !important;
+      padding: 10mm 12mm !important;
       page-break-inside: avoid;
     }
-    .ledger-doc::before, .ledger-doc::after { display: none; }
-    .ledger-section { page-break-inside: avoid; }
-    .ledger-seal {
-      background: radial-gradient(circle at 30% 30%, #c9302c 0%, #9a2422 55%, #6e1a18 100%) !important;
-      -webkit-print-color-adjust: exact;
-      print-color-adjust: exact;
-    }
+    .ledger::before { display: none; }
+    .ledger-foot { page-break-before: avoid; }
   }
 </style>
 </head>
 <body>
 
-<div class="chrome" id="chrome">
-  <a href="profile.html" class="chrome-back" id="chrome-back">← Profile</a>
-  <div class="chrome-actions">
-    <button class="chrome-btn primary" type="button" onclick="window.print()">🖨 Print / Save as PDF</button>
+<div class="top-bar">
+  <a href="index.html" class="brand">The <span>Whacky</span> Rack</a>
+  <div class="top-actions">
+    <a href="javascript:history.back()" class="top-back" id="top-back">← Back</a>
+    <button class="top-print" type="button" onclick="window.print()">🖨 Print / PDF</button>
   </div>
 </div>
 
-<main class="ledger-wrap" id="root">
+<main class="wrap" id="root">
   <div class="state-card">
     <div class="spinner"></div>
-    <p>Opening the ledger…</p>
+    <p>Retrieving your ledger…</p>
   </div>
 </main>
 
@@ -426,9 +477,12 @@
   }
 
   const root = document.getElementById('root');
-  const chrome = document.getElementById('chrome');
-  const chromeBack = document.getElementById('chrome-back');
+  const topBack = document.getElementById('top-back');
 
+  let session = null;
+  let me = null;
+
+  /* ---------- Helpers ---------- */
   function esc(s) {
     return String(s ?? '').replace(/[&<>"']/g, c => ({
       '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
@@ -442,244 +496,384 @@
       A + cc.toUpperCase().charCodeAt(1) - 65
     );
   }
-  function formatDate(iso) {
-    const d = new Date(iso);
-    const day = d.getDate();
-    const month = d.toLocaleString('en-US', { month: 'long' });
-    const year = d.getFullYear();
-    // "27th day of October, 2026"
-    const suffix = (day % 10 === 1 && day !== 11) ? 'st'
-                 : (day % 10 === 2 && day !== 12) ? 'nd'
-                 : (day % 10 === 3 && day !== 13) ? 'rd' : 'th';
-    return `${day}${suffix} day of ${month}, ${year}`;
+  function fmtDate(iso) {
+    if (!iso) return '—';
+    return new Date(iso).toLocaleDateString(undefined, {
+      year: 'numeric', month: 'long', day: 'numeric'
+    });
   }
-  function shortDate(iso) {
-    const d = new Date(iso);
-    return d.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+  function fmtShortDate(iso) {
+    if (!iso) return '—';
+    return new Date(iso).toLocaleDateString(undefined, {
+      year: 'numeric', month: 'short', day: '2-digit'
+    });
   }
-  function ordinal(n) {
-    const v = Number(n) || 0;
-    const s = ['th','st','nd','rd'];
-    const m = v % 100;
-    return v + (s[(m - 20) % 10] || s[m] || s[0]);
+  function fmtNumber(n) {
+    return Number(n || 0).toLocaleString();
   }
-  function chapterLabel(n) {
-    const v = Number(n) || 1;
-    const roman = ['', 'I','II','III','IV','V','VI','VII','VIII','IX','X',
-      'XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX'];
-    return roman[v] || String(v);
+  function fmtYears(y) {
+    const n = Number(y || 0);
+    if (n < 1) {
+      // Show months if under a year
+      const months = Math.max(1, Math.round(n * 12));
+      return months + (months === 1 ? ' month' : ' months');
+    }
+    return n.toFixed(2) + ' years';
   }
 
+  async function loadCountryNames(codes) {
+    const unique = [...new Set((codes || []).filter(Boolean))];
+    if (unique.length === 0) return {};
+    try {
+      const { data } = await sb.from('countries').select('code, name').in('code', unique);
+      return Object.fromEntries((data || []).map(c => [c.code, c.name]));
+    } catch (e) {
+      return {};
+    }
+  }
+
+  /* ---------- State screens ---------- */
   function renderSignIn() {
-    chrome.style.display = 'none';
     root.innerHTML = `
       <div class="state-card">
         <div class="emoji">🔒</div>
-        <h2>Sign in required</h2>
-        <p>Every lifetime ledger is private to the Rack. Sign in to view yours.</p>
+        <h2>Sign in to view</h2>
+        <p>The Lifetime Ledger is a private record. Sign in to see yours, or view another member's public ledger.</p>
         <div>
           <a class="btn" href="login.html">Sign in</a>
         </div>
       </div>
     `;
   }
-  function renderError(title, message) {
-    chrome.style.display = 'none';
+  function renderError(title, msg) {
     root.innerHTML = `
       <div class="state-card">
         <div class="emoji">⚡</div>
         <h2>${esc(title)}</h2>
-        <p>${esc(message)}</p>
-        <a class="btn" href="index.html">← Back to the Rack</a>
+        <p>${esc(msg)}</p>
+        <div><a class="btn" href="profile.html">← Back to profile</a></div>
       </div>
     `;
   }
 
-  function renderDocument(ledger, isOwn, countryCodeMap, countryNameMap) {
-    // Resolve user's country
-    let countryFlag = '🌍';
-    let countryName = 'Somewhere';
-    const raw = ledger.country || '';
-    if (raw.length === 2) {
-      countryFlag = flagFor(raw);
-      countryName = countryCodeMap[raw.toUpperCase()] || raw;
-    } else if (raw) {
-      const code = countryNameMap[raw.toLowerCase()];
-      if (code) {
-        countryFlag = flagFor(code);
-        countryName = raw;
-      } else {
-        countryName = raw;
-      }
+  /* ---------- Ledger renderer ---------- */
+  function renderLedger(L, countryNames, isOwn) {
+    const {
+      username, rank, country, member_since, years_on_rack,
+      letters_sent, replies_received, replies_sent,
+      bottles_sent, bottles_beached,
+      total_conversations, permanent_pen_pals, active_conversations,
+      countries_corresponded, country_list,
+      top_country, top_country_letters,
+      longest_conversation_letters, longest_conversation_id,
+      yaps_count, tapes_count, comments_count,
+      gifts_sent, gifts_received,
+      most_active_year, most_active_year_letters
+    } = L;
+
+    // Update top back link
+    topBack.href = `profile.html?id=${encodeURIComponent(L.id || '')}`;
+
+    // Narrative variations
+    let narrative;
+    if (letters_sent === 0 && total_conversations === 0) {
+      narrative = `This is the ledger of <span class="username">${esc(username)}</span>,
+        who joined the Rack on <strong>${esc(fmtDate(member_since))}</strong>.
+        Their story is just beginning — no letters written, no replies received yet.
+        The page waits, patient and blank.`;
+    } else if (letters_sent > 0 && total_conversations === 0) {
+      narrative = `This is the ledger of <span class="username">${esc(username)}</span>,
+        who joined the Rack on <strong>${esc(fmtDate(member_since))}</strong>.
+        They have written <strong>${fmtNumber(letters_sent)}</strong> letter${letters_sent === 1 ? '' : 's'} into the world,
+        and are waiting for their first reply to arrive.`;
+    } else if (total_conversations > 0 && letters_sent === 0) {
+      narrative = `This is the ledger of <span class="username">${esc(username)}</span>,
+        who joined the Rack on <strong>${esc(fmtDate(member_since))}</strong>.
+        They have answered <strong>${fmtNumber(total_conversations)}</strong> letter${total_conversations === 1 ? '' : 's'} from strangers,
+        and a slow correspondence is unfolding.`;
+    } else {
+      narrative = `This is the ledger of <span class="username">${esc(username)}</span>,
+        citizen of the Rack since <strong>${esc(fmtDate(member_since))}</strong>.
+        In that time they have written <strong>${fmtNumber(letters_sent)}</strong> letter${letters_sent === 1 ? '' : 's'} into the world,
+        received <strong>${fmtNumber(replies_received)}</strong> repl${replies_received === 1 ? 'y' : 'ies'} back,
+        and exchanged <strong>${fmtNumber(replies_sent + replies_received)}</strong> letters in total with correspondents across
+        <strong>${fmtNumber(countries_corresponded)}</strong> countr${countries_corresponded === 1 ? 'y' : 'ies'}.`;
     }
 
-    // Chapters
-    const chap = chapterLabel(ledger.chapter_number);
-
-    // Countries array
-    const countries = Array.isArray(ledger.countries_corresponded)
-      ? ledger.countries_corresponded
-      : [];
-
-    // Top correspondent
-    let topCorrespondentLine = `<span class="row-value muted">None yet</span>`;
-    if (ledger.top_correspondent_country) {
-      const topFlag = flagFor(ledger.top_correspondent_country);
-      const topName = countryCodeMap[ledger.top_correspondent_country] || ledger.top_correspondent_country;
-      const cnt = Number(ledger.top_correspondent_count) || 0;
-      topCorrespondentLine = `<span class="row-value">${topFlag} ${esc(topName)} — ${cnt}</span>`;
+    // Countries chips
+    let countriesHtml = '';
+    if (country_list && country_list.length > 0) {
+      countriesHtml = country_list.map(cc => {
+        const isTop = cc === top_country;
+        const name = countryNames[cc] || cc;
+        return `<span class="country-chip${isTop ? ' is-top' : ''}">
+          <span class="flag-icon">${flagFor(cc)}</span>${esc(name)}
+        </span>`;
+      }).join('');
+    } else {
+      countriesHtml = `<div class="empty-hint">No correspondence yet.</div>`;
     }
 
-    // Signature
-    const today = formatDate(new Date().toISOString());
+    // Longest conversation
+    let longestConvHtml = '';
+    if (longest_conversation_letters > 0 && longest_conversation_id) {
+      longestConvHtml = `
+        <div class="callout">
+          <span class="big">${fmtNumber(longest_conversation_letters)} letter${longest_conversation_letters === 1 ? '' : 's'}</span>
+          exchanged in your longest conversation.<br>
+          <a href="letters-conversation.html?id=${encodeURIComponent(longest_conversation_id)}">→ Continue reading</a>
+        </div>
+      `;
+    } else {
+      longestConvHtml = `<div class="empty-hint">No conversations yet — the longest thread is still unwritten.</div>`;
+    }
 
-    // "Empty" flag
-    const totalActivity = Number(ledger.letters_sent || 0)
-      + Number(ledger.exchanges_sent || 0)
-      + Number(ledger.yaps_posted || 0)
-      + Number(ledger.tapes_posted || 0)
-      + Number(ledger.gifts_sent || 0);
-    const isEmpty = totalActivity === 0;
+    // Gifts line
+    let giftsLine = '0';
+    if (gifts_sent === 0 && gifts_received === 0) {
+      giftsLine = '—';
+    } else {
+      giftsLine = `${fmtNumber(gifts_sent)} sent · ${fmtNumber(gifts_received)} received`;
+    }
 
-    const subtitle = isOwn
-      ? 'Your Lifetime Ledger'
-      : `${esc(ledger.username)}'s Lifetime Ledger`;
+    // Most active year
+    let activeYearHtml;
+    if (most_active_year && most_active_year_letters > 0) {
+      activeYearHtml = `
+        <div class="ledger-line">
+          <span class="label">Most active year</span>
+          <span class="dots"></span>
+          <span class="value accent">${most_active_year}</span>
+          <span class="value sub">${fmtNumber(most_active_year_letters)} letter${most_active_year_letters === 1 ? '' : 's'}</span>
+        </div>
+      `;
+    } else {
+      activeYearHtml = `<div class="empty-hint">No letter activity recorded yet.</div>`;
+    }
 
-    const subhead = isEmpty
-      ? 'A fresh ledger — every page awaits its first entry.'
-      : `Chapter ${chap} · Member since ${shortDate(ledger.joined_at)} · ${ordinal(ledger.days_on_rack)} day${Number(ledger.days_on_rack) === 1 ? '' : 's'} on the Rack`;
-
-    // Flags chips
-    const flagsChips = countries.map(cc => {
-      const flag = flagFor(cc);
-      const name = countryCodeMap[cc] || cc;
-      return `<span class="flag-chip"><span class="flag-emoji">${flag}</span>${esc(name)}</span>`;
-    }).join('');
-
-    chromeBack.href = isOwn ? 'profile.html' : `profile.html?id=${encodeURIComponent(ledger.user_id)}`;
-    chromeBack.textContent = isOwn ? '← Your profile' : `← ${ledger.username}`;
+    const isOwnIndicator = isOwn ? '' : `<div style="text-align:center; font-family:'Courier Prime',monospace; font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:#9a8f7c; margin-bottom:18px;">Public document · Viewing ${esc(username)}'s ledger</div>`;
 
     root.innerHTML = `
-      <div class="ledger-doc">
+      ${isOwnIndicator}
+      <article class="ledger">
+        <div class="corner-seal">${esc(String(rank || 0).slice(-2))}</div>
 
-        <div class="ledger-seal-wrap">
-          <div class="ledger-seal">📖</div>
-        </div>
+        <header class="ledger-head">
+          <div class="ledger-kicker">The Whacky Rack · Republic of the Rack</div>
+          <h1 class="ledger-title">The Lifetime <em>Ledger</em></h1>
+          <p class="ledger-subtitle">A complete record of a life on the Rack</p>
+        </header>
 
-        <div class="ledger-title-block">
-          <h1 class="ledger-title">The Whacky Rack</h1>
-          <p class="ledger-subtitle">Lifetime Ledger</p>
-          <p class="ledger-subhead">${subhead}</p>
-        </div>
+        <p class="narrative">${narrative}</p>
 
-        <div class="ledger-rule"></div>
+        <section class="section">
+          <h2 class="section-head">
+            <span>The Years</span>
+            <span class="ornament">✦ ✦ ✦</span>
+          </h2>
+          <div class="ledger-line">
+            <span class="label">On the rack</span>
+            <span class="dots"></span>
+            <span class="value accent">${esc(fmtYears(years_on_rack))}</span>
+          </div>
+          <div class="ledger-line">
+            <span class="label">Joined</span>
+            <span class="dots"></span>
+            <span class="value">${esc(fmtShortDate(member_since))}</span>
+          </div>
+          <div class="ledger-line">
+            <span class="label">Rank</span>
+            <span class="dots"></span>
+            <span class="value">#${fmtNumber(rank)}</span>
+          </div>
+          ${country ? `
+          <div class="ledger-line">
+            <span class="label">Country</span>
+            <span class="dots"></span>
+            <span class="value">${esc(country)}</span>
+          </div>
+          ` : ''}
+        </section>
 
-        <div class="ledger-identity">
-          <div class="identity-row">
-            <span class="id-label">Account Holder</span>
-            <span class="id-leader"></span>
-            <span class="id-value">${esc(ledger.username)}</span>
+        <section class="section">
+          <h2 class="section-head">
+            <span>The Letters</span>
+            <span class="ornament">✉</span>
+          </h2>
+          <div class="ledger-line">
+            <span class="label">Written into the world</span>
+            <span class="dots"></span>
+            <span class="value accent">${fmtNumber(letters_sent)}</span>
           </div>
-          <div class="identity-row">
-            <span class="id-label">Rank</span>
-            <span class="id-leader"></span>
-            <span class="id-value">#${ledger.rank}</span>
+          <div class="ledger-line">
+            <span class="label">Replies that found you</span>
+            <span class="dots"></span>
+            <span class="value">${fmtNumber(replies_received)}</span>
           </div>
-          <div class="identity-row">
-            <span class="id-label">Country of Residence</span>
-            <span class="id-leader"></span>
-            <span class="id-value">${countryFlag} ${esc(countryName)}</span>
+          <div class="ledger-line">
+            <span class="label">Replies you sent</span>
+            <span class="dots"></span>
+            <span class="value">${fmtNumber(replies_sent)}</span>
           </div>
-          <div class="identity-row">
-            <span class="id-label">Member Since</span>
-            <span class="id-leader"></span>
-            <span class="id-value">${shortDate(ledger.joined_at)}</span>
+          <div class="ledger-line">
+            <span class="label">Bottles drifted</span>
+            <span class="dots"></span>
+            <span class="value">${fmtNumber(bottles_sent)}</span>
           </div>
-        </div>
-
-        <div class="ledger-rule"></div>
-
-        <section class="ledger-section">
-          <h3>The Letters</h3>
-          <p class="section-note">Correspondence sent across the sea.</p>
-
-          <div class="ledger-row">
-            <span class="row-label">Letters sent</span>
-            <span class="row-leader"></span>
-            <span class="row-value">${Number(ledger.letters_sent) || 0}</span>
-          </div>
-          <div class="ledger-row">
-            <span class="row-label">Bottles cast</span>
-            <span class="row-leader"></span>
-            <span class="row-value">${Number(ledger.bottles_sent) || 0}</span>
-          </div>
-          <div class="ledger-row">
-            <span class="row-label">Bottles beached</span>
-            <span class="row-leader"></span>
-            <span class="row-value">${Number(ledger.bottles_beached) || 0}</span>
-          </div>
-          <div class="ledger-row">
-            <span class="row-label">Exchanges sent</span>
-            <span class="row-leader"></span>
-            <span class="row-value">${Number(ledger.exchanges_sent) || 0}</span>
-          </div>
-          <div class="ledger-row">
-            <span class="row-label">Exchanges received</span>
-            <span class="row-leader"></span>
-            <span class="row-value">${Number(ledger.exchanges_received) || 0}</span>
-          </div>
-          <div class="ledger-row">
-            <span class="row-label">Conversations</span>
-            <span class="row-leader"></span>
-            <span class="row-value">${Number(ledger.conversations_count) || 0}</span>
-          </div>
-          <div class="ledger-row">
-            <span class="row-label">Permanent pen pals</span>
-            <span class="row-leader"></span>
-            <span class="row-value">${Number(ledger.permanent_pen_pals) || 0}</span>
+          <div class="ledger-line">
+            <span class="label">Bottles that reached a shore</span>
+            <span class="dots"></span>
+            <span class="value">${fmtNumber(bottles_beached)}</span>
           </div>
         </section>
 
-        <div class="ledger-rule"></div>
-
-        <section class="ledger-section">
-          <h3>The World</h3>
-          <p class="section-note">Where your words have travelled.</p>
-
-          <div class="ledger-row">
-            <span class="row-label">Countries corresponded with</span>
-            <span class="row-leader"></span>
-            <span class="row-value">${countries.length}</span>
+        <section class="section">
+          <h2 class="section-head">
+            <span>The Correspondences</span>
+            <span class="ornament">🌍</span>
+          </h2>
+          <div class="ledger-line">
+            <span class="label">Conversations</span>
+            <span class="dots"></span>
+            <span class="value accent">${fmtNumber(total_conversations)}</span>
           </div>
-
-          ${countries.length > 0
-            ? `<div class="flags-row">${flagsChips}</div>`
-            : `<div class="row-value muted" style="text-align:left; padding: 4px 0 12px;">No travel yet.</div>`
-          }
-
-          <div class="ledger-row">
-            <span class="row-label">Top correspondent</span>
-            <span class="row-leader"></span>
-            ${topCorrespondentLine}
+          <div class="ledger-line">
+            <span class="label">Permanent pen pals</span>
+            <span class="dots"></span>
+            <span class="value">${fmtNumber(permanent_pen_pals)}</span>
           </div>
-          <div class="ledger-row">
-            <span class="row-label">Longest conversation</span>
-            <span class="row-leader"></span>
-            <span class="row-value">${Number(ledger.longest_conversation_letters) || 0} letter${Number(ledger.longest_conversation_letters) === 1 ? '' : 's'}</span>
+          <div class="ledger-line">
+            <span class="label">Active conversations</span>
+            <span class="dots"></span>
+            <span class="value">${fmtNumber(active_conversations)}</span>
+          </div>
+          <div class="ledger-line">
+            <span class="label">Countries corresponded</span>
+            <span class="dots"></span>
+            <span class="value">${fmtNumber(countries_corresponded)}</span>
+          </div>
+          <div style="margin-top:10px;">
+            <div class="section-head" style="font-size:8px; letter-spacing:.25em; color:var(--muted); border-bottom-style:dotted; padding-bottom:6px; margin-bottom:8px;">
+              <span>Countries</span>
+              ${top_country ? `<span class="ornament" style="font-size:9px; letter-spacing:.15em; color:var(--muted);">top: ${flagFor(top_country)} ${fmtNumber(top_country_letters)} letters</span>` : ''}
+            </div>
+            <div class="country-chips">${countriesHtml}</div>
           </div>
         </section>
 
-        <div class="ledger-rule"></div>
+        <section class="section">
+          <h2 class="section-head">
+            <span>The Longest Thread</span>
+            <span class="ornament">📜</span>
+          </h2>
+          ${longestConvHtml}
+        </section>
 
-        <section class="ledger-section">
-          <h3>The Courier</h3>
-          <p class="section-note">Packages given and received in kind.</p>
-
-          <div class="ledger-row">
-            <span class="row-label">Gifts sent</span>
-            <span class="row-leader"></span>
-            <span class="row-value">${Number(ledger.gifts_sent) || 0}</span>
+        <section class="section">
+          <h2 class="section-head">
+            <span>The Wider Rack</span>
+            <span class="ornament">✦</span>
+          </h2>
+          <div class="ledger-line">
+            <span class="label">Yaps written</span>
+            <span class="dots"></span>
+            <span class="value">${fmtNumber(yaps_count)}</span>
           </div>
-          <div class="ledger-row">
-            <span class="row-label">Gifts received</span>
-            <
+          <div class="ledger-line">
+            <span class="label">Tapes posted</span>
+            <span class="dots"></span>
+            <span class="value">${fmtNumber(tapes_count)}</span>
+          </div>
+          <div class="ledger-line">
+            <span class="label">Comments</span>
+            <span class="dots"></span>
+            <span class="value">${fmtNumber(comments_count)}</span>
+          </div>
+          <div class="ledger-line">
+            <span class="label">Gifts exchanged</span>
+            <span class="dots"></span>
+            <span class="value">${esc(giftsLine)}</span>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2 class="section-head">
+            <span>The Most Active Year</span>
+            <span class="ornament">⏳</span>
+          </h2>
+          ${activeYearHtml}
+        </section>
+
+        <div class="ledger-foot">
+          <div class="row1">Issued on ${esc(fmtDate(new Date().toISOString()))} by The Whacky Rack</div>
+          <div class="row2">Citizen ${esc(username)} · Passport rank #${fmtNumber(rank)} · Republic of the Rack</div>
+        </div>
+      </article>
+    `;
+  }
+
+  /* ---------- Boot ---------- */
+  async function boot() {
+    const { data: { session: s } } = await sb.auth.getSession();
+    session = s;
+
+    if (!session) { renderSignIn(); return; }
+
+    const params = new URLSearchParams(location.search);
+    const idParam = params.get('id');
+    const targetId = idParam || session.user.id;
+
+    me = window.wr.getProfile() || null;
+    if (!me) {
+      try {
+        const { data } = await sb.from('profiles').select('id, username').eq('id', session.user.id).maybeSingle();
+        me = data;
+      } catch (e) {}
+    }
+
+    // Confirm target profile exists and get some basics for isOwn check
+    let targetUsername = null;
+    try {
+      const { data } = await sb.from('profiles').select('id, username').eq('id', targetId).maybeSingle();
+      if (data) targetUsername = data.username;
+    } catch (e) {}
+
+    const isOwn = session.user.id === targetId;
+
+    // Update back link
+    if (idParam) {
+      topBack.href = `profile.html?id=${encodeURIComponent(targetId)}`;
+    } else {
+      topBack.href = 'profile.html';
+    }
+
+    const { data, error } = await sb.rpc('get_lifetime_ledger', { p_profile_id: targetId });
+
+    if (error) {
+      console.error('[ledger] rpc error:', error);
+      renderError("Couldn't load ledger", error.message || 'Please try again.');
+      return;
+    }
+
+    const L = (data && data[0]) || null;
+    if (!L) {
+      renderError('Ledger not found', 'This citizen has no ledger yet, or the profile no longer exists.');
+      return;
+    }
+
+    L.id = targetId;
+
+    // Resolve country names
+    const countryNames = await loadCountryNames(L.country_list || []);
+
+    // Doc title
+    document.title = `${L.username} — Lifetime Ledger — The Whacky Rack`;
+
+    renderLedger(L, countryNames, isOwn);
+  }
+
+  boot();
+})();
+</script>
+</body>
+</html>
